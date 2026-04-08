@@ -1,19 +1,5 @@
 import Link from "next/link";
-
-const services = [
-  { title: "VIDEO", href: "/video" },
-  { title: "PHOTO", href: "/foto" },
-  { title: "GRAPHIC", href: "/grafica" },
-  { title: "WEBSITE", href: "/website" },
-  { title: "META ADS", href: "/meta-ads" },
-  { title: "AUDIO", href: "/audio" },
-];
-
-const brands = [
-  { title: "Coca-Cola", href: "/brand/coca-cola" },
-  { title: "Samsung", href: "/brand/samsung" },
-  { title: "ING Bank", href: "/brand/ing-bank" },
-];
+import { featuredBrands, homeCategories } from "@/lib/data/home-data";
 
 export default function HomePage() {
   return (
@@ -31,8 +17,12 @@ export default function HomePage() {
 
       <section className="section">
         <div className="folder-grid">
-          {services.map((service) => (
-            <Link key={service.title} href={service.href} className="folder-card">
+          {homeCategories.map((service) => (
+            <Link
+              key={service.slug}
+              href={`/${service.slug}`}
+              className="folder-card"
+            >
               <div className="folder-top" />
               <div className="folder-body">
                 <span>{service.title}</span>
@@ -46,11 +36,15 @@ export default function HomePage() {
         <h2>BRANDS WE WORKED WITH</h2>
 
         <div className="brand-grid">
-          {brands.map((brand) => (
-            <Link key={brand.title} href={brand.href} className="brand-card">
+          {featuredBrands.map((brand) => (
+            <Link
+              key={brand.slug}
+              href={`/brand/${brand.slug}`}
+              className="brand-card"
+            >
               <div className="folder-top" />
               <div className="folder-body brand-body">
-                <span>{brand.title}</span>
+                <span>{brand.name}</span>
               </div>
             </Link>
           ))}
