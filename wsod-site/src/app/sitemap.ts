@@ -1,18 +1,15 @@
 import { MetadataRoute } from "next";
 import { homeCategories } from "@/lib/data/home-data";
 import { getAllBlogPosts } from "@/lib/data/blog-data";
-import { getBrandsFromDb } from "@/lib/data/db-queries";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://example.com";
-  const brands = await getBrandsFromDb();
 
   const staticRoutes = [
     "",
     "/blog",
     "/studio-login",
     ...homeCategories.map((category) => `/${category.slug}`),
-    ...brands.map((brand) => `/brand/${brand.slug}`),
     ...getAllBlogPosts().map((post) => `/blog/${post.slug}`),
   ];
 

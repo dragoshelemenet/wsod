@@ -3,17 +3,19 @@ import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
-  title: "Video | WSOD.PROD",
+  title: "Foto | WSOD.PROD",
   description:
-    "Portofoliu video WSOD.PROD: materiale video din toate brandurile, ordonate după dată.",
+    "Portofoliu foto WSOD.PROD: materiale foto din toate brandurile, ordonate după dată.",
   alternates: {
-    canonical: "/video",
+    canonical: "/foto",
   },
 };
 
-export default async function VideoPage() {
-  const items = await getMediaByCategoryFromDb("video");
+export default async function FotoPage() {
+  const items = await getMediaByCategoryFromDb("foto");
 
   return (
     <main className="inner-page">
@@ -24,15 +26,12 @@ export default async function VideoPage() {
       </div>
 
       <section className="inner-section">
-        <h1>VIDEO</h1>
+        <h1>PHOTO</h1>
         <p className="inner-description">
-          Toate materialele video din toate brandurile, ordonate după dată.
+          Toate materialele foto din toate brandurile, ordonate după dată.
         </p>
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există materiale video momentan."
-        />
+        <MediaGrid items={items} emptyText="Nu există materiale foto momentan." />
       </section>
     </main>
   );

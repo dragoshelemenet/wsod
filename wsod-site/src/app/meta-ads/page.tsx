@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Meta Ads | WSOD.PROD",
   description:
@@ -29,10 +31,7 @@ export default async function MetaAdsPage() {
           Toate materialele Meta Ads din toate brandurile, ordonate după dată.
         </p>
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există materiale Meta Ads momentan."
-        />
+        <MediaGrid items={items} emptyText="Nu există materiale Meta Ads momentan." />
       </section>
     </main>
   );

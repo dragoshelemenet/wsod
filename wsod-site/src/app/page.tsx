@@ -5,6 +5,8 @@ import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { getBrandsFromDb } from "@/lib/data/db-queries";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const brands = await getBrandsFromDb();
 

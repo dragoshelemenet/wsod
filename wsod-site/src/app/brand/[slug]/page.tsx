@@ -2,20 +2,14 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getBrandBySlugFromDb, getBrandsFromDb, getMediaByBrandSlugFromDb } from "@/lib/data/db-queries";
+import { getBrandBySlugFromDb, getMediaByBrandSlugFromDb } from "@/lib/data/db-queries";
+
+export const dynamic = "force-dynamic";
 
 interface BrandPageProps {
   params: Promise<{
     slug: string;
   }>;
-}
-
-export async function generateStaticParams() {
-  const brands = await getBrandsFromDb();
-
-  return brands.map((brand) => ({
-    slug: brand.slug,
-  }));
 }
 
 export async function generateMetadata({
@@ -63,10 +57,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
           Toate materialele asociate acestui brand, grupate într-o singură pagină.
         </p>
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există materiale pentru acest brand momentan."
-        />
+        <MediaGrid items={items} emptyText="Nu există materiale pentru acest brand momentan." />
       </section>
     </main>
   );
