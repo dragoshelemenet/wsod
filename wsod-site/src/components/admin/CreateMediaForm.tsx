@@ -1,12 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
 import { createMediaAction } from "@/app/actions/admin-actions";
-
-const initialState = {
-  ok: false,
-  message: "",
-};
 
 interface CreateMediaFormProps {
   brands: {
@@ -17,18 +11,13 @@ interface CreateMediaFormProps {
 }
 
 export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
-  const [state, formAction, isPending] = useActionState(
-    createMediaAction,
-    initialState
-  );
-
   return (
     <div className="admin-panel-card">
       <div className="admin-card-head">
         <h2>2. Creează fișier nou</h2>
       </div>
 
-      <form action={formAction} className="admin-stack">
+      <form action={createMediaAction} className="admin-stack">
         <div className="admin-form-field">
           <label htmlFor="brandSlug">Brand</label>
           <select id="brandSlug" name="brandSlug" className="admin-select" required>
@@ -101,14 +90,8 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
           />
         </div>
 
-        {state?.message ? (
-          <p className={state.ok ? "admin-success" : "admin-error"}>
-            {state.message}
-          </p>
-        ) : null}
-
-        <button type="submit" className="admin-submit" disabled={isPending}>
-          {isPending ? "Se creează..." : "Creează fișier"}
+        <button type="submit" className="admin-submit">
+          Creează fișier
         </button>
       </form>
     </div>
