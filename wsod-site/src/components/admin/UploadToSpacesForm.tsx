@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createMediaAction } from "@/app/actions/admin-actions";
 
 interface UploadToSpacesFormProps {
   brands: {
@@ -52,7 +51,10 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         throw new Error("Nu s-a putut genera URL-ul de upload.");
       }
 
-      const { uploadUrl, publicUrl } = await presignResponse.json();
+      const { uploadUrl, publicUrl } = (await presignResponse.json()) as {
+        uploadUrl: string;
+        publicUrl: string;
+      };
 
       const uploadResponse = await fetch(uploadUrl, {
         method: "PUT",
@@ -66,20 +68,30 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         throw new Error("Upload-ul către Spaces a eșuat.");
       }
 
-      const formData = new FormData();
-      formData.set("brandSlug", brandSlug);
-      formData.set("category", category);
-      formData.set("type", type);
-      formData.set("title", title);
-      formData.set("description", description);
-      formData.set("date", date);
-      formData.set("fileUrl", publicUrl);
-      formData.set("thumbnail", thumbnailUrl || publicUrl);
+      const saveResponse = await fetch("/api/admin/media", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          brandSlug,
+          category,
+          type,
+          title,
+          description,
+          date,
+          fileUrl: publicUrl,
+          thumbnail: thumbnailUrl || publicUrl,
+        }),
+      });
 
-      const result = await createMediaAction(formData);
+      const result = (await saveResponse.json()) as {
+        ok: boolean;
+        message: string;
+      };
 
-      if (!result?.ok) {
-        throw new Error(result?.message || "Nu s-a putut salva fișierul în DB.");
+      if (!saveResponse.ok || !result.ok) {
+        throw new Error(result.message || "Nu s-a putut salva fișierul în DB.");
       }
 
       setMessage("Fișier urcat în Spaces și salvat în baza de date.");

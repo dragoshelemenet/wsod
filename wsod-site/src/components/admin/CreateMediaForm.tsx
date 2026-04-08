@@ -1,6 +1,6 @@
 "use client";
 
-import { createMediaAction } from "@/app/actions/admin-actions";
+import { useState } from "react";
 
 interface CreateMediaFormProps {
   brands: {
@@ -11,13 +11,59 @@ interface CreateMediaFormProps {
 }
 
 export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitting(true);
+    setMessage("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      brandSlug: String(formData.get("brandSlug") || ""),
+      category: String(formData.get("category") || ""),
+      type: String(formData.get("type") || ""),
+      title: String(formData.get("title") || ""),
+      description: String(formData.get("description") || ""),
+      date: String(formData.get("date") || ""),
+      fileUrl: String(formData.get("fileUrl") || ""),
+      thumbnail: String(formData.get("thumbnail") || ""),
+    };
+
+    try {
+      const response = await fetch("/api/admin/media", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = (await response.json()) as { ok: boolean; message: string };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Nu s-a putut crea fișierul.");
+      }
+
+      setMessage("Fișier creat.");
+      form.reset();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div className="admin-panel-card">
       <div className="admin-card-head">
         <h2>2. Creează fișier nou</h2>
       </div>
 
-      <form action={createMediaAction} className="admin-stack">
+      <form onSubmit={handleSubmit} className="admin-stack">
         <div className="admin-form-field">
           <label htmlFor="brandSlug">Brand</label>
           <select id="brandSlug" name="brandSlug" className="admin-select" required>
@@ -90,8 +136,10 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
           />
         </div>
 
-        <button type="submit" className="admin-submit">
-          Creează fișier
+        {message ? <p className="admin-helper-text">{message}</p> : null}
+
+        <button type="submit" className="admin-submit" disabled={isSubmitting}>
+          {isSubmitting ? "Se creează..." : "Creează fișier"}
         </button>
       </form>
     </div>

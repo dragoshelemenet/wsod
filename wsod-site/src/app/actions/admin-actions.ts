@@ -64,48 +64,6 @@ export async function deleteBrandAction(formData: FormData): Promise<void> {
   revalidatePath("/studio-dashboard");
 }
 
-export async function createMediaAction(formData: FormData): Promise<void> {
-  const title = String(formData.get("title") || "").trim();
-  const description = String(formData.get("description") || "").trim();
-  const category = String(formData.get("category") || "").trim();
-  const type = String(formData.get("type") || "").trim();
-  const date = String(formData.get("date") || "").trim();
-  const fileUrl = String(formData.get("fileUrl") || "").trim();
-  const thumbnail = String(formData.get("thumbnail") || "").trim();
-  const brandSlug = String(formData.get("brandSlug") || "").trim();
-
-  if (!title || !category || !type || !date || !brandSlug) return;
-
-  const brand = await prisma.brand.findUnique({
-    where: { slug: brandSlug },
-  });
-
-  if (!brand) return;
-
-  await prisma.mediaItem.create({
-    data: {
-      title,
-      description: description || null,
-      category,
-      type,
-      date: new Date(date),
-      fileUrl: fileUrl || null,
-      thumbnail: thumbnail || null,
-      brandId: brand.id,
-    },
-  });
-
-  revalidatePath("/");
-  revalidatePath("/studio-dashboard");
-  revalidatePath("/video");
-  revalidatePath("/foto");
-  revalidatePath("/grafica");
-  revalidatePath("/audio");
-  revalidatePath("/website");
-  revalidatePath("/meta-ads");
-  revalidatePath(`/brand/${brand.slug}`);
-}
-
 export async function deleteMediaAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") || "");
   if (!id) return;
@@ -114,6 +72,7 @@ export async function deleteMediaAction(formData: FormData): Promise<void> {
     where: { id },
   });
 
+  revalidatePath("/");
   revalidatePath("/video");
   revalidatePath("/foto");
   revalidatePath("/grafica");
