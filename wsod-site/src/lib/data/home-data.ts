@@ -14,3 +14,11 @@ export const featuredBrands: Brand[] = [
   { name: "Samsung", slug: "samsung" },
   { name: "ING Bank", slug: "ing-bank" },
 ];
+
+export function getBrandNameBySlug(slug: string) {
+  return featuredBrands.find((brand) => brand.slug === slug)?.name ?? slug;
+}
+
+export function getCategoryLabel(slug: string) {
+  return homeCategories.find((category) => category.slug === slug)?.title ?? slug;
+}

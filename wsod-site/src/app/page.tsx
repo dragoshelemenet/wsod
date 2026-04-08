@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { featuredBrands, homeCategories } from "@/lib/data/home-data";
+import { getAllBlogPosts } from "@/lib/data/blog-data";
 
 export default function HomePage() {
+  const latestPosts = getAllBlogPosts().slice(0, 3);
+
   return (
     <main className="home-page">
       <section className="hero">
@@ -56,6 +59,37 @@ export default function HomePage() {
           <span />
           <span />
           <span />
+        </div>
+      </section>
+
+      <section className="section home-blog-section">
+        <div className="home-blog-head">
+          <h2>BLOG</h2>
+          <Link href="/blog" className="home-blog-link">
+            Vezi toate articolele
+          </Link>
+        </div>
+
+        <div className="blog-list">
+          {latestPosts.map((post) => (
+            <article key={post.slug} className="blog-card">
+              <div className="blog-card-content">
+                <span className="blog-date">
+                  {new Date(post.publishedAt).toLocaleDateString("ro-RO")}
+                </span>
+
+                <h3>
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                </h3>
+
+                <p>{post.excerpt}</p>
+
+                <Link href={`/blog/${post.slug}`} className="blog-read-more">
+                  Citește articolul
+                </Link>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "WSOD.PROD — Agenție media digitală & video",
   description:
     "WSOD.PROD — video, foto, grafică, website-uri, audio și Meta Ads. Portofoliu media digitală în România.",
+  metadataBase: new URL("https://example.com"),
 };
 
 export default function RootLayout({

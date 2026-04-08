@@ -15,3 +15,25 @@ export interface Category {
   title: string;
   slug: CategorySlug;
 }
+
+export interface MediaItem {
+  id: string;
+  title: string;
+  brandSlug: string;
+  category: CategorySlug;
+  type: "image" | "video" | "audio" | "website" | "graphic";
+  date: string;
+  thumbnail?: string;
+  fileUrl?: string;
+  description?: string;
+}
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  publishedAt: string;
+  seoTitle?: string;
+  metaDescription?: string;
+}
