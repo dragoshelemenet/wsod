@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import BrandForm from "@/components/admin/BrandForm";
-import CreateMediaForm from "@/components/admin/CreateMediaForm";
+import UploadToSpacesForm from "@/components/admin/UploadToSpacesForm";
 import AdminBrandManager from "@/components/admin/AdminBrandManager";
 import AdminMediaManager from "@/components/admin/AdminMediaManager";
 import { hasAdminSession } from "@/lib/auth/session";
@@ -38,13 +38,14 @@ export default async function StudioDashboardPage() {
           <span className="admin-kicker">Panou privat</span>
           <h1>Studio Dashboard</h1>
           <p className="inner-description">
-            Acum brandurile și fișierele sunt citite/scrise din baza de date.
+            Acum poți urca fișiere direct în DigitalOcean Spaces și salva
+            automat URL-urile în baza de date.
           </p>
         </div>
 
         <div className="admin-grid">
           <BrandForm brands={brands} />
-          <CreateMediaForm brands={brands} />
+          <UploadToSpacesForm brands={brands} />
         </div>
 
         <div className="admin-grid admin-grid-bottom">

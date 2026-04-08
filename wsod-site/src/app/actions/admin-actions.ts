@@ -7,21 +7,17 @@ function normalizeSlug(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, "-");
 }
 
-export async function createBrandAction(formData: FormData) {
+export async function createBrandAction(formData: FormData): Promise<void> {
   const name = String(formData.get("name") || "").trim();
   const slug = normalizeSlug(String(formData.get("slug") || ""));
 
-  if (!name || !slug) {
-    return { ok: false, message: "Numele și slug-ul sunt obligatorii." };
-  }
+  if (!name || !slug) return;
 
   const existing = await prisma.brand.findUnique({
     where: { slug },
   });
 
-  if (existing) {
-    return { ok: false, message: "Există deja un brand cu acest slug." };
-  }
+  if (existing) return;
 
   await prisma.brand.create({
     data: {
@@ -32,17 +28,14 @@ export async function createBrandAction(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/studio-dashboard");
-  return { ok: true, message: "Brand creat." };
 }
 
-export async function updateBrandAction(formData: FormData) {
+export async function updateBrandAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") || "");
   const name = String(formData.get("name") || "").trim();
   const slug = normalizeSlug(String(formData.get("slug") || ""));
 
-  if (!id || !name || !slug) {
-    return { ok: false, message: "Date incomplete." };
-  }
+  if (!id || !name || !slug) return;
 
   const conflict = await prisma.brand.findFirst({
     where: {
@@ -51,9 +44,7 @@ export async function updateBrandAction(formData: FormData) {
     },
   });
 
-  if (conflict) {
-    return { ok: false, message: "Slug deja folosit de alt brand." };
-  }
+  if (conflict) return;
 
   await prisma.brand.update({
     where: { id },
@@ -65,15 +56,12 @@ export async function updateBrandAction(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/studio-dashboard");
-  return { ok: true, message: "Brand actualizat." };
 }
 
-export async function deleteBrandAction(formData: FormData) {
+export async function deleteBrandAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") || "");
 
-  if (!id) {
-    return { ok: false, message: "ID lipsă." };
-  }
+  if (!id) return;
 
   await prisma.brand.delete({
     where: { id },
@@ -81,10 +69,9 @@ export async function deleteBrandAction(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/studio-dashboard");
-  return { ok: true, message: "Brand șters." };
 }
 
-export async function createMediaAction(formData: FormData) {
+export async function createMediaAction(formData: FormData): Promise<void> {
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
   const category = String(formData.get("category") || "").trim();
@@ -94,17 +81,13 @@ export async function createMediaAction(formData: FormData) {
   const thumbnail = String(formData.get("thumbnail") || "").trim();
   const brandSlug = String(formData.get("brandSlug") || "").trim();
 
-  if (!title || !category || !type || !date || !brandSlug) {
-    return { ok: false, message: "Completează câmpurile obligatorii." };
-  }
+  if (!title || !category || !type || !date || !brandSlug) return;
 
   const brand = await prisma.brand.findUnique({
     where: { slug: brandSlug },
   });
 
-  if (!brand) {
-    return { ok: false, message: "Brandul selectat nu există." };
-  }
+  if (!brand) return;
 
   await prisma.mediaItem.create({
     data: {
@@ -128,16 +111,12 @@ export async function createMediaAction(formData: FormData) {
   revalidatePath("/website");
   revalidatePath("/meta-ads");
   revalidatePath(`/brand/${brand.slug}`);
-
-  return { ok: true, message: "Fișier creat." };
 }
 
-export async function deleteMediaAction(formData: FormData) {
+export async function deleteMediaAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") || "");
 
-  if (!id) {
-    return { ok: false, message: "ID lipsă." };
-  }
+  if (!id) return;
 
   await prisma.mediaItem.delete({
     where: { id },
@@ -150,6 +129,4 @@ export async function deleteMediaAction(formData: FormData) {
   revalidatePath("/website");
   revalidatePath("/meta-ads");
   revalidatePath("/studio-dashboard");
-
-  return { ok: true, message: "Fișier șters." };
 }
