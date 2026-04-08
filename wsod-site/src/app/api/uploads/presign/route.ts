@@ -28,8 +28,8 @@ export async function POST(request: Request) {
         {
           error: "Spaces client missing config",
           debug: {
-            hasEndpoint: !!process.env.DO_SPACES_ENDPOINT,
-            hasRegion: !!process.env.DO_SPACES_REGION,
+            endpoint: process.env.DO_SPACES_ENDPOINT ?? null,
+            region: process.env.DO_SPACES_REGION ?? null,
             hasKey: !!process.env.DO_SPACES_KEY,
             hasSecret: !!process.env.DO_SPACES_SECRET,
           },
@@ -43,9 +43,9 @@ export async function POST(request: Request) {
         {
           error: "Spaces public config missing",
           debug: {
-            hasBucket: !!process.env.DO_SPACES_BUCKET,
-            hasRegion: !!process.env.DO_SPACES_REGION,
-            hasCdnUrl: !!process.env.DO_SPACES_CDN_URL,
+            bucket: process.env.DO_SPACES_BUCKET ?? null,
+            region: process.env.DO_SPACES_REGION ?? null,
+            cdnUrl: process.env.DO_SPACES_CDN_URL ?? null,
           },
         },
         { status: 500 }
