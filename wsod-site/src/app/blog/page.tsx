@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { getAllBlogPosts } from "@/lib/data/blog-data";
+import BlogCard from "@/components/blog/BlogCard";
 
 export const metadata: Metadata = {
   title: "Blog | WSOD.PROD",
@@ -28,23 +29,7 @@ export default function BlogPage() {
 
         <div className="blog-list">
           {posts.map((post) => (
-            <article key={post.slug} className="blog-card">
-              <div className="blog-card-content">
-                <span className="blog-date">
-                  {new Date(post.publishedAt).toLocaleDateString("ro-RO")}
-                </span>
-
-                <h2>
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                </h2>
-
-                <p>{post.excerpt}</p>
-
-                <Link href={`/blog/${post.slug}`} className="blog-read-more">
-                  Citește articolul
-                </Link>
-              </div>
-            </article>
+            <BlogCard key={post.slug} post={post} />
           ))}
         </div>
       </section>

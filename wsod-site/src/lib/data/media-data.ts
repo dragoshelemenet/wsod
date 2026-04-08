@@ -8,6 +8,8 @@ export const mediaItems: MediaItem[] = [
     category: "video",
     type: "video",
     date: "2026-04-01",
+    fileUrl: "/media/demo/coca-cola/test-video.mp4",
+    thumbnail: "/media/demo/coca-cola/test-photo.jpg",
     description: "Spot video pentru campanie principală.",
   },
   {
@@ -17,6 +19,8 @@ export const mediaItems: MediaItem[] = [
     category: "foto",
     type: "image",
     date: "2026-03-28",
+    fileUrl: "/media/demo/coca-cola/test-photo.jpg",
+    thumbnail: "/media/demo/coca-cola/test-photo.jpg",
     description: "Cadre foto de produs pentru social media.",
   },
   {
@@ -26,6 +30,8 @@ export const mediaItems: MediaItem[] = [
     category: "grafica",
     type: "graphic",
     date: "2026-03-21",
+    fileUrl: "/media/demo/samsung/test-photo.jpg",
+    thumbnail: "/media/demo/samsung/test-photo.jpg",
     description: "Grafică promo pentru lansare.",
   },
   {
@@ -44,6 +50,7 @@ export const mediaItems: MediaItem[] = [
     category: "audio",
     type: "audio",
     date: "2026-03-11",
+    fileUrl: "/media/demo/ing-bank/test-audio.mp3",
     description: "Identitate audio și sound branding.",
   },
   {
@@ -53,6 +60,8 @@ export const mediaItems: MediaItem[] = [
     category: "video",
     type: "video",
     date: "2026-03-09",
+    fileUrl: "/media/demo/ing-bank/test-video.mp4",
+    thumbnail: "/media/demo/ing-bank/test-photo.jpg",
     description: "Montaj reels vertical pentru social media.",
   },
   {
@@ -62,6 +71,8 @@ export const mediaItems: MediaItem[] = [
     category: "foto",
     type: "image",
     date: "2026-03-02",
+    fileUrl: "/media/demo/samsung/test-photo.jpg",
+    thumbnail: "/media/demo/samsung/test-photo.jpg",
     description: "Set foto studio pentru produs.",
   },
   {
@@ -71,6 +82,8 @@ export const mediaItems: MediaItem[] = [
     category: "meta-ads",
     type: "graphic",
     date: "2026-02-24",
+    fileUrl: "/media/demo/coca-cola/test-photo.jpg",
+    thumbnail: "/media/demo/coca-cola/test-photo.jpg",
     description: "Set creativ pentru campanii Meta Ads.",
   },
 ];

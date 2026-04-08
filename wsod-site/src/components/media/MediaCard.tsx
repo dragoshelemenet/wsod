@@ -10,7 +10,18 @@ export default function MediaCard({ item }: MediaCardProps) {
   return (
     <article className="media-card">
       <div className="media-thumb">
-        <div className="media-thumb-inner">{item.type.toUpperCase()}</div>
+        <div className="media-thumb-inner">
+          {item.thumbnail ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={item.thumbnail}
+              alt={item.title}
+              className="media-thumb-image"
+            />
+          ) : (
+            item.type.toUpperCase()
+          )}
+        </div>
       </div>
 
       <div className="media-copy">
@@ -31,6 +42,19 @@ export default function MediaCard({ item }: MediaCardProps) {
             Vezi brandul
           </Link>
         </div>
+
+        {item.fileUrl && (
+          <div className="media-actions">
+            <a
+              href={item.fileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="media-open-button"
+            >
+              Deschide fișierul
+            </a>
+          </div>
+        )}
       </div>
     </article>
   );
