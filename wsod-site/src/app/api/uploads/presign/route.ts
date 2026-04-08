@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { spacesClient } from "@/lib/storage/spaces";
+import { getSpacesClient, getSpacesConfig } from "@/lib/storage/spaces";
 import { hasAdminSession } from "@/lib/auth/session";
 
 function sanitizeFileName(name: string) {
@@ -19,6 +19,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const spacesClient = getSpacesClient();
+  const spacesConfig = getSpacesConfig();
+
+  if (!spacesClient || !spacesConfig) {
+    return NextResponse.json(
+      { error: "DigitalOcean Spaces is not configured yet." },
+      { status: 500 }
+    );
+  }
+
   const body = await request.json();
   const fileName = String(body.fileName || "");
   const contentType = String(body.contentType || "application/octet-stream");
@@ -29,19 +39,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing fileName" }, { status: 400 });
   }
 
-  const bucket = process.env.DO_SPACES_BUCKET;
-  const region = process.env.DO_SPACES_REGION;
-  const cdnUrl = process.env.DO_SPACES_CDN_URL;
-
-  if (!bucket || !region || !cdnUrl) {
-    return NextResponse.json({ error: "Missing Spaces config" }, { status: 500 });
-  }
-
   const safeName = sanitizeFileName(fileName);
   const objectKey = `uploads/${brandSlug}/${category}/${Date.now()}-${safeName}`;
 
   const command = new PutObjectCommand({
-    Bucket: bucket,
+    Bucket: spacesConfig.bucket,
     Key: objectKey,
     ContentType: contentType,
   });
@@ -50,7 +52,7 @@ export async function POST(request: Request) {
     expiresIn: 60 * 5,
   });
 
-  const publicUrl = `${cdnUrl}/${objectKey}`;
+  const publicUrl = `${spacesConfig.cdnUrl}/${objectKey}`;
 
   return NextResponse.json({
     uploadUrl,
