@@ -84,6 +84,54 @@ export async function deleteBrandAction(formData: FormData) {
   return { ok: true, message: "Brand șters." };
 }
 
+export async function createMediaAction(formData: FormData) {
+  const title = String(formData.get("title") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const category = String(formData.get("category") || "").trim();
+  const type = String(formData.get("type") || "").trim();
+  const date = String(formData.get("date") || "").trim();
+  const fileUrl = String(formData.get("fileUrl") || "").trim();
+  const thumbnail = String(formData.get("thumbnail") || "").trim();
+  const brandSlug = String(formData.get("brandSlug") || "").trim();
+
+  if (!title || !category || !type || !date || !brandSlug) {
+    return { ok: false, message: "Completează câmpurile obligatorii." };
+  }
+
+  const brand = await prisma.brand.findUnique({
+    where: { slug: brandSlug },
+  });
+
+  if (!brand) {
+    return { ok: false, message: "Brandul selectat nu există." };
+  }
+
+  await prisma.mediaItem.create({
+    data: {
+      title,
+      description: description || null,
+      category,
+      type,
+      date: new Date(date),
+      fileUrl: fileUrl || null,
+      thumbnail: thumbnail || null,
+      brandId: brand.id,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/studio-dashboard");
+  revalidatePath("/video");
+  revalidatePath("/foto");
+  revalidatePath("/grafica");
+  revalidatePath("/audio");
+  revalidatePath("/website");
+  revalidatePath("/meta-ads");
+  revalidatePath(`/brand/${brand.slug}`);
+
+  return { ok: true, message: "Fișier creat." };
+}
+
 export async function deleteMediaAction(formData: FormData) {
   const id = String(formData.get("id") || "");
 

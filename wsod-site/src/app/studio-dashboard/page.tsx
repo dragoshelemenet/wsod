@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import BrandForm from "@/components/admin/BrandForm";
-import UploadForm from "@/components/admin/UploadForm";
+import CreateMediaForm from "@/components/admin/CreateMediaForm";
 import AdminBrandManager from "@/components/admin/AdminBrandManager";
 import AdminMediaManager from "@/components/admin/AdminMediaManager";
 import { hasAdminSession } from "@/lib/auth/session";
@@ -43,8 +43,8 @@ export default async function StudioDashboardPage() {
         </div>
 
         <div className="admin-grid">
-          <BrandForm brands={brands} onBrandSelect={() => {}} />
-          <UploadForm selectedBrand="" />
+          <BrandForm brands={brands} />
+          <CreateMediaForm brands={brands} />
         </div>
 
         <div className="admin-grid admin-grid-bottom">

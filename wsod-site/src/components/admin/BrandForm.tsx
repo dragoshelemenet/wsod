@@ -8,10 +8,9 @@ interface BrandFormProps {
     name: string;
     slug: string;
   }[];
-  onBrandSelect: (brandSlug: string) => void;
 }
 
-export default function BrandForm({ brands, onBrandSelect }: BrandFormProps) {
+export default function BrandForm({ brands }: BrandFormProps) {
   const [mode, setMode] = useState<"existing" | "new">("existing");
   const [selectedBrand, setSelectedBrand] = useState(brands[0]?.slug ?? "");
   const [newBrandName, setNewBrandName] = useState("");
@@ -23,12 +22,11 @@ export default function BrandForm({ brands, onBrandSelect }: BrandFormProps) {
 
   function handleUseExisting(brandSlug: string) {
     setSelectedBrand(brandSlug);
-    onBrandSelect(brandSlug);
   }
 
   function handleUseNewBrandPreview() {
     if (!normalizedNewSlug || !newBrandName.trim()) return;
-    onBrandSelect(normalizedNewSlug);
+    setSelectedBrand(normalizedNewSlug);
   }
 
   return (
@@ -74,6 +72,10 @@ export default function BrandForm({ brands, onBrandSelect }: BrandFormProps) {
           >
             Selectează brandul
           </button>
+
+          <p className="admin-helper-text">
+            Brand selectat: <strong>{selectedBrand || "—"}</strong>
+          </p>
         </div>
       ) : (
         <div className="admin-stack">
@@ -110,6 +112,10 @@ export default function BrandForm({ brands, onBrandSelect }: BrandFormProps) {
           >
             Folosește preview brand nou
           </button>
+
+          <p className="admin-helper-text">
+            Brand preview selectat: <strong>{normalizedNewSlug || "—"}</strong>
+          </p>
         </div>
       )}
     </div>

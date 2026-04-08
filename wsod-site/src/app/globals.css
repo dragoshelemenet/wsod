@@ -767,3 +767,7 @@ body {
   margin-bottom: 14px;
   letter-spacing: -0.03em;
 }
+.admin-success {
+  color: #b8ffcc;
+  font-size: 14px;
+}
