@@ -20,10 +20,7 @@ export async function createBrandAction(formData: FormData): Promise<void> {
   if (existing) return;
 
   await prisma.brand.create({
-    data: {
-      name,
-      slug,
-    },
+    data: { name, slug },
   });
 
   revalidatePath("/");
@@ -48,10 +45,7 @@ export async function updateBrandAction(formData: FormData): Promise<void> {
 
   await prisma.brand.update({
     where: { id },
-    data: {
-      name,
-      slug,
-    },
+    data: { name, slug },
   });
 
   revalidatePath("/");
@@ -60,7 +54,6 @@ export async function updateBrandAction(formData: FormData): Promise<void> {
 
 export async function deleteBrandAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") || "");
-
   if (!id) return;
 
   await prisma.brand.delete({
@@ -115,7 +108,6 @@ export async function createMediaAction(formData: FormData): Promise<void> {
 
 export async function deleteMediaAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") || "");
-
   if (!id) return;
 
   await prisma.mediaItem.delete({
