@@ -751,3 +751,19 @@ body {
     align-items: center;
   }
 }
+.admin-secondary-button {
+  cursor: pointer;
+}
+.admin-list-item-column {
+  grid-template-columns: 1fr;
+}
+
+.admin-inner-card {
+  padding: 16px;
+}
+
+.admin-subtitle {
+  font-size: 20px;
+  margin-bottom: 14px;
+  letter-spacing: -0.03em;
+}

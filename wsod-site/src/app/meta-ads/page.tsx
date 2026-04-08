@@ -1,9 +1,19 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategory } from "@/lib/data/media-data";
+import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
-export default function MetaAdsPage() {
-  const items = getMediaByCategory("meta-ads");
+export const metadata: Metadata = {
+  title: "Meta Ads | WSOD.PROD",
+  description:
+    "Portofoliu Meta Ads WSOD.PROD: materiale și creative din toate brandurile, ordonate după dată.",
+  alternates: {
+    canonical: "/meta-ads",
+  },
+};
+
+export default async function MetaAdsPage() {
+  const items = await getMediaByCategoryFromDb("meta-ads");
 
   return (
     <main className="inner-page">

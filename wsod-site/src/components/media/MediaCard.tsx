@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getBrandNameBySlug, getCategoryLabel } from "@/lib/data/home-data";
-import { MediaItem } from "@/lib/types";
+import { getCategoryLabel } from "@/lib/data/home-data";
+import { DbMediaCardItem } from "@/lib/types";
 
 interface MediaCardProps {
-  item: MediaItem;
+  item: DbMediaCardItem;
 }
 
 export default function MediaCard({ item }: MediaCardProps) {
@@ -34,11 +34,9 @@ export default function MediaCard({ item }: MediaCardProps) {
         </div>
 
         <div className="media-brand-row">
-          <span className="brand-chip">
-            Brand: {getBrandNameBySlug(item.brandSlug)}
-          </span>
+          <span className="brand-chip">Brand: {item.brand.name}</span>
 
-          <Link href={`/brand/${item.brandSlug}`} className="media-link">
+          <Link href={`/brand/${item.brand.slug}`} className="media-link">
             Vezi brandul
           </Link>
         </div>

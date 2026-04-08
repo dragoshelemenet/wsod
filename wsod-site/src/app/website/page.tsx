@@ -1,9 +1,19 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategory } from "@/lib/data/media-data";
+import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
-export default function WebsitePage() {
-  const items = getMediaByCategory("website");
+export const metadata: Metadata = {
+  title: "Website | WSOD.PROD",
+  description:
+    "Portofoliu website WSOD.PROD: proiecte web din toate brandurile, ordonate după dată.",
+  alternates: {
+    canonical: "/website",
+  },
+};
+
+export default async function WebsitePage() {
+  const items = await getMediaByCategoryFromDb("website");
 
   return (
     <main className="inner-page">

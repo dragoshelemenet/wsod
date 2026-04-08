@@ -9,14 +9,16 @@ export const homeCategories: Category[] = [
   { title: "AUDIO", slug: "audio" },
 ];
 
-export const featuredBrands: Brand[] = [
+export const defaultFeaturedBrands: Brand[] = [
   { name: "Coca-Cola", slug: "coca-cola" },
   { name: "Samsung", slug: "samsung" },
   { name: "ING Bank", slug: "ing-bank" },
 ];
 
-export function getBrandNameBySlug(slug: string) {
-  return featuredBrands.find((brand) => brand.slug === slug)?.name ?? slug;
+export const featuredBrands = defaultFeaturedBrands;
+
+export function getBrandNameBySlug(slug: string, brands: Brand[] = featuredBrands) {
+  return brands.find((brand) => brand.slug === slug)?.name ?? slug;
 }
 
 export function getCategoryLabel(slug: string) {

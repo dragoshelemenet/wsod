@@ -1,9 +1,19 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategory } from "@/lib/data/media-data";
+import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
-export default function AudioPage() {
-  const items = getMediaByCategory("audio");
+export const metadata: Metadata = {
+  title: "Audio | WSOD.PROD",
+  description:
+    "Portofoliu audio WSOD.PROD: materiale audio din toate brandurile, ordonate după dată.",
+  alternates: {
+    canonical: "/audio",
+  },
+};
+
+export default async function AudioPage() {
+  const items = await getMediaByCategoryFromDb("audio");
 
   return (
     <main className="inner-page">
@@ -19,7 +29,10 @@ export default function AudioPage() {
           Toate materialele audio din toate brandurile, ordonate după dată.
         </p>
 
-        <MediaGrid items={items} emptyText="Nu există materiale audio momentan." />
+        <MediaGrid
+          items={items}
+          emptyText="Nu există materiale audio momentan."
+        />
       </section>
     </main>
   );

@@ -1,23 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { featuredBrands } from "@/lib/data/home-data";
 
 interface BrandFormProps {
+  brands: {
+    id: string;
+    name: string;
+    slug: string;
+  }[];
   onBrandSelect: (brandSlug: string) => void;
 }
 
-export default function BrandForm({ onBrandSelect }: BrandFormProps) {
+export default function BrandForm({ brands, onBrandSelect }: BrandFormProps) {
   const [mode, setMode] = useState<"existing" | "new">("existing");
-  const [selectedBrand, setSelectedBrand] = useState(featuredBrands[0]?.slug ?? "");
+  const [selectedBrand, setSelectedBrand] = useState(brands[0]?.slug ?? "");
   const [newBrandName, setNewBrandName] = useState("");
   const [newBrandSlug, setNewBrandSlug] = useState("");
 
   const normalizedNewSlug = useMemo(() => {
-    return newBrandSlug
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-");
+    return newBrandSlug.trim().toLowerCase().replace(/\s+/g, "-");
   }, [newBrandSlug]);
 
   function handleUseExisting(brandSlug: string) {
@@ -25,8 +26,8 @@ export default function BrandForm({ onBrandSelect }: BrandFormProps) {
     onBrandSelect(brandSlug);
   }
 
-  function handleUseNewBrand() {
-    if (!normalizedNewSlug) return;
+  function handleUseNewBrandPreview() {
+    if (!normalizedNewSlug || !newBrandName.trim()) return;
     onBrandSelect(normalizedNewSlug);
   }
 
@@ -59,8 +60,8 @@ export default function BrandForm({ onBrandSelect }: BrandFormProps) {
             value={selectedBrand}
             onChange={(event) => handleUseExisting(event.target.value)}
           >
-            {featuredBrands.map((brand) => (
-              <option key={brand.slug} value={brand.slug}>
+            {brands.map((brand) => (
+              <option key={brand.id} value={brand.slug}>
                 {brand.name}
               </option>
             ))}
@@ -77,9 +78,9 @@ export default function BrandForm({ onBrandSelect }: BrandFormProps) {
       ) : (
         <div className="admin-stack">
           <div className="admin-form-field">
-            <label htmlFor="new-brand-name">Nume brand</label>
+            <label htmlFor="new-brand-name-preview">Nume brand</label>
             <input
-              id="new-brand-name"
+              id="new-brand-name-preview"
               type="text"
               value={newBrandName}
               onChange={(event) => setNewBrandName(event.target.value)}
@@ -88,9 +89,9 @@ export default function BrandForm({ onBrandSelect }: BrandFormProps) {
           </div>
 
           <div className="admin-form-field">
-            <label htmlFor="new-brand-slug">Slug brand</label>
+            <label htmlFor="new-brand-slug-preview">Slug brand</label>
             <input
-              id="new-brand-slug"
+              id="new-brand-slug-preview"
               type="text"
               value={newBrandSlug}
               onChange={(event) => setNewBrandSlug(event.target.value)}
@@ -99,15 +100,15 @@ export default function BrandForm({ onBrandSelect }: BrandFormProps) {
           </div>
 
           <p className="admin-helper-text">
-            Slug folosit momentan: <strong>{normalizedNewSlug || "—"}</strong>
+            Pentru creare reală folosește secțiunea „Creează brand nou” de mai jos.
           </p>
 
           <button
             type="button"
             className="admin-secondary-button"
-            onClick={handleUseNewBrand}
+            onClick={handleUseNewBrandPreview}
           >
-            Folosește acest brand nou
+            Folosește preview brand nou
           </button>
         </div>
       )}

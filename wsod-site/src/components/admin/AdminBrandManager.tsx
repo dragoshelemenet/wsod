@@ -1,79 +1,10 @@
-"use client";
+import { prisma } from "@/lib/db/prisma";
+import { createBrandAction, deleteBrandAction, updateBrandAction } from "@/app/actions/admin-actions";
 
-import { useMemo, useState } from "react";
-import { featuredBrands } from "@/lib/data/home-data";
-
-interface EditableBrand {
-  name: string;
-  slug: string;
-  hidden?: boolean;
-}
-
-export default function AdminBrandManager() {
-  const [brands, setBrands] = useState<EditableBrand[]>(
-    featuredBrands.map((brand) => ({
-      ...brand,
-      hidden: false,
-    }))
-  );
-
-  const [editingSlug, setEditingSlug] = useState<string | null>(null);
-  const [editedName, setEditedName] = useState("");
-  const [editedSlug, setEditedSlug] = useState("");
-
-  const visibleBrands = useMemo(
-    () => brands.filter((brand) => !brand.hidden),
-    [brands]
-  );
-
-  function startEdit(brand: EditableBrand) {
-    setEditingSlug(brand.slug);
-    setEditedName(brand.name);
-    setEditedSlug(brand.slug);
-  }
-
-  function saveEdit() {
-    if (!editingSlug) return;
-
-    const normalizedSlug = editedSlug.trim().toLowerCase().replace(/\s+/g, "-");
-    const normalizedName = editedName.trim();
-
-    if (!normalizedSlug || !normalizedName) return;
-
-    setBrands((current) =>
-      current.map((brand) =>
-        brand.slug === editingSlug
-          ? {
-              ...brand,
-              name: normalizedName,
-              slug: normalizedSlug,
-            }
-          : brand
-      )
-    );
-
-    setEditingSlug(null);
-    setEditedName("");
-    setEditedSlug("");
-  }
-
-  function cancelEdit() {
-    setEditingSlug(null);
-    setEditedName("");
-    setEditedSlug("");
-  }
-
-  function toggleHide(slug: string) {
-    setBrands((current) =>
-      current.map((brand) =>
-        brand.slug === slug ? { ...brand, hidden: !brand.hidden } : brand
-      )
-    );
-  }
-
-  function removeBrand(slug: string) {
-    setBrands((current) => current.filter((brand) => brand.slug !== slug));
-  }
+export default async function AdminBrandManager() {
+  const brands = await prisma.brand.findMany({
+    orderBy: { name: "asc" },
+  });
 
   return (
     <div className="admin-panel-card">
@@ -83,101 +14,82 @@ export default function AdminBrandManager() {
 
       <div className="admin-stack">
         <p className="admin-helper-text">
-          Aici simulezi editarea brandurilor: rename, hide și delete. În etapa
-          următoare le legăm la date reale.
+          Brandurile de aici sunt acum citite și modificate direct din baza de date.
         </p>
 
         <div className="admin-list">
-          {brands.map((brand) => {
-            const isEditing = editingSlug === brand.slug;
+          {brands.map((brand) => (
+            <div key={brand.id} className="admin-list-item admin-list-item-column">
+              <form action={updateBrandAction} className="admin-stack">
+                <input type="hidden" name="id" value={brand.id} />
 
-            return (
-              <div key={brand.slug} className="admin-list-item">
-                {isEditing ? (
-                  <div className="admin-stack">
-                    <div className="admin-form-field">
-                      <label htmlFor={`name-${brand.slug}`}>Nume brand</label>
-                      <input
-                        id={`name-${brand.slug}`}
-                        type="text"
-                        value={editedName}
-                        onChange={(event) => setEditedName(event.target.value)}
-                      />
-                    </div>
+                <div className="admin-form-field">
+                  <label htmlFor={`name-${brand.id}`}>Nume brand</label>
+                  <input
+                    id={`name-${brand.id}`}
+                    name="name"
+                    type="text"
+                    defaultValue={brand.name}
+                  />
+                </div>
 
-                    <div className="admin-form-field">
-                      <label htmlFor={`slug-${brand.slug}`}>Slug brand</label>
-                      <input
-                        id={`slug-${brand.slug}`}
-                        type="text"
-                        value={editedSlug}
-                        onChange={(event) => setEditedSlug(event.target.value)}
-                      />
-                    </div>
+                <div className="admin-form-field">
+                  <label htmlFor={`slug-${brand.id}`}>Slug brand</label>
+                  <input
+                    id={`slug-${brand.id}`}
+                    name="slug"
+                    type="text"
+                    defaultValue={brand.slug}
+                  />
+                </div>
 
-                    <div className="admin-inline-actions">
-                      <button
-                        type="button"
-                        className="admin-secondary-button"
-                        onClick={saveEdit}
-                      >
-                        Salvează
-                      </button>
-                      <button
-                        type="button"
-                        className="admin-ghost-button"
-                        onClick={cancelEdit}
-                      >
-                        Anulează
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="admin-list-copy">
-                      <strong>{brand.name}</strong>
-                      <span>
-                        /brand/{brand.slug} {brand.hidden ? "• ascuns" : ""}
-                      </span>
-                    </div>
+                <div className="admin-inline-actions">
+                  <button type="submit" className="admin-secondary-button">
+                    Salvează
+                  </button>
+                </div>
+              </form>
 
-                    <div className="admin-inline-actions">
-                      <button
-                        type="button"
-                        className="admin-ghost-button"
-                        onClick={() => startEdit(brand)}
-                      >
-                        Rename
-                      </button>
-                      <button
-                        type="button"
-                        className="admin-ghost-button"
-                        onClick={() => toggleHide(brand.slug)}
-                      >
-                        {brand.hidden ? "Arată" : "Ascunde"}
-                      </button>
-                      <button
-                        type="button"
-                        className="admin-danger-button"
-                        onClick={() => removeBrand(brand.slug)}
-                      >
-                        Șterge
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            );
-          })}
+              <form action={deleteBrandAction}>
+                <input type="hidden" name="id" value={brand.id} />
+                <button type="submit" className="admin-danger-button">
+                  Șterge brand
+                </button>
+              </form>
+            </div>
+          ))}
         </div>
 
-        <div className="admin-summary-box">
-          <p>
-            <strong>Branduri vizibile:</strong> {visibleBrands.length}
-          </p>
-          <p>
-            <strong>Branduri totale:</strong> {brands.length}
-          </p>
+        <div className="admin-panel-card admin-inner-card">
+          <h3 className="admin-subtitle">Creează brand nou</h3>
+
+          <form action={createBrandAction} className="admin-stack">
+            <div className="admin-form-field">
+              <label htmlFor="create-brand-name">Nume brand</label>
+              <input
+                id="create-brand-name"
+                name="name"
+                type="text"
+                placeholder="Ex: Mosimo Barbershop"
+              />
+            </div>
+
+            <div className="admin-form-field">
+              <label htmlFor="create-brand-slug">Slug brand</label>
+              <input
+                id="create-brand-slug"
+                name="slug"
+                type="text"
+                placeholder="Ex: mosimo-barbershop"
+              />
+            </div>
+
+            <div className="admin-inline-actions">
+              <button type="submit" className="admin-secondary-button">
+                Creează brand
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { MediaItem } from "@/lib/types";
 
-export const mediaItems: MediaItem[] = [
+export const defaultMediaItems: MediaItem[] = [
   {
     id: "1",
     title: "Coca-Cola Hero Campaign",
@@ -88,14 +88,16 @@ export const mediaItems: MediaItem[] = [
   },
 ];
 
-export function getMediaByCategory(category: string) {
-  return mediaItems
+export const mediaItems = defaultMediaItems;
+
+export function getMediaByCategory(category: string, items: MediaItem[] = mediaItems) {
+  return items
     .filter((item) => item.category === category)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date));
 }
 
-export function getMediaByBrand(brandSlug: string) {
-  return mediaItems
+export function getMediaByBrand(brandSlug: string, items: MediaItem[] = mediaItems) {
+  return items
     .filter((item) => item.brandSlug === brandSlug)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date));
 }

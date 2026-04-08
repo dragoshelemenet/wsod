@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/data/blog-data";
+import { createBlogPostingSchema } from "@/lib/seo/schema";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -30,6 +31,17 @@ export async function generateMetadata({
   return {
     title: post.seoTitle ?? post.title,
     description: post.metaDescription ?? post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.seoTitle ?? post.title,
+      description: post.metaDescription ?? post.excerpt,
+      url: `https://example.com/blog/${post.slug}`,
+      siteName: "WSOD.PROD",
+      locale: "ro_RO",
+      type: "article",
+    },
   };
 }
 
@@ -40,6 +52,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+
+  const blogSchema = createBlogPostingSchema({
+    title: post.seoTitle ?? post.title,
+    description: post.metaDescription ?? post.excerpt,
+    url: `https://example.com/blog/${post.slug}`,
+    datePublished: post.publishedAt,
+  });
 
   return (
     <main className="inner-page">
@@ -59,6 +78,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div
           className="blog-post-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(blogSchema),
+          }}
         />
       </article>
     </main>

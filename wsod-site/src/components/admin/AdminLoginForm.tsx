@@ -1,57 +1,32 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { DASHBOARD_ROUTE, validateMockLogin } from "@/lib/auth/mock-auth";
+import { useActionState } from "react";
+import { loginAction } from "@/app/actions/auth-actions";
+
+const initialState = {
+  success: false,
+  message: "",
+};
 
 export default function AdminLoginForm() {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorText, setErrorText] = useState("");
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const isValid = validateMockLogin(username, password);
-
-    if (!isValid) {
-      setErrorText("Date incorecte. Încearcă din nou.");
-      return;
-    }
-
-    localStorage.setItem("wsod_admin_logged_in", "true");
-    router.push(DASHBOARD_ROUTE);
-  }
+  const [state, formAction, isPending] = useActionState(loginAction, initialState);
 
   return (
-    <form className="admin-form" onSubmit={handleSubmit}>
+    <form className="admin-form" action={formAction}>
       <div className="admin-form-field">
         <label htmlFor="username">Utilizator</label>
-        <input
-          id="username"
-          type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="admin"
-        />
+        <input id="username" name="username" type="text" placeholder="admin" />
       </div>
 
       <div className="admin-form-field">
         <label htmlFor="password">Parolă</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="••••••••"
-        />
+        <input id="password" name="password" type="password" placeholder="••••••••" />
       </div>
 
-      {errorText ? <p className="admin-error">{errorText}</p> : null}
+      {state?.message ? <p className="admin-error">{state.message}</p> : null}
 
-      <button type="submit" className="admin-submit">
-        Intră în panou
+      <button type="submit" className="admin-submit" disabled={isPending}>
+        {isPending ? "Se verifică..." : "Intră în panou"}
       </button>
     </form>
   );

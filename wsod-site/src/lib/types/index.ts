@@ -37,3 +37,18 @@ export interface BlogPost {
   seoTitle?: string;
   metaDescription?: string;
 }
+
+export interface DbMediaCardItem {
+  id: string;
+  title: string;
+  category: string;
+  type: string;
+  date: Date;
+  thumbnail: string | null;
+  fileUrl: string | null;
+  description: string | null;
+  brand: {
+    name: string;
+    slug: string;
+  };
+}

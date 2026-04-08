@@ -1,8 +1,8 @@
 import MediaCard from "@/components/media/MediaCard";
-import { MediaItem } from "@/lib/types";
+import { DbMediaCardItem } from "@/lib/types";
 
 interface MediaGridProps {
-  items: MediaItem[];
+  items: DbMediaCardItem[];
   emptyText: string;
 }
 

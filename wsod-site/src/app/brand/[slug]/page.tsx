@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MediaGrid from "@/components/media/MediaGrid";
-import { featuredBrands, getBrandNameBySlug } from "@/lib/data/home-data";
-import { getMediaByBrand } from "@/lib/data/media-data";
+import { getBrandBySlugFromDb, getBrandsFromDb, getMediaByBrandSlugFromDb } from "@/lib/data/db-queries";
 
 interface BrandPageProps {
   params: Promise<{
@@ -10,17 +10,44 @@ interface BrandPageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  const brands = await getBrandsFromDb();
+
+  return brands.map((brand) => ({
+    slug: brand.slug,
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: BrandPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const brand = await getBrandBySlugFromDb(slug);
+
+  if (!brand) {
+    return {
+      title: "Brand inexistent | WSOD.PROD",
+    };
+  }
+
+  return {
+    title: `${brand.name} | Portofoliu brand | WSOD.PROD`,
+    description: `Materiale video, foto, grafică, audio și website asociate brandului ${brand.name}.`,
+    alternates: {
+      canonical: `/brand/${slug}`,
+    },
+  };
+}
+
 export default async function BrandPage({ params }: BrandPageProps) {
   const { slug } = await params;
+  const brand = await getBrandBySlugFromDb(slug);
 
-  const brandExists = featuredBrands.some((brand) => brand.slug === slug);
-
-  if (!brandExists) {
+  if (!brand) {
     notFound();
   }
 
-  const items = getMediaByBrand(slug);
-  const brandName = getBrandNameBySlug(slug);
+  const items = await getMediaByBrandSlugFromDb(slug);
 
   return (
     <main className="inner-page">
@@ -31,7 +58,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
       </div>
 
       <section className="inner-section">
-        <h1>{brandName}</h1>
+        <h1>{brand.name}</h1>
         <p className="inner-description">
           Toate materialele asociate acestui brand, grupate într-o singură pagină.
         </p>

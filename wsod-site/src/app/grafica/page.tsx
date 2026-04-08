@@ -1,9 +1,19 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategory } from "@/lib/data/media-data";
+import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
-export default function GraficaPage() {
-  const items = getMediaByCategory("grafica");
+export const metadata: Metadata = {
+  title: "Grafică | WSOD.PROD",
+  description:
+    "Portofoliu grafică WSOD.PROD: materiale grafice din toate brandurile, ordonate după dată.",
+  alternates: {
+    canonical: "/grafica",
+  },
+};
+
+export default async function GraficaPage() {
+  const items = await getMediaByCategoryFromDb("grafica");
 
   return (
     <main className="inner-page">

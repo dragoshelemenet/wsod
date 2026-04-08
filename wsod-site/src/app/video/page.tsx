@@ -1,9 +1,19 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategory } from "@/lib/data/media-data";
+import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
-export default function VideoPage() {
-  const items = getMediaByCategory("video");
+export const metadata: Metadata = {
+  title: "Video | WSOD.PROD",
+  description:
+    "Portofoliu video WSOD.PROD: materiale video din toate brandurile, ordonate după dată.",
+  alternates: {
+    canonical: "/video",
+  },
+};
+
+export default async function VideoPage() {
+  const items = await getMediaByCategoryFromDb("video");
 
   return (
     <main className="inner-page">

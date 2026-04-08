@@ -1,44 +1,23 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import BrandForm from "@/components/admin/BrandForm";
 import UploadForm from "@/components/admin/UploadForm";
 import AdminBrandManager from "@/components/admin/AdminBrandManager";
 import AdminMediaManager from "@/components/admin/AdminMediaManager";
-import { ADMIN_ROUTE } from "@/lib/auth/mock-auth";
+import { hasAdminSession } from "@/lib/auth/session";
+import { logoutAction } from "@/app/actions/auth-actions";
+import { prisma } from "@/lib/db/prisma";
 
-export default function StudioDashboardPage() {
-  const router = useRouter();
-  const [isReady, setIsReady] = useState(false);
-  const [selectedBrand, setSelectedBrand] = useState("");
+export default async function StudioDashboardPage() {
+  const isLoggedIn = await hasAdminSession();
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("wsod_admin_logged_in") === "true";
-
-    if (!isLoggedIn) {
-      router.replace(ADMIN_ROUTE);
-      return;
-    }
-
-    setIsReady(true);
-  }, [router]);
-
-  function handleLogout() {
-    localStorage.removeItem("wsod_admin_logged_in");
-    router.push(ADMIN_ROUTE);
+  if (!isLoggedIn) {
+    redirect("/studio-login");
   }
 
-  if (!isReady) {
-    return (
-      <main className="inner-page">
-        <section className="inner-section admin-page-shell">
-          <p className="inner-description">Se verifică accesul...</p>
-        </section>
-      </main>
-    );
-  }
+  const brands = await prisma.brand.findMany({
+    orderBy: { name: "asc" },
+  });
 
   return (
     <main className="inner-page">
@@ -47,9 +26,11 @@ export default function StudioDashboardPage() {
           ← Acasă
         </Link>
 
-        <button type="button" className="admin-logout" onClick={handleLogout}>
-          Logout
-        </button>
+        <form action={logoutAction}>
+          <button type="submit" className="admin-logout">
+            Logout
+          </button>
+        </form>
       </div>
 
       <section className="inner-section admin-page-shell">
@@ -57,14 +38,13 @@ export default function StudioDashboardPage() {
           <span className="admin-kicker">Panou privat</span>
           <h1>Studio Dashboard</h1>
           <p className="inner-description">
-            Fluxul tău: selectezi brand existent sau creezi brand nou, alegi
-            categoria, apoi upload-ul se deblochează.
+            Acum brandurile și fișierele sunt citite/scrise din baza de date.
           </p>
         </div>
 
         <div className="admin-grid">
-          <BrandForm onBrandSelect={setSelectedBrand} />
-          <UploadForm selectedBrand={selectedBrand} />
+          <BrandForm brands={brands} onBrandSelect={() => {}} />
+          <UploadForm selectedBrand="" />
         </div>
 
         <div className="admin-grid admin-grid-bottom">
