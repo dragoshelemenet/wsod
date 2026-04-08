@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BrandForm from "@/components/admin/BrandForm";
 import UploadForm from "@/components/admin/UploadForm";
+import AdminBrandManager from "@/components/admin/AdminBrandManager";
+import AdminMediaManager from "@/components/admin/AdminMediaManager";
 import { ADMIN_ROUTE } from "@/lib/auth/mock-auth";
 
 export default function StudioDashboardPage() {
@@ -63,6 +65,11 @@ export default function StudioDashboardPage() {
         <div className="admin-grid">
           <BrandForm onBrandSelect={setSelectedBrand} />
           <UploadForm selectedBrand={selectedBrand} />
+        </div>
+
+        <div className="admin-grid admin-grid-bottom">
+          <AdminBrandManager />
+          <AdminMediaManager />
         </div>
       </section>
     </main>

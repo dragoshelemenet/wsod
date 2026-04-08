@@ -689,3 +689,65 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+.admin-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-list-item {
+  display: grid;
+  gap: 14px;
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-list-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-list-copy strong {
+  font-size: 16px;
+}
+
+.admin-list-copy span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.admin-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-ghost-button,
+.admin-danger-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.admin-ghost-button {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-danger-button {
+  background: rgba(255, 120, 120, 0.18);
+}
+
+.admin-grid-bottom {
+  margin-top: 18px;
+}
+
+@media (min-width: 900px) {
+  .admin-list-item {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
