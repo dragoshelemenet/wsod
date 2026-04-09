@@ -15,7 +15,6 @@ interface OwnerFolderCardProps {
 export default function OwnerFolderCard({
   title,
   href,
-  subtitle,
   imageUrl,
   previewImages = [],
   compact = false,
@@ -27,8 +26,7 @@ export default function OwnerFolderCard({
   }, [imageUrl, previewImages]);
 
   const [failed, setFailed] = useState<string[]>([]);
-
-  const visibleImages = imageCandidates.filter((src) => !failed.includes(src));
+  const visibleImages = imageCandidates.filter((src) => !failed.includes(src)).slice(0, 3);
 
   return (
     <Link
@@ -37,22 +35,45 @@ export default function OwnerFolderCard({
     >
       <div className="owner-folder-visual">
         {visibleImages.length ? (
-          <div className="owner-folder-stack" aria-hidden="true">
-            {visibleImages.slice(0, 3).map((src, index) => (
-              <div
-                key={`${src}-${index}`}
-                className={`owner-folder-stack-item owner-folder-stack-item-${index + 1}`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt=""
-                  className="owner-folder-image"
-                  loading="lazy"
-                  onError={() => setFailed((current) => [...current, src])}
-                />
-              </div>
-            ))}
+          <div className="owner-folder-collage" aria-hidden="true">
+            <div className="owner-folder-collage-main">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={visibleImages[0]}
+                alt=""
+                className="owner-folder-image owner-folder-image-main"
+                loading="lazy"
+                onError={() => setFailed((current) => [...current, visibleImages[0]])}
+              />
+            </div>
+
+            <div className="owner-folder-collage-side">
+              {visibleImages[1] ? (
+                <div className="owner-folder-collage-small">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={visibleImages[1]}
+                    alt=""
+                    className="owner-folder-image"
+                    loading="lazy"
+                    onError={() => setFailed((current) => [...current, visibleImages[1]])}
+                  />
+                </div>
+              ) : null}
+
+              {visibleImages[2] ? (
+                <div className="owner-folder-collage-small">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={visibleImages[2]}
+                    alt=""
+                    className="owner-folder-image"
+                    loading="lazy"
+                    onError={() => setFailed((current) => [...current, visibleImages[2]])}
+                  />
+                </div>
+              ) : null}
+            </div>
           </div>
         ) : (
           <div className="owner-folder-placeholder">Folder</div>
@@ -61,7 +82,6 @@ export default function OwnerFolderCard({
 
       <div className="owner-folder-copy">
         <strong>{title}</strong>
-        {!compact && subtitle ? <span>{subtitle}</span> : null}
       </div>
     </Link>
   );

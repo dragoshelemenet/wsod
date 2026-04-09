@@ -70,9 +70,7 @@ export default function MediaCard({ item }: MediaCardProps) {
             </div>
           </div>
 
-          <div className="media-card-photo-caption">
-            <strong>{item.fileNameOriginal || item.title}</strong>
-          </div>
+          <div className="media-card-photo-caption" />
         </Link>
       </article>
     );
