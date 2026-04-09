@@ -2124,3 +2124,87 @@ img {
 .hero-title-lines span {
   display: block;
 }
+
+.admin-dropzone {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 148px;
+  border-radius: 20px;
+  border: 1px dashed rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.admin-dropzone:hover {
+  border-color: rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.05);
+}
+
+.admin-dropzone.is-drag-over {
+  border-color: rgba(179, 110, 255, 0.9);
+  background: rgba(179, 110, 255, 0.08);
+  transform: scale(1.01);
+}
+
+.admin-dropzone-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.admin-dropzone-copy {
+  display: grid;
+  gap: 6px;
+  text-align: center;
+  padding: 20px;
+  pointer-events: none;
+}
+
+.admin-dropzone-copy strong {
+  font-size: 1rem;
+}
+
+.admin-dropzone-copy span {
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.66);
+}
+
+.admin-selected-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.admin-selected-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.05);
+}
+
+.admin-selected-file-chip span {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-file-chip-remove {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  cursor: pointer;
+  line-height: 1;
+}

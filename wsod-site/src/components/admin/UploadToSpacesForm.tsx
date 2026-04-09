@@ -121,6 +121,7 @@ export default function UploadToSpacesForm({
   const [date, setDate] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const [groupLabel, setGroupLabel] = useState("");
   const [groupOrder, setGroupOrder] = useState(0);
@@ -205,6 +206,29 @@ export default function UploadToSpacesForm({
   }, [category, ownerType]);
 
   const inferredType = useMemo(() => inferTypeFromCategory(category), [category]);
+
+  function addFiles(nextFiles: File[]) {
+    if (!nextFiles.length) return;
+
+    setSelectedFiles((current) => {
+      const seen = new Set(current.map((file) => `${file.name}-${file.size}-${file.lastModified}`));
+      const merged = [...current];
+
+      for (const file of nextFiles) {
+        const key = `${file.name}-${file.size}-${file.lastModified}`;
+        if (!seen.has(key)) {
+          merged.push(file);
+          seen.add(key);
+        }
+      }
+
+      return merged;
+    });
+  }
+
+  function removeFile(indexToRemove: number) {
+    setSelectedFiles((current) => current.filter((_, index) => index !== indexToRemove));
+  }
 
   async function handleCreateModel() {
     if (!newModelName.trim()) {
@@ -566,6 +590,7 @@ export default function UploadToSpacesForm({
       setGroupLabel("");
       setGroupOrder(0);
       setGraphicKind("");
+      setIsDragOver(false);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
     } finally {
@@ -833,18 +858,60 @@ export default function UploadToSpacesForm({
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="file">Fișiere</label>
-          <input
-            id="file"
-            type="file"
-            multiple
-            onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
-            required
-          />
+          <label>Fișiere</label>
+
+          <label
+            className={`admin-dropzone${isDragOver ? " is-drag-over" : ""}`}
+            onDragOver={(event) => {
+              event.preventDefault();
+              setIsDragOver(true);
+            }}
+            onDragEnter={(event) => {
+              event.preventDefault();
+              setIsDragOver(true);
+            }}
+            onDragLeave={(event) => {
+              event.preventDefault();
+              if (event.currentTarget === event.target) {
+                setIsDragOver(false);
+              }
+            }}
+            onDrop={(event) => {
+              event.preventDefault();
+              setIsDragOver(false);
+              addFiles(Array.from(event.dataTransfer.files ?? []));
+            }}
+          >
+            <input
+              id="file"
+              type="file"
+              multiple
+              className="admin-dropzone-input"
+              onChange={(e) => addFiles(Array.from(e.target.files ?? []))}
+              required={!selectedFiles.length}
+            />
+            <div className="admin-dropzone-copy">
+              <strong>Trage imaginile aici</strong>
+              <span>sau apasă pentru a selecta mai multe fișiere</span>
+            </div>
+          </label>
+
           {selectedFiles.length ? (
-            <span className="admin-helper-text">
-              Selectate: {selectedFiles.length} fișiere
-            </span>
+            <div className="admin-selected-files">
+              {selectedFiles.map((file, index) => (
+                <div key={`${file.name}-${file.size}-${file.lastModified}`} className="admin-selected-file-chip">
+                  <span>{file.name}</span>
+                  <button
+                    type="button"
+                    className="admin-file-chip-remove"
+                    onClick={() => removeFile(index)}
+                    aria-label={`Șterge ${file.name}`}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
           ) : null}
         </div>
 
