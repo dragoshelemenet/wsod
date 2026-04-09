@@ -23,6 +23,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json(
+        { ok: false, message: "Fișierul nu este o imagine." },
+        { status: 400 }
+      );
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 

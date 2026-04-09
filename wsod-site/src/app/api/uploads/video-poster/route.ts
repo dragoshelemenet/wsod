@@ -20,6 +20,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!file.type.startsWith("video/")) {
+      return NextResponse.json(
+        { ok: false, message: "Fișierul nu este un video." },
+        { status: 400 }
+      );
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 

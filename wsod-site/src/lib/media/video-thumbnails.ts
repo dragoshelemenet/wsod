@@ -29,6 +29,12 @@ export async function generateVideoPosterFromBuffer(buffer: Buffer) {
 
     const posterBuffer = await fs.readFile(outputPath);
     return posterBuffer;
+  } catch (error) {
+    throw new Error(
+      `Poster generation failed. Ensure ffmpeg is installed. ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
