@@ -160,6 +160,14 @@ export default async function BrandPage({ params }: BrandPageProps) {
           );
         })}
 
+        {graphicGroups.length ? (
+          <div className="model-page-actions">
+            <Link href={`/grafica?brand=${brand.slug}`} className="media-open-button">
+              Vezi toate graficele pentru {brand.name}
+            </Link>
+          </div>
+        ) : null}
+
         {graphicGroups.map((group) => (
           <div key={group.label} className="owner-folder-section">
             <div className="owner-folder-section-head">
