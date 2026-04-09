@@ -63,18 +63,44 @@ export async function generateMetadata({
   };
 }
 
+function buildPhotoGroups(items: Awaited<ReturnType<typeof getMediaByModelSlugFromDb>>) {
+  const grouped = new Map<string, typeof items>();
+
+  for (const item of items) {
+    const key = item.groupLabel?.trim() || "Alte poze";
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(item);
+  }
+
+  return [...grouped.entries()]
+    .map(([label, groupItems]) => ({
+      label,
+      items: [...groupItems].sort((a, b) => {
+        const orderDiff = (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+        if (orderDiff !== 0) return orderDiff;
+        return +new Date(b.date) - +new Date(a.date);
+      }),
+      groupOrder:
+        groupItems.reduce((min, item) => Math.min(min, item.groupOrder ?? 0), Number.POSITIVE_INFINITY) || 0,
+    }))
+    .sort((a, b) => a.groupOrder - b.groupOrder || a.label.localeCompare(b.label));
+}
+
 export default async function ModelPage({ params }: ModelPageProps) {
   const { slug } = await params;
 
   const [model, sameModelItems, randomItems] = await Promise.all([
     getModelBySlugFromDb(slug),
-    getMediaByModelSlugFromDb(slug, { limit: 6 }),
+    getMediaByModelSlugFromDb(slug, { limit: 96 }),
     getRandomPhotoMediaFromDb(6, slug),
   ]);
 
   if (!model) {
     notFound();
   }
+
+  const photoItems = sameModelItems.filter((item) => item.category === "foto");
+  const groupedPhotos = buildPhotoGroups(photoItems);
 
   return (
     <main className="inner-page">
@@ -98,21 +124,36 @@ export default async function ModelPage({ params }: ModelPageProps) {
           metaLine="Model page"
         />
 
-        <div className="owner-folder-section">
-          <div className="owner-folder-section-head">
-            <h2>Poze cu {model.name}</h2>
-          </div>
+        {groupedPhotos.length ? (
+          groupedPhotos.map((group) => (
+            <div key={group.label} className="owner-folder-section">
+              <div className="owner-folder-section-head">
+                <h2>{group.label}</h2>
+              </div>
 
-          <MediaGrid
-            items={sameModelItems}
-            emptyText="Nu există materiale pentru acest model momentan."
-          />
+              <MediaGrid
+                items={group.items}
+                emptyText="Nu există poze în acest grup momentan."
+              />
+            </div>
+          ))
+        ) : (
+          <div className="owner-folder-section">
+            <div className="owner-folder-section-head">
+              <h2>Poze</h2>
+            </div>
 
-          <div className="model-page-actions">
-            <Link href={`/model/${model.slug}`} className="media-open-button">
-              Vezi toate pozele cu {model.name}
-            </Link>
+            <MediaGrid
+              items={photoItems}
+              emptyText="Nu există materiale pentru acest model momentan."
+            />
           </div>
+        )}
+
+        <div className="model-page-actions">
+          <Link href={`/foto?model=${model.slug}`} className="media-open-button">
+            Vezi toate pozele cu {model.name}
+          </Link>
         </div>
 
         <div className="owner-folder-section">

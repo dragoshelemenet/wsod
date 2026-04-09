@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
+import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
+import {
+  getBrandsWithCategoryPreviewFromDb,
+  getMediaByCategoryFromDb,
+} from "@/lib/data/db-queries";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function GraficaPage() {
-  const items = await getMediaByCategoryFromDb("grafica", { limit: 36 });
+  const [brands, items] = await Promise.all([
+    getBrandsWithCategoryPreviewFromDb("grafica"),
+    getMediaByCategoryFromDb("grafica", { limit: 36 }),
+  ]);
 
   return (
     <main className="inner-page">
@@ -31,10 +38,29 @@ export default async function GraficaPage() {
           Portofoliu de materiale grafice realizate pentru branduri, social media și proiecte vizuale.
         </p>
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există materiale grafice momentan."
+        <OwnerFolderGrid
+          title="Branduri"
+          items={brands.map((brand) => ({
+            id: brand.id,
+            name: brand.name,
+            slug: brand.slug,
+            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+            previewImages: brand.previewImages ?? [],
+            href: `/brand/${brand.slug}`,
+          }))}
+          emptyText="Nu există branduri cu materiale grafice momentan."
         />
+
+        <div className="owner-folder-section">
+          <div className="owner-folder-section-head">
+            <h2>Grafici din branduri diferite</h2>
+          </div>
+
+          <MediaGrid
+            items={items}
+            emptyText="Nu există materiale grafice momentan."
+          />
+        </div>
       </section>
     </main>
   );

@@ -62,17 +62,63 @@ export async function generateMetadata({
   };
 }
 
+function groupGraphics(items: Awaited<ReturnType<typeof getMediaByBrandSlugFromDb>>) {
+  const graphics = items.filter((item) => item.category === "grafica");
+  const grouped = new Map<string, typeof graphics>();
+
+  for (const item of graphics) {
+    const key = item.graphicKind?.trim() || "Alte materiale grafice";
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(item);
+  }
+
+  return [...grouped.entries()]
+    .map(([label, groupItems]) => ({
+      label,
+      items: [...groupItems].sort((a, b) => {
+        const orderDiff = (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+        if (orderDiff !== 0) return orderDiff;
+        return +new Date(b.date) - +new Date(a.date);
+      }),
+      groupOrder:
+        groupItems.reduce((min, item) => Math.min(min, item.groupOrder ?? 0), Number.POSITIVE_INFINITY) || 0,
+    }))
+    .sort((a, b) => a.groupOrder - b.groupOrder || a.label.localeCompare(b.label));
+}
+
+function categoryTitle(category: string) {
+  switch (category) {
+    case "foto":
+      return "Poze";
+    case "video":
+      return "Video";
+    case "grafica":
+      return "Grafică";
+    case "website":
+      return "Website";
+    case "meta-ads":
+      return "Meta Ads";
+    case "audio":
+      return "Audio";
+    default:
+      return category;
+  }
+}
+
 export default async function BrandPage({ params }: BrandPageProps) {
   const { slug } = await params;
 
   const [brand, items] = await Promise.all([
     getBrandBySlugFromDb(slug),
-    getMediaByBrandSlugFromDb(slug, { limit: 48 }),
+    getMediaByBrandSlugFromDb(slug, { limit: 200 }),
   ]);
 
   if (!brand) {
     notFound();
   }
+
+  const categories = ["foto", "video", "website", "meta-ads", "audio"] as const;
+  const graphicGroups = groupGraphics(items);
 
   return (
     <main className="inner-page">
@@ -96,10 +142,36 @@ export default async function BrandPage({ params }: BrandPageProps) {
           metaLine="Brand page"
         />
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există materiale pentru acest brand momentan."
-        />
+        {categories.map((category) => {
+          const categoryItems = items.filter((item) => item.category === category);
+          if (!categoryItems.length) return null;
+
+          return (
+            <div key={category} className="owner-folder-section">
+              <div className="owner-folder-section-head">
+                <h2>{categoryTitle(category)}</h2>
+              </div>
+
+              <MediaGrid
+                items={categoryItems}
+                emptyText={`Nu există materiale ${categoryTitle(category).toLowerCase()} momentan.`}
+              />
+            </div>
+          );
+        })}
+
+        {graphicGroups.map((group) => (
+          <div key={group.label} className="owner-folder-section">
+            <div className="owner-folder-section-head">
+              <h2>{group.label}</h2>
+            </div>
+
+            <MediaGrid
+              items={group.items}
+              emptyText="Nu există materiale grafice în acest grup."
+            />
+          </div>
+        ))}
       </section>
     </main>
   );
