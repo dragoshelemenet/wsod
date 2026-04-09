@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import OwnerIntroCard from "@/components/media/OwnerIntroCard";
+import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getAudioProfileBySlugFromDb,
   getMediaByAudioProfileSlugFromDb,
@@ -63,6 +64,12 @@ export default async function AudioProfilePage({
       </div>
 
       <section className="inner-section">
+        <MediaBreadcrumbs
+          categoryLabel="Audio Profiles"
+          categoryHref="/audio"
+          currentTitle={profile.name}
+        />
+
         <OwnerIntroCard
           title={profile.name}
           description={profile.description}

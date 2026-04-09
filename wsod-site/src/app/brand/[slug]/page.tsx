@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import OwnerIntroCard from "@/components/media/OwnerIntroCard";
+import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getBrandBySlugFromDb,
   getMediaByBrandSlugFromDb,
@@ -61,6 +62,12 @@ export default async function BrandPage({ params }: BrandPageProps) {
       </div>
 
       <section className="inner-section">
+        <MediaBreadcrumbs
+          categoryLabel="Branduri"
+          categoryHref="/foto"
+          currentTitle={brand.name}
+        />
+
         <OwnerIntroCard
           title={brand.name}
           description={brand.description}

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import OwnerIntroCard from "@/components/media/OwnerIntroCard";
+import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getModelBySlugFromDb,
   getMediaByModelSlugFromDb,
@@ -61,6 +62,12 @@ export default async function ModelPage({ params }: ModelPageProps) {
       </div>
 
       <section className="inner-section">
+        <MediaBreadcrumbs
+          categoryLabel="Modele"
+          categoryHref="/foto"
+          currentTitle={model.name}
+        />
+
         <OwnerIntroCard
           title={model.name}
           description={model.description}
