@@ -1835,3 +1835,86 @@ img {
 .owner-folder-card:focus-visible .owner-folder-copy strong {
   opacity: 1;
 }
+
+.owner-folder-card {
+  position: relative;
+  overflow: visible;
+}
+
+.owner-folder-visual {
+  position: relative;
+  overflow: visible;
+}
+
+.owner-folder-collage {
+  display: grid;
+  grid-template-columns: 1.45fr 0.9fr;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  transition: transform 180ms ease;
+}
+
+.owner-folder-collage-main,
+.owner-folder-collage-small {
+  overflow: hidden;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(20,20,28,0.88);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.owner-folder-collage-main {
+  height: 100%;
+  transform: rotate(-3deg) translateY(0);
+  transform-origin: center center;
+}
+
+.owner-folder-collage-side {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+}
+
+.owner-folder-collage-small {
+  min-height: 0;
+}
+
+.owner-folder-collage-side .owner-folder-collage-small:first-child {
+  transform: rotate(3deg) translateY(0);
+}
+
+.owner-folder-collage-side .owner-folder-collage-small:last-child {
+  transform: rotate(6deg) translateY(0);
+}
+
+.owner-folder-card:hover .owner-folder-collage-main,
+.owner-folder-card:focus-visible .owner-folder-collage-main {
+  transform: rotate(-5deg) translateY(-12px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.24);
+}
+
+.owner-folder-card:hover .owner-folder-collage-side .owner-folder-collage-small:first-child,
+.owner-folder-card:focus-visible .owner-folder-collage-side .owner-folder-collage-small:first-child {
+  transform: rotate(4deg) translateY(-18px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.24);
+}
+
+.owner-folder-card:hover .owner-folder-collage-side .owner-folder-collage-small:last-child,
+.owner-folder-card:focus-visible .owner-folder-collage-side .owner-folder-collage-small:last-child {
+  transform: rotate(7deg) translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.24);
+}
+
+.owner-folder-card:hover .owner-folder-copy strong,
+.owner-folder-card:focus-visible .owner-folder-copy strong {
+  opacity: 1;
+}
