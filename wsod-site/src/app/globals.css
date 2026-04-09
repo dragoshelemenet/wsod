@@ -2208,3 +2208,20 @@ img {
   cursor: pointer;
   line-height: 1;
 }
+
+
+.admin-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+}
+
+.admin-toggle-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}

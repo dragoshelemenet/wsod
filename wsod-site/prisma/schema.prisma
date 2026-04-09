@@ -15,6 +15,7 @@ model Brand {
   description     String?
   seoTitle        String?
   metaDescription String?
+  isVisible       Boolean     @default(true)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   mediaItems      MediaItem[]
@@ -28,6 +29,7 @@ model PersonModel {
   description      String?
   seoTitle         String?
   metaDescription  String?
+  isVisible        Boolean     @default(true)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   mediaItems       MediaItem[]
@@ -42,6 +44,7 @@ model AudioProfile {
   description     String?
   seoTitle        String?
   metaDescription String?
+  isVisible       Boolean     @default(true)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   mediaItems      MediaItem[]
@@ -67,6 +70,7 @@ model MediaItem {
   sortOrder        Int      @default(0)
   graphicKind      String?
   isFeatured       Boolean  @default(false)
+  isVisible        Boolean  @default(true)
 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -110,16 +114,25 @@ model BlogPost {
 }
 
 model BlogPostMedia {
-  id         String   @id @default(cuid())
-  blogPostId String
+  id          String   @id @default(cuid())
+  blogPostId  String
   mediaItemId String
-  sortOrder  Int      @default(0)
-  createdAt  DateTime @default(now())
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
 
-  blogPost   BlogPost @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
-  mediaItem  MediaItem @relation(fields: [mediaItemId], references: [id], onDelete: Cascade)
+  blogPost    BlogPost  @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+  mediaItem   MediaItem @relation(fields: [mediaItemId], references: [id], onDelete: Cascade)
 
   @@unique([blogPostId, mediaItemId])
   @@index([blogPostId])
   @@index([mediaItemId])
+}
+
+model SiteSectionVisibility {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  label     String
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

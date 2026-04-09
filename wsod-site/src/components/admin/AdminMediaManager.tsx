@@ -17,6 +17,7 @@ interface AdminMediaItem {
   sortOrder?: number;
   graphicKind?: string | null;
   isFeatured?: boolean;
+  isVisible?: boolean;
   thumbnailUrl?: string | null;
   previewUrl?: string | null;
   fileUrl?: string | null;
@@ -187,6 +188,7 @@ export default function AdminMediaManager({
           groupOrder: item.groupOrder ?? 0,
           sortOrder: item.sortOrder ?? 0,
           isFeatured: !!item.isFeatured,
+          isVisible: item.isVisible ?? true,
         }),
       });
 
@@ -260,7 +262,7 @@ export default function AdminMediaManager({
 
       <div className="admin-stack">
         <p className="admin-helper-text">
-          Media este acum grupată pe foldere: modele, branduri și audio. Pentru foto la model poți alege rapid între OUTFIT schimbat cu AI și OUTFIT REAL.
+          Media este grupată pe foldere și poate fi ascunsă de pe site fără delete.
         </p>
 
         {message ? (
@@ -289,7 +291,6 @@ export default function AdminMediaManager({
                     >
                       <div className="admin-folder-toggle-visual">
                         {folderPreview ? (
-                          // eslint-disable-next-line @next/next/no-img-element
                           <img src={folderPreview} alt={folder.ownerName} />
                         ) : (
                           <div className="media-thumb-fallback">FOLDER</div>
@@ -331,7 +332,6 @@ export default function AdminMediaManager({
                                     <div className="admin-media-edit-layout">
                                       <div className="admin-media-edit-preview">
                                         {preview ? (
-                                          // eslint-disable-next-line @next/next/no-img-element
                                           <img src={preview} alt={item.title} />
                                         ) : (
                                           <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
@@ -438,6 +438,15 @@ export default function AdminMediaManager({
                                             onChange={(e) => patchItem(item.id, { isFeatured: e.target.checked })}
                                           />
                                           <span>Featured</span>
+                                        </label>
+
+                                        <label className="admin-checkbox-row">
+                                          <input
+                                            type="checkbox"
+                                            checked={!!item.isVisible}
+                                            onChange={(e) => patchItem(item.id, { isVisible: e.target.checked })}
+                                          />
+                                          <span>Vizibil pe site</span>
                                         </label>
 
                                         <div className="admin-list-copy">

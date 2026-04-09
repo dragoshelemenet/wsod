@@ -17,6 +17,7 @@ async function revalidateMediaPaths(existing: {
   revalidatePath("/meta-ads");
   revalidatePath("/audio");
   revalidatePath("/studio-dashboard/media");
+  revalidatePath("/studio-dashboard/visibility");
 
   revalidatePath(`/foto/${existing.slug}`);
   revalidatePath(`/video/${existing.slug}`);
@@ -52,6 +53,7 @@ export async function PUT(
   const groupOrder = Number(body.groupOrder ?? 0);
   const sortOrder = Number(body.sortOrder ?? 0);
   const isFeatured = Boolean(body.isFeatured);
+  const isVisible = Boolean(body.isVisible);
 
   const existing = await prisma.mediaItem.findUnique({
     where: { id },
@@ -83,6 +85,7 @@ export async function PUT(
       groupOrder: Number.isFinite(groupOrder) ? groupOrder : 0,
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       isFeatured,
+      isVisible,
     },
   });
 

@@ -42,26 +42,17 @@ export default async function StudioDashboardPage() {
       isVisible: true,
     },
     {
+      title: "Visibility",
+      description: "Ascunzi secțiuni, branduri, modele, audio și alte elemente fără delete.",
+      href: "/studio-dashboard/visibility",
+      isVisible: true,
+    },
+    {
       title: "Blog",
       description: "Adaugi articole noi, editezi articole vechi și atașezi media.",
       href: "/studio-dashboard/blog",
       isVisible: true,
     },
-
-    /* exemple pentru secțiuni nepregătite încă
-    {
-      title: "Meta Ads",
-      description: "Administrare Meta Ads.",
-      href: "/studio-dashboard/meta-ads",
-      isVisible: false,
-    },
-    {
-      title: "Website",
-      description: "Administrare website.",
-      href: "/studio-dashboard/website",
-      isVisible: false,
-    },
-    */
   ];
 
   const visibleSections = sections.filter((section) => section.isVisible);

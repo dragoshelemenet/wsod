@@ -18,11 +18,66 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+async function presignAndUploadFile(file: File, brandSlug: string, category: string) {
+  const presignResponse = await fetch("/api/uploads/presign", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fileName: file.name,
+      contentType: file.type,
+      brandSlug,
+      category,
+    }),
+  });
+
+  if (!presignResponse.ok) {
+    throw new Error("Nu s-a putut genera URL-ul de upload pentru brand.");
+  }
+
+  const { uploadUrl, publicUrl, objectKey } = (await presignResponse.json()) as {
+    uploadUrl: string;
+    publicUrl: string;
+    objectKey: string;
+  };
+
+  const uploadResponse = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type,
+    },
+    body: file,
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error("Upload-ul imaginii către Spaces a eșuat.");
+  }
+
+  const makePublicResponse = await fetch("/api/uploads/make-public", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      objectKey,
+    }),
+  });
+
+  if (!makePublicResponse.ok) {
+    throw new Error("Imaginea a fost urcată, dar nu a putut fi făcută publică.");
+  }
+
+  return { publicUrl };
+}
+
 export default function BrandForm({ brands }: BrandFormProps) {
   const [name, setName] = useState("");
   const [slugInput, setSlugInput] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
@@ -41,9 +96,27 @@ export default function BrandForm({ brands }: BrandFormProps) {
       return;
     }
 
+    if (!normalizedSlug) {
+      setMessage("Slug invalid pentru brand.");
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       setMessage("");
+
+      let finalLogoUrl = logoUrl.trim();
+      let finalCoverImageUrl = coverImageUrl.trim();
+
+      if (logoFile) {
+        const uploadedLogo = await presignAndUploadFile(logoFile, normalizedSlug, "brand-logo");
+        finalLogoUrl = uploadedLogo.publicUrl;
+      }
+
+      if (coverFile) {
+        const uploadedCover = await presignAndUploadFile(coverFile, normalizedSlug, "brand-cover");
+        finalCoverImageUrl = uploadedCover.publicUrl;
+      }
 
       const response = await fetch("/api/admin/brands", {
         method: "POST",
@@ -53,8 +126,8 @@ export default function BrandForm({ brands }: BrandFormProps) {
         body: JSON.stringify({
           name,
           slug: normalizedSlug,
-          logoUrl,
-          coverImageUrl,
+          logoUrl: finalLogoUrl,
+          coverImageUrl: finalCoverImageUrl,
           description,
           seoTitle,
           metaDescription,
@@ -75,6 +148,8 @@ export default function BrandForm({ brands }: BrandFormProps) {
       setSlugInput("");
       setLogoUrl("");
       setCoverImageUrl("");
+      setLogoFile(null);
+      setCoverFile(null);
       setDescription("");
       setSeoTitle("");
       setMetaDescription("");
@@ -117,12 +192,32 @@ export default function BrandForm({ brands }: BrandFormProps) {
         </div>
 
         <div className="admin-form-field">
+          <label htmlFor="brand-logo-file">Logo imagine în Spaces</label>
+          <input
+            id="brand-logo-file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
+          />
+        </div>
+
+        <div className="admin-form-field">
           <label htmlFor="brand-logo">Logo URL</label>
           <input
             id="brand-logo"
             value={logoUrl}
             onChange={(e) => setLogoUrl(e.target.value)}
             placeholder="URL logo brand"
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="brand-cover-file">Cover imagine în Spaces</label>
+          <input
+            id="brand-cover-file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
           />
         </div>
 

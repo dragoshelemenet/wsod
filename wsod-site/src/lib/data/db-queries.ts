@@ -2,9 +2,9 @@ import { prisma } from "@/lib/db/prisma";
 import { DbMediaCardItem } from "@/lib/types";
 
 function withOwner<T extends {
-  brand: { name: string; slug: string } | null;
-  personModel: { name: string; slug: string } | null;
-  audioProfile: { name: string; slug: string; kind: string } | null;
+  brand: { name: string; slug: string; isVisible?: boolean } | null;
+  personModel: { name: string; slug: string; isVisible?: boolean } | null;
+  audioProfile: { name: string; slug: string; kind: string; isVisible?: boolean } | null;
 }>(items: T[]): (T & { owner: DbMediaCardItem["owner"] })[] {
   return items.map((item) => {
     if (item.brand) {
@@ -63,24 +63,52 @@ function getPreviewSrc(item: {
   return item.thumbnailUrl ?? item.previewUrl ?? item.fileUrl ?? null;
 }
 
+async function getVisibleSectionKeys() {
+  const sections = await prisma.siteSectionVisibility.findMany({
+    where: { isVisible: true },
+    select: { key: true },
+  });
+
+  return new Set(sections.map((section) => section.key));
+}
+
+function buildVisibleMediaWhere(category?: string) {
+  return {
+    ...(category ? { category } : {}),
+    isVisible: true,
+    OR: [
+      { brandId: null, personModelId: null, audioProfileId: null },
+      { brand: { is: { isVisible: true } } },
+      { personModel: { is: { isVisible: true } } },
+      { audioProfile: { is: { isVisible: true } } },
+    ],
+  };
+}
+
 export async function getBrandsFromDb() {
   return prisma.brand.findMany({
+    where: { isVisible: true },
     orderBy: { name: "asc" },
   });
 }
 
 export async function getModelsFromDb() {
   return prisma.personModel.findMany({
+    where: { isVisible: true },
     orderBy: { name: "asc" },
   });
 }
 
 export async function getBrandsWithCategoryPreviewFromDb(category: string) {
+  const sectionKeys = await getVisibleSectionKeys();
+  if (!sectionKeys.has(category)) return [];
+
   const brands = await prisma.brand.findMany({
+    where: { isVisible: true },
     orderBy: { name: "asc" },
     include: {
       mediaItems: {
-        where: { category },
+        where: buildVisibleMediaWhere(category),
         orderBy: { date: "desc" },
         take: 3,
         select: {
@@ -94,18 +122,20 @@ export async function getBrandsWithCategoryPreviewFromDb(category: string) {
 
   return brands.map((brand) => ({
     ...brand,
-    previewImages: brand.mediaItems
-      .map(getPreviewSrc)
-      .filter(Boolean) as string[],
+    previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
   }));
 }
 
 export async function getModelsWithCategoryPreviewFromDb(category: string) {
+  const sectionKeys = await getVisibleSectionKeys();
+  if (!sectionKeys.has(category)) return [];
+
   const models = await prisma.personModel.findMany({
+    where: { isVisible: true },
     orderBy: { name: "asc" },
     include: {
       mediaItems: {
-        where: { category },
+        where: buildVisibleMediaWhere(category),
         orderBy: { date: "desc" },
         take: 3,
         select: {
@@ -119,33 +149,32 @@ export async function getModelsWithCategoryPreviewFromDb(category: string) {
 
   return models.map((model) => ({
     ...model,
-    previewImages: model.mediaItems
-      .map(getPreviewSrc)
-      .filter(Boolean) as string[],
+    previewImages: model.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
   }));
 }
 
 export async function getAudioProfilesFromDb() {
   return prisma.audioProfile.findMany({
+    where: { isVisible: true },
     orderBy: { name: "asc" },
   });
 }
 
 export async function getBrandBySlugFromDb(slug: string) {
-  return prisma.brand.findUnique({
-    where: { slug },
+  return prisma.brand.findFirst({
+    where: { slug, isVisible: true },
   });
 }
 
 export async function getModelBySlugFromDb(slug: string) {
-  return prisma.personModel.findUnique({
-    where: { slug },
+  return prisma.personModel.findFirst({
+    where: { slug, isVisible: true },
   });
 }
 
 export async function getAudioProfileBySlugFromDb(slug: string) {
-  return prisma.audioProfile.findUnique({
-    where: { slug },
+  return prisma.audioProfile.findFirst({
+    where: { slug, isVisible: true },
   });
 }
 
@@ -183,11 +212,14 @@ function buildSearchWhere(search?: string) {
 }
 
 export async function getMediaByCategoryFromDb(category: string, options?: MediaQueryOptions) {
+  const sectionKeys = await getVisibleSectionKeys();
+  if (!sectionKeys.has(category)) return [];
+
   const { take, skip, orderBy } = buildMediaQueryOptions(options);
 
   const items = await prisma.mediaItem.findMany({
     where: {
-      category,
+      ...buildVisibleMediaWhere(category),
       ...buildSearchWhere(options?.search),
     },
     include: {
@@ -208,8 +240,10 @@ export async function getMediaByBrandSlugFromDb(slug: string, options?: MediaQue
 
   const items = await prisma.mediaItem.findMany({
     where: {
+      ...buildVisibleMediaWhere(),
       brand: {
         slug,
+        isVisible: true,
       },
       ...buildSearchWhere(options?.search),
     },
@@ -231,8 +265,10 @@ export async function getMediaByModelSlugFromDb(slug: string, options?: MediaQue
 
   const items = await prisma.mediaItem.findMany({
     where: {
+      ...buildVisibleMediaWhere(),
       personModel: {
         slug,
+        isVisible: true,
       },
       ...buildSearchWhere(options?.search),
     },
@@ -252,7 +288,7 @@ export async function getMediaByModelSlugFromDb(slug: string, options?: MediaQue
 export async function getRandomPhotoMediaFromDb(limit = 6, excludeModelSlug?: string) {
   const candidates = await prisma.mediaItem.findMany({
     where: {
-      category: "foto",
+      ...buildVisibleMediaWhere("foto"),
       ...(excludeModelSlug
         ? {
             NOT: {
@@ -283,8 +319,10 @@ export async function getMediaByAudioProfileSlugFromDb(slug: string, options?: M
 
   const items = await prisma.mediaItem.findMany({
     where: {
+      ...buildVisibleMediaWhere(),
       audioProfile: {
         slug,
+        isVisible: true,
       },
       ...buildSearchWhere(options?.search),
     },
@@ -302,8 +340,11 @@ export async function getMediaByAudioProfileSlugFromDb(slug: string, options?: M
 }
 
 export async function getMediaItemBySlugFromDb(slug: string) {
-  const item = await prisma.mediaItem.findUnique({
-    where: { slug },
+  const item = await prisma.mediaItem.findFirst({
+    where: {
+      slug,
+      ...buildVisibleMediaWhere(),
+    },
     include: {
       brand: true,
       personModel: true,
@@ -311,10 +352,7 @@ export async function getMediaItemBySlugFromDb(slug: string) {
     },
   });
 
-  if (!item) {
-    return null;
-  }
-
+  if (!item) return null;
   return withOwner([item])[0];
 }
 
@@ -323,9 +361,12 @@ export async function getRelatedMediaByCategoryFromDb(
   currentId: string,
   limit = 12
 ) {
+  const sectionKeys = await getVisibleSectionKeys();
+  if (!sectionKeys.has(category)) return [];
+
   const items = await prisma.mediaItem.findMany({
     where: {
-      category,
+      ...buildVisibleMediaWhere(category),
       id: {
         not: currentId,
       },
@@ -349,33 +390,22 @@ export async function getRandomMediaByCategoryFromDb(
   limit = 6,
   excludeOwner?: { type: "brand" | "model" | "audioProfile"; slug?: string | null }
 ) {
-  const whereBase: any = {
-    category,
-  };
+  const sectionKeys = await getVisibleSectionKeys();
+  if (!sectionKeys.has(category)) return [];
+
+  const whereBase: any = buildVisibleMediaWhere(category);
 
   if (excludeOwner?.slug) {
     if (excludeOwner.type === "brand") {
-      whereBase.NOT = {
-        brand: {
-          slug: excludeOwner.slug,
-        },
-      };
+      whereBase.NOT = { brand: { slug: excludeOwner.slug } };
     }
 
     if (excludeOwner.type === "model") {
-      whereBase.NOT = {
-        personModel: {
-          slug: excludeOwner.slug,
-        },
-      };
+      whereBase.NOT = { personModel: { slug: excludeOwner.slug } };
     }
 
     if (excludeOwner.type === "audioProfile") {
-      whereBase.NOT = {
-        audioProfile: {
-          slug: excludeOwner.slug,
-        },
-      };
+      whereBase.NOT = { audioProfile: { slug: excludeOwner.slug } };
     }
   }
 
@@ -397,16 +427,18 @@ export async function getRandomMediaByCategoryFromDb(
 }
 
 export async function getHomeCategoryPreviewMap() {
+  const visibleKeys = await getVisibleSectionKeys();
   const categories = ["video", "foto", "grafica", "website", "meta-ads", "audio"] as const;
 
   const entries = await Promise.all(
     categories.map(async (category) => {
+      if (!visibleKeys.has(category)) {
+        return [category, []] as const;
+      }
+
       const items = await prisma.mediaItem.findMany({
-        where: { category },
-        orderBy: [
-          { isFeatured: "desc" },
-          { date: "desc" },
-        ],
+        where: buildVisibleMediaWhere(category),
+        orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
         take: 3,
         select: {
           thumbnailUrl: true,
@@ -415,13 +447,16 @@ export async function getHomeCategoryPreviewMap() {
         },
       });
 
-      const previews = items
-        .map((item) => getPreviewSrc(item))
-        .filter(Boolean) as string[];
-
+      const previews = items.map((item) => getPreviewSrc(item)).filter(Boolean) as string[];
       return [category, previews] as const;
     })
   );
 
   return Object.fromEntries(entries) as Record<string, string[]>;
+}
+
+export async function getVisibleSiteSectionsFromDb() {
+  return prisma.siteSectionVisibility.findMany({
+    orderBy: { label: "asc" },
+  });
 }

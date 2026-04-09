@@ -217,6 +217,7 @@ export async function POST(request: Request) {
       groupLabel: category === "foto" && ownerType === "model" ? groupLabel || null : null,
       groupOrder: category === "foto" && ownerType === "model" ? (Number.isFinite(groupOrder) ? groupOrder : 0) : 0,
       graphicKind: category === "grafica" ? graphicKind || null : null,
+      isVisible: true,
       brandId,
       personModelId,
       audioProfileId,
