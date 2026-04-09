@@ -1964,3 +1964,149 @@ img {
 .hero-logo-sub {
   margin-top: 14px !important;
 }
+
+.admin-folder-section {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-folder-section-head h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.admin-folder-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-folder-card {
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
+.admin-folder-toggle {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.admin-folder-toggle-visual {
+  width: 120px;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+}
+
+.admin-folder-toggle-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-folder-toggle-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-folder-toggle-copy strong {
+  font-size: 1rem;
+}
+
+.admin-folder-toggle-copy span {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.92rem;
+}
+
+.admin-folder-toggle-arrow {
+  font-size: 1.8rem;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.admin-folder-open-content {
+  padding: 0 16px 16px;
+  display: grid;
+  gap: 18px;
+}
+
+.admin-media-subsection {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-media-subsection-head {
+  position: relative;
+  padding: 12px 0 4px;
+}
+
+.admin-media-subsection-head::after {
+  content: "";
+  display: block;
+  margin-top: 10px;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.06),
+    transparent
+  );
+}
+
+.admin-media-subsection-head span {
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+}
+
+.admin-media-card-modern {
+  position: relative;
+}
+
+.admin-media-delete-corner {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 0;
+  background: #d72d3d;
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(215,45,61,0.35);
+}
+
+.admin-media-delete-corner:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+@media (max-width: 900px) {
+  .admin-folder-toggle {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-folder-toggle-visual {
+    width: 100%;
+    max-width: 180px;
+  }
+}
