@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "WSOD.PROD — Agenție media digitală & video",
+    title: "WSOD.PROD — Agenție media digitală",
     description:
       "Portofoliu de video, foto, grafică, website-uri, audio și Meta Ads.",
     url: "https://example.com",

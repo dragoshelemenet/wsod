@@ -7,7 +7,7 @@ export default function Hero() {
       </div>
 
       <div className="hero-copy">
-        <h1>AGENȚIE MEDIA DIGITALĂ &amp; VIDEO</h1>
+        <h1>AGENȚIE MEDIA DIGITALĂ</h1>
       </div>
     </section>
   );
