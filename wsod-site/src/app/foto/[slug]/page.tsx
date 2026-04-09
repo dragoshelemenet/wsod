@@ -6,6 +6,9 @@ import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getMediaItemBySlugFromDb,
   getRelatedMediaByCategoryFromDb,
+  getMediaByModelSlugFromDb,
+  getMediaByBrandSlugFromDb,
+  getRandomPhotoMediaFromDb,
 } from "@/lib/data/db-queries";
 import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
@@ -71,14 +74,24 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
     notFound();
   }
 
-  const relatedItems = await getRelatedMediaByCategoryFromDb("foto", item.id, 8);
-
   const ownerHref =
     item.owner.type === "brand" && item.owner.slug
       ? `/brand/${item.owner.slug}`
       : item.owner.type === "model" && item.owner.slug
         ? `/model/${item.owner.slug}`
         : null;
+
+  const sameOwnerItems =
+    item.owner.type === "model" && item.owner.slug
+      ? await getMediaByModelSlugFromDb(item.owner.slug, { limit: 6 })
+      : item.owner.type === "brand" && item.owner.slug
+        ? await getMediaByBrandSlugFromDb(item.owner.slug, { limit: 6 })
+        : await getRelatedMediaByCategoryFromDb("foto", item.id, 6);
+
+  const randomItems = await getRandomPhotoMediaFromDb(
+    6,
+    item.owner.type === "model" ? item.owner.slug ?? undefined : undefined
+  );
 
   const imageSrc = item.fileUrl || item.previewUrl || item.thumbnailUrl || null;
   const jsonLd = buildMediaJsonLd(item);
@@ -152,13 +165,52 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
 
         <div className="owner-folder-section">
           <div className="owner-folder-section-head">
-            <h2>Alte lucrări foto</h2>
+            <h2>
+              {item.owner.type === "model"
+                ? `Poze cu ${item.owner.name}`
+                : item.owner.type === "brand"
+                  ? `Poze pentru ${item.owner.name}`
+                  : "Poze similare"}
+            </h2>
           </div>
 
           <MediaGrid
-            items={relatedItems}
-            emptyText="Nu există alte lucrări foto momentan."
+            items={sameOwnerItems}
+            emptyText="Nu există alte poze similare momentan."
           />
+
+          <div className="model-page-actions">
+            {item.owner.type === "model" && item.owner.slug ? (
+              <Link href={`/model/${item.owner.slug}`} className="media-open-button">
+                Vezi toate pozele cu {item.owner.name}
+              </Link>
+            ) : item.owner.type === "brand" && item.owner.slug ? (
+              <Link href={`/brand/${item.owner.slug}`} className="media-open-button">
+                Vezi toate pozele pentru {item.owner.name}
+              </Link>
+            ) : (
+              <Link href="/foto" className="media-open-button">
+                Vezi toate pozele
+              </Link>
+            )}
+          </div>
+        </div>
+
+        <div className="owner-folder-section">
+          <div className="owner-folder-section-head">
+            <h2>Alte poze</h2>
+          </div>
+
+          <MediaGrid
+            items={randomItems}
+            emptyText="Nu există alte poze momentan."
+          />
+
+          <div className="model-page-actions">
+            <Link href="/foto" className="media-link">
+              Vezi toate pozele
+            </Link>
+          </div>
         </div>
       </section>
     </main>

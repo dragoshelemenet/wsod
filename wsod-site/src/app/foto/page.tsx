@@ -42,7 +42,6 @@ export default async function FotoPage() {
 
         <OwnerFolderGrid
           title="Branduri"
-          variant="compact-file"
           items={brands.map((brand) => ({
             id: brand.id,
             name: brand.name,
@@ -56,7 +55,6 @@ export default async function FotoPage() {
 
         <OwnerFolderGrid
           title="Modele"
-          variant="compact-file"
           items={models.map((model) => ({
             id: model.id,
             name: model.name,

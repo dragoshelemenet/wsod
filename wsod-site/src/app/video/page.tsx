@@ -40,7 +40,6 @@ export default async function VideoPage() {
 
         <OwnerFolderGrid
           title="Branduri"
-          variant="compact-file"
           items={brands.map((brand) => ({
             id: brand.id,
             name: brand.name,
