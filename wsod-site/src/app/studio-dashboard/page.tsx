@@ -19,6 +19,10 @@ export default async function StudioDashboardPage() {
     orderBy: { name: "asc" },
   });
 
+  const models = await prisma.personModel.findMany({
+    orderBy: { name: "asc" },
+  });
+
   return (
     <main className="inner-page">
       <div className="inner-topbar admin-topbar">
@@ -45,7 +49,7 @@ export default async function StudioDashboardPage() {
 
         <div className="admin-grid">
           <BrandForm brands={brands} />
-          <UploadToSpacesForm brands={brands} />
+          <UploadToSpacesForm brands={brands} models={models} />
         </div>
 
         <div className="admin-grid admin-grid-bottom">
