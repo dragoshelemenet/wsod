@@ -1918,3 +1918,22 @@ img {
 .owner-folder-card:focus-visible .owner-folder-copy strong {
   opacity: 1;
 }
+
+/* hero logo clipping fix */
+.hero-logo-wrap {
+  min-height: 240px !important;
+  padding-top: 22px !important;
+  padding-bottom: 18px !important;
+  overflow: visible !important;
+}
+
+.hero-logo {
+  line-height: 1.08 !important;
+  padding-top: 0.16em !important;
+  padding-bottom: 0.12em !important;
+  display: inline-block !important;
+}
+
+.hero-logo-sub {
+  margin-top: 10px !important;
+}
