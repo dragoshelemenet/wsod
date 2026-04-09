@@ -1193,3 +1193,7 @@ body {
     grid-template-columns: 1fr;
   }
 }
+/* video/audio detail visual fallback */
+.media-detail-hero + .media-detail-meta {
+  margin-top: 18px;
+}

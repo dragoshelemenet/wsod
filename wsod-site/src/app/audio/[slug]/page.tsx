@@ -58,6 +58,8 @@ export default async function AudioDetailPage({ params }: AudioDetailPageProps) 
       ? `/audio-profile/${item.owner.slug}`
       : null;
 
+  const previewVisual = item.thumbnailUrl || item.previewUrl || null;
+
   return (
     <main className="inner-page">
       <script
@@ -85,6 +87,13 @@ export default async function AudioDetailPage({ params }: AudioDetailPageProps) 
         <p className="inner-description">
           {item.description || "Lucrare audio din portofoliul WSOD.PROD."}
         </p>
+
+        {previewVisual ? (
+          <div className="media-detail-hero">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={previewVisual} alt={item.title} className="media-detail-image" />
+          </div>
+        ) : null}
 
         <div className="media-detail-meta">
           <p>
