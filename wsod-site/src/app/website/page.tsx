@@ -8,14 +8,14 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Website | WSOD.PROD",
   description:
-    "Portofoliu website WSOD.PROD: proiecte web din toate brandurile, ordonate după dată.",
+    "Portofoliu website WSOD.PROD: website-uri moderne, curate și prezentări digitale pentru branduri și afaceri.",
   alternates: {
     canonical: "/website",
   },
 };
 
 export default async function WebsitePage() {
-  const items = await getMediaByCategoryFromDb("website");
+  const items = await getMediaByCategoryFromDb("website", { limit: 36 });
 
   return (
     <main className="inner-page">
@@ -28,10 +28,13 @@ export default async function WebsitePage() {
       <section className="inner-section">
         <h1>WEBSITE</h1>
         <p className="inner-description">
-          Toate proiectele website din toate brandurile, ordonate după dată.
+          Website-uri moderne și proiecte digitale prezentate într-un format clar, rapid și ușor de explorat.
         </p>
 
-        <MediaGrid items={items} emptyText="Nu există proiecte website momentan." />
+        <MediaGrid
+          items={items}
+          emptyText="Nu există proiecte website momentan."
+        />
       </section>
     </main>
   );

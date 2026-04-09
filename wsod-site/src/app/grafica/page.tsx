@@ -6,16 +6,16 @@ import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Grafică | WSOD.PROD",
+  title: "Grafica | WSOD.PROD",
   description:
-    "Portofoliu grafică WSOD.PROD: materiale grafice din toate brandurile, ordonate după dată.",
+    "Portofoliu grafică WSOD.PROD: materiale grafice pentru branduri, social media și campanii vizuale.",
   alternates: {
     canonical: "/grafica",
   },
 };
 
 export default async function GraficaPage() {
-  const items = await getMediaByCategoryFromDb("grafica");
+  const items = await getMediaByCategoryFromDb("grafica", { limit: 36 });
 
   return (
     <main className="inner-page">
@@ -28,10 +28,13 @@ export default async function GraficaPage() {
       <section className="inner-section">
         <h1>GRAPHIC</h1>
         <p className="inner-description">
-          Toate materialele grafice din toate brandurile, ordonate după dată.
+          Portofoliu de materiale grafice realizate pentru branduri, social media și proiecte vizuale.
         </p>
 
-        <MediaGrid items={items} emptyText="Nu există materiale grafice momentan." />
+        <MediaGrid
+          items={items}
+          emptyText="Nu există materiale grafice momentan."
+        />
       </section>
     </main>
   );
