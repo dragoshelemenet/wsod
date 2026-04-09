@@ -1,39 +1,42 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import BrandForm from "@/components/admin/BrandForm";
-import ModelForm from "@/components/admin/ModelForm";
-import AudioProfileForm from "@/components/admin/AudioProfileForm";
-import UploadToSpacesForm from "@/components/admin/UploadToSpacesForm";
-import AdminBrandManager from "@/components/admin/AdminBrandManager";
-import AdminMediaManager from "@/components/admin/AdminMediaManager";
 import { hasAdminSession } from "@/lib/auth/session";
 import { logoutAction } from "@/app/actions/auth-actions";
-import { prisma } from "@/lib/db/prisma";
 
-interface StudioDashboardPageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-}
-
-export default async function StudioDashboardPage({
-  searchParams,
-}: StudioDashboardPageProps) {
+export default async function StudioDashboardPage() {
   const isLoggedIn = await hasAdminSession();
 
   if (!isLoggedIn) {
     redirect("/studio-login");
   }
 
-  const brands = await prisma.brand.findMany({
-    orderBy: { name: "asc" },
-  });
-
-  const models = await prisma.personModel.findMany({
-    orderBy: { name: "asc" },
-  });
-
-  const audioProfiles = await prisma.audioProfile.findMany({
-    orderBy: { name: "asc" },
-  });
+  const sections = [
+    {
+      title: "Branduri",
+      description: "Creare și administrare branduri.",
+      href: "/studio-dashboard/brands",
+    },
+    {
+      title: "Modele",
+      description: "Creare și organizare modele.",
+      href: "/studio-dashboard/models",
+    },
+    {
+      title: "Profiluri audio",
+      description: "Creare și administrare profiluri audio.",
+      href: "/studio-dashboard/audio",
+    },
+    {
+      title: "Upload media",
+      description: "Upload separat, mai curat și mai ușor de folosit.",
+      href: "/studio-dashboard/upload",
+    },
+    {
+      title: "Media manager",
+      description: "Căutare, filtrare și management media într-o pagină separată.",
+      href: "/studio-dashboard/media",
+    },
+  ];
 
   return (
     <main className="inner-page">
@@ -54,27 +57,17 @@ export default async function StudioDashboardPage({
           <span className="admin-kicker">Panou privat</span>
           <h1>Studio Dashboard</h1>
           <p className="inner-description">
-            Adminul este organizat pe entități, upload și management scalabil al bibliotecii.
+            Adminul este separat pe pagini clare, ca să nu mai fie totul încărcat într-un singur loc.
           </p>
         </div>
 
-        <div className="admin-grid">
-          <BrandForm brands={brands} />
-          <ModelForm />
-        </div>
-
-        <div className="admin-grid">
-          <AudioProfileForm />
-          <UploadToSpacesForm
-            brands={brands}
-            models={models}
-            audioProfiles={audioProfiles}
-          />
-        </div>
-
-        <div className="admin-grid admin-grid-bottom">
-          <AdminBrandManager />
-          <AdminMediaManager searchParams={searchParams} />
+        <div className="admin-sections-grid">
+          {sections.map((section) => (
+            <Link key={section.href} href={section.href} className="admin-section-card">
+              <strong>{section.title}</strong>
+              <span>{section.description}</span>
+            </Link>
+          ))}
         </div>
       </section>
     </main>

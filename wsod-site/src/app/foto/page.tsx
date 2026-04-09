@@ -37,21 +37,8 @@ export default async function FotoPage() {
       <section className="inner-section">
         <h1>PHOTO</h1>
         <p className="inner-description">
-          Portofoliu foto organizat pe branduri și modele, plus selecții recente din toate lucrările.
+          Portofoliu foto organizat pe modele și branduri, plus selecții recente din toate lucrările.
         </p>
-
-        <OwnerFolderGrid
-          title="Branduri"
-          items={brands.map((brand) => ({
-            id: brand.id,
-            name: brand.name,
-            slug: brand.slug,
-            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
-            previewImages: brand.previewImages ?? [],
-            href: `/brand/${brand.slug}`,
-          }))}
-          emptyText="Nu există branduri momentan."
-        />
 
         <OwnerFolderGrid
           title="Modele"
@@ -62,8 +49,23 @@ export default async function FotoPage() {
             imageUrl: model.portraitImageUrl ?? model.previewImages?.[0] ?? null,
             previewImages: model.previewImages ?? [],
             href: `/model/${model.slug}`,
+            subtitle: "Vezi toate materialele modelului",
           }))}
           emptyText="Nu există modele momentan."
+        />
+
+        <OwnerFolderGrid
+          title="Branduri"
+          items={brands.map((brand) => ({
+            id: brand.id,
+            name: brand.name,
+            slug: brand.slug,
+            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+            previewImages: brand.previewImages ?? [],
+            href: `/brand/${brand.slug}`,
+            subtitle: "Vezi toate materialele brandului",
+          }))}
+          emptyText="Nu există branduri momentan."
         />
 
         <div className="owner-folder-section">
