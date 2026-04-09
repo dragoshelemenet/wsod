@@ -69,6 +69,7 @@ export async function POST(request: Request) {
       Bucket: spacesConfig.bucket,
       Key: objectKey,
       ContentType: contentType,
+      ACL: "public-read",
     });
 
     const uploadUrl = await getSignedUrl(spacesClient, command, {
