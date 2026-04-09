@@ -249,6 +249,35 @@ export async function getMediaByModelSlugFromDb(slug: string, options?: MediaQue
   return withOwner(items);
 }
 
+export async function getRandomPhotoMediaFromDb(limit = 6, excludeModelSlug?: string) {
+  const candidates = await prisma.mediaItem.findMany({
+    where: {
+      category: "foto",
+      ...(excludeModelSlug
+        ? {
+            NOT: {
+              personModel: {
+                slug: excludeModelSlug,
+              },
+            },
+          }
+        : {}),
+    },
+    include: {
+      brand: true,
+      personModel: true,
+      audioProfile: true,
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 60,
+  });
+
+  const shuffled = [...candidates].sort(() => Math.random() - 0.5).slice(0, limit);
+  return withOwner(shuffled);
+}
+
 export async function getMediaByAudioProfileSlugFromDb(slug: string, options?: MediaQueryOptions) {
   const { take, skip, orderBy } = buildMediaQueryOptions(options);
 
