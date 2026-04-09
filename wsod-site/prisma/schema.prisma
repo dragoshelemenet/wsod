@@ -15,6 +15,15 @@ model Brand {
   mediaItems MediaItem[]
 }
 
+model PersonModel {
+  id         String      @id @default(cuid())
+  name       String
+  slug       String      @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  mediaItems MediaItem[]
+}
+
 model MediaItem {
   id          String   @id @default(cuid())
   title       String
@@ -27,6 +36,9 @@ model MediaItem {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  brandId String
-  brand   Brand @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brandId String?
+  brand   Brand? @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  personModelId String?
+  personModel   PersonModel? @relation(fields: [personModelId], references: [id], onDelete: Cascade)
 }
