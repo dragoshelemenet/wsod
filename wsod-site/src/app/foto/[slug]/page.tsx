@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
+import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getMediaItemBySlugFromDb,
   getRelatedMediaByCategoryFromDb,
@@ -9,6 +10,8 @@ import {
 import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
+
+const BASE_URL = "https://wsod.cloud";
 
 interface FotoDetailPageProps {
   params: Promise<{
@@ -28,14 +31,33 @@ export async function generateMetadata({
     };
   }
 
+  const title = item.seoTitle || `${item.title} | Foto | WSOD.PROD`;
+  const description =
+    item.metaDescription ||
+    item.description ||
+    `Lucrare foto din portofoliul WSOD.PROD: ${item.title}.`;
+  const url = `${BASE_URL}/foto/${item.slug}`;
+  const image = item.previewUrl || item.thumbnailUrl || item.fileUrl || undefined;
+
   return {
-    title: item.seoTitle || `${item.title} | Foto | WSOD.PROD`,
-    description:
-      item.metaDescription ||
-      item.description ||
-      `Lucrare foto din portofoliul WSOD.PROD: ${item.title}.`,
+    title,
+    description,
     alternates: {
       canonical: `/foto/${item.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "WSOD.PROD",
+      type: "article",
+      images: image ? [{ url: image }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : [],
     },
   };
 }
@@ -75,6 +97,14 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
       </div>
 
       <section className="inner-section">
+        <MediaBreadcrumbs
+          categoryLabel="Foto"
+          categoryHref="/foto"
+          ownerName={item.owner.name}
+          ownerHref={ownerHref}
+          currentTitle={item.title}
+        />
+
         <h1>{item.title}</h1>
 
         <p className="inner-description">

@@ -11,6 +11,8 @@ import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 
+const BASE_URL = "https://wsod.cloud";
+
 interface AudioDetailPageProps {
   params: Promise<{
     slug: string;
@@ -29,14 +31,33 @@ export async function generateMetadata({
     };
   }
 
+  const title = item.seoTitle || `${item.title} | Audio | WSOD.PROD`;
+  const description =
+    item.metaDescription ||
+    item.description ||
+    `Lucrare audio din portofoliul WSOD.PROD: ${item.title}.`;
+  const url = `${BASE_URL}/audio/${item.slug}`;
+  const image = item.thumbnailUrl || item.previewUrl || undefined;
+
   return {
-    title: item.seoTitle || `${item.title} | Audio | WSOD.PROD`,
-    description:
-      item.metaDescription ||
-      item.description ||
-      `Lucrare audio din portofoliul WSOD.PROD: ${item.title}.`,
+    title,
+    description,
     alternates: {
       canonical: `/audio/${item.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "WSOD.PROD",
+      type: "article",
+      images: image ? [{ url: image }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : [],
     },
   };
 }

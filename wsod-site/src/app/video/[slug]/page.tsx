@@ -11,6 +11,8 @@ import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 
+const BASE_URL = "https://wsod.cloud";
+
 interface VideoDetailPageProps {
   params: Promise<{
     slug: string;
@@ -29,14 +31,33 @@ export async function generateMetadata({
     };
   }
 
+  const title = item.seoTitle || `${item.title} | Video | WSOD.PROD`;
+  const description =
+    item.metaDescription ||
+    item.description ||
+    `Lucrare video din portofoliul WSOD.PROD: ${item.title}.`;
+  const url = `${BASE_URL}/video/${item.slug}`;
+  const image = item.previewUrl || item.thumbnailUrl || undefined;
+
   return {
-    title: item.seoTitle || `${item.title} | Video | WSOD.PROD`,
-    description:
-      item.metaDescription ||
-      item.description ||
-      `Lucrare video din portofoliul WSOD.PROD: ${item.title}.`,
+    title,
+    description,
     alternates: {
       canonical: `/video/${item.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "WSOD.PROD",
+      type: "article",
+      images: image ? [{ url: image }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : [],
     },
   };
 }
