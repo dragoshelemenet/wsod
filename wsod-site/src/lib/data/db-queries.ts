@@ -395,3 +395,33 @@ export async function getRandomMediaByCategoryFromDb(
   const shuffled = [...candidates].sort(() => Math.random() - 0.5).slice(0, limit);
   return withOwner(shuffled);
 }
+
+export async function getHomeCategoryPreviewMap() {
+  const categories = ["video", "foto", "grafica", "website", "meta-ads", "audio"] as const;
+
+  const entries = await Promise.all(
+    categories.map(async (category) => {
+      const items = await prisma.mediaItem.findMany({
+        where: { category },
+        orderBy: [
+          { isFeatured: "desc" },
+          { date: "desc" },
+        ],
+        take: 3,
+        select: {
+          thumbnailUrl: true,
+          previewUrl: true,
+          fileUrl: true,
+        },
+      });
+
+      const previews = items
+        .map((item) => getPreviewSrc(item))
+        .filter(Boolean) as string[];
+
+      return [category, previews] as const;
+    })
+  );
+
+  return Object.fromEntries(entries) as Record<string, string[]>;
+}
