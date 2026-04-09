@@ -1330,3 +1330,24 @@ img {
     font-size: clamp(26px, 8vw, 44px);
   }
 }
+.media-card {
+  position: relative;
+}
+
+.media-card-main-link {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  position: relative;
+  z-index: 1;
+}
+
+.media-actions {
+  position: relative;
+  z-index: 2;
+}
+
+.media-thumb-image,
+.media-thumb-inner::before {
+  pointer-events: none;
+}

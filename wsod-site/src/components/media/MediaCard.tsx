@@ -7,30 +7,12 @@ interface MediaCardProps {
 }
 
 function getItemHref(item: DbMediaCardItem) {
-  if (item.category === "foto") {
-    return `/foto/${item.slug}`;
-  }
-
-  if (item.category === "video") {
-    return `/video/${item.slug}`;
-  }
-
-  if (item.category === "audio") {
-    return `/audio/${item.slug}`;
-  }
-
-  if (item.category === "grafica") {
-    return `/grafica/${item.slug}`;
-  }
-
-  if (item.category === "website") {
-    return `/website/${item.slug}`;
-  }
-
-  if (item.category === "meta-ads") {
-    return `/meta-ads/${item.slug}`;
-  }
-
+  if (item.category === "foto") return `/foto/${item.slug}`;
+  if (item.category === "video") return `/video/${item.slug}`;
+  if (item.category === "audio") return `/audio/${item.slug}`;
+  if (item.category === "grafica") return `/grafica/${item.slug}`;
+  if (item.category === "website") return `/website/${item.slug}`;
+  if (item.category === "meta-ads") return `/meta-ads/${item.slug}`;
   return item.fileUrl || "#";
 }
 
@@ -51,7 +33,11 @@ export default function MediaCard({ item }: MediaCardProps) {
 
   return (
     <article className="media-card media-card-compact">
-      <Link href={itemHref} className="media-card-main-link">
+      <Link
+        href={itemHref}
+        className="media-card-main-link"
+        aria-label={`Deschide ${item.title}`}
+      >
         <div className="media-thumb">
           <div className="media-thumb-inner">
             {previewSrc ? (
