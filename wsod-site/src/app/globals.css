@@ -1363,3 +1363,73 @@ img {
   justify-content: center;
   margin-top: 16px;
 }
+
+.owner-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 260px));
+  gap: 18px;
+  justify-content: start;
+  align-items: start;
+}
+
+.owner-folder-card {
+  width: 100%;
+  max-width: 260px;
+  min-height: auto;
+  padding: 14px;
+  border-radius: 24px;
+}
+
+.owner-folder-visual {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.owner-folder-copy {
+  margin-top: 10px;
+}
+
+.owner-folder-copy strong {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.15;
+}
+
+.owner-folder-copy span {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.72;
+  margin-top: 4px;
+}
+
+.owner-folder-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.owner-folder-stack-item {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.owner-folder-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .owner-folder-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owner-folder-card {
+    max-width: none;
+  }
+}
