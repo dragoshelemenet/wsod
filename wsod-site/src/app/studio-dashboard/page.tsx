@@ -8,7 +8,13 @@ import { hasAdminSession } from "@/lib/auth/session";
 import { logoutAction } from "@/app/actions/auth-actions";
 import { prisma } from "@/lib/db/prisma";
 
-export default async function StudioDashboardPage() {
+interface StudioDashboardPageProps {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function StudioDashboardPage({
+  searchParams,
+}: StudioDashboardPageProps) {
   const isLoggedIn = await hasAdminSession();
 
   if (!isLoggedIn) {
@@ -62,7 +68,7 @@ export default async function StudioDashboardPage() {
 
         <div className="admin-grid admin-grid-bottom">
           <AdminBrandManager />
-          <AdminMediaManager />
+          <AdminMediaManager searchParams={searchParams} />
         </div>
       </section>
     </main>
