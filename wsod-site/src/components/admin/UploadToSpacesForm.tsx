@@ -54,6 +54,18 @@ function getTodayDate() {
   return `${year}-${month}-${day}`;
 }
 
+function base64ToFile(base64: string, filename: string, mimeType: string) {
+  const byteString = atob(base64);
+  const byteNumbers = new Array(byteString.length);
+
+  for (let i = 0; i < byteString.length; i += 1) {
+    byteNumbers[i] = byteString.charCodeAt(i);
+  }
+
+  const byteArray = new Uint8Array(byteNumbers);
+  return new File([byteArray], filename, { type: mimeType });
+}
+
 export default function UploadToSpacesForm({
   brands,
   models = [],
@@ -93,18 +105,11 @@ export default function UploadToSpacesForm({
 
     setDate(savedDate || getTodayDate());
 
-    if (savedCategory) {
-      setCategory(savedCategory);
-    }
-    if (savedBrand) {
-      setBrandSlug(savedBrand);
-    }
-    if (savedModel) {
-      setPersonModelSlug(savedModel);
-    }
-    if (savedAudioProfile) {
-      setAudioProfileSlug(savedAudioProfile);
-    }
+    if (savedCategory) setCategory(savedCategory);
+    if (savedBrand) setBrandSlug(savedBrand);
+    if (savedModel) setPersonModelSlug(savedModel);
+    if (savedAudioProfile) setAudioProfileSlug(savedAudioProfile);
+
     if (savedOwnerType === "brand" || savedOwnerType === "model" || savedOwnerType === "audioProfile") {
       setOwnerType(savedOwnerType);
     }
@@ -241,6 +246,59 @@ export default function UploadToSpacesForm({
     }
   }
 
+  async function presignAndUploadFile(file: File, uploadOwnerSlug: string, uploadCategory: string) {
+    const presignResponse = await fetch("/api/uploads/presign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fileName: file.name,
+        contentType: file.type,
+        brandSlug: uploadOwnerSlug,
+        category: uploadCategory,
+      }),
+    });
+
+    if (!presignResponse.ok) {
+      throw new Error("Nu s-a putut genera URL-ul de upload.");
+    }
+
+    const { uploadUrl, publicUrl, objectKey } = (await presignResponse.json()) as {
+      uploadUrl: string;
+      publicUrl: string;
+      objectKey: string;
+    };
+
+    const uploadResponse = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("Upload-ul către Spaces a eșuat.");
+    }
+
+    const makePublicResponse = await fetch("/api/uploads/make-public", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        objectKey,
+      }),
+    });
+
+    if (!makePublicResponse.ok) {
+      throw new Error("Fișierul a fost urcat, dar nu a putut fi făcut public.");
+    }
+
+    return { publicUrl };
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -281,53 +339,70 @@ export default function UploadToSpacesForm({
         uploadOwnerSlug = audioProfileSlug;
       }
 
-      const presignResponse = await fetch("/api/uploads/presign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fileName: selectedFile.name,
-          contentType: selectedFile.type,
-          brandSlug: uploadOwnerSlug,
-          category,
-        }),
-      });
+      const originalUpload = await presignAndUploadFile(
+        selectedFile,
+        uploadOwnerSlug,
+        category
+      );
 
-      if (!presignResponse.ok) {
-        throw new Error("Nu s-a putut genera URL-ul de upload.");
-      }
+      let finalThumbnailUrl = thumbnailUrl || originalUpload.publicUrl;
+      let finalPreviewUrl = originalUpload.publicUrl;
 
-      const { uploadUrl, publicUrl, objectKey } = (await presignResponse.json()) as {
-        uploadUrl: string;
-        publicUrl: string;
-        objectKey: string;
-      };
+      const isImage =
+        inferredType === "image" &&
+        selectedFile.type.startsWith("image/");
 
-      const uploadResponse = await fetch(uploadUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": selectedFile.type,
-        },
-        body: selectedFile,
-      });
+      if (isImage) {
+        const variantForm = new FormData();
+        variantForm.append("file", selectedFile);
 
-      if (!uploadResponse.ok) {
-        throw new Error("Upload-ul către Spaces a eșuat.");
-      }
+        const variantsResponse = await fetch("/api/uploads/image-variants", {
+          method: "POST",
+          body: variantForm,
+        });
 
-      const makePublicResponse = await fetch("/api/uploads/make-public", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          objectKey,
-        }),
-      });
+        if (variantsResponse.ok) {
+          const variantsResult = (await variantsResponse.json()) as {
+            ok: boolean;
+            thumbnailBase64?: string;
+            previewBase64?: string;
+            mimeType?: string;
+          };
 
-      if (!makePublicResponse.ok) {
-        throw new Error("Fișierul a fost urcat, dar nu a putut fi făcut public.");
+          if (
+            variantsResult.ok &&
+            variantsResult.thumbnailBase64 &&
+            variantsResult.previewBase64 &&
+            variantsResult.mimeType
+          ) {
+            const thumbnailFile = base64ToFile(
+              variantsResult.thumbnailBase64,
+              `thumb-${selectedFile.name}.jpg`,
+              variantsResult.mimeType
+            );
+
+            const previewFile = base64ToFile(
+              variantsResult.previewBase64,
+              `preview-${selectedFile.name}.jpg`,
+              variantsResult.mimeType
+            );
+
+            const thumbnailUpload = await presignAndUploadFile(
+              thumbnailFile,
+              uploadOwnerSlug,
+              `${category}-thumb`
+            );
+
+            const previewUpload = await presignAndUploadFile(
+              previewFile,
+              uploadOwnerSlug,
+              `${category}-preview`
+            );
+
+            finalThumbnailUrl = thumbnailUpload.publicUrl;
+            finalPreviewUrl = previewUpload.publicUrl;
+          }
+        }
       }
 
       const saveResponse = await fetch("/api/admin/media", {
@@ -347,9 +422,9 @@ export default function UploadToSpacesForm({
           seoTitle,
           metaDescription,
           date,
-          fileUrl: publicUrl,
-          thumbnailUrl: thumbnailUrl || publicUrl,
-          previewUrl: publicUrl,
+          fileUrl: originalUpload.publicUrl,
+          thumbnailUrl: finalThumbnailUrl,
+          previewUrl: finalPreviewUrl,
           fileNameOriginal: selectedFile.name,
         }),
       });
@@ -580,7 +655,7 @@ export default function UploadToSpacesForm({
             id="thumbnailUrl"
             value={thumbnailUrl}
             onChange={(e) => setThumbnailUrl(e.target.value)}
-            placeholder="Poți lăsa gol pentru a folosi fișierul urcat"
+            placeholder="Poți lăsa gol pentru a genera automat sau pentru a folosi fișierul urcat"
           />
         </div>
 
