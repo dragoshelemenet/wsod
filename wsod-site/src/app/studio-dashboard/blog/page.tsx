@@ -2,9 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { hasAdminSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
-import BlogAdminList from "./page";
+import BlogAdminList from "@/components/admin/BlogAdminList";
 
-export default async function StudioDashboardBlogPageServer() {
+export default async function StudioDashboardBlogPage() {
   const isLoggedIn = await hasAdminSession();
 
   if (!isLoggedIn) {
