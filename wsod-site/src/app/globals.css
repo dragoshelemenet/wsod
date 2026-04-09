@@ -1937,3 +1937,30 @@ img {
 .hero-logo-sub {
   margin-top: 10px !important;
 }
+
+/* stronger hero logo anti-clipping fix */
+.hero {
+  align-items: start !important;
+}
+
+.hero-logo-wrap {
+  min-height: 270px !important;
+  padding-top: 34px !important;
+  padding-bottom: 28px !important;
+  overflow: visible !important;
+}
+
+.hero-logo {
+  position: relative !important;
+  overflow: visible !important;
+  line-height: 1.16 !important;
+  padding-top: 0.22em !important;
+  padding-bottom: 0.18em !important;
+  padding-left: 0.02em !important;
+  padding-right: 0.04em !important;
+  display: inline-block !important;
+}
+
+.hero-logo-sub {
+  margin-top: 14px !important;
+}
