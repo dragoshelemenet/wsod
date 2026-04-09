@@ -15,33 +15,56 @@ export default async function StudioDashboardPage() {
       title: "Branduri",
       description: "Creare și administrare branduri.",
       href: "/studio-dashboard/brands",
+      isVisible: true,
     },
     {
       title: "Modele",
       description: "Creare și organizare modele.",
       href: "/studio-dashboard/models",
+      isVisible: true,
     },
     {
       title: "Profiluri audio",
       description: "Creare și administrare profiluri audio.",
       href: "/studio-dashboard/audio",
+      isVisible: true,
     },
     {
       title: "Upload media",
       description: "Upload separat, mai curat și mai ușor de folosit.",
       href: "/studio-dashboard/upload",
+      isVisible: true,
     },
     {
       title: "Media manager",
       description: "Căutare, filtrare și management media într-o pagină separată.",
       href: "/studio-dashboard/media",
+      isVisible: true,
     },
     {
       title: "Blog",
       description: "Adaugi articole noi, editezi articole vechi și atașezi media.",
       href: "/studio-dashboard/blog",
+      isVisible: true,
     },
+
+    /* exemple pentru secțiuni nepregătite încă
+    {
+      title: "Meta Ads",
+      description: "Administrare Meta Ads.",
+      href: "/studio-dashboard/meta-ads",
+      isVisible: false,
+    },
+    {
+      title: "Website",
+      description: "Administrare website.",
+      href: "/studio-dashboard/website",
+      isVisible: false,
+    },
+    */
   ];
+
+  const visibleSections = sections.filter((section) => section.isVisible);
 
   return (
     <main className="inner-page">
@@ -67,7 +90,7 @@ export default async function StudioDashboardPage() {
         </div>
 
         <div className="admin-sections-grid">
-          {sections.map((section) => (
+          {visibleSections.map((section) => (
             <Link key={section.href} href={section.href} className="admin-section-card">
               <strong>{section.title}</strong>
               <span>{section.description}</span>
