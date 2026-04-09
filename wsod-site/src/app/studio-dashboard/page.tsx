@@ -36,6 +36,11 @@ export default async function StudioDashboardPage() {
       description: "Căutare, filtrare și management media într-o pagină separată.",
       href: "/studio-dashboard/media",
     },
+    {
+      title: "Blog",
+      description: "Adaugi articole noi, editezi articole vechi și atașezi media.",
+      href: "/studio-dashboard/blog",
+    },
   ];
 
   return (

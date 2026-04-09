@@ -1533,3 +1533,62 @@ img {
 .media-card-photo-caption {
   display: none;
 }
+
+
+.admin-media-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.admin-media-pick-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+}
+
+.admin-media-pick-card.active {
+  border-color: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.08);
+}
+
+.admin-media-pick-card input {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-media-pick-preview {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  display: grid;
+  place-items: center;
+}
+
+.admin-media-pick-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-media-pick-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-media-pick-copy strong {
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.admin-media-pick-copy span {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.58);
+}
