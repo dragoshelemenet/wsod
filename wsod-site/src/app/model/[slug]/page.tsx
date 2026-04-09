@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import {
-  getBrandBySlugFromDb,
-  getMediaByBrandSlugFromDb,
+  getModelBySlugFromDb,
+  getMediaByModelSlugFromDb,
 } from "@/lib/data/db-queries";
 
 export const dynamic = "force-dynamic";
 
-interface BrandPageProps {
+interface ModelPageProps {
   params: Promise<{
     slug: string;
   }>;
@@ -17,37 +17,37 @@ interface BrandPageProps {
 
 export async function generateMetadata({
   params,
-}: BrandPageProps): Promise<Metadata> {
+}: ModelPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const brand = await getBrandBySlugFromDb(slug);
+  const model = await getModelBySlugFromDb(slug);
 
-  if (!brand) {
+  if (!model) {
     return {
-      title: "Brand | WSOD.PROD",
+      title: "Model | WSOD.PROD",
     };
   }
 
   return {
-    title: brand.seoTitle || `${brand.name} | WSOD.PROD`,
+    title: model.seoTitle || `${model.name} | WSOD.PROD`,
     description:
-      brand.metaDescription ||
-      brand.description ||
-      `Materiale realizate pentru ${brand.name} de WSOD.PROD.`,
+      model.metaDescription ||
+      model.description ||
+      `Materiale foto și conținut vizual pentru ${model.name}.`,
     alternates: {
-      canonical: `/brand/${brand.slug}`,
+      canonical: `/model/${model.slug}`,
     },
   };
 }
 
-export default async function BrandPage({ params }: BrandPageProps) {
+export default async function ModelPage({ params }: ModelPageProps) {
   const { slug } = await params;
 
-  const [brand, items] = await Promise.all([
-    getBrandBySlugFromDb(slug),
-    getMediaByBrandSlugFromDb(slug, { limit: 48 }),
+  const [model, items] = await Promise.all([
+    getModelBySlugFromDb(slug),
+    getMediaByModelSlugFromDb(slug, { limit: 48 }),
   ]);
 
-  if (!brand) {
+  if (!model) {
     notFound();
   }
 
@@ -60,15 +60,15 @@ export default async function BrandPage({ params }: BrandPageProps) {
       </div>
 
       <section className="inner-section">
-        <h1>{brand.name}</h1>
+        <h1>{model.name}</h1>
 
         <p className="inner-description">
-          {brand.description || `Toate materialele disponibile pentru ${brand.name}.`}
+          {model.description || `Toate materialele disponibile pentru ${model.name}.`}
         </p>
 
         <MediaGrid
           items={items}
-          emptyText="Nu există materiale pentru acest brand momentan."
+          emptyText="Nu există materiale pentru acest model momentan."
         />
       </section>
     </main>
