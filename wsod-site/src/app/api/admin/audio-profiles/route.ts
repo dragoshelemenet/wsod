@@ -21,6 +21,10 @@ export async function POST(request: Request) {
   const body = await request.json();
   const name = String(body.name || "").trim();
   const kind = String(body.kind || "").trim();
+  const coverImageUrl = String(body.coverImageUrl || "").trim();
+  const description = String(body.description || "").trim();
+  const seoTitle = String(body.seoTitle || "").trim();
+  const metaDescription = String(body.metaDescription || "").trim();
 
   if (!name) {
     return NextResponse.json(
@@ -62,6 +66,10 @@ export async function POST(request: Request) {
       name,
       slug,
       kind,
+      coverImageUrl: coverImageUrl || null,
+      description: description || null,
+      seoTitle: seoTitle || null,
+      metaDescription: metaDescription || null,
     },
   });
 
