@@ -19,13 +19,16 @@ export interface Category {
 export interface MediaItem {
   id: string;
   title: string;
-  brandSlug: string;
+  slug: string;
   category: CategorySlug;
   type: "image" | "video" | "audio" | "website" | "graphic";
   date: string;
-  thumbnail?: string;
-  fileUrl?: string;
-  description?: string;
+  thumbnailUrl?: string | null;
+  previewUrl?: string | null;
+  fileUrl?: string | null;
+  description?: string | null;
+  seoTitle?: string | null;
+  metaDescription?: string | null;
 }
 
 export interface BlogPost {
@@ -38,15 +41,27 @@ export interface BlogPost {
   metaDescription?: string;
 }
 
+export interface DbOwner {
+  type: "brand" | "model" | "audioProfile" | "unknown";
+  name: string;
+  slug: string | null;
+  audioKind?: string | null;
+}
+
 export interface DbMediaCardItem {
   id: string;
   title: string;
+  slug: string;
   category: string;
   type: string;
   date: Date;
-  thumbnail: string | null;
+  thumbnailUrl: string | null;
+  previewUrl: string | null;
   fileUrl: string | null;
+  fileNameOriginal: string | null;
   description: string | null;
+  seoTitle: string | null;
+  metaDescription: string | null;
   brand: {
     name: string;
     slug: string;
@@ -55,4 +70,10 @@ export interface DbMediaCardItem {
     name: string;
     slug: string;
   } | null;
+  audioProfile: {
+    name: string;
+    slug: string;
+    kind: string;
+  } | null;
+  owner: DbOwner;
 }

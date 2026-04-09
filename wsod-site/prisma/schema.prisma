@@ -7,38 +7,69 @@ datasource db {
 }
 
 model Brand {
-  id         String      @id @default(cuid())
-  name       String
-  slug       String      @unique
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  mediaItems MediaItem[]
+  id              String      @id @default(cuid())
+  name            String
+  slug            String      @unique
+  logoUrl         String?
+  coverImageUrl   String?
+  description     String?
+  seoTitle        String?
+  metaDescription String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  mediaItems      MediaItem[]
 }
 
 model PersonModel {
-  id         String      @id @default(cuid())
-  name       String
-  slug       String      @unique
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  mediaItems MediaItem[]
+  id              String      @id @default(cuid())
+  name            String
+  slug            String      @unique
+  portraitImageUrl String?
+  description     String?
+  seoTitle        String?
+  metaDescription String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  mediaItems      MediaItem[]
+}
+
+model AudioProfile {
+  id              String      @id @default(cuid())
+  name            String
+  slug            String      @unique
+  kind            String
+  coverImageUrl   String?
+  description     String?
+  seoTitle        String?
+  metaDescription String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  mediaItems      MediaItem[]
 }
 
 model MediaItem {
-  id          String   @id @default(cuid())
-  title       String
-  category    String
-  type        String
-  date        DateTime
-  thumbnail   String?
-  fileUrl     String?
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  category        String
+  type            String
+  date            DateTime
+  thumbnailUrl    String?
+  previewUrl      String?
+  fileUrl         String?
+  fileNameOriginal String?
+  description     String?
+  seoTitle        String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  brandId String?
-  brand   Brand? @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  brandId         String?
+  brand           Brand?        @relation(fields: [brandId], references: [id], onDelete: Cascade)
 
-  personModelId String?
-  personModel   PersonModel? @relation(fields: [personModelId], references: [id], onDelete: Cascade)
+  personModelId   String?
+  personModel     PersonModel?  @relation(fields: [personModelId], references: [id], onDelete: Cascade)
+
+  audioProfileId  String?
+  audioProfile    AudioProfile? @relation(fields: [audioProfileId], references: [id], onDelete: Cascade)
 }
