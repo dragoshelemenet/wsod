@@ -3,6 +3,7 @@ import sharp from "sharp";
 export async function generateImageThumbnail(buffer: Buffer) {
   try {
     const thumbnailBuffer = await sharp(buffer)
+      .rotate()
       .resize({
         width: 900,
         height: 900,
@@ -28,6 +29,7 @@ export async function generateImageThumbnail(buffer: Buffer) {
 export async function generateImagePreview(buffer: Buffer) {
   try {
     const previewBuffer = await sharp(buffer)
+      .rotate()
       .resize({
         width: 1600,
         height: 1600,
