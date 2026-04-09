@@ -17,9 +17,9 @@ const BASE_URL = "https://wsod.cloud";
 interface DetailPageProps { params: Promise<{ slug: string }>; }
 
 const CATEGORY = "grafica";
-const CATEGORY_LABEL = "grafica" === "meta-ads" ? "Meta Ads" : "grafica".charAt(0).toUpperCase() + "grafica".slice(1);
+const CATEGORY_LABEL = "Grafica";
 const BACK_HREF = "/grafica";
-const BACK_LABEL = "grafica" === "meta-ads" ? "← Înapoi la Meta Ads" : "← Înapoi la " + CATEGORY_LABEL.toLowerCase();
+const BACK_LABEL = "← Înapoi la grafica";
 
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const { slug } = await params;
