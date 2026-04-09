@@ -29,6 +29,7 @@ async function main() {
     data: [
       {
         title: "Coca-Cola Hero Campaign",
+        slug: "coca-cola-hero-campaign",
         category: "video",
         type: "video",
         date: new Date("2026-04-01"),
@@ -39,6 +40,7 @@ async function main() {
       },
       {
         title: "Coca-Cola Product Photos",
+        slug: "coca-cola-product-photos",
         category: "foto",
         type: "image",
         date: new Date("2026-03-28"),
@@ -49,6 +51,7 @@ async function main() {
       },
       {
         title: "Samsung Launch Visual",
+        slug: "samsung-launch-visual",
         category: "grafica",
         type: "graphic",
         date: new Date("2026-03-21"),
@@ -59,10 +62,12 @@ async function main() {
       },
       {
         title: "ING Bank Audio Identity",
+        slug: "ing-bank-audio-identity",
         category: "audio",
         type: "audio",
         date: new Date("2026-03-11"),
         fileUrl: "/media/demo/ing-bank/test-audio.mp3",
+        thumbnailUrl: "/media/demo/ing-bank/test-photo.jpg",
         description: "Identitate audio și sound branding.",
         brandId: ingBank.id,
       },
