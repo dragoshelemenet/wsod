@@ -24,6 +24,9 @@ export function getSpacesClient() {
   return new S3Client({
     region,
     endpoint,
+    forcePathStyle: false,
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
     credentials: {
       accessKeyId,
       secretAccessKey,
