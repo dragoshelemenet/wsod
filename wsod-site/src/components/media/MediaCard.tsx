@@ -19,6 +19,18 @@ function getItemHref(item: DbMediaCardItem) {
     return `/audio/${item.slug}`;
   }
 
+  if (item.category === "grafica") {
+    return `/grafica/${item.slug}`;
+  }
+
+  if (item.category === "website") {
+    return `/website/${item.slug}`;
+  }
+
+  if (item.category === "meta-ads") {
+    return `/meta-ads/${item.slug}`;
+  }
+
   return item.fileUrl || "#";
 }
 
