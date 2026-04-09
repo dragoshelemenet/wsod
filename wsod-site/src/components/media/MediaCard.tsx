@@ -7,64 +7,69 @@ interface MediaCardProps {
 }
 
 export default function MediaCard({ item }: MediaCardProps) {
-  const ownerLabel = item.personModel ? "Model" : "Brand";
-  const ownerName = item.personModel?.name ?? item.brand?.name ?? "Fără asociere";
-  const ownerHref = item.personModel
-    ? `/model/${item.personModel.slug}`
-    : item.brand
-      ? `/brand/${item.brand.slug}`
-      : null;
+  const owner = item.owner;
+  const ownerHref =
+    owner.type === "brand" && owner.slug
+      ? `/brand/${owner.slug}`
+      : owner.type === "model" && owner.slug
+        ? `/model/${owner.slug}`
+        : owner.type === "audioProfile" && owner.slug
+          ? `/audio-profile/${owner.slug}`
+          : null;
+
+  const previewSrc = item.thumbnailUrl || item.previewUrl || item.fileUrl || null;
 
   return (
-    <article className="media-card">
+    <article className="media-card media-card-compact">
       <div className="media-thumb">
         <div className="media-thumb-inner">
-          {item.thumbnail ? (
+          {previewSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={item.thumbnail}
+              src={previewSrc}
               alt={item.title}
               className="media-thumb-image"
+              loading="lazy"
             />
           ) : (
-            item.type.toUpperCase()
+            <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
           )}
         </div>
       </div>
 
       <div className="media-copy">
-        <h3>{item.title}</h3>
-        <p>{item.description}</p>
+        <div className="media-topline">
+          <span className="brand-chip">{owner.type === "unknown" ? "Media" : owner.name}</span>
+          <span className="media-date">
+            {new Date(item.date).toLocaleDateString("ro-RO")}
+          </span>
+        </div>
+
+        <h3 className="media-title">{item.title}</h3>
 
         <div className="media-meta">
           <span>{getCategoryLabel(item.category)}</span>
-          <span>{new Date(item.date).toLocaleDateString("ro-RO")}</span>
+          {item.fileNameOriginal ? <span>{item.fileNameOriginal}</span> : null}
         </div>
 
-        <div className="media-brand-row">
-          <span className="brand-chip">
-            {ownerLabel}: {ownerName}
-          </span>
-
+        <div className="media-actions">
           {ownerHref ? (
             <Link href={ownerHref} className="media-link">
-              Vezi {ownerLabel.toLowerCase()}
+              Vezi {owner.type === "audioProfile" ? "profilul audio" : owner.type}
             </Link>
           ) : null}
-        </div>
 
-        {item.fileUrl && (
-          <div className="media-actions">
+          {item.fileUrl ? (
             <a
               href={item.fileUrl}
               target="_blank"
               rel="noreferrer"
               className="media-open-button"
             >
-              Deschide fișierul
+              Deschide
             </a>
-          </div>
-        )}
+          ) : null}
+        </div>
       </div>
     </article>
   );
