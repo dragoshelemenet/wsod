@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
+import OwnerIntroCard from "@/components/media/OwnerIntroCard";
 import {
   getModelBySlugFromDb,
   getMediaByModelSlugFromDb,
@@ -60,11 +61,12 @@ export default async function ModelPage({ params }: ModelPageProps) {
       </div>
 
       <section className="inner-section">
-        <h1>{model.name}</h1>
-
-        <p className="inner-description">
-          {model.description || `Toate materialele disponibile pentru ${model.name}.`}
-        </p>
+        <OwnerIntroCard
+          title={model.name}
+          description={model.description}
+          imageUrl={model.portraitImageUrl || null}
+          metaLine="Model page"
+        />
 
         <MediaGrid
           items={items}

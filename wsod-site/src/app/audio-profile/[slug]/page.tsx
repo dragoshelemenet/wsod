@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
+import OwnerIntroCard from "@/components/media/OwnerIntroCard";
 import {
   getAudioProfileBySlugFromDb,
   getMediaByAudioProfileSlugFromDb,
@@ -62,12 +63,12 @@ export default async function AudioProfilePage({
       </div>
 
       <section className="inner-section">
-        <h1>{profile.name}</h1>
-
-        <p className="inner-description">
-          {profile.description ||
-            `Toate materialele disponibile pentru ${profile.name} (${profile.kind}).`}
-        </p>
+        <OwnerIntroCard
+          title={profile.name}
+          description={profile.description}
+          imageUrl={profile.coverImageUrl || null}
+          metaLine={`Audio profile • ${profile.kind}`}
+        />
 
         <MediaGrid
           items={items}
