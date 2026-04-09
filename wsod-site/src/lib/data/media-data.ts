@@ -1,8 +1,20 @@
-import { MediaItem } from "@/lib/types";
+export type LocalMediaItem = {
+  id: string;
+  title: string;
+  slug: string;
+  brandSlug: string;
+  category: string;
+  type: string;
+  date: string;
+  fileUrl?: string;
+  thumbnail?: string;
+  description?: string;
+};
 
-export const defaultMediaItems: MediaItem[] = [
+export const defaultMediaItems: LocalMediaItem[] = [
   {
     id: "1",
+    slug: "coca-cola-hero-campaign",
     title: "Coca-Cola Hero Campaign",
     brandSlug: "coca-cola",
     category: "video",
@@ -14,6 +26,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "2",
+    slug: "coca-cola-product-photos",
     title: "Coca-Cola Product Photos",
     brandSlug: "coca-cola",
     category: "foto",
@@ -25,6 +38,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "3",
+    slug: "samsung-launch-visual",
     title: "Samsung Launch Visual",
     brandSlug: "samsung",
     category: "grafica",
@@ -36,6 +50,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "4",
+    slug: "samsung-website-landing",
     title: "Samsung Website Landing",
     brandSlug: "samsung",
     category: "website",
@@ -45,6 +60,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "5",
+    slug: "ing-bank-audio-identity",
     title: "ING Bank Audio Identity",
     brandSlug: "ing-bank",
     category: "audio",
@@ -55,6 +71,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "6",
+    slug: "ing-bank-reels-edit",
     title: "ING Bank Reels Edit",
     brandSlug: "ing-bank",
     category: "video",
@@ -66,6 +83,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "7",
+    slug: "samsung-studio-photos",
     title: "Samsung Studio Photos",
     brandSlug: "samsung",
     category: "foto",
@@ -77,6 +95,7 @@ export const defaultMediaItems: MediaItem[] = [
   },
   {
     id: "8",
+    slug: "coca-cola-meta-ads-set",
     title: "Coca-Cola Meta Ads Set",
     brandSlug: "coca-cola",
     category: "meta-ads",
@@ -90,13 +109,13 @@ export const defaultMediaItems: MediaItem[] = [
 
 export const mediaItems = defaultMediaItems;
 
-export function getMediaByCategory(category: string, items: MediaItem[] = mediaItems) {
+export function getMediaByCategory(category: string, items: LocalMediaItem[] = mediaItems) {
   return items
     .filter((item) => item.category === category)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date));
 }
 
-export function getMediaByBrand(brandSlug: string, items: MediaItem[] = mediaItems) {
+export function getMediaByBrand(brandSlug: string, items: LocalMediaItem[] = mediaItems) {
   return items
     .filter((item) => item.brandSlug === brandSlug)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date));
