@@ -86,6 +86,18 @@ function graphicKindOptions() {
   ];
 }
 
+function fileNameToTitle(fileName: string) {
+  return fileName.replace(/\.[^/.]+$/, "").replace(/[_-]+/g, " ").trim();
+}
+
+function buildItemTitle(baseTitle: string, file: File, totalFiles: number) {
+  if (totalFiles === 1 && baseTitle.trim()) {
+    return baseTitle.trim();
+  }
+
+  return fileNameToTitle(file.name) || baseTitle.trim() || "Media item";
+}
+
 export default function UploadToSpacesForm({
   brands,
   models = [],
@@ -108,7 +120,7 @@ export default function UploadToSpacesForm({
   const [metaDescription, setMetaDescription] = useState("");
   const [date, setDate] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const [groupLabel, setGroupLabel] = useState("");
   const [groupOrder, setGroupOrder] = useState(0);
@@ -334,10 +346,164 @@ export default function UploadToSpacesForm({
     return { publicUrl };
   }
 
+  async function uploadSingleFile(file: File, totalFiles: number) {
+    let uploadOwnerSlug = brandSlug;
+    if (category === "foto" && ownerType === "model") {
+      uploadOwnerSlug = personModelSlug;
+    }
+    if (category === "audio") {
+      uploadOwnerSlug = audioProfileSlug;
+    }
+
+    const originalUpload = await presignAndUploadFile(
+      file,
+      uploadOwnerSlug,
+      category
+    );
+
+    let finalThumbnailUrl = thumbnailUrl || originalUpload.publicUrl;
+    let finalPreviewUrl = originalUpload.publicUrl;
+
+    const isImage =
+      inferredType === "image" &&
+      file.type.startsWith("image/");
+
+    const isVideo =
+      inferredType === "video" &&
+      file.type.startsWith("video/");
+
+    if (isImage) {
+      const variantForm = new FormData();
+      variantForm.append("file", file);
+
+      const variantsResponse = await fetch("/api/uploads/image-variants", {
+        method: "POST",
+        body: variantForm,
+      });
+
+      if (variantsResponse.ok) {
+        const variantsResult = (await variantsResponse.json()) as {
+          ok: boolean;
+          thumbnailBase64?: string;
+          previewBase64?: string;
+          mimeType?: string;
+        };
+
+        if (
+          variantsResult.ok &&
+          variantsResult.thumbnailBase64 &&
+          variantsResult.previewBase64 &&
+          variantsResult.mimeType
+        ) {
+          const thumbnailFile = base64ToFile(
+            variantsResult.thumbnailBase64,
+            `thumb-${file.name}.jpg`,
+            variantsResult.mimeType
+          );
+
+          const previewFile = base64ToFile(
+            variantsResult.previewBase64,
+            `preview-${file.name}.jpg`,
+            variantsResult.mimeType
+          );
+
+          const thumbnailUpload = await presignAndUploadFile(
+            thumbnailFile,
+            uploadOwnerSlug,
+            `${category}-thumb`
+          );
+
+          const previewUpload = await presignAndUploadFile(
+            previewFile,
+            uploadOwnerSlug,
+            `${category}-preview`
+          );
+
+          finalThumbnailUrl = thumbnailUpload.publicUrl;
+          finalPreviewUrl = previewUpload.publicUrl;
+        }
+      }
+    }
+
+    if (isVideo) {
+      const posterForm = new FormData();
+      posterForm.append("file", file);
+
+      const posterResponse = await fetch("/api/uploads/video-poster", {
+        method: "POST",
+        body: posterForm,
+      });
+
+      if (posterResponse.ok) {
+        const posterResult = (await posterResponse.json()) as {
+          ok: boolean;
+          posterBase64?: string;
+          mimeType?: string;
+        };
+
+        if (
+          posterResult.ok &&
+          posterResult.posterBase64 &&
+          posterResult.mimeType
+        ) {
+          const posterFile = base64ToFile(
+            posterResult.posterBase64,
+            `poster-${file.name}.jpg`,
+            posterResult.mimeType
+          );
+
+          const posterUpload = await presignAndUploadFile(
+            posterFile,
+            uploadOwnerSlug,
+            `${category}-poster`
+          );
+
+          finalThumbnailUrl = posterUpload.publicUrl;
+        }
+      }
+    }
+
+    const saveResponse = await fetch("/api/admin/media", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ownerType,
+        brandSlug: ownerType === "brand" ? brandSlug : "",
+        personModelSlug: ownerType === "model" ? personModelSlug : "",
+        audioProfileSlug: ownerType === "audioProfile" ? audioProfileSlug : "",
+        category,
+        type: inferredType,
+        title: buildItemTitle(title, file, totalFiles),
+        description,
+        seoTitle,
+        metaDescription,
+        date,
+        fileUrl: originalUpload.publicUrl,
+        thumbnailUrl: finalThumbnailUrl,
+        previewUrl: finalPreviewUrl,
+        fileNameOriginal: file.name,
+        groupLabel: category === "foto" && ownerType === "model" ? groupLabel : "",
+        groupOrder: category === "foto" && ownerType === "model" ? groupOrder : 0,
+        graphicKind: category === "grafica" ? graphicKind : "",
+      }),
+    });
+
+    const result = (await saveResponse.json()) as {
+      ok: boolean;
+      message: string;
+    };
+
+    if (!saveResponse.ok || !result.ok) {
+      throw new Error(result.message || `Nu s-a putut salva fișierul ${file.name} în DB.`);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!selectedFile || !category || !title || !date) {
+    if (!selectedFiles.length || !category || !date) {
       setMessage("Completează toate câmpurile obligatorii.");
       return;
     }
@@ -357,7 +523,7 @@ export default function UploadToSpacesForm({
       return;
     }
 
-    if (![ "foto", "audio" ].includes(category) && !brandSlug) {
+    if (!["foto", "audio"].includes(category) && !brandSlug) {
       setMessage("Selectează un brand.");
       return;
     }
@@ -372,169 +538,31 @@ export default function UploadToSpacesForm({
       return;
     }
 
+    if (selectedFiles.length === 1 && !title.trim()) {
+      setMessage("La upload simplu, completează și titlul.");
+      return;
+    }
+
     try {
       setIsUploading(true);
       setMessage("");
 
-      let uploadOwnerSlug = brandSlug;
-      if (category === "foto" && ownerType === "model") {
-        uploadOwnerSlug = personModelSlug;
-      }
-      if (category === "audio") {
-        uploadOwnerSlug = audioProfileSlug;
+      for (const file of selectedFiles) {
+        await uploadSingleFile(file, selectedFiles.length);
       }
 
-      const originalUpload = await presignAndUploadFile(
-        selectedFile,
-        uploadOwnerSlug,
-        category
+      setMessage(
+        selectedFiles.length === 1
+          ? "Fișier urcat și salvat cu succes."
+          : `${selectedFiles.length} fișiere urcate și salvate cu succes.`
       );
 
-      let finalThumbnailUrl = thumbnailUrl || originalUpload.publicUrl;
-      let finalPreviewUrl = originalUpload.publicUrl;
-
-      const isImage =
-        inferredType === "image" &&
-        selectedFile.type.startsWith("image/");
-
-      const isVideo =
-        inferredType === "video" &&
-        selectedFile.type.startsWith("video/");
-
-      if (isImage) {
-        const variantForm = new FormData();
-        variantForm.append("file", selectedFile);
-
-        const variantsResponse = await fetch("/api/uploads/image-variants", {
-          method: "POST",
-          body: variantForm,
-        });
-
-        if (variantsResponse.ok) {
-          const variantsResult = (await variantsResponse.json()) as {
-            ok: boolean;
-            thumbnailBase64?: string;
-            previewBase64?: string;
-            mimeType?: string;
-          };
-
-          if (
-            variantsResult.ok &&
-            variantsResult.thumbnailBase64 &&
-            variantsResult.previewBase64 &&
-            variantsResult.mimeType
-          ) {
-            const thumbnailFile = base64ToFile(
-              variantsResult.thumbnailBase64,
-              `thumb-${selectedFile.name}.jpg`,
-              variantsResult.mimeType
-            );
-
-            const previewFile = base64ToFile(
-              variantsResult.previewBase64,
-              `preview-${selectedFile.name}.jpg`,
-              variantsResult.mimeType
-            );
-
-            const thumbnailUpload = await presignAndUploadFile(
-              thumbnailFile,
-              uploadOwnerSlug,
-              `${category}-thumb`
-            );
-
-            const previewUpload = await presignAndUploadFile(
-              previewFile,
-              uploadOwnerSlug,
-              `${category}-preview`
-            );
-
-            finalThumbnailUrl = thumbnailUpload.publicUrl;
-            finalPreviewUrl = previewUpload.publicUrl;
-          }
-        }
-      }
-
-      if (isVideo) {
-        const posterForm = new FormData();
-        posterForm.append("file", selectedFile);
-
-        const posterResponse = await fetch("/api/uploads/video-poster", {
-          method: "POST",
-          body: posterForm,
-        });
-
-        if (posterResponse.ok) {
-          const posterResult = (await posterResponse.json()) as {
-            ok: boolean;
-            posterBase64?: string;
-            mimeType?: string;
-          };
-
-          if (
-            posterResult.ok &&
-            posterResult.posterBase64 &&
-            posterResult.mimeType
-          ) {
-            const posterFile = base64ToFile(
-              posterResult.posterBase64,
-              `poster-${selectedFile.name}.jpg`,
-              posterResult.mimeType
-            );
-
-            const posterUpload = await presignAndUploadFile(
-              posterFile,
-              uploadOwnerSlug,
-              `${category}-poster`
-            );
-
-            finalThumbnailUrl = posterUpload.publicUrl;
-          }
-        }
-      }
-
-      const saveResponse = await fetch("/api/admin/media", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ownerType,
-          brandSlug: ownerType === "brand" ? brandSlug : "",
-          personModelSlug: ownerType === "model" ? personModelSlug : "",
-          audioProfileSlug: ownerType === "audioProfile" ? audioProfileSlug : "",
-          category,
-          type: inferredType,
-          title,
-          description,
-          seoTitle,
-          metaDescription,
-          date,
-          fileUrl: originalUpload.publicUrl,
-          thumbnailUrl: finalThumbnailUrl,
-          previewUrl: finalPreviewUrl,
-          fileNameOriginal: selectedFile.name,
-          groupLabel: category === "foto" && ownerType === "model" ? groupLabel : "",
-          groupOrder: category === "foto" && ownerType === "model" ? groupOrder : 0,
-          graphicKind: category === "grafica" ? graphicKind : "",
-        }),
-      });
-
-      const result = (await saveResponse.json()) as {
-        ok: boolean;
-        message: string;
-      };
-
-      if (!saveResponse.ok || !result.ok) {
-        throw new Error(result.message || "Nu s-a putut salva fișierul în DB.");
-      }
-
-      setMessage("Fișier urcat și salvat cu succes.");
       setTitle("");
       setDescription("");
       setSeoTitle("");
       setMetaDescription("");
       setThumbnailUrl("");
-      setSelectedFile(null);
+      setSelectedFiles([]);
       setGroupLabel("");
       setGroupOrder(0);
       setGraphicKind("");
@@ -742,8 +770,20 @@ export default function UploadToSpacesForm({
         ) : null}
 
         <div className="admin-form-field">
-          <label htmlFor="title">Titlu</label>
-          <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <label htmlFor="title">
+            Titlu {selectedFiles.length > 1 ? "(opțional la upload multiplu)" : ""}
+          </label>
+          <input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required={selectedFiles.length <= 1}
+            placeholder={
+              selectedFiles.length > 1
+                ? "Dacă lași gol, fiecare fișier va primi numele lui"
+                : ""
+            }
+          />
         </div>
 
         <div className="admin-form-field">
@@ -793,13 +833,19 @@ export default function UploadToSpacesForm({
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="file">Fișier</label>
+          <label htmlFor="file">Fișiere</label>
           <input
             id="file"
             type="file"
-            onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+            multiple
+            onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
             required
           />
+          {selectedFiles.length ? (
+            <span className="admin-helper-text">
+              Selectate: {selectedFiles.length} fișiere
+            </span>
+          ) : null}
         </div>
 
         {message ? (
@@ -809,7 +855,11 @@ export default function UploadToSpacesForm({
         ) : null}
 
         <button type="submit" className="admin-submit" disabled={isUploading}>
-          {isUploading ? "Se urcă..." : "Upload în Spaces"}
+          {isUploading
+            ? `Se urcă${selectedFiles.length > 1 ? ` ${selectedFiles.length} fișiere...` : "..."}`
+            : selectedFiles.length > 1
+              ? `Upload ${selectedFiles.length} fișiere`
+              : "Upload în Spaces"}
         </button>
       </form>
     </div>
