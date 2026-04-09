@@ -11,6 +11,23 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+async function makeUniqueSlug(baseSlug: string) {
+  let slug = baseSlug;
+  let counter = 2;
+
+  while (true) {
+    const existing = await prisma.mediaItem.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+
+    if (!existing) return slug;
+
+    slug = `${baseSlug}-${counter}`;
+    counter += 1;
+  }
+}
+
 export async function POST(request: Request) {
   const isLoggedIn = await hasAdminSession();
 
@@ -19,58 +36,188 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const name = String(body.name || "").trim();
-  const kind = String(body.kind || "").trim();
 
-  if (!name) {
+  const ownerType = String(body.ownerType || "").trim();
+  const brandSlug = String(body.brandSlug || "").trim();
+  const personModelSlug = String(body.personModelSlug || "").trim();
+  const audioProfileSlug = String(body.audioProfileSlug || "").trim();
+
+  const category = String(body.category || "").trim();
+  const type = String(body.type || "").trim();
+  const title = String(body.title || "").trim();
+  const description = String(body.description || "").trim();
+  const seoTitle = String(body.seoTitle || "").trim();
+  const metaDescription = String(body.metaDescription || "").trim();
+  const dateRaw = String(body.date || "").trim();
+
+  const fileUrl = String(body.fileUrl || "").trim();
+  const thumbnailUrl = String(body.thumbnailUrl || "").trim();
+  const previewUrl = String(body.previewUrl || "").trim();
+  const fileNameOriginal = String(body.fileNameOriginal || "").trim();
+
+  if (!ownerType || !["brand", "model", "audioProfile"].includes(ownerType)) {
     return NextResponse.json(
-      { ok: false, message: "Numele profilului audio este obligatoriu." },
+      { ok: false, message: "Tipul de asociere este invalid." },
       { status: 400 }
     );
   }
 
-  if (!kind) {
+  if (!category) {
     return NextResponse.json(
-      { ok: false, message: "Tipul profilului audio este obligatoriu." },
+      { ok: false, message: "Categoria este obligatorie." },
       { status: 400 }
     );
   }
 
-  const allowedKinds = ["artist", "podcast", "show", "project"];
-  if (!allowedKinds.includes(kind)) {
+  if (!type) {
     return NextResponse.json(
-      { ok: false, message: "Tip invalid pentru profilul audio." },
+      { ok: false, message: "Tipul media este obligatoriu." },
       { status: 400 }
     );
   }
 
-  const slug = slugify(name);
-
-  const existing = await prisma.audioProfile.findUnique({
-    where: { slug },
-  });
-
-  if (existing) {
+  if (!title) {
     return NextResponse.json(
-      { ok: false, message: "Profilul audio există deja." },
-      { status: 409 }
+      { ok: false, message: "Titlul este obligatoriu." },
+      { status: 400 }
     );
   }
 
-  const audioProfile = await prisma.audioProfile.create({
+  if (!dateRaw) {
+    return NextResponse.json(
+      { ok: false, message: "Data este obligatorie." },
+      { status: 400 }
+    );
+  }
+
+  if (!fileUrl) {
+    return NextResponse.json(
+      { ok: false, message: "Fișierul principal nu a fost salvat corect." },
+      { status: 400 }
+    );
+  }
+
+  let brandId: string | null = null;
+  let personModelId: string | null = null;
+  let audioProfileId: string | null = null;
+
+  if (ownerType === "brand") {
+    if (!brandSlug) {
+      return NextResponse.json(
+        { ok: false, message: "Selectează un brand." },
+        { status: 400 }
+      );
+    }
+
+    const brand = await prisma.brand.findUnique({
+      where: { slug: brandSlug },
+      select: { id: true },
+    });
+
+    if (!brand) {
+      return NextResponse.json(
+        { ok: false, message: "Brandul selectat nu există." },
+        { status: 404 }
+      );
+    }
+
+    brandId = brand.id;
+  }
+
+  if (ownerType === "model") {
+    if (!personModelSlug) {
+      return NextResponse.json(
+        { ok: false, message: "Selectează un model." },
+        { status: 400 }
+      );
+    }
+
+    const model = await prisma.personModel.findUnique({
+      where: { slug: personModelSlug },
+      select: { id: true },
+    });
+
+    if (!model) {
+      return NextResponse.json(
+        { ok: false, message: "Modelul selectat nu există." },
+        { status: 404 }
+      );
+    }
+
+    personModelId = model.id;
+  }
+
+  if (ownerType === "audioProfile") {
+    if (!audioProfileSlug) {
+      return NextResponse.json(
+        { ok: false, message: "Selectează un profil audio." },
+        { status: 400 }
+      );
+    }
+
+    const profile = await prisma.audioProfile.findUnique({
+      where: { slug: audioProfileSlug },
+      select: { id: true },
+    });
+
+    if (!profile) {
+      return NextResponse.json(
+        { ok: false, message: "Profilul audio selectat nu există." },
+        { status: 404 }
+      );
+    }
+
+    audioProfileId = profile.id;
+  }
+
+  const baseSlug = slugify(title || fileNameOriginal || "media-item");
+  const slug = await makeUniqueSlug(baseSlug);
+
+  const parsedDate = new Date(dateRaw);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return NextResponse.json(
+      { ok: false, message: "Data este invalidă." },
+      { status: 400 }
+    );
+  }
+
+  const mediaItem = await prisma.mediaItem.create({
     data: {
-      name,
+      title,
       slug,
-      kind,
+      category,
+      type,
+      date: parsedDate,
+      fileUrl,
+      thumbnailUrl: thumbnailUrl || null,
+      previewUrl: previewUrl || null,
+      fileNameOriginal: fileNameOriginal || null,
+      description: description || null,
+      seoTitle: seoTitle || null,
+      metaDescription: metaDescription || null,
+      brandId,
+      personModelId,
+      audioProfileId,
     },
   });
 
-  revalidatePath("/studio-dashboard");
+  revalidatePath("/");
+  revalidatePath("/foto");
+  revalidatePath("/video");
+  revalidatePath("/grafica");
+  revalidatePath("/website");
+  revalidatePath("/meta-ads");
   revalidatePath("/audio");
+  revalidatePath("/studio-dashboard");
+
+  if (brandSlug) revalidatePath(`/brand/${brandSlug}`);
+  if (personModelSlug) revalidatePath(`/model/${personModelSlug}`);
+  if (audioProfileSlug) revalidatePath(`/audio-profile/${audioProfileSlug}`);
 
   return NextResponse.json({
     ok: true,
-    message: "Profil audio creat.",
-    audioProfile,
+    message: "Media salvată cu succes.",
+    mediaItem,
   });
 }
