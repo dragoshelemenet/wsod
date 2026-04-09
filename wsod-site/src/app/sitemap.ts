@@ -61,19 +61,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/grafica`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.7,
+      priority: 0.8,
     },
     {
       url: `${BASE_URL}/website`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.7,
+      priority: 0.8,
     },
     {
       url: `${BASE_URL}/meta-ads`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.7,
+      priority: 0.8,
     },
   ];
 
@@ -98,8 +98,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const allowedItemCategories = [
+    "foto",
+    "video",
+    "audio",
+    "grafica",
+    "website",
+    "meta-ads",
+  ];
+
   const mediaRoutes: MetadataRoute.Sitemap = mediaItems
-    .filter((item) => ["foto", "video", "audio"].includes(item.category))
+    .filter((item) => allowedItemCategories.includes(item.category))
     .map((item) => ({
       url: `${BASE_URL}/${item.category}/${item.slug}`,
       lastModified: item.updatedAt,
