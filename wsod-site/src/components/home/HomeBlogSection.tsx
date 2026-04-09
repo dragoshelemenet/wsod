@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getAllBlogPosts } from "@/lib/data/blog-data";
 import BlogCard from "@/components/blog/BlogCard";
+import { getAllBlogPostsFromDb } from "@/lib/data/blog-db";
 
-export default function HomeBlogSection() {
-  const latestPosts = getAllBlogPosts().slice(0, 3);
+export default async function HomeBlogSection() {
+  const latestPosts = (await getAllBlogPostsFromDb()).slice(0, 3);
 
   return (
     <section className="section home-blog-section">
@@ -16,7 +16,19 @@ export default function HomeBlogSection() {
 
       <div className="blog-list">
         {latestPosts.map((post) => (
-          <BlogCard key={post.slug} post={post} headingLevel="h3" />
+          <BlogCard
+            key={post.slug}
+            post={{
+              slug: post.slug,
+              title: post.title,
+              excerpt: post.excerpt || "",
+              publishedAt: post.publishedAt?.toISOString() || post.createdAt.toISOString(),
+              seoTitle: post.seoTitle || undefined,
+              metaDescription: post.metaDescription || undefined,
+              content: post.contentHtml,
+            }}
+            headingLevel="h3"
+          />
         ))}
       </div>
     </section>
