@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface UploadToSpacesFormProps {
   brands: {
@@ -10,10 +10,39 @@ interface UploadToSpacesFormProps {
   }[];
 }
 
+const LAST_USED_DATE_KEY = "wsod-last-used-date";
+const LAST_USED_BRAND_KEY = "wsod-last-used-brand";
+const LAST_USED_CATEGORY_KEY = "wsod-last-used-category";
+
+function inferTypeFromCategory(category: string) {
+  switch (category) {
+    case "video":
+      return "video";
+    case "foto":
+      return "image";
+    case "audio":
+      return "audio";
+    case "website":
+      return "website";
+    case "grafica":
+    case "meta-ads":
+      return "graphic";
+    default:
+      return "image";
+  }
+}
+
+function getTodayDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = `${now.getMonth() + 1}`.padStart(2, "0");
+  const day = `${now.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) {
   const [brandSlug, setBrandSlug] = useState("");
   const [category, setCategory] = useState("");
-  const [type, setType] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
@@ -22,10 +51,46 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
+  useEffect(() => {
+    const savedDate = window.localStorage.getItem(LAST_USED_DATE_KEY);
+    const savedBrand = window.localStorage.getItem(LAST_USED_BRAND_KEY);
+    const savedCategory = window.localStorage.getItem(LAST_USED_CATEGORY_KEY);
+
+    setDate(savedDate || getTodayDate());
+
+    if (savedBrand) {
+      setBrandSlug(savedBrand);
+    }
+
+    if (savedCategory) {
+      setCategory(savedCategory);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (date) {
+      window.localStorage.setItem(LAST_USED_DATE_KEY, date);
+    }
+  }, [date]);
+
+  useEffect(() => {
+    if (brandSlug) {
+      window.localStorage.setItem(LAST_USED_BRAND_KEY, brandSlug);
+    }
+  }, [brandSlug]);
+
+  useEffect(() => {
+    if (category) {
+      window.localStorage.setItem(LAST_USED_CATEGORY_KEY, category);
+    }
+  }, [category]);
+
+  const inferredType = useMemo(() => inferTypeFromCategory(category), [category]);
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!selectedFile || !brandSlug || !category || !type || !title || !date) {
+    if (!selectedFile || !brandSlug || !category || !title || !date) {
       setMessage("Completează toate câmpurile obligatorii.");
       return;
     }
@@ -91,7 +156,7 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         body: JSON.stringify({
           brandSlug,
           category,
-          type,
+          type: inferredType,
           title,
           description,
           date,
@@ -112,7 +177,6 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
       setMessage("Fișier urcat în Spaces, făcut public și salvat în baza de date.");
       setTitle("");
       setDescription("");
-      setDate("");
       setThumbnailUrl("");
       setSelectedFile(null);
     } catch (error) {
@@ -168,21 +232,8 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="type">Tip</label>
-          <select
-            id="type"
-            className="admin-select"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            required
-          >
-            <option value="">Selectează tipul</option>
-            <option value="video">video</option>
-            <option value="image">image</option>
-            <option value="audio">audio</option>
-            <option value="website">website</option>
-            <option value="graphic">graphic</option>
-          </select>
+          <label>Tip detectat automat</label>
+          <input value={inferredType || "-"} readOnly />
         </div>
 
         <div className="admin-form-field">
