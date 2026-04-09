@@ -77,11 +77,6 @@ export async function getModelsFromDb() {
 
 export async function getBrandsWithCategoryPreviewFromDb(category: string) {
   const brands = await prisma.brand.findMany({
-    where: {
-      mediaItems: {
-        some: { category },
-      },
-    },
     orderBy: { name: "asc" },
     include: {
       mediaItems: {
@@ -107,11 +102,6 @@ export async function getBrandsWithCategoryPreviewFromDb(category: string) {
 
 export async function getModelsWithCategoryPreviewFromDb(category: string) {
   const models = await prisma.personModel.findMany({
-    where: {
-      mediaItems: {
-        some: { category },
-      },
-    },
     orderBy: { name: "asc" },
     include: {
       mediaItems: {

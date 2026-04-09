@@ -1357,19 +1357,19 @@ img {
 }
 
 .owner-folder-grid-compact {
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 12px;
 }
 
 .owner-folder-card-compact {
-  padding: 12px;
-  border-radius: 22px;
+  padding: 10px;
+  border-radius: 18px;
   min-height: auto;
 }
 
 .owner-folder-card-compact .owner-folder-visual {
   aspect-ratio: 4 / 5;
-  border-radius: 16px;
+  border-radius: 14px;
 }
 
 .owner-folder-card-compact .owner-folder-copy {
@@ -1377,8 +1377,13 @@ img {
 }
 
 .owner-folder-card-compact .owner-folder-copy strong {
-  font-size: 0.9rem;
-  line-height: 1.15;
+  font-size: 0.82rem;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.owner-folder-card-compact .owner-folder-placeholder {
+  font-size: 0.72rem;
 }
 
 .owner-folder-stack {
@@ -1474,7 +1479,7 @@ img {
 
 @media (max-width: 640px) {
   .owner-folder-grid-compact {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
