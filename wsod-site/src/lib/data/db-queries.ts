@@ -213,3 +213,46 @@ export async function getMediaByAudioProfileSlugFromDb(slug: string, options?: M
 
   return withOwner(items);
 }
+
+export async function getMediaItemBySlugFromDb(slug: string) {
+  const item = await prisma.mediaItem.findUnique({
+    where: { slug },
+    include: {
+      brand: true,
+      personModel: true,
+      audioProfile: true,
+    },
+  });
+
+  if (!item) {
+    return null;
+  }
+
+  return withOwner([item])[0];
+}
+
+export async function getRelatedMediaByCategoryFromDb(
+  category: string,
+  currentId: string,
+  limit = 12
+) {
+  const items = await prisma.mediaItem.findMany({
+    where: {
+      category,
+      id: {
+        not: currentId,
+      },
+    },
+    include: {
+      brand: true,
+      personModel: true,
+      audioProfile: true,
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: limit,
+  });
+
+  return withOwner(items);
+}
