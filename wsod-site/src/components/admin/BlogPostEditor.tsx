@@ -33,6 +33,10 @@ interface BlogPostEditorProps {
   mediaItems: AdminMediaOption[];
 }
 
+function getMediaPreview(item: AdminMediaOption) {
+  return item.previewUrl || item.thumbnailUrl || item.fileUrl || "";
+}
+
 export default function BlogPostEditor({
   mode,
   initialData,
@@ -68,6 +72,11 @@ export default function BlogPostEditor({
       )
     );
   }, [mediaItems, filter]);
+
+  const attachedMedia = useMemo(
+    () => mediaItems.filter((item) => selectedMediaIds.includes(item.id)),
+    [mediaItems, selectedMediaIds]
+  );
 
   function toggleMedia(id: string) {
     setSelectedMediaIds((current) =>
@@ -199,6 +208,13 @@ export default function BlogPostEditor({
           />
         </div>
 
+        {coverImageUrl ? (
+          <div className="admin-blog-cover-preview">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={coverImageUrl} alt="Cover preview" />
+          </div>
+        ) : null}
+
         <div className="admin-form-field">
           <label htmlFor="blog-status">Status</label>
           <select
@@ -234,7 +250,7 @@ export default function BlogPostEditor({
 
         <div className="admin-media-picker">
           {filteredMedia.map((item) => {
-            const preview = item.thumbnailUrl || item.previewUrl || item.fileUrl || null;
+            const preview = getMediaPreview(item);
             const checked = selectedMediaIds.includes(item.id);
 
             return (
@@ -256,10 +272,63 @@ export default function BlogPostEditor({
                   <strong>{item.title}</strong>
                   <span>{item.category}</span>
                 </div>
+
+                {preview ? (
+                  <button
+                    type="button"
+                    className="admin-ghost-button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCoverImageUrl(preview);
+                    }}
+                  >
+                    Setează ca cover
+                  </button>
+                ) : null}
               </label>
             );
           })}
         </div>
+
+        {attachedMedia.length ? (
+          <div className="admin-stack">
+            <div className="admin-card-head">
+              <h2>Media atașată</h2>
+            </div>
+
+            <div className="admin-media-picker">
+              {attachedMedia.map((item) => {
+                const preview = getMediaPreview(item);
+
+                return (
+                  <div key={`attached-${item.id}`} className="admin-media-pick-card active">
+                    <div className="admin-media-pick-preview">
+                      {preview ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={preview} alt={item.title} />
+                      ) : (
+                        <span>{item.type}</span>
+                      )}
+                    </div>
+                    <div className="admin-media-pick-copy">
+                      <strong>{item.title}</strong>
+                      <span>{item.category}</span>
+                    </div>
+                    {preview ? (
+                      <button
+                        type="button"
+                        className="admin-submit"
+                        onClick={() => setCoverImageUrl(preview)}
+                      >
+                        Folosește ca cover
+                      </button>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
 
         {message ? (
           <p className={message.includes("creat") || message.includes("actualizat") ? "admin-success" : "admin-error"}>
