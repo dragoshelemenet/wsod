@@ -1197,3 +1197,23 @@ body {
 .media-detail-hero + .media-detail-meta {
   margin-top: 18px;
 }
+.media-card {
+  position: relative;
+}
+
+.media-card-main-link {
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+.media-actions {
+  position: relative;
+  z-index: 3;
+}
+
+.media-thumb,
+.media-thumb-inner,
+.media-thumb-image {
+  pointer-events: none;
+}
