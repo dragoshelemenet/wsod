@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getCategoryLabel } from "@/lib/data/home-data";
 import { DbMediaCardItem } from "@/lib/types";
@@ -28,7 +31,14 @@ export default function MediaCard({ item }: MediaCardProps) {
           ? `/audio-profile/${owner.slug}`
           : null;
 
-  const previewSrc = item.thumbnailUrl || item.previewUrl || item.fileUrl || null;
+  const imageCandidates = useMemo(
+    () => [item.thumbnailUrl, item.previewUrl, item.fileUrl].filter(Boolean) as string[],
+    [item.thumbnailUrl, item.previewUrl, item.fileUrl]
+  );
+
+  const [imageIndex, setImageIndex] = useState(0);
+  const previewSrc = imageCandidates[imageIndex] ?? null;
+
   const itemHref = getItemHref(item);
 
   return (
@@ -47,6 +57,11 @@ export default function MediaCard({ item }: MediaCardProps) {
                 alt={item.title}
                 className="media-thumb-image"
                 loading="lazy"
+                onError={() => {
+                  if (imageIndex < imageCandidates.length - 1) {
+                    setImageIndex((current) => current + 1);
+                  }
+                }}
               />
             ) : (
               <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
