@@ -24,7 +24,7 @@ FROM "Brand";
 
 DROP TABLE "Brand";
 ALTER TABLE "new_Brand" RENAME TO "Brand";
-CREATE UNIQUE INDEX "Brand_slug_key" ON "Brand"("slug");
+CREATE UNIQUE INDEX IF NOT EXISTS "Brand_slug_key" ON "Brand"("slug");
 
 -- Create PersonModel if missing
 CREATE TABLE IF NOT EXISTS "PersonModel" (
@@ -119,7 +119,7 @@ SELECT
           ',', ''),
         '.', '')
       )
-    ) AS "slug",
+    ) || '-' || substr("id", 1, 8) AS "slug",
     "category",
     "type",
     "date",
@@ -134,8 +134,7 @@ FROM "MediaItem";
 DROP TABLE "MediaItem";
 ALTER TABLE "new_MediaItem" RENAME TO "MediaItem";
 
-CREATE UNIQUE INDEX "MediaItem_slug_key" ON "MediaItem"("slug");
-
+CREATE UNIQUE INDEX IF NOT EXISTS "MediaItem_slug_key" ON "MediaItem"("slug");
 CREATE INDEX IF NOT EXISTS "MediaItem_brandId_idx" ON "MediaItem"("brandId");
 CREATE INDEX IF NOT EXISTS "MediaItem_personModelId_idx" ON "MediaItem"("personModelId");
 CREATE INDEX IF NOT EXISTS "MediaItem_audioProfileId_idx" ON "MediaItem"("audioProfileId");
