@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface UploadToSpacesFormProps {
   brands: {
@@ -13,13 +13,20 @@ interface UploadToSpacesFormProps {
     name: string;
     slug: string;
   }[];
+  audioProfiles?: {
+    id: string;
+    name: string;
+    slug: string;
+    kind: string;
+  }[];
 }
 
 const LAST_USED_DATE_KEY = "wsod-last-used-date";
-const LAST_USED_BRAND_KEY = "wsod-last-used-brand";
 const LAST_USED_CATEGORY_KEY = "wsod-last-used-category";
-const LAST_USED_OWNER_TYPE_KEY = "wsod-last-used-owner-type";
+const LAST_USED_BRAND_KEY = "wsod-last-used-brand";
 const LAST_USED_MODEL_KEY = "wsod-last-used-model";
+const LAST_USED_AUDIO_PROFILE_KEY = "wsod-last-used-audio-profile";
+const LAST_USED_OWNER_TYPE_KEY = "wsod-last-used-owner-type";
 
 function inferTypeFromCategory(category: string) {
   switch (category) {
@@ -50,82 +57,102 @@ function getTodayDate() {
 export default function UploadToSpacesForm({
   brands,
   models = [],
+  audioProfiles = [],
 }: UploadToSpacesFormProps) {
-  const [ownerType, setOwnerType] = useState<"brand" | "model">("brand");
+  const [category, setCategory] = useState("");
+  const [ownerType, setOwnerType] = useState<"brand" | "model" | "audioProfile">("brand");
+
   const [brandSlug, setBrandSlug] = useState("");
   const [personModelSlug, setPersonModelSlug] = useState("");
+  const [audioProfileSlug, setAudioProfileSlug] = useState("");
+
   const [newModelName, setNewModelName] = useState("");
-  const [category, setCategory] = useState("");
+  const [newAudioProfileName, setNewAudioProfileName] = useState("");
+  const [newAudioProfileKind, setNewAudioProfileKind] = useState("artist");
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
   const [date, setDate] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [isCreatingModel, setIsCreatingModel] = useState(false);
+  const [isCreatingAudioProfile, setIsCreatingAudioProfile] = useState(false);
 
   useEffect(() => {
     const savedDate = window.localStorage.getItem(LAST_USED_DATE_KEY);
-    const savedBrand = window.localStorage.getItem(LAST_USED_BRAND_KEY);
     const savedCategory = window.localStorage.getItem(LAST_USED_CATEGORY_KEY);
-    const savedOwnerType = window.localStorage.getItem(LAST_USED_OWNER_TYPE_KEY);
+    const savedBrand = window.localStorage.getItem(LAST_USED_BRAND_KEY);
     const savedModel = window.localStorage.getItem(LAST_USED_MODEL_KEY);
+    const savedAudioProfile = window.localStorage.getItem(LAST_USED_AUDIO_PROFILE_KEY);
+    const savedOwnerType = window.localStorage.getItem(LAST_USED_OWNER_TYPE_KEY);
 
     setDate(savedDate || getTodayDate());
-
-    if (savedBrand) {
-      setBrandSlug(savedBrand);
-    }
 
     if (savedCategory) {
       setCategory(savedCategory);
     }
-
-    if (savedOwnerType === "model" || savedOwnerType === "brand") {
-      setOwnerType(savedOwnerType);
+    if (savedBrand) {
+      setBrandSlug(savedBrand);
     }
-
     if (savedModel) {
       setPersonModelSlug(savedModel);
+    }
+    if (savedAudioProfile) {
+      setAudioProfileSlug(savedAudioProfile);
+    }
+    if (savedOwnerType === "brand" || savedOwnerType === "model" || savedOwnerType === "audioProfile") {
+      setOwnerType(savedOwnerType);
     }
   }, []);
 
   useEffect(() => {
-    if (date) {
-      window.localStorage.setItem(LAST_USED_DATE_KEY, date);
-    }
+    if (date) window.localStorage.setItem(LAST_USED_DATE_KEY, date);
   }, [date]);
 
   useEffect(() => {
-    if (brandSlug) {
-      window.localStorage.setItem(LAST_USED_BRAND_KEY, brandSlug);
-    }
+    if (category) window.localStorage.setItem(LAST_USED_CATEGORY_KEY, category);
+  }, [category]);
+
+  useEffect(() => {
+    if (brandSlug) window.localStorage.setItem(LAST_USED_BRAND_KEY, brandSlug);
   }, [brandSlug]);
 
   useEffect(() => {
-    if (category) {
-      window.localStorage.setItem(LAST_USED_CATEGORY_KEY, category);
-    }
-  }, [category]);
+    if (personModelSlug) window.localStorage.setItem(LAST_USED_MODEL_KEY, personModelSlug);
+  }, [personModelSlug]);
+
+  useEffect(() => {
+    if (audioProfileSlug) window.localStorage.setItem(LAST_USED_AUDIO_PROFILE_KEY, audioProfileSlug);
+  }, [audioProfileSlug]);
 
   useEffect(() => {
     window.localStorage.setItem(LAST_USED_OWNER_TYPE_KEY, ownerType);
   }, [ownerType]);
 
   useEffect(() => {
-    if (personModelSlug) {
-      window.localStorage.setItem(LAST_USED_MODEL_KEY, personModelSlug);
+    if (category === "foto") {
+      if (ownerType !== "brand" && ownerType !== "model") {
+        setOwnerType("brand");
+      }
+      return;
     }
-  }, [personModelSlug]);
 
-  useEffect(() => {
-    if (category !== "foto" && ownerType === "model") {
+    if (category === "audio") {
+      setOwnerType("audioProfile");
+      return;
+    }
+
+    if (category) {
       setOwnerType("brand");
     }
   }, [category, ownerType]);
 
-  const inferredType = inferTypeFromCategory(category);
+  const inferredType = useMemo(() => inferTypeFromCategory(category), [category]);
 
   async function handleCreateModel() {
     if (!newModelName.trim()) {
@@ -150,9 +177,7 @@ export default function UploadToSpacesForm({
       const result = (await response.json()) as {
         ok: boolean;
         message: string;
-        personModel?: {
-          slug: string;
-        };
+        personModel?: { slug: string };
       };
 
       if (!response.ok || !result.ok) {
@@ -166,10 +191,53 @@ export default function UploadToSpacesForm({
         setPersonModelSlug(result.personModel.slug);
       }
     } catch (error) {
-      const text = error instanceof Error ? error.message : "Eroare necunoscută.";
-      setMessage(text);
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
     } finally {
       setIsCreatingModel(false);
+    }
+  }
+
+  async function handleCreateAudioProfile() {
+    if (!newAudioProfileName.trim()) {
+      setMessage("Scrie numele profilului audio.");
+      return;
+    }
+
+    try {
+      setIsCreatingAudioProfile(true);
+      setMessage("");
+
+      const response = await fetch("/api/admin/audio-profiles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newAudioProfileName,
+          kind: newAudioProfileKind,
+        }),
+      });
+
+      const result = (await response.json()) as {
+        ok: boolean;
+        message: string;
+        audioProfile?: { slug: string };
+      };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Nu s-a putut crea profilul audio.");
+      }
+
+      setMessage("Profil audio creat. Reîncarcă pagina ca să apară în listă.");
+      setNewAudioProfileName("");
+
+      if (result.audioProfile?.slug) {
+        setAudioProfileSlug(result.audioProfile.slug);
+      }
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
+    } finally {
+      setIsCreatingAudioProfile(false);
     }
   }
 
@@ -181,13 +249,23 @@ export default function UploadToSpacesForm({
       return;
     }
 
-    if (ownerType === "brand" && !brandSlug) {
+    if (category === "foto" && ownerType === "brand" && !brandSlug) {
       setMessage("Selectează un brand.");
       return;
     }
 
-    if (ownerType === "model" && !personModelSlug) {
+    if (category === "foto" && ownerType === "model" && !personModelSlug) {
       setMessage("Selectează un model.");
+      return;
+    }
+
+    if (category === "audio" && !audioProfileSlug) {
+      setMessage("Selectează un profil audio.");
+      return;
+    }
+
+    if (!["foto", "audio"].includes(category) && !brandSlug) {
+      setMessage("Selectează un brand.");
       return;
     }
 
@@ -195,7 +273,13 @@ export default function UploadToSpacesForm({
       setIsUploading(true);
       setMessage("");
 
-      const uploadOwnerSlug = ownerType === "model" ? personModelSlug : brandSlug;
+      let uploadOwnerSlug = brandSlug;
+      if (category === "foto" && ownerType === "model") {
+        uploadOwnerSlug = personModelSlug;
+      }
+      if (category === "audio") {
+        uploadOwnerSlug = audioProfileSlug;
+      }
 
       const presignResponse = await fetch("/api/uploads/presign", {
         method: "POST",
@@ -255,13 +339,18 @@ export default function UploadToSpacesForm({
           ownerType,
           brandSlug: ownerType === "brand" ? brandSlug : "",
           personModelSlug: ownerType === "model" ? personModelSlug : "",
+          audioProfileSlug: ownerType === "audioProfile" ? audioProfileSlug : "",
           category,
           type: inferredType,
           title,
           description,
+          seoTitle,
+          metaDescription,
           date,
           fileUrl: publicUrl,
-          thumbnail: thumbnailUrl || publicUrl,
+          thumbnailUrl: thumbnailUrl || publicUrl,
+          previewUrl: publicUrl,
+          fileNameOriginal: selectedFile.name,
         }),
       });
 
@@ -277,11 +366,12 @@ export default function UploadToSpacesForm({
       setMessage("Fișier urcat și salvat cu succes.");
       setTitle("");
       setDescription("");
+      setSeoTitle("");
+      setMetaDescription("");
       setThumbnailUrl("");
       setSelectedFile(null);
     } catch (error) {
-      const text = error instanceof Error ? error.message : "Eroare necunoscută.";
-      setMessage(text);
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
     } finally {
       setIsUploading(false);
     }
@@ -294,6 +384,25 @@ export default function UploadToSpacesForm({
       </div>
 
       <form className="admin-stack" onSubmit={handleSubmit}>
+        <div className="admin-form-field">
+          <label htmlFor="category">Categorie</label>
+          <select
+            id="category"
+            className="admin-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Selectează categoria</option>
+            <option value="video">VIDEO</option>
+            <option value="foto">PHOTO</option>
+            <option value="grafica">GRAPHIC</option>
+            <option value="website">WEBSITE</option>
+            <option value="meta-ads">META ADS</option>
+            <option value="audio">AUDIO</option>
+          </select>
+        </div>
+
         {category === "foto" ? (
           <div className="admin-form-field">
             <label htmlFor="ownerType">Asociere foto</label>
@@ -309,7 +418,62 @@ export default function UploadToSpacesForm({
           </div>
         ) : null}
 
-        {ownerType === "brand" ? (
+        {category === "audio" ? (
+          <>
+            <div className="admin-form-field">
+              <label htmlFor="audioProfileSlug">Profil audio</label>
+              <select
+                id="audioProfileSlug"
+                className="admin-select"
+                value={audioProfileSlug}
+                onChange={(e) => setAudioProfileSlug(e.target.value)}
+                required
+              >
+                <option value="">Selectează profilul audio</option>
+                {audioProfiles.map((profile) => (
+                  <option key={profile.id} value={profile.slug}>
+                    {profile.name} ({profile.kind})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-form-field">
+              <label htmlFor="newAudioProfileName">Profil audio nou</label>
+              <input
+                id="newAudioProfileName"
+                value={newAudioProfileName}
+                onChange={(e) => setNewAudioProfileName(e.target.value)}
+                placeholder="Scrie numele profilului audio nou"
+              />
+            </div>
+
+            <div className="admin-form-field">
+              <label htmlFor="newAudioProfileKind">Tip profil audio</label>
+              <select
+                id="newAudioProfileKind"
+                className="admin-select"
+                value={newAudioProfileKind}
+                onChange={(e) => setNewAudioProfileKind(e.target.value)}
+              >
+                <option value="artist">artist</option>
+                <option value="podcast">podcast</option>
+                <option value="show">show</option>
+                <option value="project">project</option>
+              </select>
+              <button
+                type="button"
+                className="admin-submit"
+                onClick={handleCreateAudioProfile}
+                disabled={isCreatingAudioProfile}
+              >
+                {isCreatingAudioProfile ? "Se creează..." : "Creează profil audio"}
+              </button>
+            </div>
+          </>
+        ) : null}
+
+        {category !== "audio" && ownerType === "brand" ? (
           <div className="admin-form-field">
             <label htmlFor="brandSlug">Brand</label>
             <select
@@ -370,32 +534,39 @@ export default function UploadToSpacesForm({
         ) : null}
 
         <div className="admin-form-field">
-          <label htmlFor="category">Categorie</label>
-          <select
-            id="category"
-            className="admin-select"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="">Selectează categoria</option>
-            <option value="video">VIDEO</option>
-            <option value="foto">PHOTO</option>
-            <option value="grafica">GRAPHIC</option>
-            <option value="website">WEBSITE</option>
-            <option value="meta-ads">META ADS</option>
-            <option value="audio">AUDIO</option>
-          </select>
-        </div>
-
-        <div className="admin-form-field">
           <label htmlFor="title">Titlu</label>
           <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
         </div>
 
         <div className="admin-form-field">
           <label htmlFor="description">Descriere</label>
-          <input id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="seoTitle">SEO title opțional</label>
+          <input
+            id="seoTitle"
+            value={seoTitle}
+            onChange={(e) => setSeoTitle(e.target.value)}
+            placeholder="Titlu pentru Google, dacă vrei diferit de titlul principal"
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="metaDescription">Meta description opțional</label>
+          <textarea
+            id="metaDescription"
+            value={metaDescription}
+            onChange={(e) => setMetaDescription(e.target.value)}
+            rows={3}
+            placeholder="Descriere scurtă pentru Google"
+          />
         </div>
 
         <div className="admin-form-field">

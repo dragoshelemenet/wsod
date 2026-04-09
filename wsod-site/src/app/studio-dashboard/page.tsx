@@ -23,6 +23,10 @@ export default async function StudioDashboardPage() {
     orderBy: { name: "asc" },
   });
 
+  const audioProfiles = await prisma.audioProfile.findMany({
+    orderBy: { name: "asc" },
+  });
+
   return (
     <main className="inner-page">
       <div className="inner-topbar admin-topbar">
@@ -49,7 +53,11 @@ export default async function StudioDashboardPage() {
 
         <div className="admin-grid">
           <BrandForm brands={brands} />
-          <UploadToSpacesForm brands={brands} models={models} />
+          <UploadToSpacesForm
+            brands={brands}
+            models={models}
+            audioProfiles={audioProfiles}
+          />
         </div>
 
         <div className="admin-grid admin-grid-bottom">
