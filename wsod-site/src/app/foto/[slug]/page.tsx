@@ -5,10 +5,10 @@ import MediaGrid from "@/components/media/MediaGrid";
 import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getMediaItemBySlugFromDb,
-  getRelatedMediaByCategoryFromDb,
   getMediaByModelSlugFromDb,
   getMediaByBrandSlugFromDb,
-  getRandomPhotoMediaFromDb,
+  getMediaByAudioProfileSlugFromDb,
+  getRandomMediaByCategoryFromDb,
 } from "@/lib/data/db-queries";
 import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
@@ -17,21 +17,15 @@ export const dynamic = "force-dynamic";
 const BASE_URL = "https://wsod.cloud";
 
 interface FotoDetailPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: FotoDetailPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: FotoDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
   const item = await getMediaItemBySlugFromDb(slug);
 
   if (!item || item.category !== "foto") {
-    return {
-      title: "Foto | WSOD.PROD",
-    };
+    return { title: "Foto | WSOD.PROD" };
   }
 
   const title = item.seoTitle || `${item.title} | Foto | WSOD.PROD`;
@@ -45,9 +39,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: {
-      canonical: `/foto/${item.slug}`,
-    },
+    alternates: { canonical: `/foto/${item.slug}` },
     openGraph: {
       title,
       description,
@@ -65,48 +57,63 @@ export async function generateMetadata({
   };
 }
 
-export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
-  const { slug } = await params;
+async function getSameOwnerItems(item: Awaited<ReturnType<typeof getMediaItemBySlugFromDb>>) {
+  if (!item) return [];
 
-  const item = await getMediaItemBySlugFromDb(slug);
-
-  if (!item || item.category !== "foto") {
-    notFound();
+  if (item.owner.type === "brand" && item.owner.slug) {
+    const items = await getMediaByBrandSlugFromDb(item.owner.slug, { limit: 48 });
+    return items.filter((entry) => entry.category === item.category).slice(0, 6);
   }
 
-  const ownerHref =
-    item.owner.type === "brand" && item.owner.slug
-      ? `/brand/${item.owner.slug}`
-      : item.owner.type === "model" && item.owner.slug
-        ? `/model/${item.owner.slug}`
-        : null;
+  if (item.owner.type === "model" && item.owner.slug) {
+    const items = await getMediaByModelSlugFromDb(item.owner.slug, { limit: 48 });
+    return items.filter((entry) => entry.category === item.category).slice(0, 6);
+  }
 
-  const sameOwnerItems =
-    item.owner.type === "model" && item.owner.slug
-      ? await getMediaByModelSlugFromDb(item.owner.slug, { limit: 6 })
-      : item.owner.type === "brand" && item.owner.slug
-        ? await getMediaByBrandSlugFromDb(item.owner.slug, { limit: 6 })
-        : await getRelatedMediaByCategoryFromDb("foto", item.id, 6);
+  if (item.owner.type === "audioProfile" && item.owner.slug) {
+    const items = await getMediaByAudioProfileSlugFromDb(item.owner.slug, { limit: 48 });
+    return items.filter((entry) => entry.category === item.category).slice(0, 6);
+  }
 
-  const randomItems = await getRandomPhotoMediaFromDb(
-    6,
-    item.owner.type === "model" ? item.owner.slug ?? undefined : undefined
-  );
+  return [];
+}
 
+function getOwnerHref(item: NonNullable<Awaited<ReturnType<typeof getMediaItemBySlugFromDb>>>) {
+  if (item.owner.type === "brand" && item.owner.slug) return `/brand/${item.owner.slug}`;
+  if (item.owner.type === "model" && item.owner.slug) return `/model/${item.owner.slug}`;
+  if (item.owner.type === "audioProfile" && item.owner.slug) return `/audio-profile/${item.owner.slug}`;
+  return null;
+}
+
+function getOwnerAllLabel(item: NonNullable<Awaited<ReturnType<typeof getMediaItemBySlugFromDb>>>) {
+  if (item.owner.type === "model") return `Vezi toate pozele cu ${item.owner.name}`;
+  if (item.owner.type === "brand") return `Vezi toate pozele pentru ${item.owner.name}`;
+  if (item.owner.type === "audioProfile") return `Vezi toate pozele pentru ${item.owner.name}`;
+  return "Vezi toate pozele";
+}
+
+export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
+  const { slug } = await params;
+  const item = await getMediaItemBySlugFromDb(slug);
+
+  if (!item || item.category !== "foto") notFound();
+
+  const [sameOwnerItems, randomItems] = await Promise.all([
+    getSameOwnerItems(item),
+    getRandomMediaByCategoryFromDb("foto", 6,
+      item.owner.type !== "unknown" ? { type: item.owner.type, slug: item.owner.slug } : undefined),
+  ]);
+
+  const ownerHref = getOwnerHref(item);
   const imageSrc = item.fileUrl || item.previewUrl || item.thumbnailUrl || null;
   const jsonLd = buildMediaJsonLd(item);
 
   return (
     <main className="inner-page">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="inner-topbar">
-        <Link href="/foto" className="back-link">
-          ← Înapoi la foto
-        </Link>
+        <Link href="/foto" className="back-link">← Înapoi la foto</Link>
       </div>
 
       <section className="inner-section">
@@ -126,38 +133,20 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
 
         {imageSrc ? (
           <div className="media-detail-hero">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageSrc} alt={item.title} className="media-detail-image" />
           </div>
         ) : null}
 
         <div className="media-detail-meta">
-          <p>
-            <strong>Categorie:</strong> Foto
-          </p>
-          <p>
-            <strong>Dată:</strong>{" "}
-            {new Date(item.date).toLocaleDateString("ro-RO")}
-          </p>
-          <p>
-            <strong>Owner:</strong> {item.owner.name}
-          </p>
+          <p><strong>Categorie:</strong> Foto</p>
+          <p><strong>Dată:</strong> {new Date(item.date).toLocaleDateString("ro-RO")}</p>
+          <p><strong>Owner:</strong> {item.owner.name}</p>
         </div>
 
         <div className="media-actions">
-          {ownerHref ? (
-            <Link href={ownerHref} className="media-link">
-              Vezi toate fișierele {item.owner.type === "model" ? "modelului" : "brandului"}
-            </Link>
-          ) : null}
-
+          {ownerHref ? <Link href={ownerHref} className="media-link">Vezi pagina ownerului</Link> : null}
           {item.fileUrl ? (
-            <a
-              href={item.fileUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="media-open-button"
-            >
+            <a href={item.fileUrl} target="_blank" rel="noreferrer" className="media-open-button">
               Deschide originalul
             </a>
           ) : null}
@@ -165,34 +154,13 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
 
         <div className="owner-folder-section">
           <div className="owner-folder-section-head">
-            <h2>
-              {item.owner.type === "model"
-                ? `Poze cu ${item.owner.name}`
-                : item.owner.type === "brand"
-                  ? `Poze pentru ${item.owner.name}`
-                  : "Poze similare"}
-            </h2>
+            <h2>{item.owner.type === "model" ? `Poze cu ${item.owner.name}` : `Poze pentru ${item.owner.name}`}</h2>
           </div>
 
-          <MediaGrid
-            items={sameOwnerItems}
-            emptyText="Nu există alte poze similare momentan."
-          />
+          <MediaGrid items={sameOwnerItems} emptyText="Nu există alte poze similare momentan." />
 
           <div className="model-page-actions">
-            {item.owner.type === "model" && item.owner.slug ? (
-              <Link href={`/model/${item.owner.slug}`} className="media-open-button">
-                Vezi toate pozele cu {item.owner.name}
-              </Link>
-            ) : item.owner.type === "brand" && item.owner.slug ? (
-              <Link href={`/brand/${item.owner.slug}`} className="media-open-button">
-                Vezi toate pozele pentru {item.owner.name}
-              </Link>
-            ) : (
-              <Link href="/foto" className="media-open-button">
-                Vezi toate pozele
-              </Link>
-            )}
+            {ownerHref ? <Link href={ownerHref} className="media-open-button">{getOwnerAllLabel(item)}</Link> : null}
           </div>
         </div>
 
@@ -201,15 +169,10 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
             <h2>Alte poze</h2>
           </div>
 
-          <MediaGrid
-            items={randomItems}
-            emptyText="Nu există alte poze momentan."
-          />
+          <MediaGrid items={randomItems} emptyText="Nu există alte poze momentan." />
 
           <div className="model-page-actions">
-            <Link href="/foto" className="media-link">
-              Vezi toate pozele
-            </Link>
+            <Link href="/foto" className="media-link">Vezi toate pozele</Link>
           </div>
         </div>
       </section>

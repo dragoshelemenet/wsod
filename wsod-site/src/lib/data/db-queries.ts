@@ -343,3 +343,55 @@ export async function getRelatedMediaByCategoryFromDb(
 
   return withOwner(items);
 }
+
+export async function getRandomMediaByCategoryFromDb(
+  category: string,
+  limit = 6,
+  excludeOwner?: { type: "brand" | "model" | "audioProfile"; slug?: string | null }
+) {
+  const whereBase: any = {
+    category,
+  };
+
+  if (excludeOwner?.slug) {
+    if (excludeOwner.type === "brand") {
+      whereBase.NOT = {
+        brand: {
+          slug: excludeOwner.slug,
+        },
+      };
+    }
+
+    if (excludeOwner.type === "model") {
+      whereBase.NOT = {
+        personModel: {
+          slug: excludeOwner.slug,
+        },
+      };
+    }
+
+    if (excludeOwner.type === "audioProfile") {
+      whereBase.NOT = {
+        audioProfile: {
+          slug: excludeOwner.slug,
+        },
+      };
+    }
+  }
+
+  const candidates = await prisma.mediaItem.findMany({
+    where: whereBase,
+    include: {
+      brand: true,
+      personModel: true,
+      audioProfile: true,
+    },
+    orderBy: {
+      date: "desc",
+    },
+    take: 60,
+  });
+
+  const shuffled = [...candidates].sort(() => Math.random() - 0.5).slice(0, limit);
+  return withOwner(shuffled);
+}
