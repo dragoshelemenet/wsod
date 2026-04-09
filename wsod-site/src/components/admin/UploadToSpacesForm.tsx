@@ -352,6 +352,10 @@ export default function UploadToSpacesForm({
         inferredType === "image" &&
         selectedFile.type.startsWith("image/");
 
+      const isVideo =
+        inferredType === "video" &&
+        selectedFile.type.startsWith("video/");
+
       if (isImage) {
         const variantForm = new FormData();
         variantForm.append("file", selectedFile);
@@ -401,6 +405,44 @@ export default function UploadToSpacesForm({
 
             finalThumbnailUrl = thumbnailUpload.publicUrl;
             finalPreviewUrl = previewUpload.publicUrl;
+          }
+        }
+      }
+
+      if (isVideo) {
+        const posterForm = new FormData();
+        posterForm.append("file", selectedFile);
+
+        const posterResponse = await fetch("/api/uploads/video-poster", {
+          method: "POST",
+          body: posterForm,
+        });
+
+        if (posterResponse.ok) {
+          const posterResult = (await posterResponse.json()) as {
+            ok: boolean;
+            posterBase64?: string;
+            mimeType?: string;
+          };
+
+          if (
+            posterResult.ok &&
+            posterResult.posterBase64 &&
+            posterResult.mimeType
+          ) {
+            const posterFile = base64ToFile(
+              posterResult.posterBase64,
+              `poster-${selectedFile.name}.jpg`,
+              posterResult.mimeType
+            );
+
+            const posterUpload = await presignAndUploadFile(
+              posterFile,
+              uploadOwnerSlug,
+              `${category}-poster`
+            );
+
+            finalThumbnailUrl = posterUpload.publicUrl;
           }
         }
       }
