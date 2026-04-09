@@ -177,3 +177,41 @@ export async function PUT(
     post,
   });
 }
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const isLoggedIn = await hasAdminSession();
+
+  if (!isLoggedIn) {
+    return NextResponse.json({ ok: false, message: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  const existing = await prisma.blogPost.findUnique({
+    where: { id },
+    select: { id: true, slug: true },
+  });
+
+  if (!existing) {
+    return NextResponse.json(
+      { ok: false, message: "Articolul nu există." },
+      { status: 404 }
+    );
+  }
+
+  await prisma.blogPost.delete({
+    where: { id },
+  });
+
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${existing.slug}`);
+  revalidatePath("/studio-dashboard/blog");
+
+  return NextResponse.json({
+    ok: true,
+    message: "Articol șters.",
+  });
+}

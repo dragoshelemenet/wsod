@@ -2,8 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { hasAdminSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
+import BlogAdminList from "./page";
 
-export default async function StudioDashboardBlogPage() {
+export default async function StudioDashboardBlogPageServer() {
   const isLoggedIn = await hasAdminSession();
 
   if (!isLoggedIn) {
@@ -14,8 +15,8 @@ export default async function StudioDashboardBlogPage() {
     orderBy: [{ updatedAt: "desc" }],
     include: {
       mediaLinks: {
-        include: {
-          mediaItem: true,
+        select: {
+          id: true,
         },
         orderBy: { sortOrder: "asc" },
       },
@@ -39,33 +40,11 @@ export default async function StudioDashboardBlogPage() {
           <span className="admin-kicker">Admin</span>
           <h1>Blog</h1>
           <p className="inner-description">
-            Editezi articolele vechi, adaugi articole noi și atașezi media existentă.
+            Editezi articolele vechi, adaugi articole noi, atașezi media și poți șterge articolele existente.
           </p>
         </div>
 
-        <div className="admin-list">
-          {posts.map((post) => (
-            <div key={post.id} className="admin-list-item">
-              <div className="admin-list-copy">
-                <strong>{post.title}</strong>
-                <span>slug: {post.slug}</span>
-                <span>status: {post.status}</span>
-                <span>
-                  media atașată: {post.mediaLinks.length}
-                </span>
-              </div>
-
-              <div className="admin-inline-actions">
-                <Link href={`/studio-dashboard/blog/${post.id}`} className="admin-secondary-button">
-                  Editează
-                </Link>
-                <Link href={`/blog/${post.slug}`} className="admin-ghost-button" target="_blank">
-                  Vezi live
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+        <BlogAdminList posts={posts} />
       </section>
     </main>
   );
