@@ -32,7 +32,7 @@ export default async function StudioDashboardBrandsPage() {
 
         <div className="admin-grid">
           <BrandForm brands={brands} />
-          <AdminBrandManager />
+          <AdminBrandManager initialBrands={brands} />
         </div>
       </section>
     </main>
