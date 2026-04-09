@@ -50,5 +50,9 @@ export interface DbMediaCardItem {
   brand: {
     name: string;
     slug: string;
-  };
+  } | null;
+  personModel: {
+    name: string;
+    slug: string;
+  } | null;
 }

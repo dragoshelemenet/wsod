@@ -7,6 +7,14 @@ interface MediaCardProps {
 }
 
 export default function MediaCard({ item }: MediaCardProps) {
+  const ownerLabel = item.personModel ? "Model" : "Brand";
+  const ownerName = item.personModel?.name ?? item.brand?.name ?? "Fără asociere";
+  const ownerHref = item.personModel
+    ? `/model/${item.personModel.slug}`
+    : item.brand
+      ? `/brand/${item.brand.slug}`
+      : null;
+
   return (
     <article className="media-card">
       <div className="media-thumb">
@@ -34,11 +42,15 @@ export default function MediaCard({ item }: MediaCardProps) {
         </div>
 
         <div className="media-brand-row">
-          <span className="brand-chip">Brand: {item.brand.name}</span>
+          <span className="brand-chip">
+            {ownerLabel}: {ownerName}
+          </span>
 
-          <Link href={`/brand/${item.brand.slug}`} className="media-link">
-            Vezi brandul
-          </Link>
+          {ownerHref ? (
+            <Link href={ownerHref} className="media-link">
+              Vezi {ownerLabel.toLowerCase()}
+            </Link>
+          ) : null}
         </div>
 
         {item.fileUrl && (
