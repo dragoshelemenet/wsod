@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
+import MediaBreadcrumbs from "@/components/media/MediaBreadcrumbs";
 import {
   getMediaItemBySlugFromDb,
   getRelatedMediaByCategoryFromDb,
@@ -71,6 +72,14 @@ export default async function AudioDetailPage({ params }: AudioDetailPageProps) 
       </div>
 
       <section className="inner-section">
+        <MediaBreadcrumbs
+          categoryLabel="Audio"
+          categoryHref="/audio"
+          ownerName={item.owner.name}
+          ownerHref={ownerHref}
+          currentTitle={item.title}
+        />
+
         <h1>{item.title}</h1>
 
         <p className="inner-description">
