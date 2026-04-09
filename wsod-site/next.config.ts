@@ -1,11 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["*.app.github.dev"],
-  experimental: {
-    serverActions: {
-      allowedOrigins: ["*.app.github.dev"],
-    },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "wsod-media.fra1.digitaloceanspaces.com",
+      },
+      {
+        protocol: "https",
+        hostname: "wsod-media.fra1.cdn.digitaloceanspaces.com",
+      },
+    ],
   },
 };
 
