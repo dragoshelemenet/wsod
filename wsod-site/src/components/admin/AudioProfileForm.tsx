@@ -1,27 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-interface BrandFormProps {
-  brands: {
-    id: string;
-    name: string;
-    slug: string;
-  }[];
-}
-
-function slugify(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-export default function BrandForm({ brands }: BrandFormProps) {
+export default function AudioProfileForm() {
   const [name, setName] = useState("");
-  const [slugInput, setSlugInput] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
+  const [kind, setKind] = useState("artist");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [description, setDescription] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
@@ -29,15 +12,11 @@ export default function BrandForm({ brands }: BrandFormProps) {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const normalizedSlug = useMemo(() => {
-    return slugify(slugInput || name);
-  }, [slugInput, name]);
-
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!name.trim()) {
-      setMessage("Numele brandului este obligatoriu.");
+      setMessage("Numele profilului audio este obligatoriu.");
       return;
     }
 
@@ -45,15 +24,14 @@ export default function BrandForm({ brands }: BrandFormProps) {
       setIsSubmitting(true);
       setMessage("");
 
-      const response = await fetch("/api/admin/brands", {
+      const response = await fetch("/api/admin/audio-profiles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
-          slug: normalizedSlug,
-          logoUrl,
+          kind,
           coverImageUrl,
           description,
           seoTitle,
@@ -67,13 +45,12 @@ export default function BrandForm({ brands }: BrandFormProps) {
       };
 
       if (!response.ok || !result.ok) {
-        throw new Error(result.message || "Nu s-a putut crea brandul.");
+        throw new Error(result.message || "Nu s-a putut crea profilul audio.");
       }
 
-      setMessage("Brand creat cu succes.");
+      setMessage("Profil audio creat cu succes.");
       setName("");
-      setSlugInput("");
-      setLogoUrl("");
+      setKind("artist");
       setCoverImageUrl("");
       setDescription("");
       setSeoTitle("");
@@ -88,58 +65,50 @@ export default function BrandForm({ brands }: BrandFormProps) {
   return (
     <div className="admin-panel-card">
       <div className="admin-card-head">
-        <h2>1. Brand nou</h2>
+        <h2>Audio Profile nou</h2>
       </div>
 
       <form className="admin-stack" onSubmit={handleSubmit}>
         <div className="admin-form-field">
-          <label htmlFor="brand-name">Nume brand</label>
+          <label htmlFor="audio-profile-name">Nume profil</label>
           <input
-            id="brand-name"
+            id="audio-profile-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ex: Mosimo Barbershop"
+            placeholder="Ex: Cartier Talks"
             required
           />
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="brand-slug">Slug</label>
-          <input
-            id="brand-slug"
-            value={slugInput}
-            onChange={(e) => setSlugInput(e.target.value)}
-            placeholder="Lasă gol pentru auto din nume"
-          />
-          <p className="admin-helper-text">
-            Slug final: <strong>{normalizedSlug || "—"}</strong>
-          </p>
+          <label htmlFor="audio-profile-kind">Tip</label>
+          <select
+            id="audio-profile-kind"
+            className="admin-select"
+            value={kind}
+            onChange={(e) => setKind(e.target.value)}
+          >
+            <option value="artist">artist</option>
+            <option value="podcast">podcast</option>
+            <option value="show">show</option>
+            <option value="project">project</option>
+          </select>
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="brand-logo">Logo URL</label>
+          <label htmlFor="audio-profile-cover">Cover image URL</label>
           <input
-            id="brand-logo"
-            value={logoUrl}
-            onChange={(e) => setLogoUrl(e.target.value)}
-            placeholder="URL logo brand"
-          />
-        </div>
-
-        <div className="admin-form-field">
-          <label htmlFor="brand-cover">Cover image URL</label>
-          <input
-            id="brand-cover"
+            id="audio-profile-cover"
             value={coverImageUrl}
             onChange={(e) => setCoverImageUrl(e.target.value)}
-            placeholder="URL imagine cover brand"
+            placeholder="URL cover"
           />
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="brand-description">Descriere</label>
+          <label htmlFor="audio-profile-description">Descriere</label>
           <textarea
-            id="brand-description"
+            id="audio-profile-description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
@@ -147,29 +116,23 @@ export default function BrandForm({ brands }: BrandFormProps) {
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="brand-seo-title">SEO title</label>
+          <label htmlFor="audio-profile-seo-title">SEO title</label>
           <input
-            id="brand-seo-title"
+            id="audio-profile-seo-title"
             value={seoTitle}
             onChange={(e) => setSeoTitle(e.target.value)}
           />
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="brand-meta-description">Meta description</label>
+          <label htmlFor="audio-profile-meta-description">Meta description</label>
           <textarea
-            id="brand-meta-description"
+            id="audio-profile-meta-description"
             value={metaDescription}
             onChange={(e) => setMetaDescription(e.target.value)}
             rows={3}
           />
         </div>
-
-        {brands.length ? (
-          <p className="admin-helper-text">
-            Branduri existente: {brands.map((brand) => brand.name).join(", ")}
-          </p>
-        ) : null}
 
         {message ? (
           <p className={message.includes("succes") ? "admin-success" : "admin-error"}>
@@ -178,7 +141,7 @@ export default function BrandForm({ brands }: BrandFormProps) {
         ) : null}
 
         <button type="submit" className="admin-submit" disabled={isSubmitting}>
-          {isSubmitting ? "Se creează..." : "Creează brand"}
+          {isSubmitting ? "Se creează..." : "Creează audio profile"}
         </button>
       </form>
     </div>

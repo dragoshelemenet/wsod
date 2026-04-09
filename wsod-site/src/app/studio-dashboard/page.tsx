@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import BrandForm from "@/components/admin/BrandForm";
+import ModelForm from "@/components/admin/ModelForm";
+import AudioProfileForm from "@/components/admin/AudioProfileForm";
 import UploadToSpacesForm from "@/components/admin/UploadToSpacesForm";
 import AdminBrandManager from "@/components/admin/AdminBrandManager";
 import AdminMediaManager from "@/components/admin/AdminMediaManager";
@@ -52,13 +54,17 @@ export default async function StudioDashboardPage({
           <span className="admin-kicker">Panou privat</span>
           <h1>Studio Dashboard</h1>
           <p className="inner-description">
-            Acum poți urca fișiere direct în DigitalOcean Spaces și salva
-            automat URL-urile în baza de date.
+            Adminul este organizat pe entități, upload și management scalabil al bibliotecii.
           </p>
         </div>
 
         <div className="admin-grid">
           <BrandForm brands={brands} />
+          <ModelForm />
+        </div>
+
+        <div className="admin-grid">
+          <AudioProfileForm />
           <UploadToSpacesForm
             brands={brands}
             models={models}
