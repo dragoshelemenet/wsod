@@ -389,31 +389,24 @@ export default function AdminMediaManager({
                                                 ))}
                                               </select>
                                             </div>
-                                          ) : (
-                                            <div className="admin-form-field">
-                                              <label>Group label</label>
-                                              <input
-                                                placeholder="ex: Outfit"
-                                                value={item.groupLabel || ""}
-                                                onChange={(e) => patchItem(item.id, { groupLabel: e.target.value })}
-                                              />
-                                            </div>
-                                          )}
+                                          ) : null}
 
-                                          <div className="admin-form-field">
-                                            <label>Graphic kind</label>
-                                            <select
-                                              className="admin-select"
-                                              value={item.graphicKind || ""}
-                                              onChange={(e) => patchItem(item.id, { graphicKind: e.target.value })}
-                                            >
-                                              {graphicKindOptions().map((option) => (
-                                                <option key={option.value || "empty"} value={option.value}>
-                                                  {option.label}
-                                                </option>
-                                              ))}
-                                            </select>
-                                          </div>
+                                          {item.category === "grafica" ? (
+                                            <div className="admin-form-field">
+                                              <label>Graphic kind</label>
+                                              <select
+                                                className="admin-select"
+                                                value={item.graphicKind || ""}
+                                                onChange={(e) => patchItem(item.id, { graphicKind: e.target.value })}
+                                              >
+                                                {graphicKindOptions().map((option) => (
+                                                  <option key={option.value || "empty"} value={option.value}>
+                                                    {option.label}
+                                                  </option>
+                                                ))}
+                                              </select>
+                                            </div>
+                                          ) : null}
 
                                           <div className="admin-form-field">
                                             <label>Group order</label>

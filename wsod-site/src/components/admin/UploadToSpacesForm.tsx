@@ -66,6 +66,26 @@ function base64ToFile(base64: string, filename: string, mimeType: string) {
   return new File([byteArray], filename, { type: mimeType });
 }
 
+function photoOutfitOptions() {
+  return [
+    { value: "", label: "Selectează outfit" },
+    { value: "OUTFIT schimbat cu AI", label: "OUTFIT schimbat cu AI", groupOrder: 0 },
+    { value: "OUTFIT REAL", label: "OUTFIT REAL", groupOrder: 10 },
+  ];
+}
+
+function graphicKindOptions() {
+  return [
+    { value: "", label: "Selectează tipul grafic" },
+    { value: "flyer", label: "flyer" },
+    { value: "banner-ad", label: "banner-ad" },
+    { value: "business-card", label: "business-card" },
+    { value: "menu-redesign", label: "menu-redesign" },
+    { value: "logo-reinvented", label: "logo-reinvented" },
+    { value: "menu", label: "menu" },
+  ];
+}
+
 export default function UploadToSpacesForm({
   brands,
   models = [],
@@ -89,6 +109,10 @@ export default function UploadToSpacesForm({
   const [date, setDate] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [groupLabel, setGroupLabel] = useState("");
+  const [groupOrder, setGroupOrder] = useState(0);
+  const [graphicKind, setGraphicKind] = useState("");
 
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -154,6 +178,17 @@ export default function UploadToSpacesForm({
 
     if (category) {
       setOwnerType("brand");
+    }
+  }, [category, ownerType]);
+
+  useEffect(() => {
+    if (!(category === "foto" && ownerType === "model")) {
+      setGroupLabel("");
+      setGroupOrder(0);
+    }
+
+    if (category !== "grafica") {
+      setGraphicKind("");
     }
   }, [category, ownerType]);
 
@@ -322,8 +357,18 @@ export default function UploadToSpacesForm({
       return;
     }
 
-    if (!["foto", "audio"].includes(category) && !brandSlug) {
+    if (![ "foto", "audio" ].includes(category) && !brandSlug) {
       setMessage("Selectează un brand.");
+      return;
+    }
+
+    if (category === "foto" && ownerType === "model" && !groupLabel) {
+      setMessage("Selectează tipul outfitului.");
+      return;
+    }
+
+    if (category === "grafica" && !graphicKind) {
+      setMessage("Selectează tipul materialului grafic.");
       return;
     }
 
@@ -468,6 +513,9 @@ export default function UploadToSpacesForm({
           thumbnailUrl: finalThumbnailUrl,
           previewUrl: finalPreviewUrl,
           fileNameOriginal: selectedFile.name,
+          groupLabel: category === "foto" && ownerType === "model" ? groupLabel : "",
+          groupOrder: category === "foto" && ownerType === "model" ? groupOrder : 0,
+          graphicKind: category === "grafica" ? graphicKind : "",
         }),
       });
 
@@ -487,6 +535,9 @@ export default function UploadToSpacesForm({
       setMetaDescription("");
       setThumbnailUrl("");
       setSelectedFile(null);
+      setGroupLabel("");
+      setGroupOrder(0);
+      setGraphicKind("");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
     } finally {
@@ -631,6 +682,27 @@ export default function UploadToSpacesForm({
             </div>
 
             <div className="admin-form-field">
+              <label htmlFor="photoOutfit">Outfit</label>
+              <select
+                id="photoOutfit"
+                className="admin-select"
+                value={groupLabel}
+                onChange={(e) => {
+                  const selected = photoOutfitOptions().find((option) => option.value === e.target.value);
+                  setGroupLabel(e.target.value);
+                  setGroupOrder(selected?.groupOrder ?? 0);
+                }}
+                required
+              >
+                {photoOutfitOptions().map((option) => (
+                  <option key={option.value || "empty"} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-form-field">
               <label htmlFor="newModelName">Model nou</label>
               <input
                 id="newModelName"
@@ -648,6 +720,25 @@ export default function UploadToSpacesForm({
               </button>
             </div>
           </>
+        ) : null}
+
+        {category === "grafica" ? (
+          <div className="admin-form-field">
+            <label htmlFor="graphicKind">Tip material grafic</label>
+            <select
+              id="graphicKind"
+              className="admin-select"
+              value={graphicKind}
+              onChange={(e) => setGraphicKind(e.target.value)}
+              required
+            >
+              {graphicKindOptions().map((option) => (
+                <option key={option.value || "empty"} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         ) : null}
 
         <div className="admin-form-field">

@@ -55,6 +55,10 @@ export async function POST(request: Request) {
   const previewUrl = String(body.previewUrl || "").trim();
   const fileNameOriginal = String(body.fileNameOriginal || "").trim();
 
+  const groupLabel = String(body.groupLabel || "").trim();
+  const graphicKind = String(body.graphicKind || "").trim();
+  const groupOrder = Number(body.groupOrder ?? 0);
+
   if (!ownerType || !["brand", "model", "audioProfile"].includes(ownerType)) {
     return NextResponse.json(
       { ok: false, message: "Tipul de asociere este invalid." },
@@ -170,6 +174,20 @@ export async function POST(request: Request) {
     audioProfileId = profile.id;
   }
 
+  if (category === "foto" && ownerType === "model" && !groupLabel) {
+    return NextResponse.json(
+      { ok: false, message: "Selectează tipul outfitului." },
+      { status: 400 }
+    );
+  }
+
+  if (category === "grafica" && !graphicKind) {
+    return NextResponse.json(
+      { ok: false, message: "Selectează tipul materialului grafic." },
+      { status: 400 }
+    );
+  }
+
   const baseSlug = slugify(title || fileNameOriginal || "media-item");
   const slug = await makeUniqueSlug(baseSlug);
 
@@ -196,6 +214,9 @@ export async function POST(request: Request) {
       description: description || null,
       seoTitle: seoTitle || null,
       metaDescription: metaDescription || null,
+      groupLabel: category === "foto" && ownerType === "model" ? groupLabel || null : null,
+      groupOrder: category === "foto" && ownerType === "model" ? (Number.isFinite(groupOrder) ? groupOrder : 0) : 0,
+      graphicKind: category === "grafica" ? graphicKind || null : null,
       brandId,
       personModelId,
       audioProfileId,
