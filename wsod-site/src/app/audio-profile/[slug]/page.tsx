@@ -11,6 +11,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const BASE_URL = "https://wsod.cloud";
+
 interface AudioProfilePageProps {
   params: Promise<{
     slug: string;
@@ -29,14 +31,33 @@ export async function generateMetadata({
     };
   }
 
+  const title = profile.seoTitle || `${profile.name} | WSOD.PROD`;
+  const description =
+    profile.metaDescription ||
+    profile.description ||
+    `Materiale audio pentru ${profile.name}.`;
+  const url = `${BASE_URL}/audio-profile/${profile.slug}`;
+  const image = profile.coverImageUrl || undefined;
+
   return {
-    title: profile.seoTitle || `${profile.name} | WSOD.PROD`,
-    description:
-      profile.metaDescription ||
-      profile.description ||
-      `Materiale audio pentru ${profile.name}.`,
+    title,
+    description,
     alternates: {
       canonical: `/audio-profile/${profile.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "WSOD.PROD",
+      type: "profile",
+      images: image ? [{ url: image }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : [],
     },
   };
 }

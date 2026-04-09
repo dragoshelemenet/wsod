@@ -11,6 +11,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const BASE_URL = "https://wsod.cloud";
+
 interface BrandPageProps {
   params: Promise<{
     slug: string;
@@ -29,14 +31,33 @@ export async function generateMetadata({
     };
   }
 
+  const title = brand.seoTitle || `${brand.name} | WSOD.PROD`;
+  const description =
+    brand.metaDescription ||
+    brand.description ||
+    `Materiale realizate pentru ${brand.name} de WSOD.PROD.`;
+  const url = `${BASE_URL}/brand/${brand.slug}`;
+  const image = brand.logoUrl || brand.coverImageUrl || undefined;
+
   return {
-    title: brand.seoTitle || `${brand.name} | WSOD.PROD`,
-    description:
-      brand.metaDescription ||
-      brand.description ||
-      `Materiale realizate pentru ${brand.name} de WSOD.PROD.`,
+    title,
+    description,
     alternates: {
       canonical: `/brand/${brand.slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "WSOD.PROD",
+      type: "profile",
+      images: image ? [{ url: image }] : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : [],
     },
   };
 }
