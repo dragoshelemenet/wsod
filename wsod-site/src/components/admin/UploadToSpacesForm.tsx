@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface UploadToSpacesFormProps {
   brands: {
+    id: string;
+    name: string;
+    slug: string;
+  }[];
+  models?: {
     id: string;
     name: string;
     slug: string;
@@ -13,6 +18,8 @@ interface UploadToSpacesFormProps {
 const LAST_USED_DATE_KEY = "wsod-last-used-date";
 const LAST_USED_BRAND_KEY = "wsod-last-used-brand";
 const LAST_USED_CATEGORY_KEY = "wsod-last-used-category";
+const LAST_USED_OWNER_TYPE_KEY = "wsod-last-used-owner-type";
+const LAST_USED_MODEL_KEY = "wsod-last-used-model";
 
 function inferTypeFromCategory(category: string) {
   switch (category) {
@@ -40,8 +47,14 @@ function getTodayDate() {
   return `${year}-${month}-${day}`;
 }
 
-export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) {
+export default function UploadToSpacesForm({
+  brands,
+  models = [],
+}: UploadToSpacesFormProps) {
+  const [ownerType, setOwnerType] = useState<"brand" | "model">("brand");
   const [brandSlug, setBrandSlug] = useState("");
+  const [personModelSlug, setPersonModelSlug] = useState("");
+  const [newModelName, setNewModelName] = useState("");
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -50,11 +63,14 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [isCreatingModel, setIsCreatingModel] = useState(false);
 
   useEffect(() => {
     const savedDate = window.localStorage.getItem(LAST_USED_DATE_KEY);
     const savedBrand = window.localStorage.getItem(LAST_USED_BRAND_KEY);
     const savedCategory = window.localStorage.getItem(LAST_USED_CATEGORY_KEY);
+    const savedOwnerType = window.localStorage.getItem(LAST_USED_OWNER_TYPE_KEY);
+    const savedModel = window.localStorage.getItem(LAST_USED_MODEL_KEY);
 
     setDate(savedDate || getTodayDate());
 
@@ -64,6 +80,14 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
 
     if (savedCategory) {
       setCategory(savedCategory);
+    }
+
+    if (savedOwnerType === "model" || savedOwnerType === "brand") {
+      setOwnerType(savedOwnerType);
+    }
+
+    if (savedModel) {
+      setPersonModelSlug(savedModel);
     }
   }, []);
 
@@ -85,19 +109,93 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
     }
   }, [category]);
 
-  const inferredType = useMemo(() => inferTypeFromCategory(category), [category]);
+  useEffect(() => {
+    window.localStorage.setItem(LAST_USED_OWNER_TYPE_KEY, ownerType);
+  }, [ownerType]);
+
+  useEffect(() => {
+    if (personModelSlug) {
+      window.localStorage.setItem(LAST_USED_MODEL_KEY, personModelSlug);
+    }
+  }, [personModelSlug]);
+
+  useEffect(() => {
+    if (category !== "foto" && ownerType === "model") {
+      setOwnerType("brand");
+    }
+  }, [category, ownerType]);
+
+  const inferredType = inferTypeFromCategory(category);
+
+  async function handleCreateModel() {
+    if (!newModelName.trim()) {
+      setMessage("Scrie numele modelului.");
+      return;
+    }
+
+    try {
+      setIsCreatingModel(true);
+      setMessage("");
+
+      const response = await fetch("/api/admin/models", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newModelName,
+        }),
+      });
+
+      const result = (await response.json()) as {
+        ok: boolean;
+        message: string;
+        personModel?: {
+          slug: string;
+        };
+      };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Nu s-a putut crea modelul.");
+      }
+
+      setMessage("Model creat. Reîncarcă pagina ca să apară în listă.");
+      setNewModelName("");
+
+      if (result.personModel?.slug) {
+        setPersonModelSlug(result.personModel.slug);
+      }
+    } catch (error) {
+      const text = error instanceof Error ? error.message : "Eroare necunoscută.";
+      setMessage(text);
+    } finally {
+      setIsCreatingModel(false);
+    }
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!selectedFile || !brandSlug || !category || !title || !date) {
+    if (!selectedFile || !category || !title || !date) {
       setMessage("Completează toate câmpurile obligatorii.");
+      return;
+    }
+
+    if (ownerType === "brand" && !brandSlug) {
+      setMessage("Selectează un brand.");
+      return;
+    }
+
+    if (ownerType === "model" && !personModelSlug) {
+      setMessage("Selectează un model.");
       return;
     }
 
     try {
       setIsUploading(true);
       setMessage("");
+
+      const uploadOwnerSlug = ownerType === "model" ? personModelSlug : brandSlug;
 
       const presignResponse = await fetch("/api/uploads/presign", {
         method: "POST",
@@ -107,7 +205,7 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         body: JSON.stringify({
           fileName: selectedFile.name,
           contentType: selectedFile.type,
-          brandSlug,
+          brandSlug: uploadOwnerSlug,
           category,
         }),
       });
@@ -154,7 +252,9 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          brandSlug,
+          ownerType,
+          brandSlug: ownerType === "brand" ? brandSlug : "",
+          personModelSlug: ownerType === "model" ? personModelSlug : "",
           category,
           type: inferredType,
           title,
@@ -174,7 +274,7 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         throw new Error(result.message || "Nu s-a putut salva fișierul în DB.");
       }
 
-      setMessage("Fișier urcat în Spaces, făcut public și salvat în baza de date.");
+      setMessage("Fișier urcat și salvat cu succes.");
       setTitle("");
       setDescription("");
       setThumbnailUrl("");
@@ -194,23 +294,80 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
       </div>
 
       <form className="admin-stack" onSubmit={handleSubmit}>
-        <div className="admin-form-field">
-          <label htmlFor="brandSlug">Brand</label>
-          <select
-            id="brandSlug"
-            className="admin-select"
-            value={brandSlug}
-            onChange={(e) => setBrandSlug(e.target.value)}
-            required
-          >
-            <option value="">Selectează brandul</option>
-            {brands.map((brand) => (
-              <option key={brand.id} value={brand.slug}>
-                {brand.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {category === "foto" ? (
+          <div className="admin-form-field">
+            <label htmlFor="ownerType">Asociere foto</label>
+            <select
+              id="ownerType"
+              className="admin-select"
+              value={ownerType}
+              onChange={(e) => setOwnerType(e.target.value as "brand" | "model")}
+            >
+              <option value="brand">Brand</option>
+              <option value="model">Model</option>
+            </select>
+          </div>
+        ) : null}
+
+        {ownerType === "brand" ? (
+          <div className="admin-form-field">
+            <label htmlFor="brandSlug">Brand</label>
+            <select
+              id="brandSlug"
+              className="admin-select"
+              value={brandSlug}
+              onChange={(e) => setBrandSlug(e.target.value)}
+              required
+            >
+              <option value="">Selectează brandul</option>
+              {brands.map((brand) => (
+                <option key={brand.id} value={brand.slug}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
+
+        {category === "foto" && ownerType === "model" ? (
+          <>
+            <div className="admin-form-field">
+              <label htmlFor="personModelSlug">Model</label>
+              <select
+                id="personModelSlug"
+                className="admin-select"
+                value={personModelSlug}
+                onChange={(e) => setPersonModelSlug(e.target.value)}
+                required
+              >
+                <option value="">Selectează modelul</option>
+                {models.map((model) => (
+                  <option key={model.id} value={model.slug}>
+                    {model.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-form-field">
+              <label htmlFor="newModelName">Model nou</label>
+              <input
+                id="newModelName"
+                value={newModelName}
+                onChange={(e) => setNewModelName(e.target.value)}
+                placeholder="Scrie numele modelului nou"
+              />
+              <button
+                type="button"
+                className="admin-submit"
+                onClick={handleCreateModel}
+                disabled={isCreatingModel}
+              >
+                {isCreatingModel ? "Se creează..." : "Creează model"}
+              </button>
+            </div>
+          </>
+        ) : null}
 
         <div className="admin-form-field">
           <label htmlFor="category">Categorie</label>
@@ -267,7 +424,7 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         </div>
 
         {message ? (
-          <p className={message.includes("salvat") || message.includes("public") ? "admin-success" : "admin-error"}>
+          <p className={message.includes("succes") || message.includes("creat") ? "admin-success" : "admin-error"}>
             {message}
           </p>
         ) : null}
