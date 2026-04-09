@@ -23,9 +23,7 @@ export default function OwnerIntroCard({
       <div className="owner-intro-copy">
         <h1>{title}</h1>
         {metaLine ? <p className="owner-intro-meta">{metaLine}</p> : null}
-        <p className="inner-description">
-          {description || `Toate materialele disponibile pentru ${title}.`}
-        </p>
+        {description ? <p className="inner-description">{description}</p> : null}
       </div>
     </div>
   );
