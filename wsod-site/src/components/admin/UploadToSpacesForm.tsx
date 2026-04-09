@@ -232,11 +232,6 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         </div>
 
         <div className="admin-form-field">
-          <label>Tip detectat automat</label>
-          <input value={inferredType || "-"} readOnly />
-        </div>
-
-        <div className="admin-form-field">
           <label htmlFor="title">Titlu</label>
           <input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
         </div>
