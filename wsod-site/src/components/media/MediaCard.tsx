@@ -21,6 +21,7 @@ function getItemHref(item: DbMediaCardItem) {
 
 export default function MediaCard({ item }: MediaCardProps) {
   const owner = item.owner;
+  const isPhotoFile = item.category === "foto";
 
   const ownerHref =
     owner.type === "brand" && owner.slug
@@ -38,8 +39,44 @@ export default function MediaCard({ item }: MediaCardProps) {
 
   const [imageIndex, setImageIndex] = useState(0);
   const previewSrc = imageCandidates[imageIndex] ?? null;
-
   const itemHref = getItemHref(item);
+
+  if (isPhotoFile) {
+    return (
+      <article className="media-card media-card-photo-file">
+        <Link
+          href={itemHref}
+          className="media-card-photo-link"
+          aria-label={`Deschide ${item.title}`}
+        >
+          <div className="media-card-photo-thumb">
+            <div className="media-card-photo-thumb-inner">
+              {previewSrc ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={previewSrc}
+                  alt={item.title}
+                  className="media-card-photo-image"
+                  loading="lazy"
+                  onError={() => {
+                    if (imageIndex < imageCandidates.length - 1) {
+                      setImageIndex((current) => current + 1);
+                    }
+                  }}
+                />
+              ) : (
+                <div className="media-thumb-fallback">PHOTO</div>
+              )}
+            </div>
+          </div>
+
+          <div className="media-card-photo-caption">
+            <strong>{item.fileNameOriginal || item.title}</strong>
+          </div>
+        </Link>
+      </article>
+    );
+  }
 
   return (
     <article className="media-card media-card-compact">

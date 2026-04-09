@@ -55,6 +55,14 @@ function withOwner<T extends {
   });
 }
 
+function getPreviewSrc(item: {
+  thumbnailUrl?: string | null;
+  previewUrl?: string | null;
+  fileUrl?: string | null;
+}) {
+  return item.thumbnailUrl ?? item.previewUrl ?? item.fileUrl ?? null;
+}
+
 export async function getBrandsFromDb() {
   return prisma.brand.findMany({
     orderBy: { name: "asc" },
@@ -65,6 +73,66 @@ export async function getModelsFromDb() {
   return prisma.personModel.findMany({
     orderBy: { name: "asc" },
   });
+}
+
+export async function getBrandsWithCategoryPreviewFromDb(category: string) {
+  const brands = await prisma.brand.findMany({
+    where: {
+      mediaItems: {
+        some: { category },
+      },
+    },
+    orderBy: { name: "asc" },
+    include: {
+      mediaItems: {
+        where: { category },
+        orderBy: { date: "desc" },
+        take: 3,
+        select: {
+          thumbnailUrl: true,
+          previewUrl: true,
+          fileUrl: true,
+        },
+      },
+    },
+  });
+
+  return brands.map((brand) => ({
+    ...brand,
+    previewImages: brand.mediaItems
+      .map(getPreviewSrc)
+      .filter(Boolean) as string[],
+  }));
+}
+
+export async function getModelsWithCategoryPreviewFromDb(category: string) {
+  const models = await prisma.personModel.findMany({
+    where: {
+      mediaItems: {
+        some: { category },
+      },
+    },
+    orderBy: { name: "asc" },
+    include: {
+      mediaItems: {
+        where: { category },
+        orderBy: { date: "desc" },
+        take: 3,
+        select: {
+          thumbnailUrl: true,
+          previewUrl: true,
+          fileUrl: true,
+        },
+      },
+    },
+  });
+
+  return models.map((model) => ({
+    ...model,
+    previewImages: model.mediaItems
+      .map(getPreviewSrc)
+      .filter(Boolean) as string[],
+  }));
 }
 
 export async function getAudioProfilesFromDb() {

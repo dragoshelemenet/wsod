@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
 import {
-  getBrandsFromDb,
-  getModelsFromDb,
+  getBrandsWithCategoryPreviewFromDb,
+  getModelsWithCategoryPreviewFromDb,
   getMediaByCategoryFromDb,
 } from "@/lib/data/db-queries";
 
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 
 export default async function FotoPage() {
   const [brands, models, items] = await Promise.all([
-    getBrandsFromDb(),
-    getModelsFromDb(),
+    getBrandsWithCategoryPreviewFromDb("foto"),
+    getModelsWithCategoryPreviewFromDb("foto"),
     getMediaByCategoryFromDb("foto", { limit: 24 }),
   ]);
 
@@ -42,26 +42,28 @@ export default async function FotoPage() {
 
         <OwnerFolderGrid
           title="Branduri"
+          variant="compact-file"
           items={brands.map((brand) => ({
             id: brand.id,
             name: brand.name,
             slug: brand.slug,
-            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? null,
+            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+            previewImages: brand.previewImages ?? [],
             href: `/brand/${brand.slug}`,
-            subtitle: "Vezi toate materialele brandului",
           }))}
           emptyText="Nu există branduri momentan."
         />
 
         <OwnerFolderGrid
           title="Modele"
+          variant="compact-file"
           items={models.map((model) => ({
             id: model.id,
             name: model.name,
             slug: model.slug,
-            imageUrl: model.portraitImageUrl ?? null,
+            imageUrl: model.portraitImageUrl ?? model.previewImages?.[0] ?? null,
+            previewImages: model.previewImages ?? [],
             href: `/model/${model.slug}`,
-            subtitle: "Vezi toate materialele modelului",
           }))}
           emptyText="Nu există modele momentan."
         />

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
 import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
 import {
-  getBrandsFromDb,
+  getBrandsWithCategoryPreviewFromDb,
   getMediaByCategoryFromDb,
 } from "@/lib/data/db-queries";
 
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default async function VideoPage() {
   const [brands, items] = await Promise.all([
-    getBrandsFromDb(),
+    getBrandsWithCategoryPreviewFromDb("video"),
     getMediaByCategoryFromDb("video", { limit: 24 }),
   ]);
 
@@ -40,13 +40,14 @@ export default async function VideoPage() {
 
         <OwnerFolderGrid
           title="Branduri"
+          variant="compact-file"
           items={brands.map((brand) => ({
             id: brand.id,
             name: brand.name,
             slug: brand.slug,
-            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? null,
+            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+            previewImages: brand.previewImages ?? [],
             href: `/brand/${brand.slug}`,
-            subtitle: "Vezi toate materialele brandului",
           }))}
           emptyText="Nu există branduri momentan."
         />
