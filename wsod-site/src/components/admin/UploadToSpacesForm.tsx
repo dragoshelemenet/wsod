@@ -51,9 +51,10 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         throw new Error("Nu s-a putut genera URL-ul de upload.");
       }
 
-      const { uploadUrl, publicUrl } = (await presignResponse.json()) as {
+      const { uploadUrl, publicUrl, objectKey } = (await presignResponse.json()) as {
         uploadUrl: string;
         publicUrl: string;
+        objectKey: string;
       };
 
       const uploadResponse = await fetch(uploadUrl, {
@@ -66,6 +67,20 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
 
       if (!uploadResponse.ok) {
         throw new Error("Upload-ul către Spaces a eșuat.");
+      }
+
+      const makePublicResponse = await fetch("/api/uploads/make-public", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          objectKey,
+        }),
+      });
+
+      if (!makePublicResponse.ok) {
+        throw new Error("Fișierul a fost urcat, dar nu a putut fi făcut public.");
       }
 
       const saveResponse = await fetch("/api/admin/media", {
@@ -94,7 +109,7 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         throw new Error(result.message || "Nu s-a putut salva fișierul în DB.");
       }
 
-      setMessage("Fișier urcat în Spaces și salvat în baza de date.");
+      setMessage("Fișier urcat în Spaces, făcut public și salvat în baza de date.");
       setTitle("");
       setDescription("");
       setDate("");
@@ -206,7 +221,7 @@ export default function UploadToSpacesForm({ brands }: UploadToSpacesFormProps) 
         </div>
 
         {message ? (
-          <p className={message.includes("salvat") ? "admin-success" : "admin-error"}>
+          <p className={message.includes("salvat") || message.includes("public") ? "admin-success" : "admin-error"}>
             {message}
           </p>
         ) : null}
