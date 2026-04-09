@@ -6,6 +6,7 @@ import {
   getMediaItemBySlugFromDb,
   getRelatedMediaByCategoryFromDb,
 } from "@/lib/data/db-queries";
+import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,7 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
   }
 
   const relatedItems = await getRelatedMediaByCategoryFromDb("video", item.id, 8);
+  const jsonLd = buildMediaJsonLd(item);
 
   const ownerHref =
     item.owner.type === "brand" && item.owner.slug
@@ -57,6 +59,11 @@ export default async function VideoDetailPage({ params }: VideoDetailPageProps) 
 
   return (
     <main className="inner-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <div className="inner-topbar">
         <Link href="/video" className="back-link">
           ← Înapoi la video

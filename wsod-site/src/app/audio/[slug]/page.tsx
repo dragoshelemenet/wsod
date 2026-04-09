@@ -6,6 +6,7 @@ import {
   getMediaItemBySlugFromDb,
   getRelatedMediaByCategoryFromDb,
 } from "@/lib/data/db-queries";
+import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,7 @@ export default async function AudioDetailPage({ params }: AudioDetailPageProps) 
   }
 
   const relatedItems = await getRelatedMediaByCategoryFromDb("audio", item.id, 8);
+  const jsonLd = buildMediaJsonLd(item);
 
   const ownerHref =
     item.owner.type === "audioProfile" && item.owner.slug
@@ -57,6 +59,11 @@ export default async function AudioDetailPage({ params }: AudioDetailPageProps) 
 
   return (
     <main className="inner-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <div className="inner-topbar">
         <Link href="/audio" className="back-link">
           ← Înapoi la audio

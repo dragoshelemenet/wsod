@@ -6,6 +6,7 @@ import {
   getMediaItemBySlugFromDb,
   getRelatedMediaByCategoryFromDb,
 } from "@/lib/data/db-queries";
+import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 
@@ -58,9 +59,15 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
         : null;
 
   const imageSrc = item.fileUrl || item.previewUrl || item.thumbnailUrl || null;
+  const jsonLd = buildMediaJsonLd(item);
 
   return (
     <main className="inner-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <div className="inner-topbar">
         <Link href="/foto" className="back-link">
           ← Înapoi la foto
