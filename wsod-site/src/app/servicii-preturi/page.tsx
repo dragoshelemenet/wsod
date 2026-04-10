@@ -6,7 +6,19 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Servicii & prețuri | WSOD.PROD",
-  description: "Serviciile WSOD.PROD și prețuri orientative pentru video, foto, design, website și audio.",
+  description:
+    "Servicii video, foto, grafică, website, audio și content AI pentru branduri, artiști și afaceri. Vezi prețuri orientative și descrieri detaliate.",
+  alternates: {
+    canonical: "/servicii-preturi",
+  },
+  openGraph: {
+    title: "Servicii & prețuri | WSOD.PROD",
+    description:
+      "Servicii video, foto, grafică, website, audio și content AI pentru branduri, artiști și afaceri.",
+    url: "https://wsod.cloud/servicii-preturi",
+    siteName: "WSOD.PROD",
+    type: "website",
+  },
 };
 
 function parseCards(text?: string | null) {
@@ -36,9 +48,12 @@ export default async function ServicesPricingPage() {
       <section className="inner-section services-shell">
         <div className="services-header">
           <span className="services-kicker">WSOD.PROD</span>
-          <h1>{content.servicesTitle || "Serviciile noastre"}</h1>
+          <h1>Servicii & prețuri</h1>
           <p className="inner-description">
-            Prețurile sunt orientative. Pentru ofertă exactă, scrie-ne cu ce ai nevoie și îți spunem rapid varianta potrivită.
+            Oferim producție video, fotografie, conținut AI hiper-realist, grafică,
+            website-uri moderne și servicii audio pentru branduri, afaceri, artiști
+            și proiecte care vor să arate premium online. Prețurile de mai jos sunt
+            orientative și pot varia în funcție de complexitate, volum și deadline.
           </p>
         </div>
 
@@ -68,12 +83,15 @@ export default async function ServicesPricingPage() {
           </a>
 
           <a
-            href={content.claimHref || "#"}
+            href={
+              content.claimHref ||
+              "https://wa.me/40727205689?text=Salut%2C%20vreau%20primul%20video%20sau%20foto%20gratis"
+            }
             className="media-link"
             target={String(content.claimHref || "").startsWith("http") ? "_blank" : undefined}
             rel={String(content.claimHref || "").startsWith("http") ? "noreferrer" : undefined}
           >
-            {content.claimLabel || "Claim your first video/photo for free"}
+            {content.claimLabel || "Primul video/foto gratis"}
           </a>
         </div>
       </section>
