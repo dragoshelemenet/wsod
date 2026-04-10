@@ -158,6 +158,28 @@ export default function HomeServicesCarouselClient({
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
+        {baseSlides.length > 1 ? (
+          <>
+            <button
+              type="button"
+              className="services-carousel-arrow services-carousel-arrow-left"
+              onClick={goPrev}
+              aria-label="Anterior"
+            >
+              ‹
+            </button>
+
+            <button
+              type="button"
+              className="services-carousel-arrow services-carousel-arrow-right"
+              onClick={goNext}
+              aria-label="Următor"
+            >
+              ›
+            </button>
+          </>
+        ) : null}
+
         {baseSlides.length > 1 ? renderCard(prev, "prev") : null}
         {renderCard(current, "current")}
         {baseSlides.length > 1 ? renderCard(next, "next") : null}

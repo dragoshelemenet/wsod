@@ -841,3 +841,64 @@
     filter: saturate(0.8) brightness(0.74) blur(2px);
   }
 }
+
+/* carousel arrows */
+.services-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(8,8,14,0.54);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255,255,255,0.96);
+  font-size: 30px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+}
+
+.services-carousel-arrow:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.services-carousel-arrow-left {
+  left: max(8px, calc(50% - 210px));
+}
+
+.services-carousel-arrow-right {
+  right: max(8px, calc(50% - 210px));
+}
+
+@media (min-width: 900px) {
+  .services-carousel-arrow-left {
+    left: calc(50% - 250px);
+  }
+
+  .services-carousel-arrow-right {
+    right: calc(50% - 250px);
+  }
+}
+
+@media (max-width: 640px) {
+  .services-carousel-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 26px;
+    background: rgba(8,8,14,0.42);
+  }
+
+  .services-carousel-arrow-left {
+    left: 8px;
+  }
+
+  .services-carousel-arrow-right {
+    right: 8px;
+  }
+}
