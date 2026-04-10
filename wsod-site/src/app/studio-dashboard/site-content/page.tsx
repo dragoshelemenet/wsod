@@ -18,13 +18,17 @@ async function saveSiteContent(formData: FormData) {
     return value.length ? value : null;
   };
 
+  const existing = await prisma.siteContent.findUnique({
+    where: { id: "main" },
+  });
+
   await prisma.siteContent.upsert({
     where: { id: "main" },
     create: {
       id: "main",
-      servicesEyebrow: clean("servicesEyebrow"),
+      servicesEyebrow: existing?.servicesEyebrow ?? null,
       servicesTitle: clean("servicesTitle"),
-      servicesList: clean("servicesList"),
+      servicesList: existing?.servicesList ?? null,
       servicesCards: clean("servicesCards"),
       pricingLabel: clean("pricingLabel"),
       pricingHref: clean("pricingHref"),
@@ -34,9 +38,7 @@ async function saveSiteContent(formData: FormData) {
       claimHref: clean("claimHref"),
     },
     update: {
-      servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
-      servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
       pricingLabel: clean("pricingLabel"),
       pricingHref: clean("pricingHref"),
@@ -71,40 +73,21 @@ export default async function SiteContentDashboardPage() {
 
       <section className="inner-section admin-page-shell">
         <div className="admin-page-header">
-          <span className="admin-kicker">Homepage + Servicii</span>
-          <h1>Site content</h1>
+          <span className="admin-kicker">Servicii</span>
+          <h1>Servicii & prețuri</h1>
           <p className="inner-description">
-            Aici modifici textele din homepage și pagina Servicii & prețuri fără cod.
+            Aici modifici doar conținutul pentru pagina separată de servicii și butoanele principale.
           </p>
         </div>
 
         <form action={saveSiteContent} className="site-content-form">
           <div className="site-content-grid">
-            <label className="admin-field">
-              <span>Eyebrow</span>
-              <input
-                name="servicesEyebrow"
-                defaultValue={content.servicesEyebrow || ""}
-                className="admin-input"
-              />
-            </label>
-
-            <label className="admin-field">
-              <span>Titlu secțiune / pagină</span>
+            <label className="admin-field site-content-full">
+              <span>Titlul paginii de servicii</span>
               <input
                 name="servicesTitle"
                 defaultValue={content.servicesTitle || ""}
                 className="admin-input"
-              />
-            </label>
-
-            <label className="admin-field site-content-full">
-              <span>Listă scurtă homepage — un serviciu pe rând</span>
-              <textarea
-                name="servicesList"
-                defaultValue={content.servicesList || ""}
-                className="admin-textarea"
-                rows={10}
               />
             </label>
 
@@ -119,7 +102,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Label meniu servicii</span>
+              <span>Text buton servicii</span>
               <input
                 name="pricingLabel"
                 defaultValue={content.pricingLabel || ""}
@@ -128,7 +111,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Link pagină servicii</span>
+              <span>Link buton servicii</span>
               <input
                 name="pricingHref"
                 defaultValue={content.pricingHref || ""}
@@ -137,7 +120,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Label contact</span>
+              <span>Text buton contact</span>
               <input
                 name="contactLabel"
                 defaultValue={content.contactLabel || ""}
@@ -146,7 +129,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Link contact</span>
+              <span>Link buton contact</span>
               <input
                 name="contactHref"
                 defaultValue={content.contactHref || ""}
@@ -155,7 +138,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Label gratis</span>
+              <span>Text buton gratis</span>
               <input
                 name="claimLabel"
                 defaultValue={content.claimLabel || ""}
@@ -164,7 +147,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Link gratis</span>
+              <span>Link buton gratis</span>
               <input
                 name="claimHref"
                 defaultValue={content.claimHref || ""}
