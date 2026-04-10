@@ -2403,3 +2403,125 @@ img {
 .footer {
   margin-bottom: 28px !important;
 }
+
+/* paginated media grid */
+.media-grid-block {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.grid-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.grid-page-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 160ms ease;
+}
+
+.grid-page-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.16);
+  transform: translateY(-1px);
+}
+
+.grid-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.grid-page-indicator {
+  min-width: 72px;
+  text-align: center;
+  color: rgba(255,255,255,0.82);
+  font-weight: 600;
+}
+
+/* owner folder carousel */
+.owner-folder-section-head-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.owner-folder-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.owner-folder-nav-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 160ms ease;
+}
+
+.owner-folder-nav-btn:hover {
+  background: rgba(255,255,255,0.16);
+  transform: translateY(-1px);
+}
+
+.owner-folder-grid-carousel {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+@media (max-width: 1024px) {
+  .owner-folder-grid-carousel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .owner-folder-grid-carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .owner-folder-nav-btn,
+  .grid-page-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+
+  .media-grid {
+    gap: 14px;
+  }
+
+  .media-card-photo-file .media-card-photo-thumb {
+    border-radius: 18px;
+  }
+
+  .media-card-photo-file .media-card-photo-link {
+    max-width: 100%;
+  }
+
+  .media-card-photo-file .media-card-photo-image,
+  .media-card-video-file .media-card-photo-image,
+  .media-thumb-image {
+    max-height: 260px !important;
+    object-fit: cover;
+  }
+}
