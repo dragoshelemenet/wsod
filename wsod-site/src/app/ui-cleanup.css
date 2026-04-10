@@ -757,3 +757,87 @@
     line-height: 1.35;
   }
 }
+
+/* interactive peek carousel */
+.services-carousel-stage {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.services-carousel-card {
+  position: absolute;
+  display: block;
+  transition:
+    transform 0.45s ease,
+    opacity 0.45s ease,
+    filter 0.45s ease;
+}
+
+.services-carousel-card-link {
+  display: block;
+}
+
+.services-carousel-card-current {
+  z-index: 3;
+  opacity: 1;
+  transform: translateX(0) scale(1) rotate(0deg);
+}
+
+.services-carousel-card-prev,
+.services-carousel-card-next {
+  cursor: pointer;
+}
+
+.services-carousel-card-prev {
+  z-index: 2;
+  opacity: 0.58;
+  transform: translateX(-38%) scale(0.82) rotate(-7deg);
+}
+
+.services-carousel-card-next {
+  z-index: 2;
+  opacity: 0.58;
+  transform: translateX(38%) scale(0.82) rotate(7deg);
+}
+
+.services-carousel-card-prev .services-carousel-media,
+.services-carousel-card-next .services-carousel-media {
+  filter: saturate(0.84) brightness(0.78) blur(1.8px);
+}
+
+.services-carousel-card-prev:hover,
+.services-carousel-card-next:hover {
+  opacity: 0.8;
+}
+
+.services-carousel-card-prev:hover .services-carousel-media,
+.services-carousel-card-next:hover .services-carousel-media {
+  filter: saturate(0.92) brightness(0.86) blur(1px);
+}
+
+@media (min-width: 900px) {
+  .services-carousel-card-prev {
+    transform: translateX(-48%) scale(0.84) rotate(-8deg);
+  }
+
+  .services-carousel-card-next {
+    transform: translateX(48%) scale(0.84) rotate(8deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .services-carousel-card-prev {
+    transform: translateX(-32%) scale(0.8) rotate(-7deg);
+    opacity: 0.46;
+  }
+
+  .services-carousel-card-next {
+    transform: translateX(32%) scale(0.8) rotate(7deg);
+    opacity: 0.46;
+  }
+
+  .services-carousel-card-prev .services-carousel-media,
+  .services-carousel-card-next .services-carousel-media {
+    filter: saturate(0.8) brightness(0.74) blur(2px);
+  }
+}
