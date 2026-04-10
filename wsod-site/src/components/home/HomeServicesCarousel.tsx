@@ -4,6 +4,15 @@ import {
 } from "@/lib/data/db-queries";
 import HomeServicesCarouselClient from "@/components/home/HomeServicesCarouselClient";
 
+type Slide = {
+  id: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  imageSrc?: string | null;
+  videoSrc?: string | null;
+};
+
 function isImageUrl(url?: string | null) {
   if (!url) return false;
   const clean = url.split("?")[0].toLowerCase();
@@ -40,6 +49,10 @@ function getBestVideoSrc(item: {
   ) || null;
 }
 
+function isSlide(value: Slide | null): value is Slide {
+  return value !== null;
+}
+
 export default async function HomeServicesCarousel() {
   const [videoItems, photoItems, graphicItems, websiteItems, modelItems] =
     await Promise.all([
@@ -52,7 +65,7 @@ export default async function HomeServicesCarousel() {
 
   const model = modelItems[0] || null;
 
-  const slides = [
+  const slides: Slide[] = [
     videoItems[0]
       ? {
           id: "video",
@@ -107,7 +120,7 @@ export default async function HomeServicesCarousel() {
           videoSrc: null,
         }
       : null,
-  ].filter(Boolean);
+  ].filter(isSlide);
 
   if (!slides.length) return null;
 
