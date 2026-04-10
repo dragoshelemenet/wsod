@@ -2398,3 +2398,8 @@ img {
 .brands-section .owner-folder-card .folder-hover-preview {
   display: none !important;
 }
+
+/* footer bottom breathing space on all pages */
+.footer {
+  margin-bottom: 28px !important;
+}
