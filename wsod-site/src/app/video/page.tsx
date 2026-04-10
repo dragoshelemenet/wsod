@@ -38,19 +38,6 @@ export default async function VideoPage() {
           Portofoliu video organizat pe branduri, plus materiale recente din toate proiectele.
         </p>
 
-        <OwnerFolderGrid
-          title="Branduri"
-          items={brands.map((brand) => ({
-            id: brand.id,
-            name: brand.name,
-            slug: brand.slug,
-            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
-            previewImages: brand.previewImages ?? [],
-            href: `/brand/${brand.slug}`,
-          }))}
-          emptyText="Nu există branduri momentan."
-        />
-
         <div className="owner-folder-section">
           <div className="owner-folder-section-head">
             <h2>Selecții video</h2>
@@ -61,6 +48,20 @@ export default async function VideoPage() {
             emptyText="Nu există materiale video momentan."
           />
         </div>
+
+        <OwnerFolderGrid
+          title="Branduri"
+          items={brands.map((brand) => ({
+            id: brand.id,
+            name: brand.name,
+            slug: brand.slug,
+            imageUrl:
+              brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+            previewImages: brand.previewImages ?? [],
+            href: `/brand/${brand.slug}?from=video`,
+          }))}
+          emptyText="Nu există branduri momentan."
+        />
       </section>
     </main>
   );

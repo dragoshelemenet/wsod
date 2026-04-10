@@ -2302,3 +2302,22 @@ img {
 .folder-hover-shot {
   background: #000;
 }
+
+/* homepage brand logos */
+.brands-section .owner-folder-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+}
+
+.brands-section .owner-folder-card {
+  min-height: 220px;
+}
+
+.brands-section .owner-folder-card img {
+  object-fit: contain !important;
+  background: transparent !important;
+  padding: 18px;
+}
+
+.brands-section .owner-folder-card .folder-hover-preview {
+  display: none !important;
+}

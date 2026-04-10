@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { createOrganizationSchema } from "@/lib/seo/schema";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "WSOD.PROD — Agenție media digitală & video",
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="ro">
       <body>
         {children}
+        <Footer />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
