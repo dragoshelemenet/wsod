@@ -70,7 +70,7 @@ function groupGraphics(items: Awaited<ReturnType<typeof getMediaByBrandSlugFromD
   const grouped = new Map<string, typeof graphics>();
 
   for (const item of graphics) {
-    const key = item.graphicKind?.trim() || "Alte materiale grafice";
+    const key = item.graphicKind?.trim() || "Grafică";
     if (!grouped.has(key)) grouped.set(key, []);
     grouped.get(key)!.push(item);
   }
@@ -94,12 +94,10 @@ function groupGraphics(items: Awaited<ReturnType<typeof getMediaByBrandSlugFromD
 
 function categoryTitle(category: string) {
   switch (category) {
-    case "foto":
-      return "Poze";
     case "video":
       return "Video";
-    case "grafica":
-      return "Grafică";
+    case "foto":
+      return "Poze";
     case "website":
       return "Website";
     case "meta-ads":
@@ -112,16 +110,14 @@ function categoryTitle(category: string) {
 }
 
 function buildOrderedCategories(from?: string) {
-  const base = ["foto", "video", "website", "meta-ads", "audio"];
-  if (!from) return base;
-
-  if (from === "foto") return ["foto", "video", "website", "meta-ads", "audio"];
   if (from === "video") return ["video", "foto", "website", "meta-ads", "audio"];
-  if (from === "website") return ["website", "foto", "video", "meta-ads", "audio"];
-  if (from === "meta-ads") return ["meta-ads", "foto", "video", "website", "audio"];
-  if (from === "audio") return ["audio", "foto", "video", "website", "meta-ads"];
+  if (from === "grafica") return ["video", "foto", "website", "meta-ads", "audio"];
+  if (from === "foto") return ["foto", "video", "website", "meta-ads", "audio"];
+  if (from === "website") return ["website", "video", "foto", "meta-ads", "audio"];
+  if (from === "meta-ads") return ["meta-ads", "video", "foto", "website", "audio"];
+  if (from === "audio") return ["audio", "video", "foto", "website", "meta-ads"];
 
-  return base;
+  return ["video", "foto", "website", "meta-ads", "audio"];
 }
 
 export default async function BrandPage({ params, searchParams }: BrandPageProps) {
@@ -140,7 +136,6 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
 
   const orderedCategories = buildOrderedCategories(from);
   const graphicGroups = groupGraphics(items);
-  const showGraphicsFirst = from === "grafica";
 
   return (
     <main className="inner-page">
@@ -164,21 +159,6 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
           metaLine="Brand page"
         />
 
-        {showGraphicsFirst
-          ? graphicGroups.map((group) => (
-              <div key={group.label} className="owner-folder-section">
-                <div className="owner-folder-section-head">
-                  <h2>{group.label}</h2>
-                </div>
-
-                <MediaGrid
-                  items={group.items}
-                  emptyText="Nu există materiale grafice în acest grup."
-                />
-              </div>
-            ))
-          : null}
-
         {orderedCategories.map((category) => {
           const categoryItems = items.filter((item) => item.category === category);
           if (!categoryItems.length) return null;
@@ -197,20 +177,18 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
           );
         })}
 
-        {!showGraphicsFirst
-          ? graphicGroups.map((group) => (
-              <div key={group.label} className="owner-folder-section">
-                <div className="owner-folder-section-head">
-                  <h2>{group.label}</h2>
-                </div>
+        {graphicGroups.map((group) => (
+          <div key={group.label} className="owner-folder-section">
+            <div className="owner-folder-section-head">
+              <h2>{group.label}</h2>
+            </div>
 
-                <MediaGrid
-                  items={group.items}
-                  emptyText="Nu există materiale grafice în acest grup."
-                />
-              </div>
-            ))
-          : null}
+            <MediaGrid
+              items={group.items}
+              emptyText="Nu există materiale grafice în acest grup."
+            />
+          </div>
+        ))}
 
         {graphicGroups.length ? (
           <div className="model-page-actions">
