@@ -1,1 +1,1 @@
-ALTER TABLE "SiteContent" ADD COLUMN "servicesCards" TEXT;\n
+ALTER TABLE "SiteContent" ADD COLUMN "servicesCards" TEXT;
