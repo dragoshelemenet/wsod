@@ -15,8 +15,12 @@ export default async function HomePage() {
       <ServiceFolders />
 
       <section className="section brands-section">
+        <div className="brands-section-copy">
+          <p className="brands-section-kicker">Vezi portofoliul nostru:</p>
+        </div>
+
         <OwnerFolderGrid
-          title="BRANDS WE WORKED WITH"
+          title="Brandurile cu care am lucrat"
           items={brands.map((brand) => ({
             id: brand.id,
             name: brand.name,
