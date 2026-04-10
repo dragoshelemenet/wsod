@@ -14,6 +14,7 @@ import { buildMediaJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 const BASE_URL = "https://wsod.cloud";
+const CATEGORY = "video";
 
 interface VideoDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -77,19 +78,19 @@ async function getSameOwnerItems(
 
   if (item.owner.type === "brand" && item.owner.slug) {
     return (await getMediaByBrandSlugFromDb(item.owner.slug, { limit: 48 }))
-      .filter((x) => x.category === CATEGORY)
+      .filter((x) => x.category === "video")
       .slice(0, 6);
   }
 
   if (item.owner.type === "model" && item.owner.slug) {
     return (await getMediaByModelSlugFromDb(item.owner.slug, { limit: 48 }))
-      .filter((x) => x.category === CATEGORY)
+      .filter((x) => x.category === "video")
       .slice(0, 6);
   }
 
   if (item.owner.type === "audioProfile" && item.owner.slug) {
     return (await getMediaByAudioProfileSlugFromDb(item.owner.slug, { limit: 48 }))
-      .filter((x) => x.category === CATEGORY)
+      .filter((x) => x.category === "video")
       .slice(0, 6);
   }
 
