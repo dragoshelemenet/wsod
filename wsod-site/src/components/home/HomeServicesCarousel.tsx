@@ -34,9 +34,11 @@ function getBestImageSrc(item: {
   previewUrl?: string | null;
   fileUrl?: string | null;
 }) {
-  return [item.thumbnailUrl, item.previewUrl, item.fileUrl].find((url) =>
-    isImageUrl(url)
-  ) || null;
+  return (
+    [item.thumbnailUrl, item.previewUrl, item.fileUrl].find((url) =>
+      isImageUrl(url)
+    ) || null
+  );
 }
 
 function getBestVideoSrc(item: {
@@ -44,13 +46,11 @@ function getBestVideoSrc(item: {
   previewUrl?: string | null;
   fileUrl?: string | null;
 }) {
-  return [item.fileUrl, item.previewUrl, item.thumbnailUrl].find((url) =>
-    isVideoUrl(url)
-  ) || null;
-}
-
-function isSlide(value: Slide | null): value is Slide {
-  return value !== null;
+  return (
+    [item.fileUrl, item.previewUrl, item.thumbnailUrl].find((url) =>
+      isVideoUrl(url)
+    ) || null
+  );
 }
 
 export default async function HomeServicesCarousel() {
@@ -65,62 +65,62 @@ export default async function HomeServicesCarousel() {
 
   const model = modelItems[0] || null;
 
-  const slides: Slide[] = [
-    videoItems[0]
-      ? {
-          id: "video",
-          title: "VIDEO VIRALE",
-          subtitle: "Reels, content și reclame care atrag atenția rapid.",
-          href: "/video",
-          imageSrc: getBestImageSrc(videoItems[0]),
-          videoSrc: getBestVideoSrc(videoItems[0]),
-        }
-      : null,
+  const slides: Slide[] = [];
 
-    photoItems[0]
-      ? {
-          id: "foto",
-          title: "POZE FABULOASE",
-          subtitle: "Cadre curate, premium și gata pentru social media.",
-          href: "/foto",
-          imageSrc: getBestImageSrc(photoItems[0]),
-          videoSrc: null,
-        }
-      : null,
+  if (videoItems[0]) {
+    slides.push({
+      id: "video",
+      title: "VIDEO VIRALE",
+      subtitle: "Reels, content și reclame care atrag atenția rapid.",
+      href: "/video",
+      imageSrc: getBestImageSrc(videoItems[0]),
+      videoSrc: getBestVideoSrc(videoItems[0]),
+    });
+  }
 
-    graphicItems[0]
-      ? {
-          id: "grafica",
-          title: "GRAFICE PENTRU AFACEREA TA",
-          subtitle: "Vizualuri moderne pentru ads, postări și branding.",
-          href: "/grafica",
-          imageSrc: getBestImageSrc(graphicItems[0]),
-          videoSrc: null,
-        }
-      : null,
+  if (photoItems[0]) {
+    slides.push({
+      id: "foto",
+      title: "POZE FABULOASE",
+      subtitle: "Cadre curate, premium și gata pentru social media.",
+      href: "/foto",
+      imageSrc: getBestImageSrc(photoItems[0]),
+      videoSrc: null,
+    });
+  }
 
-    websiteItems[0]
-      ? {
-          id: "website",
-          title: "WEBSITE-URI ACCESIBILE",
-          subtitle: "Site-uri moderne, rapide și clare pentru business-ul tău.",
-          href: "/website",
-          imageSrc: getBestImageSrc(websiteItems[0]),
-          videoSrc: null,
-        }
-      : null,
+  if (graphicItems[0]) {
+    slides.push({
+      id: "grafica",
+      title: "GRAFICE PENTRU AFACEREA TA",
+      subtitle: "Vizualuri moderne pentru ads, postări și branding.",
+      href: "/grafica",
+      imageSrc: getBestImageSrc(graphicItems[0]),
+      videoSrc: null,
+    });
+  }
 
-    model
-      ? {
-          id: "modele",
-          title: "TOTUL PENTRU AFACEREA TA",
-          subtitle: "Foto, video, design și pachete avantajoase pentru brand.",
-          href: `/model/${model.slug}`,
-          imageSrc: model.portraitImageUrl || model.previewImages?.[0] || null,
-          videoSrc: null,
-        }
-      : null,
-  ].filter(isSlide);
+  if (websiteItems[0]) {
+    slides.push({
+      id: "website",
+      title: "WEBSITE-URI ACCESIBILE",
+      subtitle: "Site-uri moderne, rapide și clare pentru business-ul tău.",
+      href: "/website",
+      imageSrc: getBestImageSrc(websiteItems[0]),
+      videoSrc: null,
+    });
+  }
+
+  if (model) {
+    slides.push({
+      id: "modele",
+      title: "TOTUL PENTRU AFACEREA TA",
+      subtitle: "Foto, video, design și pachete avantajoase pentru brand.",
+      href: `/model/${model.slug}`,
+      imageSrc: model.portraitImageUrl || model.previewImages?.[0] || null,
+      videoSrc: null,
+    });
+  }
 
   if (!slides.length) return null;
 
