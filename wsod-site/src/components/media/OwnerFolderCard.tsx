@@ -26,13 +26,6 @@ function isVideoUrl(url?: string | null) {
   );
 }
 
-function getOwnerTypeFromHref(href: string) {
-  if (href.includes("/brand/")) return "brand";
-  if (href.includes("/model/")) return "model";
-  if (href.includes("/audio-profile/")) return "audio";
-  return "unknown";
-}
-
 function PreviewMedia({
   src,
   className,
@@ -74,33 +67,24 @@ export default function OwnerFolderCard({
   imageUrl,
   previewImages = [],
 }: OwnerFolderCardProps) {
-  const ownerType = getOwnerTypeFromHref(href);
   const [failed, setFailed] = useState<string[]>([]);
 
   const cleanPreviewImages = useMemo(() => {
     return [...new Set(previewImages.filter(Boolean))].filter((src) => !failed.includes(src));
   }, [previewImages, failed]);
 
-  const mainImage = imageUrl && !failed.includes(imageUrl) ? imageUrl : cleanPreviewImages[0] ?? null;
-  const hoverImages = cleanPreviewImages.filter((src) => src !== mainImage).slice(0, 3);
+  const mainImage =
+    imageUrl && !failed.includes(imageUrl) ? imageUrl : cleanPreviewImages[0] ?? null;
 
+  const hoverImages = cleanPreviewImages.filter((src) => src !== mainImage).slice(0, 3);
   const useTransparentArt = isTransparentFriendlyAsset(imageUrl);
-  const isBrand = ownerType === "brand";
-  const isModel = ownerType === "model";
 
   return (
-    <Link
-      href={href}
-      className={`owner-folder-card folder-card folder-card-rich owner-folder-card-${ownerType}`}
-    >
+    <Link href={href} className="owner-folder-card folder-card folder-card-rich owner-folder-card-unified">
       <div className="folder-top" />
 
       <div className="folder-body owner-folder-classic-body">
-        {isModel ? (
-          <div className="folder-model-title-wrap" aria-hidden="true">
-            <span className="folder-model-title">{title}</span>
-          </div>
-        ) : mainImage ? (
+        {mainImage ? (
           <div
             className={`folder-brand-art-wrap${useTransparentArt ? " folder-brand-art-wrap-transparent" : ""}`}
             aria-hidden="true"
@@ -112,7 +96,9 @@ export default function OwnerFolderCard({
             />
           </div>
         ) : (
-          <span>{title}</span>
+          <div className="folder-model-title-wrap" aria-hidden="true">
+            <span className="folder-model-title">{title}</span>
+          </div>
         )}
 
         {hoverImages.length ? (
@@ -149,12 +135,6 @@ export default function OwnerFolderCard({
           </div>
         ) : null}
       </div>
-
-      {isBrand ? null : (
-        <div className="owner-folder-copy">
-          <strong>{title}</strong>
-        </div>
-      )}
     </Link>
   );
 }

@@ -39,8 +39,8 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
     getModelsWithCategoryPreviewFromDb("foto"),
     modelSlug ? getModelBySlugFromDb(modelSlug) : Promise.resolve(null),
     modelSlug
-      ? getMediaByModelSlugFromDb(modelSlug, { limit: 120 })
-      : getMediaByCategoryFromDb("foto", { limit: 24 }),
+      ? getMediaByModelSlugFromDb(modelSlug, { limit: 240 })
+      : getMediaByCategoryFromDb("foto", { limit: 240 }),
   ]);
 
   const photoItems = items.filter((item) => item.category === "foto");

@@ -10,6 +10,13 @@ interface MediaGridProps {
   variant?: "default" | "compact-photos";
 }
 
+function getCompactPhotoColumns(width: number) {
+  if (width <= 700) return 3;
+  if (width <= 900) return 4;
+  if (width <= 1200) return 5;
+  return 6;
+}
+
 export default function MediaGrid({
   items,
   emptyText,
@@ -20,12 +27,18 @@ export default function MediaGrid({
 
   useEffect(() => {
     const update = () => {
+      if (variant === "compact-photos") {
+        const columns = getCompactPhotoColumns(window.innerWidth);
+        setPerPage(columns * 2);
+        return;
+      }
+
       if (window.innerWidth <= 640) {
-        setPerPage(variant === "compact-photos" ? 12 : 4);
+        setPerPage(4);
       } else if (window.innerWidth <= 980) {
-        setPerPage(variant === "compact-photos" ? 18 : 8);
+        setPerPage(8);
       } else {
-        setPerPage(variant === "compact-photos" ? 24 : 9);
+        setPerPage(9);
       }
     };
 

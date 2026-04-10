@@ -113,20 +113,22 @@ export async function getBrandsWithHomePreviewFromDb() {
     },
   });
 
-  return brands.map((brand) => {
-    const previewImages = brand.mediaItems
-      .map(getPreviewSrc)
-      .filter(Boolean) as string[];
+  return brands
+    .map((brand) => {
+      const previewImages = brand.mediaItems
+        .map(getPreviewSrc)
+        .filter(Boolean) as string[];
 
-    const shuffled = [...previewImages]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3);
+      const shuffled = [...previewImages]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
 
-    return {
-      ...brand,
-      previewImages: shuffled,
-    };
-  });
+      return {
+        ...brand,
+        previewImages: shuffled,
+      };
+    })
+    .filter((brand) => brand.previewImages.length > 0 || brand.logoUrl || brand.coverImageUrl);
 }
 
 
@@ -148,8 +150,8 @@ export async function getBrandsWithCategoryPreviewFromDb(category: string) {
     include: {
       mediaItems: {
         where: buildVisibleMediaWhere(category),
-        orderBy: { date: "desc" },
-        take: 3,
+        orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
+        take: 6,
         select: {
           thumbnailUrl: true,
           previewUrl: true,
@@ -159,10 +161,12 @@ export async function getBrandsWithCategoryPreviewFromDb(category: string) {
     },
   });
 
-  return brands.map((brand) => ({
-    ...brand,
-    previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-  }));
+  return brands
+    .map((brand) => ({
+      ...brand,
+      previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
+    }))
+    .filter((brand) => brand.previewImages.length > 0);
 }
 
 export async function getModelsWithCategoryPreviewFromDb(category: string) {
@@ -175,8 +179,8 @@ export async function getModelsWithCategoryPreviewFromDb(category: string) {
     include: {
       mediaItems: {
         where: buildVisibleMediaWhere(category),
-        orderBy: { date: "desc" },
-        take: 3,
+        orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
+        take: 6,
         select: {
           thumbnailUrl: true,
           previewUrl: true,
@@ -186,10 +190,12 @@ export async function getModelsWithCategoryPreviewFromDb(category: string) {
     },
   });
 
-  return models.map((model) => ({
-    ...model,
-    previewImages: model.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-  }));
+  return models
+    .map((model) => ({
+      ...model,
+      previewImages: model.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
+    }))
+    .filter((model) => model.previewImages.length > 0 || model.portraitImageUrl);
 }
 
 export async function getAudioProfilesFromDb() {
