@@ -27,6 +27,14 @@ function isImageUrl(url?: string | null) {
   );
 }
 
+function isVideoUrl(url?: string | null) {
+  if (!url) return false;
+  const clean = url.split("?")[0].toLowerCase();
+  return [".mp4", ".webm", ".mov", ".m4v", ".ogg"].some((ext) =>
+    clean.endsWith(ext)
+  );
+}
+
 export default function MediaCard({ item }: MediaCardProps) {
   const owner = item.owner;
   const isPhotoFile = item.category === "foto";
@@ -50,8 +58,17 @@ export default function MediaCard({ item }: MediaCardProps) {
     [item.thumbnailUrl, item.previewUrl, item.fileUrl]
   );
 
+  const videoCandidates = useMemo(
+    () =>
+      [item.fileUrl, item.previewUrl, item.thumbnailUrl].filter(
+        (url): url is string => Boolean(url) && isVideoUrl(url)
+      ),
+    [item.fileUrl, item.previewUrl, item.thumbnailUrl]
+  );
+
   const [imageIndex, setImageIndex] = useState(0);
   const previewSrc = imageCandidates[imageIndex] ?? null;
+  const videoSrc = videoCandidates[0] ?? null;
   const itemHref = getItemHref(item);
 
   if (isPhotoFile || isGraphicFile) {
@@ -95,6 +112,46 @@ export default function MediaCard({ item }: MediaCardProps) {
     );
   }
 
+  if (isVideoFile) {
+    return (
+      <article className="media-card media-card-visual-only media-card-video-file">
+        <div className="media-card-photo-link" aria-label={`Redă ${item.title}`}>
+          <div className="media-card-photo-thumb">
+            <div className="media-card-photo-thumb-inner">
+              {videoSrc ? (
+                <video
+                  src={videoSrc}
+                  className="media-card-photo-image"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster={previewSrc || undefined}
+                />
+              ) : previewSrc ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={previewSrc}
+                  alt={item.title}
+                  className="media-card-photo-image"
+                  loading="lazy"
+                  onError={() => {
+                    if (imageIndex < imageCandidates.length - 1) {
+                      setImageIndex((current) => current + 1);
+                    }
+                  }}
+                />
+              ) : (
+                <div className="media-thumb-fallback">VIDEO</div>
+              )}
+            </div>
+          </div>
+
+          <div className="media-card-photo-caption" />
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="media-card media-card-compact">
       <Link
@@ -116,14 +173,6 @@ export default function MediaCard({ item }: MediaCardProps) {
                     setImageIndex((current) => current + 1);
                   }
                 }}
-              />
-            ) : isVideoFile && item.fileUrl ? (
-              <video
-                src={item.fileUrl}
-                className="media-thumb-image"
-                muted
-                playsInline
-                preload="metadata"
               />
             ) : (
               <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
@@ -164,7 +213,7 @@ export default function MediaCard({ item }: MediaCardProps) {
             rel="noreferrer"
             className="media-open-button"
           >
-            {isVideoFile ? "Deschide video" : "Deschide originalul"}
+            Deschide originalul
           </a>
         ) : null}
       </div>

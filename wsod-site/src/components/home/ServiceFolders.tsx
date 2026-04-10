@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { homeCategories } from "@/lib/data/home-data";
-import { getHomeCategoryPreviewMap } from "@/lib/data/db-queries";
+import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
 
 function isImageUrl(url?: string | null) {
   if (!url) return false;
@@ -18,52 +18,86 @@ function isVideoUrl(url?: string | null) {
   );
 }
 
+function getBestImageSrc(item: {
+  thumbnailUrl?: string | null;
+  previewUrl?: string | null;
+  fileUrl?: string | null;
+}) {
+  return [item.thumbnailUrl, item.previewUrl, item.fileUrl].find((url) =>
+    isImageUrl(url)
+  ) || null;
+}
+
+function getBestVideoSrc(item: {
+  thumbnailUrl?: string | null;
+  previewUrl?: string | null;
+  fileUrl?: string | null;
+}) {
+  return [item.fileUrl, item.previewUrl, item.thumbnailUrl].find((url) =>
+    isVideoUrl(url)
+  ) || null;
+}
+
 export default async function ServiceFolders() {
-  const previewMap = await getHomeCategoryPreviewMap();
+  const folderData = await Promise.all(
+    homeCategories.map(async (service) => {
+      const items = await getMediaByCategoryFromDb(service.slug, { limit: 3 });
+
+      return {
+        service,
+        previews: items
+          .map((item) => ({
+            imageSrc: getBestImageSrc(item),
+            videoSrc: getBestVideoSrc(item),
+          }))
+          .filter((shot) => shot.imageSrc || shot.videoSrc)
+          .slice(0, 3),
+      };
+    })
+  );
 
   return (
     <section className="section">
       <div className="folder-grid">
-        {homeCategories.map((service) => {
-          const previews = previewMap[service.slug] || [];
+        {folderData.map(({ service, previews }) => (
+          <Link
+            key={service.slug}
+            href={`/${service.slug}`}
+            className="folder-card folder-card-rich"
+          >
+            <div className="folder-top" />
 
-          return (
-            <Link
-              key={service.slug}
-              href={`/${service.slug}`}
-              className="folder-card folder-card-rich"
-            >
-              <div className="folder-top" />
+            <div className="folder-body">
+              <span>{service.title}</span>
+            </div>
 
-              <div className="folder-body">
-                <span>{service.title}</span>
+            {previews.length ? (
+              <div className="folder-hover-preview" aria-hidden="true">
+                {previews.map((shot, index) => (
+                  <div
+                    key={`${service.slug}-${index}-${shot.imageSrc || shot.videoSrc}`}
+                    className={`folder-hover-shot folder-hover-shot-${index + 1}`}
+                  >
+                    {shot.videoSrc ? (
+                      <video
+                        src={shot.videoSrc}
+                        muted
+                        playsInline
+                        autoPlay
+                        loop
+                        preload="metadata"
+                        poster={shot.imageSrc || undefined}
+                      />
+                    ) : shot.imageSrc ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={shot.imageSrc} alt="" loading="lazy" />
+                    ) : null}
+                  </div>
+                ))}
               </div>
-
-              {previews.length ? (
-                <div className="folder-hover-preview" aria-hidden="true">
-                  {previews.slice(0, 3).map((src, index) => (
-                    <div
-                      key={`${service.slug}-${index}-${src}`}
-                      className={`folder-hover-shot folder-hover-shot-${index + 1}`}
-                    >
-                      {isImageUrl(src) ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={src} alt="" loading="lazy" />
-                      ) : isVideoUrl(src) ? (
-                        <video
-                          src={src}
-                          muted
-                          playsInline
-                          preload="metadata"
-                        />
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </Link>
-          );
-        })}
+            ) : null}
+          </Link>
+        ))}
       </div>
     </section>
   );
