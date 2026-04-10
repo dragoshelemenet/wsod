@@ -46,7 +46,7 @@ async function getSameOwnerItems(item: Awaited<ReturnType<typeof getMediaItemByS
 }
 
 function getOwnerHref(item: NonNullable<Awaited<ReturnType<typeof getMediaItemBySlugFromDb>>>) {
-  if (item.owner.type === "brand" && item.owner.slug) return `/brand/${item.owner.slug}`;
+  if (item.owner.type === "brand" && item.owner.slug) return `/brand/${item.owner.slug}?from=${item.category}`;
   if (item.owner.type === "model" && item.owner.slug) return `/model/${item.owner.slug}`;
   if (item.owner.type === "audioProfile" && item.owner.slug) return `/audio-profile/${item.owner.slug}`;
   return null;

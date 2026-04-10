@@ -17,6 +17,9 @@ interface BrandPageProps {
   params: Promise<{
     slug: string;
   }>;
+  searchParams?: Promise<{
+    from?: string;
+  }>;
 }
 
 export async function generateMetadata({
@@ -108,8 +111,23 @@ function categoryTitle(category: string) {
   }
 }
 
-export default async function BrandPage({ params }: BrandPageProps) {
+function buildOrderedCategories(from?: string) {
+  const base = ["foto", "video", "website", "meta-ads", "audio"];
+  if (!from) return base;
+
+  if (from === "foto") return ["foto", "video", "website", "meta-ads", "audio"];
+  if (from === "video") return ["video", "foto", "website", "meta-ads", "audio"];
+  if (from === "website") return ["website", "foto", "video", "meta-ads", "audio"];
+  if (from === "meta-ads") return ["meta-ads", "foto", "video", "website", "audio"];
+  if (from === "audio") return ["audio", "foto", "video", "website", "meta-ads"];
+
+  return base;
+}
+
+export default async function BrandPage({ params, searchParams }: BrandPageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const from = String(resolvedSearchParams?.from || "").trim().toLowerCase();
 
   const [brand, items] = await Promise.all([
     getBrandBySlugFromDb(slug),
@@ -120,8 +138,9 @@ export default async function BrandPage({ params }: BrandPageProps) {
     notFound();
   }
 
-  const orderedCategories = ["foto", "video", "website", "meta-ads", "audio"] as const;
+  const orderedCategories = buildOrderedCategories(from);
   const graphicGroups = groupGraphics(items);
+  const showGraphicsFirst = from === "grafica";
 
   return (
     <main className="inner-page">
@@ -145,6 +164,21 @@ export default async function BrandPage({ params }: BrandPageProps) {
           metaLine="Brand page"
         />
 
+        {showGraphicsFirst
+          ? graphicGroups.map((group) => (
+              <div key={group.label} className="owner-folder-section">
+                <div className="owner-folder-section-head">
+                  <h2>{group.label}</h2>
+                </div>
+
+                <MediaGrid
+                  items={group.items}
+                  emptyText="Nu există materiale grafice în acest grup."
+                />
+              </div>
+            ))
+          : null}
+
         {orderedCategories.map((category) => {
           const categoryItems = items.filter((item) => item.category === category);
           if (!categoryItems.length) return null;
@@ -163,18 +197,20 @@ export default async function BrandPage({ params }: BrandPageProps) {
           );
         })}
 
-        {graphicGroups.map((group) => (
-          <div key={group.label} className="owner-folder-section">
-            <div className="owner-folder-section-head">
-              <h2>{group.label}</h2>
-            </div>
+        {!showGraphicsFirst
+          ? graphicGroups.map((group) => (
+              <div key={group.label} className="owner-folder-section">
+                <div className="owner-folder-section-head">
+                  <h2>{group.label}</h2>
+                </div>
 
-            <MediaGrid
-              items={group.items}
-              emptyText="Nu există materiale grafice în acest grup."
-            />
-          </div>
-        ))}
+                <MediaGrid
+                  items={group.items}
+                  emptyText="Nu există materiale grafice în acest grup."
+                />
+              </div>
+            ))
+          : null}
 
         {graphicGroups.length ? (
           <div className="model-page-actions">

@@ -43,7 +43,7 @@ export default function MediaCard({ item }: MediaCardProps) {
 
   const ownerHref =
     owner.type === "brand" && owner.slug
-      ? `/brand/${owner.slug}`
+      ? `/brand/${owner.slug}?from=${item.category}`
       : owner.type === "model" && owner.slug
         ? `/model/${owner.slug}`
         : owner.type === "audioProfile" && owner.slug
