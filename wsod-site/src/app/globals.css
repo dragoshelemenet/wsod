@@ -2525,3 +2525,107 @@ img {
     object-fit: cover;
   }
 }
+
+/* better folder look + transparent png support */
+.owner-folder-card.folder-card.folder-card-rich {
+  border-radius: 30px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03)),
+    linear-gradient(135deg, rgba(180, 188, 255, 0.16), rgba(255,255,255,0.04)),
+    rgba(18,18,26,0.88) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(255,255,255,0.03),
+    0 24px 70px rgba(0,0,0,0.34) !important;
+}
+
+.owner-folder-card.folder-card.folder-card-rich::after {
+  inset: 10px !important;
+  border-radius: 24px !important;
+}
+
+.owner-folder-classic-body {
+  min-height: 210px !important;
+  padding: 40px 18px 24px !important;
+}
+
+.folder-brand-art-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+
+.folder-brand-art {
+  max-width: 88%;
+  max-height: 130px;
+  width: auto;
+  height: auto;
+  object-fit: contain !important;
+  display: block;
+  border-radius: 18px;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,0.22),
+    0 0 0 1px rgba(255,255,255,0.06);
+}
+
+.folder-brand-art-wrap-transparent {
+  padding: 6px 6px 2px;
+}
+
+.folder-brand-art-transparent {
+  max-width: 92%;
+  max-height: 140px;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 14px 30px rgba(0,0,0,0.30));
+  background: transparent !important;
+}
+
+.owner-folder-card .owner-folder-copy {
+  padding: 0 16px 16px !important;
+}
+
+.owner-folder-card .owner-folder-copy strong {
+  font-size: 1rem !important;
+  line-height: 1.14 !important;
+}
+
+.folder-hover-shot {
+  border-radius: 18px !important;
+}
+
+.brands-section .owner-folder-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 22px !important;
+}
+
+@media (max-width: 1024px) {
+  .brands-section .owner-folder-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .brands-section .owner-folder-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .owner-folder-classic-body {
+    min-height: 180px !important;
+    padding: 34px 14px 18px !important;
+  }
+
+  .folder-brand-art {
+    max-height: 108px;
+  }
+
+  .folder-brand-art-transparent {
+    max-height: 116px;
+  }
+}

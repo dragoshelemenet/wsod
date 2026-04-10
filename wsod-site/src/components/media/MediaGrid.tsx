@@ -11,14 +11,14 @@ interface MediaGridProps {
 
 export default function MediaGrid({ items, emptyText }: MediaGridProps) {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(9);
 
   useEffect(() => {
     const update = () => {
       if (window.innerWidth <= 640) {
-        setPerPage(6);
+        setPerPage(4);
       } else {
-        setPerPage(10);
+        setPerPage(9);
       }
     };
 
