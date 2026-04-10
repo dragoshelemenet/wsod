@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { homeCategories } from "@/lib/data/home-data";
-import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
+import {
+  getMediaByCategoryFromDb,
+  getVisibleSiteSectionsFromDb,
+} from "@/lib/data/db-queries";
 
 function isImageUrl(url?: string | null) {
   if (!url) return false;
@@ -39,8 +42,17 @@ function getBestVideoSrc(item: {
 }
 
 export default async function ServiceFolders() {
+  const visibleSections = await getVisibleSiteSectionsFromDb();
+  const visibleKeys = new Set(
+    visibleSections.filter((section) => section.isVisible).map((section) => section.key)
+  );
+
+  const visibleCategories = homeCategories.filter((service) =>
+    visibleKeys.has(service.slug)
+  );
+
   const folderData = await Promise.all(
-    homeCategories.map(async (service) => {
+    visibleCategories.map(async (service) => {
       const items = await getMediaByCategoryFromDb(service.slug, { limit: 3 });
 
       return {
@@ -89,7 +101,6 @@ export default async function ServiceFolders() {
                         poster={shot.imageSrc || undefined}
                       />
                     ) : shot.imageSrc ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={shot.imageSrc} alt="" loading="lazy" />
                     ) : null}
                   </div>
