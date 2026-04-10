@@ -2225,3 +2225,51 @@ img {
   width: 18px;
   height: 18px;
 }
+
+/* clean cards for foto + grafica */
+.media-card-visual-only {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.media-card-photo-link {
+  display: block;
+  color: inherit;
+}
+
+.media-card-photo-thumb {
+  width: 100%;
+}
+
+.media-card-photo-thumb-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(18,18,24,0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 18px 50px rgba(0,0,0,0.24);
+}
+
+.media-card-photo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-card-graphic-file .media-card-photo-thumb-inner {
+  aspect-ratio: 4 / 5;
+}
+
+.media-card-photo-caption,
+.media-card-graphic-file .media-card-photo-caption {
+  display: none !important;
+}

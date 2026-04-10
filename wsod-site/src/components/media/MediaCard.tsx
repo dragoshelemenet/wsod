@@ -30,6 +30,7 @@ function isImageUrl(url?: string | null) {
 export default function MediaCard({ item }: MediaCardProps) {
   const owner = item.owner;
   const isPhotoFile = item.category === "foto";
+  const isGraphicFile = item.category === "grafica";
   const isVideoFile = item.category === "video";
 
   const ownerHref =
@@ -53,9 +54,13 @@ export default function MediaCard({ item }: MediaCardProps) {
   const previewSrc = imageCandidates[imageIndex] ?? null;
   const itemHref = getItemHref(item);
 
-  if (isPhotoFile) {
+  if (isPhotoFile || isGraphicFile) {
     return (
-      <article className="media-card media-card-photo-file">
+      <article
+        className={`media-card media-card-visual-only ${
+          isGraphicFile ? "media-card-graphic-file" : "media-card-photo-file"
+        }`}
+      >
         <Link
           href={itemHref}
           className="media-card-photo-link"
@@ -77,7 +82,9 @@ export default function MediaCard({ item }: MediaCardProps) {
                   }}
                 />
               ) : (
-                <div className="media-thumb-fallback">PHOTO</div>
+                <div className="media-thumb-fallback">
+                  {isGraphicFile ? "GRAPHIC" : "PHOTO"}
+                </div>
               )}
             </div>
           </div>
