@@ -39,9 +39,7 @@ export default function OwnerFolderCard({
   }, [previewImages, failed]);
 
   const mainImage = imageUrl && !failed.includes(imageUrl) ? imageUrl : cleanPreviewImages[0] ?? null;
-  const hoverImages = cleanPreviewImages
-    .filter((src) => src !== mainImage)
-    .slice(0, 3);
+  const hoverImages = cleanPreviewImages.filter((src) => src !== mainImage).slice(0, 3);
 
   const useTransparentArt = isTransparentFriendlyAsset(imageUrl);
   const isBrand = ownerType === "brand";

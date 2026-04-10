@@ -3876,3 +3876,72 @@ img {
     flex-direction: column;
   }
 }
+
+/* brand hover closer to photo vibe */
+.owner-folder-card-brand .folder-body {
+  background:
+    linear-gradient(180deg, rgba(12,12,14,0.96), rgba(7,7,9,0.98)),
+    rgba(8,8,10,0.98);
+}
+
+.owner-folder-card-brand .folder-hover-preview {
+  opacity: 0;
+  transform: translateY(12px) scale(0.985);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: none;
+}
+
+.owner-folder-card-brand:hover .folder-hover-preview,
+.owner-folder-card-brand:focus-visible .folder-hover-preview {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.owner-folder-card-brand .folder-hover-shot {
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+}
+
+.owner-folder-card-brand .folder-hover-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.owner-folder-card-brand .folder-brand-art-wrap {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.owner-folder-card-brand:hover .folder-brand-art-wrap,
+.owner-folder-card-brand:focus-visible .folder-brand-art-wrap {
+  opacity: 0;
+  transform: scale(1.07);
+}
+
+/* smaller visual items in brand pages */
+.media-grid-compact-photos {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.media-grid-compact-photos .media-card-photo-thumb {
+  aspect-ratio: 0.82 / 1;
+}
+
+@media (max-width: 900px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .media-grid-compact-photos .media-card-photo-thumb {
+    aspect-ratio: 0.78 / 1;
+  }
+}
