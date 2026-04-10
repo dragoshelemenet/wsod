@@ -1,5 +1,6 @@
 import Hero from "@/components/home/Hero";
 import ServiceFolders from "@/components/home/ServiceFolders";
+import HomeServicesCarousel from "@/components/home/HomeServicesCarousel";
 import HomeBlogSection from "@/components/home/HomeBlogSection";
 import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
 import { getBrandsWithHomePreviewFromDb } from "@/lib/data/db-queries";
@@ -12,6 +13,7 @@ export default async function HomePage() {
   return (
     <main className="home-page">
       <Hero />
+      <HomeServicesCarousel />
       <ServiceFolders />
 
       <section className="section brands-section">
