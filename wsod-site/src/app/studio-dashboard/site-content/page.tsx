@@ -25,6 +25,7 @@ async function saveSiteContent(formData: FormData) {
       servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
+      servicesCards: clean("servicesCards"),
       pricingLabel: clean("pricingLabel"),
       pricingHref: clean("pricingHref"),
       contactLabel: clean("contactLabel"),
@@ -36,6 +37,7 @@ async function saveSiteContent(formData: FormData) {
       servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
+      servicesCards: clean("servicesCards"),
       pricingLabel: clean("pricingLabel"),
       pricingHref: clean("pricingHref"),
       contactLabel: clean("contactLabel"),
@@ -46,6 +48,7 @@ async function saveSiteContent(formData: FormData) {
   });
 
   revalidatePath("/");
+  revalidatePath("/servicii-preturi");
   revalidatePath("/studio-dashboard/site-content");
 }
 
@@ -68,10 +71,10 @@ export default async function SiteContentDashboardPage() {
 
       <section className="inner-section admin-page-shell">
         <div className="admin-page-header">
-          <span className="admin-kicker">Homepage</span>
-          <h1>Home content</h1>
+          <span className="admin-kicker">Homepage + Servicii</span>
+          <h1>Site content</h1>
           <p className="inner-description">
-            Aici modifici textele mari din homepage fără să mai intri în cod.
+            Aici modifici textele din homepage și pagina Servicii & prețuri fără cod.
           </p>
         </div>
 
@@ -87,7 +90,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Titlu secțiune</span>
+              <span>Titlu secțiune / pagină</span>
               <input
                 name="servicesTitle"
                 defaultValue={content.servicesTitle || ""}
@@ -96,17 +99,27 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field site-content-full">
-              <span>Listă servicii — un serviciu pe fiecare rând</span>
+              <span>Listă scurtă homepage — un serviciu pe rând</span>
               <textarea
                 name="servicesList"
                 defaultValue={content.servicesList || ""}
                 className="admin-textarea"
-                rows={12}
+                rows={10}
+              />
+            </label>
+
+            <label className="admin-field site-content-full">
+              <span>Carduri servicii — format: Titlu | Descriere | Preț</span>
+              <textarea
+                name="servicesCards"
+                defaultValue={content.servicesCards || ""}
+                className="admin-textarea"
+                rows={14}
               />
             </label>
 
             <label className="admin-field">
-              <span>Label prețuri</span>
+              <span>Label meniu servicii</span>
               <input
                 name="pricingLabel"
                 defaultValue={content.pricingLabel || ""}
@@ -115,7 +128,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Link prețuri</span>
+              <span>Link pagină servicii</span>
               <input
                 name="pricingHref"
                 defaultValue={content.pricingHref || ""}
@@ -142,7 +155,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Label buton gratis</span>
+              <span>Label gratis</span>
               <input
                 name="claimLabel"
                 defaultValue={content.claimLabel || ""}
@@ -151,7 +164,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Link buton gratis</span>
+              <span>Link gratis</span>
               <input
                 name="claimHref"
                 defaultValue={content.claimHref || ""}

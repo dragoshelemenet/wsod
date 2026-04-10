@@ -2,7 +2,7 @@ import { getSiteContentFromDb } from "@/lib/data/site-content";
 
 function getLines(text?: string | null) {
   return String(text || "")
-    .split("\\n")
+    .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
 }
@@ -42,16 +42,16 @@ export default async function Hero() {
 
       <div className="hero-quick-nav">
         <a
-          href={content.pricingHref || "#"}
+          href={content.pricingHref || "/servicii-preturi"}
           className="hero-quick-link"
           target={String(content.pricingHref || "").startsWith("http") ? "_blank" : undefined}
           rel={String(content.pricingHref || "").startsWith("http") ? "noreferrer" : undefined}
         >
-          {content.pricingLabel || "Prețuri"}
+          {content.pricingLabel || "Serviciile noastre"}
         </a>
 
         <a
-          href={content.contactHref || "#"}
+          href={content.contactHref || "#contact"}
           className="hero-quick-link"
           target={String(content.contactHref || "").startsWith("http") ? "_blank" : undefined}
           rel={String(content.contactHref || "").startsWith("http") ? "noreferrer" : undefined}
@@ -65,7 +65,7 @@ export default async function Hero() {
           target={String(content.claimHref || "").startsWith("http") ? "_blank" : undefined}
           rel={String(content.claimHref || "").startsWith("http") ? "noreferrer" : undefined}
         >
-          {content.claimLabel || "Primul video/foto gratis"}
+          {content.claimLabel || "Claim your first video/photo for free"}
         </a>
       </div>
     </section>

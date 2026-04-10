@@ -2,12 +2,12 @@ import Hero from "@/components/home/Hero";
 import ServiceFolders from "@/components/home/ServiceFolders";
 import HomeBlogSection from "@/components/home/HomeBlogSection";
 import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
-import { getBrandsFromDb } from "@/lib/data/db-queries";
+import { getBrandsWithHomePreviewFromDb } from "@/lib/data/db-queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const brands = await getBrandsFromDb();
+  const brands = await getBrandsWithHomePreviewFromDb();
 
   return (
     <main className="home-page">
@@ -22,7 +22,7 @@ export default async function HomePage() {
             name: brand.name,
             slug: brand.slug,
             imageUrl: brand.logoUrl ?? null,
-            previewImages: [],
+            previewImages: brand.previewImages ?? [],
             href: `/brand/${brand.slug}`,
           }))}
           emptyText="Nu există branduri momentan."

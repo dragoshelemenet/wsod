@@ -92,6 +92,32 @@ export async function getBrandsFromDb() {
   });
 }
 
+export async function getBrandsWithHomePreviewFromDb() {
+  const brands = await prisma.brand.findMany({
+    where: { isVisible: true },
+    orderBy: { name: "asc" },
+    include: {
+      mediaItems: {
+        where: {
+          isVisible: true,
+        },
+        orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
+        take: 3,
+        select: {
+          thumbnailUrl: true,
+          previewUrl: true,
+          fileUrl: true,
+        },
+      },
+    },
+  });
+
+  return brands.map((brand) => ({
+    ...brand,
+    previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
+  }));
+}
+
 export async function getModelsFromDb() {
   return prisma.personModel.findMany({
     where: { isVisible: true },
