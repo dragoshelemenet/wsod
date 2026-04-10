@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./ui-cleanup.css";
 import { createOrganizationSchema } from "@/lib/seo/schema";
 import Footer from "@/components/layout/Footer";
 
