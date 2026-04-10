@@ -377,3 +377,12 @@
 .services-intro-line {
   margin-bottom: 0 !important;
 }
+
+.services-intro {
+  display: grid;
+  gap: 6px;
+}
+
+.services-intro-line {
+  margin-bottom: 0 !important;
+}
