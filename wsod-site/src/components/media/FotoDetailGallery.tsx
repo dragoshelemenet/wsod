@@ -15,11 +15,11 @@ function getImageSrc(item: DbMediaCardItem) {
   return item.fileUrl || item.previewUrl || item.thumbnailUrl || null;
 }
 
-function getOwnerLabel(item: DbMediaCardItem) {
-  if (item.owner.type === "model") return `Poze cu ${item.owner.name}`;
-  if (item.owner.type === "brand") return `Poze pentru ${item.owner.name}`;
-  if (item.owner.type === "audioProfile") return `Poze pentru ${item.owner.name}`;
-  return "Galerie foto";
+function formatMonthYear(value: string | Date) {
+  return new Intl.DateTimeFormat("ro-RO", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(value));
 }
 
 export default function FotoDetailGallery({
@@ -92,7 +92,6 @@ export default function FotoDetailGallery({
 
       <div className="foto-gallery-stage">
         {imageSrc ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imageSrc}
             alt={currentItem.title}
@@ -103,10 +102,12 @@ export default function FotoDetailGallery({
         )}
       </div>
 
-      <div className="foto-gallery-meta">
-        <div>
-          <h1>{currentItem.title}</h1>
-          <p>{getOwnerLabel(currentItem)}</p>
+      <div className="foto-gallery-meta foto-gallery-meta-simple">
+        <div className="foto-gallery-meta-text">
+          <p className="foto-gallery-date">{formatMonthYear(currentItem.date)}</p>
+          {currentItem.description ? (
+            <p className="foto-gallery-description">{currentItem.description}</p>
+          ) : null}
         </div>
 
         <div className="foto-gallery-meta-actions">
@@ -139,11 +140,10 @@ export default function FotoDetailGallery({
                 key={item.id}
                 href={`/foto/${item.slug}`}
                 className={`foto-gallery-thumb ${item.id === currentItem.id ? "is-active" : ""}`}
-                aria-label={`Deschide ${item.title}`}
+                aria-label={`Deschide imaginea ${item.id === currentItem.id ? "curentă" : item.slug}`}
               >
                 {thumbSrc ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={thumbSrc} alt={item.title} className="foto-gallery-thumb-image" />
+                  <img src={thumbSrc} alt="" className="foto-gallery-thumb-image" />
                 ) : (
                   <div className="foto-gallery-thumb-fallback">PHOTO</div>
                 )}

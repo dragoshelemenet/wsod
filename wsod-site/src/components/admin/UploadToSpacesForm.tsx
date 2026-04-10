@@ -46,12 +46,11 @@ function inferTypeFromCategory(category: string) {
   }
 }
 
-function getTodayDate() {
+function getTodayMonth() {
   const now = new Date();
   const year = now.getFullYear();
   const month = `${now.getMonth() + 1}`.padStart(2, "0");
-  const day = `${now.getDate()}`.padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  return `${year}-${month}`;
 }
 
 function base64ToFile(base64: string, filename: string, mimeType: string) {
@@ -140,7 +139,7 @@ export default function UploadToSpacesForm({
     const savedAudioProfile = window.localStorage.getItem(LAST_USED_AUDIO_PROFILE_KEY);
     const savedOwnerType = window.localStorage.getItem(LAST_USED_OWNER_TYPE_KEY);
 
-    setDate(savedDate || getTodayDate());
+    setDate(savedDate || getTodayMonth());
 
     if (savedCategory) setCategory(savedCategory);
     if (savedBrand) setBrandSlug(savedBrand);
@@ -503,7 +502,7 @@ export default function UploadToSpacesForm({
         description,
         seoTitle,
         metaDescription,
-        date,
+        date: `${date}-01`,
         fileUrl: originalUpload.publicUrl,
         thumbnailUrl: finalThumbnailUrl,
         previewUrl: finalPreviewUrl,
@@ -843,8 +842,8 @@ export default function UploadToSpacesForm({
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="date">Dată</label>
-          <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+          <label htmlFor="date">Lună / an</label>
+          <input id="date" type="month" value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
 
         <div className="admin-form-field">

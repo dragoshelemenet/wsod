@@ -163,6 +163,9 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
           const categoryItems = items.filter((item) => item.category === category);
           if (!categoryItems.length) return null;
 
+          const gridVariant =
+            category === "foto" || category === "grafica" ? "compact-photos" : "default";
+
           return (
             <div key={category} className="owner-folder-section">
               <div className="owner-folder-section-head">
@@ -172,6 +175,7 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
               <MediaGrid
                 items={categoryItems}
                 emptyText={`Nu există materiale ${categoryTitle(category).toLowerCase()} momentan.`}
+                variant={gridVariant}
               />
             </div>
           );
@@ -186,6 +190,7 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
             <MediaGrid
               items={group.items}
               emptyText="Nu există materiale grafice în acest grup."
+              variant="compact-photos"
             />
           </div>
         ))}

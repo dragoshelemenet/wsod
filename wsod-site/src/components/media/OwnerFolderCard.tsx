@@ -32,21 +32,18 @@ export default function OwnerFolderCard({
   previewImages = [],
 }: OwnerFolderCardProps) {
   const ownerType = getOwnerTypeFromHref(href);
-
-  const imageCandidates = useMemo(() => {
-    const unique = [...previewImages.filter(Boolean)];
-    if (imageUrl && !unique.includes(imageUrl)) {
-      unique.unshift(imageUrl);
-    }
-    return unique.slice(0, 4);
-  }, [imageUrl, previewImages]);
-
   const [failed, setFailed] = useState<string[]>([]);
-  const visibleImages = imageCandidates.filter((src) => !failed.includes(src));
-  const mainImage = visibleImages[0] ?? null;
-  const hoverImages = visibleImages.slice(1, 4);
-  const useTransparentArt = isTransparentFriendlyAsset(imageUrl);
 
+  const cleanPreviewImages = useMemo(() => {
+    return [...new Set(previewImages.filter(Boolean))].filter((src) => !failed.includes(src));
+  }, [previewImages, failed]);
+
+  const mainImage = imageUrl && !failed.includes(imageUrl) ? imageUrl : cleanPreviewImages[0] ?? null;
+  const hoverImages = cleanPreviewImages
+    .filter((src) => src !== mainImage)
+    .slice(0, 3);
+
+  const useTransparentArt = isTransparentFriendlyAsset(imageUrl);
   const isBrand = ownerType === "brand";
   const isModel = ownerType === "model";
 

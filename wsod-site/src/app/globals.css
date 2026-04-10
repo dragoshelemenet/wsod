@@ -3816,3 +3816,63 @@ img {
 .brands-section .owner-folder-card .folder-hover-preview {
   display: block !important;
 }
+
+/* tighter visual media inside brand pages */
+.media-grid-compact-photos {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.media-grid-compact-photos .media-card-photo-thumb {
+  aspect-ratio: 0.82 / 1;
+}
+
+@media (max-width: 900px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .media-grid-compact-photos .media-card-photo-thumb {
+    aspect-ratio: 0.78 / 1;
+  }
+}
+
+/* photo detail meta simplified */
+.foto-gallery-meta-simple {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.foto-gallery-meta-text {
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+}
+
+.foto-gallery-date {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.56);
+}
+
+.foto-gallery-description {
+  margin: 0;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .foto-gallery-meta-simple {
+    flex-direction: column;
+  }
+}

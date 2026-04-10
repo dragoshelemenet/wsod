@@ -35,6 +35,13 @@ function isVideoUrl(url?: string | null) {
   );
 }
 
+function formatMonthYear(value: string | Date) {
+  return new Intl.DateTimeFormat("ro-RO", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
 export default function MediaCard({ item }: MediaCardProps) {
   const owner = item.owner;
   const isPhotoFile = item.category === "foto";
@@ -86,7 +93,6 @@ export default function MediaCard({ item }: MediaCardProps) {
           <div className="media-card-photo-thumb">
             <div className="media-card-photo-thumb-inner">
               {previewSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={previewSrc}
                   alt={item.title}
@@ -128,7 +134,6 @@ export default function MediaCard({ item }: MediaCardProps) {
                   poster={previewSrc || undefined}
                 />
               ) : previewSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={previewSrc}
                   alt={item.title}
@@ -162,7 +167,6 @@ export default function MediaCard({ item }: MediaCardProps) {
         <div className="media-thumb">
           <div className="media-thumb-inner">
             {previewSrc ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={previewSrc}
                 alt={item.title}
@@ -185,16 +189,13 @@ export default function MediaCard({ item }: MediaCardProps) {
             <span className="brand-chip">
               {owner.type === "unknown" ? "Media" : owner.name}
             </span>
-            <span className="media-date">
-              {new Date(item.date).toLocaleDateString("ro-RO")}
-            </span>
+            <span className="media-date">{formatMonthYear(item.date)}</span>
           </div>
 
           <h3 className="media-title">{item.title}</h3>
 
           <div className="media-meta">
             <span>{getCategoryLabel(item.category)}</span>
-            {item.fileNameOriginal ? <span>{item.fileNameOriginal}</span> : null}
           </div>
         </div>
       </Link>
