@@ -103,7 +103,7 @@ export async function getBrandsWithHomePreviewFromDb() {
           isVisible: true,
         },
         orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
-        take: 3,
+        take: 12,
         select: {
           thumbnailUrl: true,
           previewUrl: true,
@@ -113,63 +113,23 @@ export async function getBrandsWithHomePreviewFromDb() {
     },
   });
 
-  return brands.map((brand) => ({
-    ...brand,
-    previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-  }));
-}
+  return brands.map((brand) => {
+    const previewImages = brand.mediaItems
+      .map(getPreviewSrc)
+      .filter(Boolean) as string[];
 
-export async function getBrandsWithHomePreviewFromDb() {
-  const brands = await prisma.brand.findMany({
-    where: { isVisible: true },
-    orderBy: { name: "asc" },
-    include: {
-      mediaItems: {
-        where: {
-          isVisible: true,
-        },
-        orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
-        take: 3,
-        select: {
-          thumbnailUrl: true,
-          previewUrl: true,
-          fileUrl: true,
-        },
-      },
-    },
+    const shuffled = [...previewImages]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
+    return {
+      ...brand,
+      previewImages: shuffled,
+    };
   });
-
-  return brands.map((brand) => ({
-    ...brand,
-    previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-  }));
 }
 
-export async function getBrandsWithHomePreviewFromDb() {
-  const brands = await prisma.brand.findMany({
-    where: { isVisible: true },
-    orderBy: { name: "asc" },
-    include: {
-      mediaItems: {
-        where: {
-          isVisible: true,
-        },
-        orderBy: [{ isFeatured: "desc" }, { date: "desc" }],
-        take: 3,
-        select: {
-          thumbnailUrl: true,
-          previewUrl: true,
-          fileUrl: true,
-        },
-      },
-    },
-  });
 
-  return brands.map((brand) => ({
-    ...brand,
-    previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-  }));
-}
 
 export async function getModelsFromDb() {
   return prisma.personModel.findMany({
