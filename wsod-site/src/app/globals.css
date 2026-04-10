@@ -3126,3 +3126,110 @@ img {
     grid-template-columns: 1fr;
   }
 }
+
+/* services & pricing page */
+.services-page {
+  padding-bottom: 96px;
+}
+
+.services-shell {
+  display: grid;
+  gap: 28px;
+}
+
+.services-header {
+  display: grid;
+  gap: 12px;
+}
+
+.services-kicker {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.services-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.service-price-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)),
+    rgba(8,8,10,0.95);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.32);
+}
+
+.service-price-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.service-price-top h2 {
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.service-price-badge {
+  white-space: nowrap;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 13px;
+}
+
+.service-price-description {
+  color: rgba(255,255,255,0.78);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.services-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* make home brand folders use same hover vibe clearly */
+.brands-section .owner-folder-card-brand .folder-hover-preview {
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.brands-section .owner-folder-card-brand:hover .folder-hover-preview {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap {
+  opacity: 0;
+  transform: scale(1.08);
+}
+
+.brands-section .folder-brand-art-wrap {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+@media (max-width: 900px) {
+  .services-pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
