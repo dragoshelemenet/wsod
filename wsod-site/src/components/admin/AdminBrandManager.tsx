@@ -83,24 +83,17 @@ export default function AdminBrandManager({ initialBrands }: Props) {
     );
   }
 
-  async function saveBrand(brand: BrandItem, logoFile?: File | null, coverFile?: File | null) {
+  async function saveBrand(brand: BrandItem, logoFile?: File | null) {
     setSavingId(brand.id);
     setMessage("");
 
     try {
       let finalLogoUrl = brand.logoUrl || "";
-      let finalCoverImageUrl = brand.coverImageUrl || "";
 
       if (logoFile) {
         const uploadedLogo = await presignAndUploadFile(logoFile, brand.slug, "brand-logo");
         finalLogoUrl = uploadedLogo.publicUrl;
         patchBrand(brand.id, { logoUrl: finalLogoUrl });
-      }
-
-      if (coverFile) {
-        const uploadedCover = await presignAndUploadFile(coverFile, brand.slug, "brand-cover");
-        finalCoverImageUrl = uploadedCover.publicUrl;
-        patchBrand(brand.id, { coverImageUrl: finalCoverImageUrl });
       }
 
       const response = await fetch(`/api/admin/brands/${brand.id}`, {
@@ -110,7 +103,7 @@ export default function AdminBrandManager({ initialBrands }: Props) {
           name: brand.name,
           slug: brand.slug,
           logoUrl: finalLogoUrl,
-          coverImageUrl: finalCoverImageUrl,
+          coverImageUrl: "",
           description: brand.description || "",
           seoTitle: brand.seoTitle || "",
           metaDescription: brand.metaDescription || "",
@@ -167,7 +160,7 @@ export default function AdminBrandManager({ initialBrands }: Props) {
 
       <div className="admin-stack">
         <p className="admin-helper-text">
-          Poți edita slugul, descrierea, SEO, visibility și poți înlocui sau șterge imaginile brandului.
+          Brandul folosește acum doar logo / imagine principală pentru folder.
         </p>
 
         {message ? (
@@ -204,13 +197,12 @@ function BrandEditorCard({
 }: {
   brand: BrandItem;
   onPatch: (patch: Partial<BrandItem>) => void;
-  onSave: (brand: BrandItem, logoFile?: File | null, coverFile?: File | null) => Promise<void>;
+  onSave: (brand: BrandItem, logoFile?: File | null) => Promise<void>;
   onDelete: (brand: BrandItem) => Promise<void>;
   isSaving: boolean;
   isDeleting: boolean;
 }) {
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
 
   return (
     <div className="admin-list-item admin-list-item-column">
@@ -271,7 +263,7 @@ function BrandEditorCard({
           </div>
 
           <div className="admin-form-field">
-            <label>Înlocuiește logo</label>
+            <label>Înlocuiește logo / imagine folder</label>
             <input
               type="file"
               accept="image/*"
@@ -283,36 +275,9 @@ function BrandEditorCard({
             <button
               type="button"
               className="admin-danger-button"
-              onClick={() => onPatch({ logoUrl: "" })}
+              onClick={() => onPatch({ logoUrl: "", coverImageUrl: "" })}
             >
-              Șterge logo
-            </button>
-          </div>
-
-          <div className="admin-form-field">
-            <label>Cover image URL</label>
-            <input
-              value={brand.coverImageUrl || ""}
-              onChange={(e) => onPatch({ coverImageUrl: e.target.value })}
-            />
-          </div>
-
-          <div className="admin-form-field">
-            <label>Înlocuiește cover</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
-            />
-          </div>
-
-          <div className="admin-inline-actions">
-            <button
-              type="button"
-              className="admin-danger-button"
-              onClick={() => onPatch({ coverImageUrl: "" })}
-            >
-              Șterge cover
+              Șterge imagine
             </button>
           </div>
 
@@ -329,7 +294,7 @@ function BrandEditorCard({
             <button
               type="button"
               className="admin-submit"
-              onClick={() => onSave(brand, logoFile, coverFile)}
+              onClick={() => onSave(brand, logoFile)}
               disabled={isSaving}
             >
               {isSaving ? "Se salvează..." : "Salvează brand"}

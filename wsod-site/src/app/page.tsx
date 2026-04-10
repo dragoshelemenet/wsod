@@ -21,7 +21,7 @@ export default async function HomePage() {
             id: brand.id,
             name: brand.name,
             slug: brand.slug,
-            imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? null,
+            imageUrl: brand.logoUrl ?? null,
             previewImages: [],
             href: `/brand/${brand.slug}`,
           }))}

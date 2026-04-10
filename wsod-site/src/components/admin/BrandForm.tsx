@@ -75,9 +75,7 @@ export default function BrandForm({ brands }: BrandFormProps) {
   const [name, setName] = useState("");
   const [slugInput, setSlugInput] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
-  const [coverImageUrl, setCoverImageUrl] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
@@ -106,16 +104,10 @@ export default function BrandForm({ brands }: BrandFormProps) {
       setMessage("");
 
       let finalLogoUrl = logoUrl.trim();
-      let finalCoverImageUrl = coverImageUrl.trim();
 
       if (logoFile) {
         const uploadedLogo = await presignAndUploadFile(logoFile, normalizedSlug, "brand-logo");
         finalLogoUrl = uploadedLogo.publicUrl;
-      }
-
-      if (coverFile) {
-        const uploadedCover = await presignAndUploadFile(coverFile, normalizedSlug, "brand-cover");
-        finalCoverImageUrl = uploadedCover.publicUrl;
       }
 
       const response = await fetch("/api/admin/brands", {
@@ -127,7 +119,7 @@ export default function BrandForm({ brands }: BrandFormProps) {
           name,
           slug: normalizedSlug,
           logoUrl: finalLogoUrl,
-          coverImageUrl: finalCoverImageUrl,
+          coverImageUrl: "",
           description,
           seoTitle,
           metaDescription,
@@ -147,9 +139,7 @@ export default function BrandForm({ brands }: BrandFormProps) {
       setName("");
       setSlugInput("");
       setLogoUrl("");
-      setCoverImageUrl("");
       setLogoFile(null);
-      setCoverFile(null);
       setDescription("");
       setSeoTitle("");
       setMetaDescription("");
@@ -192,7 +182,7 @@ export default function BrandForm({ brands }: BrandFormProps) {
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="brand-logo-file">Logo imagine în Spaces</label>
+          <label htmlFor="brand-logo-file">Logo / imagine folder în Spaces</label>
           <input
             id="brand-logo-file"
             type="file"
@@ -208,26 +198,6 @@ export default function BrandForm({ brands }: BrandFormProps) {
             value={logoUrl}
             onChange={(e) => setLogoUrl(e.target.value)}
             placeholder="URL logo brand"
-          />
-        </div>
-
-        <div className="admin-form-field">
-          <label htmlFor="brand-cover-file">Cover imagine în Spaces</label>
-          <input
-            id="brand-cover-file"
-            type="file"
-            accept="image/*"
-            onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
-          />
-        </div>
-
-        <div className="admin-form-field">
-          <label htmlFor="brand-cover">Cover image URL</label>
-          <input
-            id="brand-cover"
-            value={coverImageUrl}
-            onChange={(e) => setCoverImageUrl(e.target.value)}
-            placeholder="URL imagine cover brand"
           />
         </div>
 

@@ -56,7 +56,7 @@ export default async function VideoPage() {
             name: brand.name,
             slug: brand.slug,
             imageUrl:
-              brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+              brand.logoUrl ?? brand.previewImages?.[0] ?? null,
             previewImages: brand.previewImages ?? [],
             href: `/brand/${brand.slug}?from=video`,
           }))}
