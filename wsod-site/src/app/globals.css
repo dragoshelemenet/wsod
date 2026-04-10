@@ -4116,3 +4116,30 @@ img {
     aspect-ratio: 0.66 / 1 !important;
   }
 }
+
+/* brand folders radius like photo cards on homepage */
+.brands-section .owner-folder-card-brand,
+.brands-section .owner-folder-card-brand.folder-card,
+.brands-section .owner-folder-card-brand.folder-card.folder-card-rich {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.brands-section .owner-folder-card-brand::after,
+.brands-section .owner-folder-card-brand.folder-card::after,
+.brands-section .owner-folder-card-brand.folder-card.folder-card-rich::after {
+  border-radius: 16px !important;
+}
+
+.brands-section .owner-folder-card-brand .owner-folder-classic-body,
+.brands-section .owner-folder-card-brand .folder-body {
+  border-radius: 22px !important;
+  overflow: hidden !important;
+}
+
+.brands-section .owner-folder-card-brand .folder-hover-shot,
+.brands-section .owner-folder-card-brand .folder-hover-media,
+.brands-section .owner-folder-card-brand .folder-brand-art,
+.brands-section .owner-folder-card-brand .folder-brand-art-wrap {
+  border-radius: 16px !important;
+}
