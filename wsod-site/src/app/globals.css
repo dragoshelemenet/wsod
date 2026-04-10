@@ -2629,3 +2629,21 @@ img {
     max-height: 116px;
   }
 }
+
+/* make brand art cleaner inside folders */
+.folder-brand-art {
+  max-width: 74% !important;
+  max-height: 96px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.folder-brand-art-wrap {
+  padding: 4px !important;
+}
+
+.owner-folder-classic-body {
+  min-height: 180px !important;
+}
