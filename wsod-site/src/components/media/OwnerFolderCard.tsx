@@ -18,11 +18,54 @@ function isTransparentFriendlyAsset(url?: string | null) {
   return clean.endsWith(".png") || clean.endsWith(".webp");
 }
 
+function isVideoUrl(url?: string | null) {
+  if (!url) return false;
+  const clean = url.split("?")[0].toLowerCase();
+  return [".mp4", ".webm", ".mov", ".m4v", ".ogg"].some((ext) =>
+    clean.endsWith(ext)
+  );
+}
+
 function getOwnerTypeFromHref(href: string) {
   if (href.includes("/brand/")) return "brand";
   if (href.includes("/model/")) return "model";
   if (href.includes("/audio-profile/")) return "audio";
   return "unknown";
+}
+
+function PreviewMedia({
+  src,
+  className,
+  onError,
+}: {
+  src: string;
+  className: string;
+  onError: () => void;
+}) {
+  if (isVideoUrl(src)) {
+    return (
+      <video
+        src={src}
+        className={className}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        onError={onError}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt=""
+      className={className}
+      loading="lazy"
+      onError={onError}
+    />
+  );
 }
 
 export default function OwnerFolderCard({
@@ -62,11 +105,9 @@ export default function OwnerFolderCard({
             className={`folder-brand-art-wrap${useTransparentArt ? " folder-brand-art-wrap-transparent" : ""}`}
             aria-hidden="true"
           >
-            <img
+            <PreviewMedia
               src={mainImage}
-              alt=""
               className={`folder-brand-art${useTransparentArt ? " folder-brand-art-transparent" : ""}`}
-              loading="lazy"
               onError={() => setFailed((current) => [...current, mainImage])}
             />
           </div>
@@ -78,10 +119,9 @@ export default function OwnerFolderCard({
           <div className="folder-hover-preview" aria-hidden="true">
             {hoverImages[0] ? (
               <div className="folder-hover-shot folder-hover-shot-1">
-                <img
+                <PreviewMedia
                   src={hoverImages[0]}
-                  alt=""
-                  loading="lazy"
+                  className="folder-hover-media"
                   onError={() => setFailed((current) => [...current, hoverImages[0]])}
                 />
               </div>
@@ -89,10 +129,9 @@ export default function OwnerFolderCard({
 
             {hoverImages[1] ? (
               <div className="folder-hover-shot folder-hover-shot-2">
-                <img
+                <PreviewMedia
                   src={hoverImages[1]}
-                  alt=""
-                  loading="lazy"
+                  className="folder-hover-media"
                   onError={() => setFailed((current) => [...current, hoverImages[1]])}
                 />
               </div>
@@ -100,10 +139,9 @@ export default function OwnerFolderCard({
 
             {hoverImages[2] ? (
               <div className="folder-hover-shot folder-hover-shot-3">
-                <img
+                <PreviewMedia
                   src={hoverImages[2]}
-                  alt=""
-                  loading="lazy"
+                  className="folder-hover-media"
                   onError={() => setFailed((current) => [...current, hoverImages[2]])}
                 />
               </div>

@@ -16,14 +16,16 @@ export default function MediaGrid({
   variant = "default",
 }: MediaGridProps) {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(9);
+  const [perPage, setPerPage] = useState(12);
 
   useEffect(() => {
     const update = () => {
       if (window.innerWidth <= 640) {
-        setPerPage(variant === "compact-photos" ? 9 : 4);
+        setPerPage(variant === "compact-photos" ? 12 : 4);
+      } else if (window.innerWidth <= 980) {
+        setPerPage(variant === "compact-photos" ? 18 : 8);
       } else {
-        setPerPage(variant === "compact-photos" ? 18 : 9);
+        setPerPage(variant === "compact-photos" ? 24 : 9);
       }
     };
 
