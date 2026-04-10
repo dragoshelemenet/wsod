@@ -4004,3 +4004,115 @@ img {
     aspect-ratio: 0.68 / 1 !important;
   }
 }
+
+/* ultra compact photo/file look */
+.media-grid-compact-photos {
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.media-grid-compact-photos .media-card,
+.media-grid-compact-photos .media-card-visual-only {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+.media-grid-compact-photos .media-card-photo-link,
+.media-grid-compact-photos .media-card-photo-thumb,
+.media-grid-compact-photos .media-card-photo-thumb-inner {
+  width: 100% !important;
+}
+
+.media-grid-compact-photos .media-card-photo-thumb {
+  aspect-ratio: 0.68 / 1 !important;
+  border-radius: 12px !important;
+}
+
+.media-grid-compact-photos .media-card-photo-thumb-inner {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+.media-grid-compact-photos .media-card-photo-image,
+.media-grid-compact-photos .media-thumb-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.media-grid-compact-photos .media-card-photo-caption,
+.media-grid-compact-photos .media-copy,
+.media-grid-compact-photos .media-actions,
+.media-grid-compact-photos .media-meta,
+.media-grid-compact-photos .media-topline,
+.media-grid-compact-photos .media-title {
+  display: none !important;
+}
+
+.media-grid-compact-photos .media-card-photo-link,
+.media-grid-compact-photos .media-card-main-link {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.media-grid-compact-photos .media-card-photo-file,
+.media-grid-compact-photos .media-card-graphic-file,
+.media-grid-compact-photos .media-card-video-file {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* no empty frame on brand hover */
+.owner-folder-card-brand .folder-hover-preview {
+  inset: 0 !important;
+  padding: 0 !important;
+}
+
+.owner-folder-card-brand .folder-hover-shot {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 14px !important;
+}
+
+.owner-folder-card-brand .folder-hover-shot-1,
+.owner-folder-card-brand .folder-hover-shot-2,
+.owner-folder-card-brand .folder-hover-shot-3 {
+  overflow: hidden !important;
+}
+
+.owner-folder-card-brand .folder-hover-media {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  border-radius: 14px !important;
+}
+
+@media (max-width: 1200px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .media-grid-compact-photos {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .media-grid-compact-photos .media-card-photo-thumb {
+    aspect-ratio: 0.66 / 1 !important;
+  }
+}
