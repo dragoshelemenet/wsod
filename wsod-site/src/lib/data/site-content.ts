@@ -2,18 +2,12 @@ import { prisma } from "@/lib/db/prisma";
 
 const defaults = {
   id: "main",
-  servicesEyebrow: "Serviciile noastre",
-  servicesTitle: "Serviciile noastre",
+  servicesEyebrow: "Servicii & prețuri",
+  servicesTitle: "Servicii pentru branduri, artiști și social media",
   servicesList: [
-    "Filmare & montaj video",
-    "Video AI (conținut hiper-realist)",
-    "Video muzicale (lyric videos)",
-    "Fotografii & retuș profesional",
-    "Grafică pentru branduri",
-    "Cover art pentru piese",
-    "Creare website-uri moderne",
-    "Audio mixing & mastering",
-    "Editare podcasturi",
+    "Te ajutăm cu video, editare video, design, poze și pachete avantajoase pentru dezvoltarea brandului și pentru social media.",
+    "Poți folosi liniile de mai jos ca intro sau beneficii pe pagina separată de servicii.",
+    "Schimbă acest text din dashboard, din Home Content.",
   ].join("\n"),
   servicesCards: [
     "Filmare & montaj video|Reels, reclame, content pentru branduri, filmări comerciale și edit profesional adaptat pentru social media sau website.|de la 150€",
@@ -26,11 +20,11 @@ const defaults = {
     "Audio mixing & mastering|Mix și master pentru piese, voice-over, reclame sau proiecte audio comerciale.|de la 70€",
     "Editare podcasturi|Curățare audio, montaj, tăieri, intro/outro și export final pentru podcast video sau audio.|de la 60€",
   ].join("\n"),
-  pricingLabel: "Serviciile noastre",
+  pricingLabel: "Servicii & prețuri",
   pricingHref: "/servicii-preturi",
   contactLabel: "Contact",
   contactHref: "https://wa.me/40727205689",
-  claimLabel: "Claim your first video/photo for free",
+  claimLabel: "Primul video/foto gratis",
   claimHref:
     "https://wa.me/40727205689?text=Salut%2C%20vreau%20primul%20video%20sau%20foto%20gratis",
 };

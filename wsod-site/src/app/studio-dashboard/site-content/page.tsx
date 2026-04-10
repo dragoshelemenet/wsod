@@ -18,17 +18,13 @@ async function saveSiteContent(formData: FormData) {
     return value.length ? value : null;
   };
 
-  const existing = await prisma.siteContent.findUnique({
-    where: { id: "main" },
-  });
-
   await prisma.siteContent.upsert({
     where: { id: "main" },
     create: {
       id: "main",
-      servicesEyebrow: existing?.servicesEyebrow ?? null,
+      servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
-      servicesList: existing?.servicesList ?? null,
+      servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
       pricingLabel: clean("pricingLabel"),
       pricingHref: clean("pricingHref"),
@@ -38,7 +34,9 @@ async function saveSiteContent(formData: FormData) {
       claimHref: clean("claimHref"),
     },
     update: {
+      servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
+      servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
       pricingLabel: clean("pricingLabel"),
       pricingHref: clean("pricingHref"),
@@ -74,20 +72,39 @@ export default async function SiteContentDashboardPage() {
       <section className="inner-section admin-page-shell">
         <div className="admin-page-header">
           <span className="admin-kicker">Servicii</span>
-          <h1>Servicii & prețuri</h1>
+          <h1>Pagina Servicii & prețuri</h1>
           <p className="inner-description">
-            Aici modifici doar conținutul pentru pagina separată de servicii și butoanele principale.
+            Aici modifici conținutul pentru pagina separată de servicii și butoanele principale.
           </p>
         </div>
 
         <form action={saveSiteContent} className="site-content-form">
           <div className="site-content-grid">
             <label className="admin-field site-content-full">
-              <span>Titlul paginii de servicii</span>
+              <span>Eyebrow pagină</span>
+              <input
+                name="servicesEyebrow"
+                defaultValue={content.servicesEyebrow || ""}
+                className="admin-input"
+              />
+            </label>
+
+            <label className="admin-field site-content-full">
+              <span>Titlul paginii</span>
               <input
                 name="servicesTitle"
                 defaultValue={content.servicesTitle || ""}
                 className="admin-input"
+              />
+            </label>
+
+            <label className="admin-field site-content-full">
+              <span>Text intro pagină — o linie pe rând</span>
+              <textarea
+                name="servicesList"
+                defaultValue={content.servicesList || ""}
+                className="admin-textarea"
+                rows={8}
               />
             </label>
 

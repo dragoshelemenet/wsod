@@ -33,9 +33,17 @@ function parseCards(text?: string | null) {
     .filter((item) => item.title);
 }
 
+function parseIntro(text?: string | null) {
+  return String(text || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 export default async function ServicesPricingPage() {
   const content = await getSiteContentFromDb();
   const cards = parseCards(content.servicesCards);
+  const introLines = parseIntro(content.servicesList);
 
   return (
     <main className="inner-page services-page">
@@ -47,14 +55,27 @@ export default async function ServicesPricingPage() {
 
       <section className="inner-section services-shell">
         <div className="services-header">
-          <span className="services-kicker">WSOD.PROD</span>
-          <h1>Servicii & prețuri</h1>
-          <p className="inner-description">
-            Oferim producție video, fotografie, conținut AI hiper-realist, grafică,
-            website-uri moderne și servicii audio pentru branduri, afaceri, artiști
-            și proiecte care vor să arate premium online. Prețurile de mai jos sunt
-            orientative și pot varia în funcție de complexitate, volum și deadline.
-          </p>
+          <span className="services-kicker">
+            {content.servicesEyebrow || "Servicii & prețuri"}
+          </span>
+
+          <h1>{content.servicesTitle || "Servicii & prețuri"}</h1>
+
+          <div className="services-intro">
+            {introLines.length ? (
+              introLines.map((line) => (
+                <p key={line} className="inner-description services-intro-line">
+                  {line}
+                </p>
+              ))
+            ) : (
+              <p className="inner-description services-intro-line">
+                Oferim producție video, fotografie, conținut AI hiper-realist, grafică,
+                website-uri moderne și servicii audio pentru branduri, afaceri, artiști
+                și proiecte care vor să arate premium online.
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="services-pricing-grid">
