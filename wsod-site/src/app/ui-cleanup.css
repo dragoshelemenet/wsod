@@ -530,3 +530,30 @@
     font-size: 14px;
   }
 }
+
+/* model name only on hover */
+.owner-folder-card[href*="/model/"] .folder-model-title-wrap,
+.owner-folder-card-unified[href*="/model/"] .folder-model-title-wrap {
+  opacity: 0 !important;
+  transition: opacity 0.22s ease !important;
+}
+
+.owner-folder-card[href*="/model/"]:hover .folder-model-title-wrap,
+.owner-folder-card[href*="/model/"]:focus-visible .folder-model-title-wrap,
+.owner-folder-card-unified[href*="/model/"]:hover .folder-model-title-wrap,
+.owner-folder-card-unified[href*="/model/"]:focus-visible .folder-model-title-wrap {
+  opacity: 1 !important;
+}
+
+.owner-folder-card[href*="/model/"] .folder-brand-art-wrap,
+.owner-folder-card-unified[href*="/model/"] .folder-brand-art-wrap {
+  opacity: 1 !important;
+  transition: opacity 0.22s ease !important, transform 0.22s ease !important;
+}
+
+.owner-folder-card[href*="/model/"]:hover .folder-brand-art-wrap,
+.owner-folder-card[href*="/model/"]:focus-visible .folder-brand-art-wrap,
+.owner-folder-card-unified[href*="/model/"]:hover .folder-brand-art-wrap,
+.owner-folder-card-unified[href*="/model/"]:focus-visible .folder-brand-art-wrap {
+  opacity: 0 !important;
+}
