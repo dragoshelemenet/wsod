@@ -59,6 +59,21 @@ export default async function GraficaPage({ searchParams }: GraficaPageProps) {
             : "Portofoliu de materiale grafice realizate pentru branduri, social media și proiecte vizuale."}
         </p>
 
+        <div className="owner-folder-section">
+          <div className="owner-folder-section-head">
+            <h2>
+              {selectedBrand
+                ? `Toate graficele pentru ${selectedBrand.name}`
+                : "Grafici din branduri diferite"}
+            </h2>
+          </div>
+
+          <MediaGrid
+            items={graphicItems}
+            emptyText="Nu există materiale grafice momentan."
+          />
+        </div>
+
         {!selectedBrand ? (
           <OwnerFolderGrid
             title="Branduri"
@@ -66,7 +81,11 @@ export default async function GraficaPage({ searchParams }: GraficaPageProps) {
               id: brand.id,
               name: brand.name,
               slug: brand.slug,
-              imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+              imageUrl:
+                brand.logoUrl ??
+                brand.coverImageUrl ??
+                brand.previewImages?.[0] ??
+                null,
               previewImages: brand.previewImages ?? [],
               href: `/grafica?brand=${brand.slug}`,
             }))}
@@ -82,27 +101,12 @@ export default async function GraficaPage({ searchParams }: GraficaPageProps) {
               <Link href="/grafica" className="media-link">
                 Resetează filtrul
               </Link>
-              <Link href={`/brand/${selectedBrand.slug}`} className="media-link">
+              <Link href={`/brand/${selectedBrand.slug}?from=grafica`} className="media-link">
                 Vezi pagina brandului
               </Link>
             </div>
           </div>
         )}
-
-        <div className="owner-folder-section">
-          <div className="owner-folder-section-head">
-            <h2>
-              {selectedBrand
-                ? `Toate graficele pentru ${selectedBrand.name}`
-                : "Grafici din branduri diferite"}
-            </h2>
-          </div>
-
-          <MediaGrid
-            items={graphicItems}
-            emptyText="Nu există materiale grafice momentan."
-          />
-        </div>
       </section>
     </main>
   );

@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
+import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
+import {
+  getBrandsWithCategoryPreviewFromDb,
+  getMediaByCategoryFromDb,
+} from "@/lib/data/db-queries";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function MetaAdsPage() {
-  const items = await getMediaByCategoryFromDb("meta-ads", { limit: 36 });
+  const [brands, items] = await Promise.all([
+    getBrandsWithCategoryPreviewFromDb("meta-ads"),
+    getMediaByCategoryFromDb("meta-ads", { limit: 36 }),
+  ]);
 
   return (
     <main className="inner-page">
@@ -31,9 +38,32 @@ export default async function MetaAdsPage() {
           Vizuale și materiale pentru campanii Meta Ads, organizate clar pentru prezentare și explorare rapidă.
         </p>
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există materiale Meta Ads momentan."
+        <div className="owner-folder-section">
+          <div className="owner-folder-section-head">
+            <h2>Selecții Meta Ads</h2>
+          </div>
+
+          <MediaGrid
+            items={items}
+            emptyText="Nu există materiale Meta Ads momentan."
+          />
+        </div>
+
+        <OwnerFolderGrid
+          title="Branduri"
+          items={brands.map((brand) => ({
+            id: brand.id,
+            name: brand.name,
+            slug: brand.slug,
+            imageUrl:
+              brand.logoUrl ??
+              brand.coverImageUrl ??
+              brand.previewImages?.[0] ??
+              null,
+            previewImages: brand.previewImages ?? [],
+            href: `/brand/${brand.slug}?from=meta-ads`,
+          }))}
+          emptyText="Nu există branduri cu materiale Meta Ads momentan."
         />
       </section>
     </main>

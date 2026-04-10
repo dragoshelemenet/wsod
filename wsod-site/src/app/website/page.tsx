@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import MediaGrid from "@/components/media/MediaGrid";
-import { getMediaByCategoryFromDb } from "@/lib/data/db-queries";
+import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
+import {
+  getBrandsWithCategoryPreviewFromDb,
+  getMediaByCategoryFromDb,
+} from "@/lib/data/db-queries";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function WebsitePage() {
-  const items = await getMediaByCategoryFromDb("website", { limit: 36 });
+  const [brands, items] = await Promise.all([
+    getBrandsWithCategoryPreviewFromDb("website"),
+    getMediaByCategoryFromDb("website", { limit: 36 }),
+  ]);
 
   return (
     <main className="inner-page">
@@ -31,9 +38,32 @@ export default async function WebsitePage() {
           Website-uri moderne și proiecte digitale prezentate într-un format clar, rapid și ușor de explorat.
         </p>
 
-        <MediaGrid
-          items={items}
-          emptyText="Nu există proiecte website momentan."
+        <div className="owner-folder-section">
+          <div className="owner-folder-section-head">
+            <h2>Selecții website</h2>
+          </div>
+
+          <MediaGrid
+            items={items}
+            emptyText="Nu există proiecte website momentan."
+          />
+        </div>
+
+        <OwnerFolderGrid
+          title="Branduri"
+          items={brands.map((brand) => ({
+            id: brand.id,
+            name: brand.name,
+            slug: brand.slug,
+            imageUrl:
+              brand.logoUrl ??
+              brand.coverImageUrl ??
+              brand.previewImages?.[0] ??
+              null,
+            previewImages: brand.previewImages ?? [],
+            href: `/brand/${brand.slug}?from=website`,
+          }))}
+          emptyText="Nu există branduri cu proiecte website momentan."
         />
       </section>
     </main>

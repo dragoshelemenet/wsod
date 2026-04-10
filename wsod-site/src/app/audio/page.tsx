@@ -38,19 +38,6 @@ export default async function AudioPage() {
           Portofoliu audio organizat pe profile audio: artiști, podcasturi, show-uri și proiecte.
         </p>
 
-        <OwnerFolderGrid
-          title="Audio Profiles"
-          items={audioProfiles.map((profile) => ({
-            id: profile.id,
-            name: profile.name,
-            slug: profile.slug,
-            imageUrl: profile.coverImageUrl ?? null,
-            href: `/audio-profile/${profile.slug}`,
-            subtitle: profile.kind,
-          }))}
-          emptyText="Nu există profile audio momentan."
-        />
-
         <div className="owner-folder-section">
           <div className="owner-folder-section-head">
             <h2>Selecții audio</h2>
@@ -61,6 +48,19 @@ export default async function AudioPage() {
             emptyText="Nu există materiale audio momentan."
           />
         </div>
+
+        <OwnerFolderGrid
+          title="Audio Profiles"
+          items={audioProfiles.map((profile) => ({
+            id: profile.id,
+            name: profile.name,
+            slug: profile.slug,
+            imageUrl: profile.coverImageUrl ?? null,
+            href: `/audio-profile/${profile.slug}?from=audio`,
+            subtitle: profile.kind,
+          }))}
+          emptyText="Nu există profile audio momentan."
+        />
       </section>
     </main>
   );

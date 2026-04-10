@@ -61,6 +61,17 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
             : "Portofoliu foto organizat pe modele și branduri, plus selecții recente din toate lucrările."}
         </p>
 
+        <div className="owner-folder-section">
+          <div className="owner-folder-section-head">
+            <h2>{selectedModel ? `Toate pozele cu ${selectedModel.name}` : "Selecții foto"}</h2>
+          </div>
+
+          <MediaGrid
+            items={photoItems}
+            emptyText="Nu există materiale foto momentan."
+          />
+        </div>
+
         {!selectedModel ? (
           <>
             <OwnerFolderGrid
@@ -71,7 +82,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                 slug: model.slug,
                 imageUrl: model.portraitImageUrl ?? model.previewImages?.[0] ?? null,
                 previewImages: model.previewImages ?? [],
-                href: `/model/${model.slug}`,
+                href: `/model/${model.slug}?from=foto`,
               }))}
               emptyText="Nu există modele momentan."
             />
@@ -82,9 +93,13 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                 id: brand.id,
                 name: brand.name,
                 slug: brand.slug,
-                imageUrl: brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
+                imageUrl:
+                  brand.logoUrl ??
+                  brand.coverImageUrl ??
+                  brand.previewImages?.[0] ??
+                  null,
                 previewImages: brand.previewImages ?? [],
-                href: `/brand/${brand.slug}`,
+                href: `/brand/${brand.slug}?from=foto`,
               }))}
               emptyText="Nu există branduri momentan."
             />
@@ -102,17 +117,6 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
             </div>
           </div>
         )}
-
-        <div className="owner-folder-section">
-          <div className="owner-folder-section-head">
-            <h2>{selectedModel ? `Toate pozele cu ${selectedModel.name}` : "Selecții foto"}</h2>
-          </div>
-
-          <MediaGrid
-            items={photoItems}
-            emptyText="Nu există materiale foto momentan."
-          />
-        </div>
       </section>
     </main>
   );
