@@ -902,3 +902,80 @@
     right: 8px;
   }
 }
+
+/* make services carousel cards narrower */
+.services-carousel-media {
+  width: min(100%, 260px) !important;
+  aspect-ratio: 2 / 3 !important;
+}
+
+.services-carousel-card-prev {
+  transform: translateX(-34%) scale(0.78) rotate(-7deg) !important;
+}
+
+.services-carousel-card-next {
+  transform: translateX(34%) scale(0.78) rotate(7deg) !important;
+}
+
+.services-carousel-arrow-left {
+  left: max(8px, calc(50% - 180px)) !important;
+}
+
+.services-carousel-arrow-right {
+  right: max(8px, calc(50% - 180px)) !important;
+}
+
+@media (min-width: 900px) {
+  .services-carousel-stage {
+    min-height: 560px !important;
+  }
+
+  .services-carousel-media {
+    width: min(100%, 300px) !important;
+  }
+
+  .services-carousel-card-prev {
+    transform: translateX(-42%) scale(0.8) rotate(-8deg) !important;
+  }
+
+  .services-carousel-card-next {
+    transform: translateX(42%) scale(0.8) rotate(8deg) !important;
+  }
+
+  .services-carousel-arrow-left {
+    left: calc(50% - 205px) !important;
+  }
+
+  .services-carousel-arrow-right {
+    right: calc(50% - 205px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .services-carousel-stage {
+    min-height: 380px !important;
+  }
+
+  .services-carousel-media {
+    width: min(100%, 190px) !important;
+    border-radius: 20px !important;
+  }
+
+  .services-carousel-card-prev {
+    transform: translateX(-28%) scale(0.76) rotate(-7deg) !important;
+    opacity: 0.44 !important;
+  }
+
+  .services-carousel-card-next {
+    transform: translateX(28%) scale(0.76) rotate(7deg) !important;
+    opacity: 0.44 !important;
+  }
+
+  .services-carousel-arrow-left {
+    left: 4px !important;
+  }
+
+  .services-carousel-arrow-right {
+    right: 4px !important;
+  }
+}
