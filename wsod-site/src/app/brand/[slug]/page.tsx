@@ -81,7 +81,10 @@ function groupGraphics(items: Awaited<ReturnType<typeof getMediaByBrandSlugFromD
         return +new Date(b.date) - +new Date(a.date);
       }),
       groupOrder:
-        groupItems.reduce((min, item) => Math.min(min, item.groupOrder ?? 0), Number.POSITIVE_INFINITY) || 0,
+        groupItems.reduce(
+          (min, item) => Math.min(min, item.groupOrder ?? 0),
+          Number.POSITIVE_INFINITY
+        ) || 0,
     }))
     .sort((a, b) => a.groupOrder - b.groupOrder || a.label.localeCompare(b.label));
 }
@@ -117,7 +120,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
     notFound();
   }
 
-  const categories = ["foto", "video", "website", "meta-ads", "audio"] as const;
+  const orderedCategories = ["foto", "video", "website", "meta-ads", "audio"] as const;
   const graphicGroups = groupGraphics(items);
 
   return (
@@ -142,7 +145,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
           metaLine="Brand page"
         />
 
-        {categories.map((category) => {
+        {orderedCategories.map((category) => {
           const categoryItems = items.filter((item) => item.category === category);
           if (!categoryItems.length) return null;
 
@@ -160,14 +163,6 @@ export default async function BrandPage({ params }: BrandPageProps) {
           );
         })}
 
-        {graphicGroups.length ? (
-          <div className="model-page-actions">
-            <Link href={`/grafica?brand=${brand.slug}`} className="media-open-button">
-              Vezi toate graficele pentru {brand.name}
-            </Link>
-          </div>
-        ) : null}
-
         {graphicGroups.map((group) => (
           <div key={group.label} className="owner-folder-section">
             <div className="owner-folder-section-head">
@@ -180,6 +175,14 @@ export default async function BrandPage({ params }: BrandPageProps) {
             />
           </div>
         ))}
+
+        {graphicGroups.length ? (
+          <div className="model-page-actions">
+            <Link href={`/grafica?brand=${brand.slug}`} className="media-open-button">
+              Vezi toate graficele pentru {brand.name}
+            </Link>
+          </div>
+        ) : null}
       </section>
     </main>
   );

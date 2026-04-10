@@ -19,9 +19,18 @@ function getItemHref(item: DbMediaCardItem) {
   return item.fileUrl || "#";
 }
 
+function isImageUrl(url?: string | null) {
+  if (!url) return false;
+  const clean = url.split("?")[0].toLowerCase();
+  return [".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"].some((ext) =>
+    clean.endsWith(ext)
+  );
+}
+
 export default function MediaCard({ item }: MediaCardProps) {
   const owner = item.owner;
   const isPhotoFile = item.category === "foto";
+  const isVideoFile = item.category === "video";
 
   const ownerHref =
     owner.type === "brand" && owner.slug
@@ -33,7 +42,10 @@ export default function MediaCard({ item }: MediaCardProps) {
           : null;
 
   const imageCandidates = useMemo(
-    () => [item.thumbnailUrl, item.previewUrl, item.fileUrl].filter(Boolean) as string[],
+    () =>
+      [item.thumbnailUrl, item.previewUrl, item.fileUrl].filter(
+        (url): url is string => Boolean(url) && isImageUrl(url)
+      ),
     [item.thumbnailUrl, item.previewUrl, item.fileUrl]
   );
 
@@ -98,6 +110,14 @@ export default function MediaCard({ item }: MediaCardProps) {
                   }
                 }}
               />
+            ) : isVideoFile && item.fileUrl ? (
+              <video
+                src={item.fileUrl}
+                className="media-thumb-image"
+                muted
+                playsInline
+                preload="metadata"
+              />
             ) : (
               <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
             )}
@@ -137,7 +157,7 @@ export default function MediaCard({ item }: MediaCardProps) {
             rel="noreferrer"
             className="media-open-button"
           >
-            Deschide originalul
+            {isVideoFile ? "Deschide video" : "Deschide originalul"}
           </a>
         ) : null}
       </div>
