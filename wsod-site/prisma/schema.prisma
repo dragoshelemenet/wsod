@@ -135,7 +135,9 @@ model SiteSectionVisibility {
   isVisible Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}\n\nmodel SiteContent {
+}
+
+model SiteContent {
   id               String   @id
   servicesEyebrow  String?
   servicesTitle    String?
@@ -148,4 +150,4 @@ model SiteSectionVisibility {
   claimHref        String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-}\n
+}

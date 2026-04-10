@@ -39,9 +39,9 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
 
 async function getSameOwnerItems(item: Awaited<ReturnType<typeof getMediaItemBySlugFromDb>>) {
   if (!item) return [];
-  if (item.owner.type === "brand" && item.owner.slug) return (await getMediaByBrandSlugFromDb(item.owner.slug, { limit: 48 })).filter((x) => x.category === item.category).slice(0, 6);
-  if (item.owner.type === "model" && item.owner.slug) return (await getMediaByModelSlugFromDb(item.owner.slug, { limit: 48 })).filter((x) => x.category === item.category).slice(0, 6);
-  if (item.owner.type === "audioProfile" && item.owner.slug) return (await getMediaByAudioProfileSlugFromDb(item.owner.slug, { limit: 48 })).filter((x) => x.category === item.category).slice(0, 6);
+  if (item.owner.type === "brand" && item.owner.slug) return (await getMediaByBrandSlugFromDb(item.owner.slug, { limit: 48 })).filter((x) => x.category === CATEGORY).slice(0, 6);
+  if (item.owner.type === "model" && item.owner.slug) return (await getMediaByModelSlugFromDb(item.owner.slug, { limit: 48 })).filter((x) => x.category === CATEGORY).slice(0, 6);
+  if (item.owner.type === "audioProfile" && item.owner.slug) return (await getMediaByAudioProfileSlugFromDb(item.owner.slug, { limit: 48 })).filter((x) => x.category === CATEGORY).slice(0, 6);
   return [];
 }
 
