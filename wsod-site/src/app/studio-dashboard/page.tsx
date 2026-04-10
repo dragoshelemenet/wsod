@@ -53,6 +53,12 @@ export default async function StudioDashboardPage() {
       href: "/studio-dashboard/blog",
       isVisible: true,
     },
+    {
+      title: "Home content",
+      description: "Editezi textele din homepage: servicii, prețuri, contact, claim gratis.",
+      href: "/studio-dashboard/site-content",
+      isVisible: true,
+    },
   ];
 
   const visibleSections = sections.filter((section) => section.isVisible);
