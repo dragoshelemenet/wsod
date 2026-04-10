@@ -69,6 +69,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
           <MediaGrid
             items={photoItems}
             emptyText="Nu există materiale foto momentan."
+            variant="compact-photos"
           />
         </div>
 

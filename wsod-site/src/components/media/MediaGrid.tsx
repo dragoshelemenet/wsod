@@ -7,25 +7,30 @@ import { DbMediaCardItem } from "@/lib/types";
 interface MediaGridProps {
   items: DbMediaCardItem[];
   emptyText: string;
+  variant?: "default" | "compact-photos";
 }
 
-export default function MediaGrid({ items, emptyText }: MediaGridProps) {
+export default function MediaGrid({
+  items,
+  emptyText,
+  variant = "default",
+}: MediaGridProps) {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(9);
 
   useEffect(() => {
     const update = () => {
       if (window.innerWidth <= 640) {
-        setPerPage(4);
+        setPerPage(variant === "compact-photos" ? 9 : 4);
       } else {
-        setPerPage(9);
+        setPerPage(variant === "compact-photos" ? 18 : 9);
       }
     };
 
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, []);
+  }, [variant]);
 
   const totalPages = Math.max(1, Math.ceil(items.length / perPage));
 
@@ -45,8 +50,8 @@ export default function MediaGrid({ items, emptyText }: MediaGridProps) {
   }
 
   return (
-    <div className="media-grid-block">
-      <div className="media-grid">
+    <div className={`media-grid-block media-grid-block-${variant}`}>
+      <div className={`media-grid media-grid-${variant}`}>
         {visibleItems.map((item) => (
           <MediaCard key={item.id} item={item} />
         ))}
@@ -71,9 +76,7 @@ export default function MediaGrid({ items, emptyText }: MediaGridProps) {
           <button
             type="button"
             className="grid-page-btn"
-            onClick={() =>
-              setPage((current) => Math.min(totalPages, current + 1))
-            }
+            onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
             disabled={page === totalPages}
             aria-label="Pagina următoare"
           >
