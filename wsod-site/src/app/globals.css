@@ -2321,3 +2321,80 @@ img {
 .brands-section .owner-folder-card .folder-hover-preview {
   display: none !important;
 }
+
+/* restore classic brand folder look */
+.owner-folder-card.folder-card.folder-card-rich {
+  padding: 0 !important;
+  max-width: none !important;
+  min-height: auto !important;
+  overflow: hidden !important;
+}
+
+.owner-folder-card .owner-folder-visual,
+.owner-folder-card .owner-folder-collage,
+.owner-folder-card .owner-folder-stack,
+.owner-folder-card .owner-folder-placeholder {
+  display: none !important;
+}
+
+.owner-folder-classic-body {
+  min-height: 190px;
+  padding: 34px 14px 22px !important;
+}
+
+.folder-brand-art-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.folder-brand-art {
+  max-width: 82%;
+  max-height: 112px;
+  width: auto;
+  height: auto;
+  object-fit: contain !important;
+  display: block;
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.28));
+  background: transparent !important;
+}
+
+.owner-folder-card .owner-folder-copy {
+  padding: 0 14px 14px;
+  margin-top: 0 !important;
+}
+
+.owner-folder-card .owner-folder-copy strong {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.15;
+}
+
+.owner-folder-card .owner-folder-copy span {
+  display: none !important;
+}
+
+/* homepage brand section should use same folder shape, not tiny compact logos */
+.brands-section .owner-folder-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 260px)) !important;
+  justify-content: center;
+}
+
+.brands-section .owner-folder-card {
+  min-height: auto !important;
+}
+
+.brands-section .owner-folder-card img.folder-brand-art {
+  padding: 0 !important;
+  object-fit: contain !important;
+  background: transparent !important;
+}
+
+.brands-section .owner-folder-card .folder-hover-preview {
+  display: none !important;
+}
