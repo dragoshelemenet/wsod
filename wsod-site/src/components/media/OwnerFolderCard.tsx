@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface OwnerFolderCardProps {
   title: string;
@@ -30,10 +31,14 @@ function PreviewMedia({
   src,
   className,
   onError,
+  alt,
+  eager = false,
 }: {
   src: string;
   className: string;
   onError: () => void;
+  alt: string;
+  eager?: boolean;
 }) {
   if (isVideoUrl(src)) {
     return (
@@ -51,11 +56,14 @@ function PreviewMedia({
   }
 
   return (
-    <img
+    <Image
       src={src}
-      alt=""
+      alt={alt}
+      fill
       className={className}
-      loading="lazy"
+      sizes="(max-width: 768px) 140px, 180px"
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : "auto"}
       onError={onError}
     />
   );
@@ -91,6 +99,8 @@ export default function OwnerFolderCard({
           >
             <PreviewMedia
               src={mainImage}
+              alt={title}
+              eager={false}
               className={`folder-brand-art${useTransparentArt ? " folder-brand-art-transparent" : ""}`}
               onError={() => setFailed((current) => [...current, mainImage])}
             />
@@ -107,6 +117,7 @@ export default function OwnerFolderCard({
               <div className="folder-hover-shot folder-hover-shot-1">
                 <PreviewMedia
                   src={hoverImages[0]}
+                  alt={`${title} preview 1`}
                   className="folder-hover-media"
                   onError={() => setFailed((current) => [...current, hoverImages[0]])}
                 />
@@ -117,6 +128,7 @@ export default function OwnerFolderCard({
               <div className="folder-hover-shot folder-hover-shot-2">
                 <PreviewMedia
                   src={hoverImages[1]}
+                  alt={`${title} preview 2`}
                   className="folder-hover-media"
                   onError={() => setFailed((current) => [...current, hoverImages[1]])}
                 />
@@ -127,6 +139,7 @@ export default function OwnerFolderCard({
               <div className="folder-hover-shot folder-hover-shot-3">
                 <PreviewMedia
                   src={hoverImages[2]}
+                  alt={`${title} preview 3`}
                   className="folder-hover-media"
                   onError={() => setFailed((current) => [...current, hoverImages[2]])}
                 />

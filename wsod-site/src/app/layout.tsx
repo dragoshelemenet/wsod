@@ -5,21 +5,27 @@ import { createOrganizationSchema } from "@/lib/seo/schema";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "WSOD.PROD — Agenție media digitală & video",
+  title: "WSOD.PROD — Agenție media digitală în România | Video, foto, grafică, website-uri",
   description:
-    "WSOD.PROD — video, foto, grafică, website-uri, audio și Meta Ads. Portofoliu media digitală în România.",
-  metadataBase: new URL("https://example.com"),
+    "WSOD.PROD este o agenție media digitală din România care oferă producție video, fotografie, grafică, website-uri, audio și Meta Ads pentru branduri și business-uri.",
+  metadataBase: new URL("https://wsod.cloud"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "WSOD.PROD — Agenție media digitală",
+    title: "WSOD.PROD — Agenție media digitală în România",
     description:
-      "Portofoliu de video, foto, grafică, website-uri, audio și Meta Ads.",
-    url: "https://example.com",
+      "Producție video, fotografie, grafică, website-uri, audio și Meta Ads pentru branduri și business-uri.",
+    url: "https://wsod.cloud",
     siteName: "WSOD.PROD",
     locale: "ro_RO",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WSOD.PROD — Agenție media digitală în România",
+    description:
+      "Producție video, fotografie, grafică, website-uri, audio și Meta Ads pentru branduri și business-uri.",
   },
 };
 

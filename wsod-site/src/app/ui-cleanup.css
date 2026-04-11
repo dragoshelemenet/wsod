@@ -1562,3 +1562,34 @@
     align-items: stretch;
   }
 }
+
+/* real H1 for SEO but visually hidden */
+.seo-h1 {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* prevent image layout shifts */
+.services-carousel-media,
+.folder-brand-art-wrap,
+.folder-hover-shot {
+  position: relative;
+  overflow: hidden;
+}
+
+.folder-brand-art,
+.folder-hover-media,
+.services-carousel-media-el {
+  object-fit: cover;
+}
+
+.folder-brand-art-transparent {
+  object-fit: contain;
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -129,11 +130,15 @@ export default function HomeServicesCarouselClient({
               poster={slide.imageSrc || undefined}
             />
           ) : slide.imageSrc ? (
-            <img
+            <Image
               src={slide.imageSrc}
               alt={slide.title}
+              fill
               className="services-carousel-media-el"
-              loading="lazy"
+              sizes="(max-width: 640px) 190px, (max-width: 900px) 260px, 300px"
+              priority={variant === "current" && index === 0}
+              loading={variant === "current" && index === 0 ? "eager" : "lazy"}
+              fetchPriority={variant === "current" && index === 0 ? "high" : "auto"}
             />
           ) : (
             <div className="services-carousel-media-fallback">{slide.title}</div>

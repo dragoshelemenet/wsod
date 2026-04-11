@@ -25,6 +25,11 @@ export default function HeroClient({
 
   return (
     <section className="hero hero-home-clean">
+      <h1 className="seo-h1">
+        WSOD.PROD — agenție media digitală în România pentru video, foto, grafică,
+        website-uri și Meta Ads
+      </h1>
+
       <div className="hero-home-mobilebar">
         <button
           type="button"
