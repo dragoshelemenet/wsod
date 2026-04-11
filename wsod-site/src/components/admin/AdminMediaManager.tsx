@@ -325,35 +325,39 @@ export default function AdminMediaManager({
                               <span>{sectionGroup.label}</span>
                             </div>
 
-                            <div className="admin-list admin-list-compact-cards">
+                            <div className="admin-media-thumb-grid">
                               {sectionGroup.items.map((item) => {
                                 const preview = getPreview(item);
                                 const isItemOpen = !!openItems[item.id];
 
                                 return (
-                                  <div key={item.id} className="admin-media-collapsible-card">
-                                    <button
-                                      type="button"
-                                      className="admin-media-collapsible-head"
-                                      onClick={() => toggleItem(item.id)}
-                                    >
-                                      <div className="admin-media-collapsible-preview">
-                                        {preview ? (
-                                          <img src={preview} alt={item.title} />
-                                        ) : (
-                                          <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
-                                        )}
-                                      </div>
+                                  <div key={item.id} className="admin-media-thumb-card">
+                                    <div className="admin-media-thumb-top">
+                                      <button
+                                        type="button"
+                                        className="admin-media-thumb-delete"
+                                        onClick={() => deleteItem(item)}
+                                        disabled={deletingId === item.id}
+                                        aria-label={`Șterge ${item.title}`}
+                                        title="Șterge"
+                                      >
+                                        {deletingId === item.id ? "…" : "×"}
+                                      </button>
 
-                                      <div className="admin-media-collapsible-copy">
-                                        <strong>{item.title}</strong>
-                                        <span>
-                                          {item.category} • {folder.ownerName} • {formatDate(item.date)}
-                                        </span>
-                                      </div>
-
-                                      <span className="admin-folder-toggle-arrow">{isItemOpen ? "−" : "+"}</span>
-                                    </button>
+                                      <button
+                                        type="button"
+                                        className="admin-media-thumb-button"
+                                        onClick={() => toggleItem(item.id)}
+                                      >
+                                        <div className="admin-media-thumb-visual">
+                                          {preview ? (
+                                            <img src={preview} alt={item.title} />
+                                          ) : (
+                                            <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
+                                          )}
+                                        </div>
+                                      </button>
+                                    </div>
 
                                     {isItemOpen ? (
                                       <div className="admin-media-collapsible-body">
@@ -491,15 +495,6 @@ export default function AdminMediaManager({
                                                 disabled={savingId === item.id}
                                               >
                                                 {savingId === item.id ? "Se salvează..." : "Salvează"}
-                                              </button>
-
-                                              <button
-                                                type="button"
-                                                className="admin-danger-button"
-                                                onClick={() => deleteItem(item)}
-                                                disabled={deletingId === item.id}
-                                              >
-                                                {deletingId === item.id ? "Se șterge..." : "Șterge"}
                                               </button>
                                             </div>
                                           </div>
