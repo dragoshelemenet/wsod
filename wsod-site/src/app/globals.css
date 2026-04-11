@@ -3353,3 +3353,117 @@ textarea:focus {
   text-align: center !important;
   text-shadow: 0 10px 30px rgba(0,0,0,0.36) !important;
 }
+
+/* ===== hero reference layout ===== */
+.hero-home-clean {
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 40px !important;
+}
+
+.hero-logo-wrap-reference {
+  flex: 0 0 auto !important;
+  min-width: 360px !important;
+  padding-left: 34px !important;
+}
+
+.hero-copy-reference {
+  flex: 1 1 auto !important;
+  justify-content: flex-start !important;
+}
+
+.hero-copy-reference h1 {
+  max-width: 12ch !important;
+  font-size: clamp(34px, 4.6vw, 76px) !important;
+  line-height: 0.93 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.055em !important;
+  text-transform: none !important;
+  color: rgba(255,255,255,0.98) !important;
+}
+
+@media (max-width: 900px) {
+  .hero-logo-wrap-reference {
+    min-width: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .hero-copy-reference h1 {
+    max-width: 100% !important;
+    font-size: clamp(28px, 8vw, 48px) !important;
+  }
+}
+
+/* ===== brand folders darker + hide logo fully on hover ===== */
+.owner-folder-card-brand {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005)),
+    linear-gradient(135deg, rgba(42,42,48,0.34), rgba(255,255,255,0.015)),
+    rgba(5,5,7,0.985) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 24px 70px rgba(0,0,0,0.52) !important;
+}
+
+.owner-folder-card-brand::before {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.06), transparent 24%),
+    radial-gradient(circle at 20% 18%, rgba(120,130,150,0.12), transparent 30%),
+    radial-gradient(circle at 78% 18%, rgba(110,110,135,0.08), transparent 24%) !important;
+  opacity: 0.62 !important;
+}
+
+.owner-folder-card-brand::after {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.008)),
+    rgba(18,18,22,0.22) !important;
+  opacity: 1 !important;
+}
+
+.owner-folder-card-brand .owner-folder-classic-body,
+.brands-section .owner-folder-card-brand .owner-folder-classic-body {
+  background:
+    linear-gradient(180deg, rgba(12,12,14,0.98), rgba(7,7,9,0.99)),
+    rgba(6,6,8,0.98) !important;
+}
+
+.owner-folder-card-brand .folder-brand-art-wrap {
+  opacity: 1 !important;
+  transition: opacity 0.22s ease, transform 0.22s ease !important;
+}
+
+.owner-folder-card-brand:hover .folder-brand-art-wrap,
+.owner-folder-card-brand:focus-visible .folder-brand-art-wrap {
+  opacity: 0 !important;
+  transform: scale(1.06) !important;
+}
+
+.owner-folder-card-brand .folder-hover-preview {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.22s ease !important;
+}
+
+.owner-folder-card-brand:hover .folder-hover-preview,
+.owner-folder-card-brand:focus-visible .folder-hover-preview {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.owner-folder-card-brand .folder-hover-shot {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.owner-folder-card-brand .folder-hover-media,
+.owner-folder-card-brand .folder-hover-shot img,
+.owner-folder-card-brand .folder-hover-shot video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  border-radius: 16px !important;
+  background: transparent !important;
+}
