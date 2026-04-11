@@ -52,21 +52,7 @@ export default function HeroClient({
       </div>
 
       <div className="hero-copy hero-copy-reference">
-        <h1>WSOD.PROD — agenție media digitală & video</h1>
-      </div>
-
-      <div className="hero-home-actions">
-        <a href="/servicii-preturi" className="hero-quick-link">
-          Servicii & prețuri
-        </a>
-
-        <a href={contactHref} className="hero-quick-link">
-          {contactLabel}
-        </a>
-
-        <a href={claimHref} className="hero-quick-link hero-quick-link-primary">
-          {claimLabel}
-        </a>
+        <h1>agenție media digitală &amp; video</h1>
       </div>
     </section>
   );

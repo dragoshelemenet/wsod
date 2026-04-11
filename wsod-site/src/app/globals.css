@@ -3891,3 +3891,107 @@ textarea:focus {
   background: transparent !important;
 }
 
+
+/* ===== final homepage heading/menu sizing fix ===== */
+.hero-home-clean {
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 54px !important;
+  margin-bottom: 20px !important;
+}
+
+.hero-logo-wrap-reference {
+  flex: 0 0 auto !important;
+  min-width: 380px !important;
+  padding-left: 22px !important;
+}
+
+.hero-copy-reference {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 620px !important;
+  justify-content: flex-start !important;
+}
+
+.hero-copy-reference h1 {
+  max-width: none !important;
+  font-size: clamp(30px, 4.3vw, 64px) !important;
+  line-height: 0.94 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.055em !important;
+  text-transform: none !important;
+  color: rgba(255,255,255,0.98) !important;
+}
+
+.hero-home-actions {
+  display: none !important;
+}
+
+.home-after-carousel-copy {
+  margin-top: 8px !important;
+  margin-bottom: 26px !important;
+  display: grid !important;
+  gap: 18px !important;
+  justify-items: center !important;
+  text-align: center !important;
+}
+
+.home-after-carousel-text {
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  font-size: clamp(16px, 1.6vw, 22px) !important;
+  line-height: 1.5 !important;
+  letter-spacing: -0.02em !important;
+  color: rgba(255,255,255,0.74) !important;
+}
+
+.home-after-carousel-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+/* smaller hover title for brands/models */
+.owner-folder-card-brand .folder-model-title,
+.owner-folder-card-model .folder-model-title {
+  max-width: 84% !important;
+  font-size: clamp(20px, 2.1vw, 30px) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.045em !important;
+}
+
+@media (max-width: 900px) {
+  .hero-home-clean {
+    gap: 26px !important;
+  }
+
+  .hero-logo-wrap-reference {
+    min-width: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .hero-copy-reference {
+    max-width: 100% !important;
+  }
+
+  .hero-copy-reference h1 {
+    font-size: clamp(24px, 7vw, 42px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-after-carousel-actions {
+    display: none !important;
+  }
+
+  .home-after-carousel-text {
+    max-width: 100% !important;
+    text-align: left !important;
+  }
+
+  .hero-copy-reference h1 {
+    max-width: 100% !important;
+  }
+}
