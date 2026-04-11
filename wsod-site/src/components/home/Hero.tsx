@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { getSiteContentFromDb } from "@/lib/data/site-content";
 
 export default async function Hero() {
@@ -9,7 +12,56 @@ export default async function Hero() {
     "https://wa.me/40727205689?text=Salut%2C%20vreau%20primul%20video%20sau%20foto%20gratis";
 
   return (
+    <HeroClient
+      contactHref={contactHref}
+      claimHref={claimHref}
+      contactLabel={content.contactLabel || "Contact"}
+      claimLabel={content.claimLabel || "Primul video/foto gratis"}
+    />
+  );
+}
+
+function HeroClient({
+  contactHref,
+  claimHref,
+  contactLabel,
+  claimLabel,
+}: {
+  contactHref: string;
+  claimHref: string;
+  contactLabel: string;
+  claimLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
     <section className="hero hero-home-clean">
+      <div className="hero-home-mobilebar">
+        <button
+          type="button"
+          className={`hero-mobile-menu-btn${open ? " is-open" : ""}`}
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open menu"
+          aria-expanded={open}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <div className={`hero-mobile-menu${open ? " is-open" : ""}`}>
+          <a href="/servicii-preturi" className="hero-mobile-menu-link">
+            Servicii & prețuri
+          </a>
+          <a href={contactHref} className="hero-mobile-menu-link">
+            {contactLabel}
+          </a>
+          <a href={claimHref} className="hero-mobile-menu-link hero-mobile-menu-link-primary">
+            {claimLabel}
+          </a>
+        </div>
+      </div>
+
       <div className="hero-logo-wrap hero-logo-wrap-reference">
         <div className="hero-logo">WSOD</div>
         <div className="hero-logo-sub">PROD</div>
@@ -17,8 +69,7 @@ export default async function Hero() {
 
       <div className="hero-copy hero-copy-reference">
         <h1>
-          WSOD.PROD — agenție media digitală în România pentru video, foto,
-          grafică, website-uri și Meta Ads
+          Te ajutăm cu video, foto, design, website-uri și content pentru social media.
         </h1>
       </div>
 
@@ -28,11 +79,11 @@ export default async function Hero() {
         </a>
 
         <a href={contactHref} className="hero-quick-link">
-          {content.contactLabel || "Contact"}
+          {contactLabel}
         </a>
 
         <a href={claimHref} className="hero-quick-link hero-quick-link-primary">
-          {content.claimLabel || "Primul video/foto gratis"}
+          {claimLabel}
         </a>
       </div>
     </section>

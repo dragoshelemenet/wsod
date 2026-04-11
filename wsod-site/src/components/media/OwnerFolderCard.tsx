@@ -11,6 +11,7 @@ interface OwnerFolderCardProps {
   imageUrl?: string | null;
   previewImages?: string[];
   compact?: boolean;
+  variant?: "brand" | "model";
 }
 
 function isTransparentFriendlyAsset(url?: string | null) {
@@ -108,6 +109,7 @@ export default function OwnerFolderCard({
   href,
   imageUrl,
   previewImages = [],
+  variant = "brand",
 }: OwnerFolderCardProps) {
   const [failed, setFailed] = useState<string[]>([]);
 
@@ -125,10 +127,13 @@ export default function OwnerFolderCard({
   const hoverImages = cleanPreviewImages.slice(0, 3);
   const useTransparentArt = isTransparentFriendlyAsset(imageUrl);
 
+  const variantClass =
+    variant === "model" ? "owner-folder-card-model" : "owner-folder-card-brand";
+
   return (
     <Link
       href={href}
-      className="owner-folder-card folder-card folder-card-rich owner-folder-card-unified"
+      className={`owner-folder-card folder-card folder-card-rich owner-folder-card-unified ${variantClass}`}
     >
       <div className="folder-top" />
 
@@ -149,11 +154,11 @@ export default function OwnerFolderCard({
               onError={() => setFailed((current) => [...current, mainImage])}
             />
           </div>
-        ) : (
-          <div className="folder-model-title-wrap" aria-hidden="true">
-            <span className="folder-model-title">{title}</span>
-          </div>
-        )}
+        ) : null}
+
+        <div className="folder-model-title-wrap" aria-hidden="true">
+          <span className="folder-model-title">{title}</span>
+        </div>
 
         {hoverImages.length ? (
           <div className="folder-hover-preview" aria-hidden="true">
