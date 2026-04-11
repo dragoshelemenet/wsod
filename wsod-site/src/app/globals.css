@@ -2991,3 +2991,242 @@ textarea:focus {
     line-height: 1.35;
   }
 }
+
+/* ===== FINAL OVERRIDE: home services carousel ===== */
+.services-carousel-section {
+  margin-top: 4px !important;
+  margin-bottom: 28px !important;
+}
+
+.services-carousel-shell {
+  gap: 10px !important;
+}
+
+.services-carousel-shell-peek {
+  overflow: hidden !important;
+}
+
+.services-carousel-stage {
+  position: relative !important;
+  height: 340px !important;
+  min-height: 340px !important;
+  padding: 0 72px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.services-carousel-card {
+  position: absolute !important;
+  top: 50% !important;
+  width: 220px !important;
+  aspect-ratio: 2 / 3 !important;
+  transform-origin: center center !important;
+  transition:
+    transform 260ms ease,
+    opacity 260ms ease,
+    filter 260ms ease !important;
+}
+
+.services-carousel-card-link {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.services-carousel-media {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(12,12,16,0.9) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 18px 48px rgba(0,0,0,0.30) !important;
+  isolation: isolate !important;
+}
+
+.services-carousel-media-el {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  background: #000 !important;
+}
+
+.services-carousel-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.72) 100%) !important;
+}
+
+.services-carousel-text {
+  position: absolute !important;
+  left: 14px !important;
+  right: 14px !important;
+  bottom: 14px !important;
+  z-index: 2 !important;
+  display: grid !important;
+  gap: 6px !important;
+  text-align: left !important;
+}
+
+.services-carousel-text h3 {
+  margin: 0 !important;
+  font-size: 18px !important;
+  line-height: 0.95 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.05em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+
+.services-carousel-text p {
+  margin: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.34 !important;
+  color: rgba(255,255,255,0.84) !important;
+}
+
+.services-carousel-card-current {
+  left: 50% !important;
+  z-index: 3 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg) !important;
+}
+
+.services-carousel-card-prev {
+  left: 50% !important;
+  z-index: 2 !important;
+  opacity: 0.5 !important;
+  filter: none !important;
+  transform: translate(calc(-50% - 128px), -50%) scale(0.84) rotate(-8deg) !important;
+  cursor: pointer !important;
+}
+
+.services-carousel-card-next {
+  left: 50% !important;
+  z-index: 2 !important;
+  opacity: 0.5 !important;
+  filter: none !important;
+  transform: translate(calc(-50% + 128px), -50%) scale(0.84) rotate(8deg) !important;
+  cursor: pointer !important;
+}
+
+.services-carousel-card-prev .services-carousel-text p,
+.services-carousel-card-next .services-carousel-text p {
+  display: none !important;
+}
+
+.services-carousel-arrow {
+  position: absolute !important;
+  top: 50% !important;
+  z-index: 5 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(12,12,16,0.62) !important;
+  color: #fff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 30px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(16px) !important;
+  transform: translateY(-50%) !important;
+}
+
+.services-carousel-arrow-left {
+  left: 8px !important;
+}
+
+.services-carousel-arrow-right {
+  right: 8px !important;
+}
+
+.services-carousel-dots {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 10px !important;
+}
+
+.services-carousel-dot {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 999px !important;
+  border: 0 !important;
+  background: rgba(255,255,255,0.28) !important;
+  cursor: pointer !important;
+}
+
+.services-carousel-dot.is-active {
+  background: rgba(255,255,255,0.92) !important;
+}
+
+@media (max-width: 900px) {
+  .services-carousel-stage {
+    height: 300px !important;
+    min-height: 300px !important;
+    padding: 0 44px !important;
+  }
+
+  .services-carousel-card {
+    width: 190px !important;
+  }
+
+  .services-carousel-card-prev {
+    transform: translate(calc(-50% - 102px), -50%) scale(0.8) rotate(-7deg) !important;
+    opacity: 0.42 !important;
+  }
+
+  .services-carousel-card-next {
+    transform: translate(calc(-50% + 102px), -50%) scale(0.8) rotate(7deg) !important;
+    opacity: 0.42 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .services-carousel-stage {
+    height: 270px !important;
+    min-height: 270px !important;
+    padding: 0 !important;
+  }
+
+  .services-carousel-card {
+    width: 168px !important;
+  }
+
+  .services-carousel-card-prev {
+    transform: translate(calc(-50% - 82px), -50%) scale(0.76) rotate(-6deg) !important;
+    opacity: 0.28 !important;
+  }
+
+  .services-carousel-card-next {
+    transform: translate(calc(-50% + 82px), -50%) scale(0.76) rotate(6deg) !important;
+    opacity: 0.28 !important;
+  }
+
+  .services-carousel-arrow {
+    display: none !important;
+  }
+
+  .services-carousel-text h3 {
+    font-size: 16px !important;
+  }
+
+  .services-carousel-text p {
+    display: none !important;
+  }
+}
