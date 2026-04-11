@@ -88,7 +88,6 @@ export default async function ServicesPricingPage() {
         <section className="services-section-block">
           <div className="services-section-head">
             <h2>Ce oferim</h2>
-            <p>Servicii prezentate mai clar, mai ușor de citit și mai premium vizual.</p>
           </div>
 
           <div className="services-rich-grid">
