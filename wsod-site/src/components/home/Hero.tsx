@@ -11,7 +11,7 @@ export default async function Hero() {
 
   return (
     <HeroClient
-      pricingHref={content.pricingHref || "/servicii-preturi"}
+      pricingHref="/servicii-preturi"
       pricingLabel={content.pricingLabel || "Servicii & prețuri"}
       contactHref={contactHref}
       contactLabel={content.contactLabel || "Contact"}

@@ -26,7 +26,7 @@ export default async function StudioDashboardVisibilityPage() {
         </Link>
       </div>
 
-      <section className="inner-section admin-page-shell">
+      <section className="inner-section admin-page-shell admin-page-shell-wide">
         <div className="admin-page-header">
           <span className="admin-kicker">Admin</span>
           <h1>Visibility</h1>

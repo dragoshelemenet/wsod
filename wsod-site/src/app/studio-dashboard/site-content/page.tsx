@@ -26,8 +26,8 @@ async function saveSiteContent(formData: FormData) {
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
-      pricingLabel: clean("pricingLabel"),
-      pricingHref: clean("pricingHref"),
+      pricingLabel: clean("pricingLabel") || "Servicii & prețuri",
+      pricingHref: "/servicii-preturi",
       contactLabel: clean("contactLabel"),
       contactHref: clean("contactHref"),
       claimLabel: clean("claimLabel"),
@@ -38,8 +38,8 @@ async function saveSiteContent(formData: FormData) {
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
-      pricingLabel: clean("pricingLabel"),
-      pricingHref: clean("pricingHref"),
+      pricingLabel: clean("pricingLabel") || "Servicii & prețuri",
+      pricingHref: "/servicii-preturi",
       contactLabel: clean("contactLabel"),
       contactHref: clean("contactHref"),
       claimLabel: clean("claimLabel"),
@@ -69,12 +69,12 @@ export default async function SiteContentDashboardPage() {
         </Link>
       </div>
 
-      <section className="inner-section admin-page-shell">
+      <section className="inner-section admin-page-shell admin-page-shell-narrow">
         <div className="admin-page-header">
           <span className="admin-kicker">Servicii</span>
           <h1>Pagina Servicii & prețuri</h1>
           <p className="inner-description">
-            Aici modifici conținutul pentru pagina separată de servicii și butoanele principale.
+            Aici modifici conținutul paginii Servicii & prețuri și textele butoanelor principale.
           </p>
         </div>
 
@@ -119,22 +119,22 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field">
-              <span>Text buton servicii</span>
+              <span>Text buton Servicii & prețuri</span>
               <input
                 name="pricingLabel"
-                defaultValue={content.pricingLabel || ""}
+                defaultValue={content.pricingLabel || "Servicii & prețuri"}
                 className="admin-input"
               />
             </label>
 
-            <label className="admin-field">
-              <span>Link buton servicii</span>
+            <div className="admin-field">
+              <span>Link pagină servicii</span>
               <input
-                name="pricingHref"
-                defaultValue={content.pricingHref || ""}
+                value="/servicii-preturi"
                 className="admin-input"
+                readOnly
               />
-            </label>
+            </div>
 
             <label className="admin-field">
               <span>Text buton contact</span>

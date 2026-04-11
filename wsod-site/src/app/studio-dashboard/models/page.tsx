@@ -18,13 +18,13 @@ export default async function StudioDashboardModelsPage() {
         </Link>
       </div>
 
-      <section className="inner-section admin-page-shell">
+      <section className="inner-section admin-page-shell admin-page-shell-wide">
         <div className="admin-page-header">
           <span className="admin-kicker">Admin</span>
           <h1>Modele</h1>
         </div>
 
-        <div className="admin-grid">
+        <div className="admin-grid admin-grid-single">
           <ModelForm />
         </div>
       </section>

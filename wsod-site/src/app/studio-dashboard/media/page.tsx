@@ -29,7 +29,7 @@ export default async function StudioDashboardMediaPage() {
         </Link>
       </div>
 
-      <section className="inner-section admin-page-shell">
+      <section className="inner-section admin-page-shell admin-page-shell-wide">
         <div className="admin-page-header">
           <span className="admin-kicker">Admin</span>
           <h1>Media manager</h1>
@@ -38,7 +38,7 @@ export default async function StudioDashboardMediaPage() {
           </p>
         </div>
 
-        <div className="admin-grid">
+        <div className="admin-grid admin-grid-single">
           <AdminMediaManager initialItems={mediaItems} />
         </div>
       </section>

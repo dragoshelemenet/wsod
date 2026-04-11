@@ -31,13 +31,13 @@ export default async function StudioDashboardUploadPage() {
         </Link>
       </div>
 
-      <section className="inner-section admin-page-shell">
+      <section className="inner-section admin-page-shell admin-page-shell-wide">
         <div className="admin-page-header">
           <span className="admin-kicker">Admin</span>
           <h1>Upload media</h1>
         </div>
 
-        <div className="admin-grid">
+        <div className="admin-grid admin-grid-single">
           <UploadToSpacesForm
             brands={brands}
             models={models}

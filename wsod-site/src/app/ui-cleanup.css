@@ -979,3 +979,118 @@
     right: 4px !important;
   }
 }
+
+/* wider admin shells on desktop */
+.admin-page-shell-wide {
+  max-width: 1480px !important;
+}
+
+.admin-page-shell-narrow {
+  max-width: 1040px !important;
+}
+
+.admin-grid-single {
+  grid-template-columns: 1fr !important;
+}
+
+.admin-panel-card-wide,
+.admin-page-shell-wide .admin-panel-card,
+.admin-page-shell-wide .admin-form {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+@media (min-width: 1100px) {
+  .admin-page-shell-wide .admin-media-grid-2,
+  .admin-page-shell-wide .site-content-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .admin-media-edit-layout-wide {
+    display: grid !important;
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    gap: 22px !important;
+    align-items: start !important;
+  }
+
+  .admin-page-shell-wide .admin-media-edit-preview {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+}
+
+/* media manager collapsed first */
+.admin-list-compact-cards {
+  gap: 14px !important;
+}
+
+.admin-media-collapsible-card {
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)),
+    rgba(18,18,24,0.72);
+  overflow: hidden;
+}
+
+.admin-media-collapsible-head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.admin-media-collapsible-preview {
+  width: 140px;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+
+.admin-media-collapsible-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-media-collapsible-copy {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.admin-media-collapsible-copy strong {
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.admin-media-collapsible-copy span {
+  color: rgba(255,255,255,0.62);
+  line-height: 1.4;
+}
+
+.admin-media-collapsible-body {
+  padding: 0 16px 16px;
+}
+
+@media (max-width: 900px) {
+  .admin-media-collapsible-head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .admin-media-collapsible-preview {
+    width: 100%;
+    max-width: 220px;
+  }
+}
