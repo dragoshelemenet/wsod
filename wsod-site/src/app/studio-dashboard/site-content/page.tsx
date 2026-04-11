@@ -23,7 +23,6 @@ async function saveSiteContent(formData: FormData) {
     create: {
       id: "main",
       homeLogoUrl: clean("homeLogoUrl"),
-      homeLogoUrl: clean("homeLogoUrl"),
       servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
