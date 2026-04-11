@@ -22,7 +22,7 @@ export default function ModelForm({
   const [description, setDescription] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
-  const [models, setModels] = useState(initialModels);
+  const [models, setModels] = useState<ModelListItem[]>(initialModels);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -56,7 +56,12 @@ export default function ModelForm({
       const result = (await response.json()) as {
         ok: boolean;
         message: string;
-        personModel?: ModelListItem;
+        personModel?: {
+          id: string;
+          name: string;
+          slug: string;
+          portraitImageUrl?: string | null;
+        };
       };
 
       if (!response.ok || !result.ok) {
@@ -70,11 +75,21 @@ export default function ModelForm({
       setSeoTitle("");
       setMetaDescription("");
 
-      if (result.personModel) {
-        setModels((current) => [
-          { ...result.personModel, _count: { mediaItems: 0 } },
-          ...current,
-        ]);
+      if (
+        result.personModel &&
+        result.personModel.id &&
+        result.personModel.name &&
+        result.personModel.slug
+      ) {
+        const newModel: ModelListItem = {
+          id: result.personModel.id,
+          name: result.personModel.name,
+          slug: result.personModel.slug,
+          portraitImageUrl: result.personModel.portraitImageUrl || null,
+          _count: { mediaItems: 0 },
+        };
+
+        setModels((current) => [newModel, ...current]);
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
