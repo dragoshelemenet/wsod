@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { homeCategories } from "@/lib/data/home-data";
 import {
   getMediaByCategoryFromDb,
@@ -41,6 +42,15 @@ function getBestVideoSrc(item: {
   ) || null;
 }
 
+function shuffleArray<T>(array: T[]) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 export default async function ServiceFolders() {
   const visibleSections = await getVisibleSiteSectionsFromDb();
   const visibleKeys = new Set(
@@ -53,17 +63,20 @@ export default async function ServiceFolders() {
 
   const folderData = await Promise.all(
     visibleCategories.map(async (service) => {
-      const items = await getMediaByCategoryFromDb(service.slug, { limit: 3 });
+      const items = await getMediaByCategoryFromDb(service.slug, { limit: 12 });
 
-      return {
-        service,
-        previews: items
+      const previews = shuffleArray(
+        items
           .map((item) => ({
             imageSrc: getBestImageSrc(item),
             videoSrc: getBestVideoSrc(item),
           }))
           .filter((shot) => shot.imageSrc || shot.videoSrc)
-          .slice(0, 3),
+      ).slice(0, 3);
+
+      return {
+        service,
+        previews,
       };
     })
   );
@@ -101,7 +114,15 @@ export default async function ServiceFolders() {
                         poster={shot.imageSrc || undefined}
                       />
                     ) : shot.imageSrc ? (
-                      <img src={shot.imageSrc} alt="" loading="lazy" />
+                      <Image
+                        src={shot.imageSrc}
+                        alt={`${service.title} preview ${index + 1}`}
+                        fill
+                        className="folder-hover-media"
+                        sizes="(max-width: 768px) 120px, 180px"
+                        loading="lazy"
+                        fetchPriority="low"
+                      />
                     ) : null}
                   </div>
                 ))}
