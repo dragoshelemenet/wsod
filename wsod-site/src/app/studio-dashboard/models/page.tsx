@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import ModelForm from "@/components/admin/ModelForm";
 import { hasAdminSession } from "@/lib/auth/session";
+import { prisma } from "@/lib/db/prisma";
 
 export default async function StudioDashboardModelsPage() {
   const isLoggedIn = await hasAdminSession();
@@ -9,6 +10,17 @@ export default async function StudioDashboardModelsPage() {
   if (!isLoggedIn) {
     redirect("/studio-login");
   }
+
+  const models = await prisma.personModel.findMany({
+    orderBy: [{ updatedAt: "desc" }],
+    include: {
+      _count: {
+        select: {
+          mediaItems: true,
+        },
+      },
+    },
+  });
 
   return (
     <main className="inner-page">
@@ -25,7 +37,7 @@ export default async function StudioDashboardModelsPage() {
         </div>
 
         <div className="admin-grid admin-grid-single">
-          <ModelForm />
+          <ModelForm initialModels={models} />
         </div>
       </section>
     </main>

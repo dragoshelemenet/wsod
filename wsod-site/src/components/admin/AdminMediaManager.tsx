@@ -32,6 +32,23 @@ interface AdminMediaManagerClientProps {
 
 type OwnerType = "models" | "brands" | "audio" | "unassigned";
 
+const MONTH_OPTIONS = [
+  { value: 0, label: "Ianuarie" },
+  { value: 1, label: "Februarie" },
+  { value: 2, label: "Martie" },
+  { value: 3, label: "Aprilie" },
+  { value: 4, label: "Mai" },
+  { value: 5, label: "Iunie" },
+  { value: 6, label: "Iulie" },
+  { value: 7, label: "August" },
+  { value: 8, label: "Septembrie" },
+  { value: 9, label: "Octombrie" },
+  { value: 10, label: "Noiembrie" },
+  { value: 11, label: "Decembrie" },
+];
+
+const YEAR_OPTIONS = Array.from({ length: 21 }, (_, i) => 2018 + i);
+
 function getPreview(item: AdminMediaItem) {
   return item.thumbnailUrl || item.previewUrl || item.fileUrl || null;
 }
@@ -136,10 +153,6 @@ function getSmartSections(items: AdminMediaItem[]) {
     .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
 }
 
-function formatDate(value: string | Date) {
-  return new Date(value).toLocaleDateString("ro-RO");
-}
-
 function PreviewThumb({ item }: { item: AdminMediaItem }) {
   if (isVideoLike(item)) {
     const src = getVideoPreview(item);
@@ -186,6 +199,18 @@ function PreviewLarge({ item }: { item: AdminMediaItem }) {
   ) : (
     <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
   );
+}
+
+function getMonthValue(value: string | Date) {
+  return new Date(value).getMonth();
+}
+
+function getYearValue(value: string | Date) {
+  return new Date(value).getFullYear();
+}
+
+function buildMonthYearIso(month: number, year: number) {
+  return new Date(Date.UTC(year, month, 1)).toISOString();
 }
 
 export default function AdminMediaManager({
@@ -266,6 +291,7 @@ export default function AdminMediaManager({
           sortOrder: item.sortOrder ?? 0,
           isFeatured: !!item.isFeatured,
           isVisible: item.isVisible ?? true,
+          date: item.date,
         }),
       });
 
@@ -319,11 +345,52 @@ export default function AdminMediaManager({
     );
   }
 
+  function updateTitle(id: string, value: string) {
+    const current = items.find((item) => item.id === id);
+    patchItem(id, {
+      title: value,
+      seoTitle: current?.seoTitle?.trim() ? current.seoTitle : value,
+    });
+  }
+
+  function updateDescription(id: string, value: string) {
+    const current = items.find((item) => item.id === id);
+    patchItem(id, {
+      description: value,
+      metaDescription: current?.metaDescription?.trim()
+        ? current.metaDescription
+        : value,
+    });
+  }
+
+  function updateMonth(id: string, month: number) {
+    const current = items.find((item) => item.id === id);
+    if (!current) return;
+    const year = getYearValue(current.date);
+    patchItem(id, {
+      date: buildMonthYearIso(month, year),
+    });
+  }
+
+  function updateYear(id: string, year: number) {
+    const current = items.find((item) => item.id === id);
+    if (!current) return;
+    const month = getMonthValue(current.date);
+    patchItem(id, {
+      date: buildMonthYearIso(month, year),
+    });
+  }
+
   function toggleFolder(key: string) {
     setOpenFolders((current) => ({
       ...current,
       [key]: !current[key],
     }));
+  }
+
+  function openEditor(id: string) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    setSelectedItemId(id);
   }
 
   function applyPhotoGroup(item: AdminMediaItem, value: string) {
@@ -412,7 +479,7 @@ export default function AdminMediaManager({
                                       <button
                                         type="button"
                                         className="admin-media-thumb-button"
-                                        onClick={() => setSelectedItemId(item.id)}
+                                        onClick={() => openEditor(item.id)}
                                       >
                                         <div className="admin-media-thumb-visual">
                                           <PreviewThumb item={item} />
@@ -468,7 +535,7 @@ export default function AdminMediaManager({
                   <label>Titlu</label>
                   <input
                     value={selectedItem.title}
-                    onChange={(e) => patchItem(selectedItem.id, { title: e.target.value })}
+                    onChange={(e) => updateTitle(selectedItem.id, e.target.value)}
                   />
                 </div>
 
@@ -477,9 +544,7 @@ export default function AdminMediaManager({
                   <textarea
                     rows={3}
                     value={selectedItem.description || ""}
-                    onChange={(e) =>
-                      patchItem(selectedItem.id, { description: e.target.value })
-                    }
+                    onChange={(e) => updateDescription(selectedItem.id, e.target.value)}
                   />
                 </div>
 
@@ -505,6 +570,36 @@ export default function AdminMediaManager({
                 </div>
 
                 <div className="admin-media-grid-2">
+                  <div className="admin-form-field">
+                    <label>Lună</label>
+                    <select
+                      className="admin-select"
+                      value={getMonthValue(selectedItem.date)}
+                      onChange={(e) => updateMonth(selectedItem.id, Number(e.target.value))}
+                    >
+                      {MONTH_OPTIONS.map((month) => (
+                        <option key={month.value} value={month.value}>
+                          {month.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="admin-form-field">
+                    <label>An</label>
+                    <select
+                      className="admin-select"
+                      value={getYearValue(selectedItem.date)}
+                      onChange={(e) => updateYear(selectedItem.id, Number(e.target.value))}
+                    >
+                      {YEAR_OPTIONS.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   {selectedItem.category === "foto" && selectedItem.personModel?.name ? (
                     <div className="admin-form-field">
                       <label>Outfit</label>
@@ -592,8 +687,7 @@ export default function AdminMediaManager({
 
                 <div className="admin-list-copy">
                   <span>
-                    {selectedItem.category} • {getOwnerMeta(selectedItem).ownerName} •{" "}
-                    {formatDate(selectedItem.date)}
+                    {selectedItem.category} • {getOwnerMeta(selectedItem).ownerName}
                   </span>
                 </div>
 

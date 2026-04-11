@@ -2,14 +2,30 @@
 
 import { useState } from "react";
 
-export default function ModelForm() {
+interface ModelListItem {
+  id: string;
+  name: string;
+  slug: string;
+  portraitImageUrl?: string | null;
+  _count?: {
+    mediaItems: number;
+  };
+}
+
+export default function ModelForm({
+  initialModels,
+}: {
+  initialModels: ModelListItem[];
+}) {
   const [name, setName] = useState("");
   const [portraitImageUrl, setPortraitImageUrl] = useState("");
   const [description, setDescription] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
+  const [models, setModels] = useState(initialModels);
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,6 +56,7 @@ export default function ModelForm() {
       const result = (await response.json()) as {
         ok: boolean;
         message: string;
+        personModel?: ModelListItem;
       };
 
       if (!response.ok || !result.ok) {
@@ -52,10 +69,53 @@ export default function ModelForm() {
       setDescription("");
       setSeoTitle("");
       setMetaDescription("");
+
+      if (result.personModel) {
+        setModels((current) => [
+          { ...result.personModel, _count: { mediaItems: 0 } },
+          ...current,
+        ]);
+      }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleDelete(model: ModelListItem) {
+    const confirmed = window.confirm(`Ștergi modelul "${model.name}"?`);
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(model.id);
+      setMessage("");
+
+      const response = await fetch("/api/admin/models", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: model.id,
+        }),
+      });
+
+      const result = (await response.json()) as {
+        ok: boolean;
+        message: string;
+      };
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Nu s-a putut șterge modelul.");
+      }
+
+      setModels((current) => current.filter((entry) => entry.id !== model.id));
+      setMessage("Model șters.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -117,7 +177,7 @@ export default function ModelForm() {
         </div>
 
         {message ? (
-          <p className={message.includes("succes") ? "admin-success" : "admin-error"}>
+          <p className={message.includes("succes") || message.includes("șters") ? "admin-success" : "admin-error"}>
             {message}
           </p>
         ) : null}
@@ -126,6 +186,47 @@ export default function ModelForm() {
           {isSubmitting ? "Se creează..." : "Creează model"}
         </button>
       </form>
+
+      <div className="admin-existing-models">
+        <div className="admin-card-head">
+          <h2>Modele existente</h2>
+        </div>
+
+        <div className="admin-model-list">
+          {models.map((model) => (
+            <div key={model.id} className="admin-model-row">
+              <div className="admin-model-row-left">
+                <div className="admin-model-thumb">
+                  {model.portraitImageUrl ? (
+                    <img src={model.portraitImageUrl} alt={model.name} />
+                  ) : (
+                    <div className="media-thumb-fallback">MODEL</div>
+                  )}
+                </div>
+
+                <div className="admin-model-copy">
+                  <strong>{model.name}</strong>
+                  <span>{model.slug}</span>
+                  <span>{model._count?.mediaItems ?? 0} fișiere</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="admin-danger-button"
+                onClick={() => handleDelete(model)}
+                disabled={deletingId === model.id}
+              >
+                {deletingId === model.id ? "Se șterge..." : "Șterge"}
+              </button>
+            </div>
+          ))}
+
+          {!models.length ? (
+            <p className="admin-helper-text">Nu există modele.</p>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }

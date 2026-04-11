@@ -55,6 +55,14 @@ export async function PUT(
   const isFeatured = Boolean(body.isFeatured);
   const isVisible = Boolean(body.isVisible);
 
+  let parsedDate: Date | undefined;
+  if (body.date) {
+    const maybeDate = new Date(body.date);
+    if (!Number.isNaN(maybeDate.getTime())) {
+      parsedDate = maybeDate;
+    }
+  }
+
   const existing = await prisma.mediaItem.findUnique({
     where: { id },
     select: {
@@ -86,6 +94,7 @@ export async function PUT(
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       isFeatured,
       isVisible,
+      ...(parsedDate ? { date: parsedDate } : {}),
     },
   });
 

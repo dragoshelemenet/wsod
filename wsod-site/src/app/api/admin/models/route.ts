@@ -57,11 +57,72 @@ export async function POST(request: Request) {
   });
 
   revalidatePath("/studio-dashboard");
+  revalidatePath("/studio-dashboard/models");
   revalidatePath("/foto");
 
   return NextResponse.json({
     ok: true,
     message: "Model creat.",
     personModel,
+  });
+}
+
+export async function DELETE(request: Request) {
+  const isLoggedIn = await hasAdminSession();
+
+  if (!isLoggedIn) {
+    return NextResponse.json({ ok: false, message: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = await request.json();
+  const id = String(body.id || "").trim();
+
+  if (!id) {
+    return NextResponse.json(
+      { ok: false, message: "ID model lipsă." },
+      { status: 400 }
+    );
+  }
+
+  const existing = await prisma.personModel.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: {
+          mediaItems: true,
+        },
+      },
+    },
+  });
+
+  if (!existing) {
+    return NextResponse.json(
+      { ok: false, message: "Modelul nu există." },
+      { status: 404 }
+    );
+  }
+
+  if ((existing._count?.mediaItems ?? 0) > 0) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Modelul are fișiere legate. Mută sau șterge mai întâi media acelui model.",
+      },
+      { status: 409 }
+    );
+  }
+
+  await prisma.personModel.delete({
+    where: { id },
+  });
+
+  revalidatePath("/studio-dashboard");
+  revalidatePath("/studio-dashboard/models");
+  revalidatePath("/foto");
+  revalidatePath(`/model/${existing.slug}`);
+
+  return NextResponse.json({
+    ok: true,
+    message: "Model șters.",
   });
 }
