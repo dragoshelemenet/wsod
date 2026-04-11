@@ -3752,3 +3752,142 @@ textarea:focus {
   text-align: center !important;
   text-shadow: 0 10px 30px rgba(0,0,0,0.36) !important;
 }
+/* ===== homepage heading/menu cleanup ===== */
+
+.hero-home-clean {
+  margin-bottom: 18px !important;
+}
+
+.hero-copy-reference h1 {
+  max-width: 8ch !important;
+  font-size: clamp(24px, 3.4vw, 50px) !important;
+  line-height: 0.94 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.05em !important;
+  text-transform: none !important;
+  color: rgba(255,255,255,0.98) !important;
+}
+
+.hero-home-actions {
+  display: none !important;
+}
+
+.services-carousel-copy,
+.services-carousel-kicker {
+  display: none !important;
+}
+
+.home-after-carousel-copy {
+  margin-top: 6px !important;
+  margin-bottom: 28px !important;
+  display: grid !important;
+  gap: 18px !important;
+  justify-items: center !important;
+  text-align: center !important;
+}
+
+.home-after-carousel-text {
+  max-width: 860px !important;
+  font-size: clamp(16px, 1.6vw, 22px) !important;
+  line-height: 1.5 !important;
+  letter-spacing: -0.02em !important;
+  color: rgba(255,255,255,0.74) !important;
+  margin: 0 auto !important;
+}
+
+.home-after-carousel-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+@media (max-width: 640px) {
+  .home-after-carousel-actions {
+    width: 100% !important;
+    display: none !important;
+  }
+
+  .home-after-carousel-text {
+    text-align: left !important;
+    max-width: 100% !important;
+  }
+}
+/* ===== brand + model folders: thumbnail by default, name only on hover ===== */
+
+.owner-folder-card-brand .folder-model-title-wrap,
+.owner-folder-card-model .folder-model-title-wrap {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: scale(0.96) !important;
+  z-index: 20 !important;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease !important;
+}
+
+.owner-folder-card-brand .folder-brand-art-wrap,
+.owner-folder-card-model .folder-brand-art-wrap {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 8 !important;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease !important;
+}
+
+.owner-folder-card-brand .folder-hover-preview,
+.owner-folder-card-model .folder-hover-preview {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.owner-folder-card-brand:hover .folder-brand-art-wrap,
+.owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
+.owner-folder-card-model:hover .folder-brand-art-wrap,
+.owner-folder-card-model:focus-visible .folder-brand-art-wrap {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: scale(1.03) !important;
+}
+
+.owner-folder-card-brand:hover .folder-model-title-wrap,
+.owner-folder-card-brand:focus-visible .folder-model-title-wrap,
+.owner-folder-card-model:hover .folder-model-title-wrap,
+.owner-folder-card-model:focus-visible .folder-model-title-wrap {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: scale(1) !important;
+}
+
+.owner-folder-card-brand .folder-model-title,
+.owner-folder-card-model .folder-model-title {
+  display: block !important;
+  max-width: 88% !important;
+  margin: 0 auto !important;
+  font-size: clamp(24px, 2.7vw, 38px) !important;
+  line-height: 0.95 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.06em !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,0.97) !important;
+  text-align: center !important;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.36) !important;
+  word-break: break-word !important;
+}
+
+.owner-folder-card-brand .folder-model-title-wrap,
+.owner-folder-card-model .folder-model-title-wrap {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+  background: transparent !important;
+}
+
