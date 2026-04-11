@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 
 const defaults = {
   id: "main",
+  homeLogoUrl: null,
   servicesEyebrow: "Serviciile noastre",
   servicesTitle: "Servicii & prețuri",
   servicesList: [

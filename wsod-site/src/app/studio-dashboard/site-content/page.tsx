@@ -22,6 +22,8 @@ async function saveSiteContent(formData: FormData) {
     where: { id: "main" },
     create: {
       id: "main",
+      homeLogoUrl: clean("homeLogoUrl"),
+      homeLogoUrl: clean("homeLogoUrl"),
       servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
@@ -82,6 +84,16 @@ export default async function SiteContentDashboardPage() {
 
         <form action={saveSiteContent} className="site-content-form">
           <div className="site-content-grid">
+
+            <label className="admin-field site-content-full">
+              <span>Home logo URL (încarci PNG-ul din Upload media și pui aici linkul final)</span>
+              <input
+                name="homeLogoUrl"
+                defaultValue={content.homeLogoUrl || ""}
+                className="admin-input"
+              />
+            </label>
+
             <label className="admin-field site-content-full">
               <span>Eyebrow pagină</span>
               <input

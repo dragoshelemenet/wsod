@@ -139,6 +139,7 @@ model SiteSectionVisibility {
 
 model SiteContent {
   id               String   @id
+  homeLogoUrl      String?
   servicesEyebrow  String?
   servicesTitle    String?
   servicesList     String?

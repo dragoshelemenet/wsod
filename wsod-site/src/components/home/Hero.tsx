@@ -11,6 +11,7 @@ export default async function Hero() {
 
   return (
     <HeroClient
+      logoUrl={content.homeLogoUrl || ""}
       contactHref={contactHref}
       claimHref={claimHref}
       contactLabel={content.contactLabel || "Contact"}

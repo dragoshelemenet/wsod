@@ -3,11 +3,13 @@
 import { useState } from "react";
 
 export default function HeroClient({
+  logoUrl,
   contactHref,
   claimHref,
   contactLabel,
   claimLabel,
 }: {
+  logoUrl: string;
   contactHref: string;
   claimHref: string;
   contactLabel: string;
@@ -47,8 +49,16 @@ export default function HeroClient({
       </div>
 
       <div className="hero-logo-wrap hero-logo-wrap-reference">
-        <div className="hero-logo">WSOD</div>
-        <div className="hero-logo-sub">PROD</div>
+        <div className="hero-logo-visual-shell">
+          {logoUrl ? (
+            <img src={logoUrl} alt="WSOD logo" className="hero-logo-image" />
+          ) : (
+            <>
+              <div className="hero-logo">WSOD</div>
+              <div className="hero-logo-sub">PROD</div>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="hero-copy hero-copy-reference">
