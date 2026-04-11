@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { homeCategories } from "@/lib/data/home-data";
 import {
   getMediaByCategoryFromDb,
@@ -112,16 +111,15 @@ export default async function ServiceFolders() {
                         loop
                         preload="metadata"
                         poster={shot.imageSrc || undefined}
+                        className="folder-hover-media"
                       />
                     ) : shot.imageSrc ? (
-                      <Image
+                      <img
                         src={shot.imageSrc}
-                        alt={`${service.title} preview ${index + 1}`}
-                        fill
-                        className="folder-hover-media"
-                        sizes="(max-width: 768px) 120px, 180px"
+                        alt=""
                         loading="lazy"
-                        fetchPriority="low"
+                        decoding="async"
+                        className="folder-hover-media"
                       />
                     ) : null}
                   </div>
