@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface AdminMediaItem {
   id: string;
@@ -34,6 +34,43 @@ type OwnerType = "models" | "brands" | "audio" | "unassigned";
 
 function getPreview(item: AdminMediaItem) {
   return item.thumbnailUrl || item.previewUrl || item.fileUrl || null;
+}
+
+function isVideoUrl(url?: string | null) {
+  if (!url) return false;
+  const clean = url.split("?")[0].toLowerCase();
+  return [".mp4", ".webm", ".mov", ".m4v", ".ogg"].some((ext) =>
+    clean.endsWith(ext)
+  );
+}
+
+function PreviewMedia({
+  src,
+  alt,
+  className,
+}: {
+  src?: string | null;
+  alt: string;
+  className: string;
+}) {
+  if (!src) {
+    return <div className="media-thumb-fallback">MEDIA</div>;
+  }
+
+  if (isVideoUrl(src)) {
+    return (
+      <video
+        src={src}
+        className={className}
+        muted
+        playsInline
+        preload="metadata"
+        controls
+      />
+    );
+  }
+
+  return <img src={src} alt={alt} className={className} />;
 }
 
 function getOwnerMeta(item: AdminMediaItem): { ownerType: OwnerType; ownerName: string } {
@@ -139,7 +176,23 @@ export default function AdminMediaManager({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
-  const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+
+  const selectedItem = useMemo(
+    () => items.find((item) => item.id === selectedItemId) || null,
+    [items, selectedItemId]
+  );
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedItemId(null);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const groupedFolders = useMemo(() => {
     const ownerTypeOrder: OwnerType[] = ["models", "brands", "audio", "unassigned"];
@@ -230,6 +283,9 @@ export default function AdminMediaManager({
       }
 
       setItems((current) => current.filter((entry) => entry.id !== item.id));
+      if (selectedItemId === item.id) {
+        setSelectedItemId(null);
+      }
       setMessage("Fișier șters din site și baza de date.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
@@ -251,13 +307,6 @@ export default function AdminMediaManager({
     }));
   }
 
-  function toggleItem(id: string) {
-    setOpenItems((current) => ({
-      ...current,
-      [id]: !current[id],
-    }));
-  }
-
   function applyPhotoGroup(item: AdminMediaItem, value: string) {
     const matched = photoOutfitOptions().find((entry) => entry.value === value);
     patchItem(item.id, {
@@ -267,259 +316,304 @@ export default function AdminMediaManager({
   }
 
   return (
-    <div className="admin-panel-card admin-panel-card-wide">
-      <div className="admin-card-head">
-        <h2>Media manager</h2>
+    <>
+      <div className="admin-panel-card admin-panel-card-wide">
+        <div className="admin-card-head">
+          <h2>Media manager</h2>
+        </div>
+
+        <div className="admin-stack">
+          <p className="admin-helper-text">
+            Media este grupată pe foldere și poate fi ascunsă de pe site fără delete.
+          </p>
+
+          {message ? (
+            <p className={message.includes("șters") || message.includes("actualizat") ? "admin-success" : "admin-error"}>
+              {message}
+            </p>
+          ) : null}
+
+          {groupedFolders.map((section) => (
+            <div key={section.ownerType} className="admin-folder-section">
+              <div className="admin-folder-section-head">
+                <h3>{section.label}</h3>
+              </div>
+
+              <div className="admin-folder-list">
+                {section.folders.map((folder) => {
+                  const isOpen = !!openFolders[folder.key];
+                  const folderPreview = getPreview(folder.ownerItems[0]);
+
+                  return (
+                    <div key={folder.key} className="admin-folder-card">
+                      <button
+                        type="button"
+                        className="admin-folder-toggle"
+                        onClick={() => toggleFolder(folder.key)}
+                      >
+                        <div className="admin-folder-toggle-visual">
+                          <PreviewMedia
+                            src={folderPreview}
+                            alt={folder.ownerName}
+                            className="admin-folder-toggle-media"
+                          />
+                        </div>
+
+                        <div className="admin-folder-toggle-copy">
+                          <strong>{folder.ownerName}</strong>
+                          <span>{folder.ownerItems.length} fișiere</span>
+                        </div>
+
+                        <span className="admin-folder-toggle-arrow">{isOpen ? "−" : "+"}</span>
+                      </button>
+
+                      {isOpen ? (
+                        <div className="admin-folder-open-content">
+                          {getSmartSections(folder.ownerItems).map((sectionGroup) => (
+                            <div key={`${folder.key}-${sectionGroup.label}`} className="admin-media-subsection">
+                              <div className="admin-media-subsection-head">
+                                <span>{sectionGroup.label}</span>
+                              </div>
+
+                              <div className="admin-media-thumb-grid">
+                                {sectionGroup.items.map((item) => {
+                                  const preview = getPreview(item);
+
+                                  return (
+                                    <div key={item.id} className="admin-media-thumb-card">
+                                      <div className="admin-media-thumb-top">
+                                        <button
+                                          type="button"
+                                          className="admin-media-thumb-delete"
+                                          onClick={() => deleteItem(item)}
+                                          disabled={deletingId === item.id}
+                                          aria-label={`Șterge ${item.title}`}
+                                          title="Șterge"
+                                        >
+                                          {deletingId === item.id ? "…" : "×"}
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          className="admin-media-thumb-button"
+                                          onClick={() => setSelectedItemId(item.id)}
+                                        >
+                                          <div className="admin-media-thumb-visual">
+                                            <PreviewMedia
+                                              src={preview}
+                                              alt={item.title}
+                                              className="admin-media-thumb-media"
+                                            />
+                                          </div>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+
+          {!items.length ? (
+            <p className="admin-helper-text">Nu există fișiere pentru editare.</p>
+          ) : null}
+        </div>
       </div>
 
-      <div className="admin-stack">
-        <p className="admin-helper-text">
-          Media este grupată pe foldere și poate fi ascunsă de pe site fără delete.
-        </p>
+      {selectedItem ? (
+        <div className="admin-media-modal" onClick={() => setSelectedItemId(null)}>
+          <div
+            className="admin-media-modal-dialog"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="admin-media-modal-topbar">
+              <h3>Editează media</h3>
 
-        {message ? (
-          <p className={message.includes("șters") || message.includes("actualizat") ? "admin-success" : "admin-error"}>
-            {message}
-          </p>
-        ) : null}
-
-        {groupedFolders.map((section) => (
-          <div key={section.ownerType} className="admin-folder-section">
-            <div className="admin-folder-section-head">
-              <h3>{section.label}</h3>
+              <button
+                type="button"
+                className="admin-media-modal-close"
+                onClick={() => setSelectedItemId(null)}
+                aria-label="Închide"
+              >
+                ×
+              </button>
             </div>
 
-            <div className="admin-folder-list">
-              {section.folders.map((folder) => {
-                const isOpen = !!openFolders[folder.key];
-                const folderPreview = getPreview(folder.ownerItems[0]);
+            <div className="admin-media-edit-layout admin-media-edit-layout-wide">
+              <div className="admin-media-edit-preview">
+                <PreviewMedia
+                  src={getPreview(selectedItem)}
+                  alt={selectedItem.title}
+                  className="admin-media-edit-preview-media"
+                />
+              </div>
 
-                return (
-                  <div key={folder.key} className="admin-folder-card">
-                    <button
-                      type="button"
-                      className="admin-folder-toggle"
-                      onClick={() => toggleFolder(folder.key)}
-                    >
-                      <div className="admin-folder-toggle-visual">
-                        {folderPreview ? (
-                          <img src={folderPreview} alt={folder.ownerName} />
-                        ) : (
-                          <div className="media-thumb-fallback">FOLDER</div>
-                        )}
-                      </div>
+              <div className="admin-media-edit-form">
+                <div className="admin-form-field">
+                  <label>Titlu</label>
+                  <input
+                    value={selectedItem.title}
+                    onChange={(e) => patchItem(selectedItem.id, { title: e.target.value })}
+                  />
+                </div>
 
-                      <div className="admin-folder-toggle-copy">
-                        <strong>{folder.ownerName}</strong>
-                        <span>{folder.ownerItems.length} fișiere</span>
-                      </div>
+                <div className="admin-form-field">
+                  <label>Descriere</label>
+                  <textarea
+                    rows={3}
+                    value={selectedItem.description || ""}
+                    onChange={(e) =>
+                      patchItem(selectedItem.id, { description: e.target.value })
+                    }
+                  />
+                </div>
 
-                      <span className="admin-folder-toggle-arrow">{isOpen ? "−" : "+"}</span>
-                    </button>
+                <div className="admin-form-field">
+                  <label>SEO title</label>
+                  <input
+                    value={selectedItem.seoTitle || ""}
+                    onChange={(e) =>
+                      patchItem(selectedItem.id, { seoTitle: e.target.value })
+                    }
+                  />
+                </div>
 
-                    {isOpen ? (
-                      <div className="admin-folder-open-content">
-                        {getSmartSections(folder.ownerItems).map((sectionGroup) => (
-                          <div key={`${folder.key}-${sectionGroup.label}`} className="admin-media-subsection">
-                            <div className="admin-media-subsection-head">
-                              <span>{sectionGroup.label}</span>
-                            </div>
+                <div className="admin-form-field">
+                  <label>Meta description</label>
+                  <textarea
+                    rows={3}
+                    value={selectedItem.metaDescription || ""}
+                    onChange={(e) =>
+                      patchItem(selectedItem.id, { metaDescription: e.target.value })
+                    }
+                  />
+                </div>
 
-                            <div className="admin-media-thumb-grid">
-                              {sectionGroup.items.map((item) => {
-                                const preview = getPreview(item);
-                                const isItemOpen = !!openItems[item.id];
-
-                                return (
-                                  <div key={item.id} className="admin-media-thumb-card">
-                                    <div className="admin-media-thumb-top">
-                                      <button
-                                        type="button"
-                                        className="admin-media-thumb-delete"
-                                        onClick={() => deleteItem(item)}
-                                        disabled={deletingId === item.id}
-                                        aria-label={`Șterge ${item.title}`}
-                                        title="Șterge"
-                                      >
-                                        {deletingId === item.id ? "…" : "×"}
-                                      </button>
-
-                                      <button
-                                        type="button"
-                                        className="admin-media-thumb-button"
-                                        onClick={() => toggleItem(item.id)}
-                                      >
-                                        <div className="admin-media-thumb-visual">
-                                          {preview ? (
-                                            <img src={preview} alt={item.title} />
-                                          ) : (
-                                            <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
-                                          )}
-                                        </div>
-                                      </button>
-                                    </div>
-
-                                    {isItemOpen ? (
-                                      <div className="admin-media-collapsible-body">
-                                        <div className="admin-media-edit-layout admin-media-edit-layout-wide">
-                                          <div className="admin-media-edit-preview">
-                                            {preview ? (
-                                              <img src={preview} alt={item.title} />
-                                            ) : (
-                                              <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
-                                            )}
-                                          </div>
-
-                                          <div className="admin-media-edit-form">
-                                            <div className="admin-form-field">
-                                              <label>Titlu</label>
-                                              <input
-                                                value={item.title}
-                                                onChange={(e) => patchItem(item.id, { title: e.target.value })}
-                                              />
-                                            </div>
-
-                                            <div className="admin-form-field">
-                                              <label>Descriere</label>
-                                              <textarea
-                                                rows={3}
-                                                value={item.description || ""}
-                                                onChange={(e) => patchItem(item.id, { description: e.target.value })}
-                                              />
-                                            </div>
-
-                                            <div className="admin-form-field">
-                                              <label>SEO title</label>
-                                              <input
-                                                value={item.seoTitle || ""}
-                                                onChange={(e) => patchItem(item.id, { seoTitle: e.target.value })}
-                                              />
-                                            </div>
-
-                                            <div className="admin-form-field">
-                                              <label>Meta description</label>
-                                              <textarea
-                                                rows={3}
-                                                value={item.metaDescription || ""}
-                                                onChange={(e) => patchItem(item.id, { metaDescription: e.target.value })}
-                                              />
-                                            </div>
-
-                                            <div className="admin-media-grid-2">
-                                              {item.category === "foto" && item.personModel?.name ? (
-                                                <div className="admin-form-field">
-                                                  <label>Outfit</label>
-                                                  <select
-                                                    className="admin-select"
-                                                    value={item.groupLabel || ""}
-                                                    onChange={(e) => applyPhotoGroup(item, e.target.value)}
-                                                  >
-                                                    {photoOutfitOptions().map((option) => (
-                                                      <option key={option.value || "empty"} value={option.value}>
-                                                        {option.label}
-                                                      </option>
-                                                    ))}
-                                                  </select>
-                                                </div>
-                                              ) : null}
-
-                                              {item.category === "grafica" ? (
-                                                <div className="admin-form-field">
-                                                  <label>Graphic kind</label>
-                                                  <select
-                                                    className="admin-select"
-                                                    value={item.graphicKind || ""}
-                                                    onChange={(e) => patchItem(item.id, { graphicKind: e.target.value })}
-                                                  >
-                                                    {graphicKindOptions().map((option) => (
-                                                      <option key={option.value || "empty"} value={option.value}>
-                                                        {option.label}
-                                                      </option>
-                                                    ))}
-                                                  </select>
-                                                </div>
-                                              ) : null}
-
-                                              <div className="admin-form-field">
-                                                <label>Group order</label>
-                                                <input
-                                                  type="number"
-                                                  value={item.groupOrder ?? 0}
-                                                  onChange={(e) =>
-                                                    patchItem(item.id, { groupOrder: Number(e.target.value || 0) })
-                                                  }
-                                                />
-                                              </div>
-
-                                              <div className="admin-form-field">
-                                                <label>Sort order</label>
-                                                <input
-                                                  type="number"
-                                                  value={item.sortOrder ?? 0}
-                                                  onChange={(e) =>
-                                                    patchItem(item.id, { sortOrder: Number(e.target.value || 0) })
-                                                  }
-                                                />
-                                              </div>
-                                            </div>
-
-                                            <label className="admin-checkbox-row">
-                                              <input
-                                                type="checkbox"
-                                                checked={!!item.isFeatured}
-                                                onChange={(e) => patchItem(item.id, { isFeatured: e.target.checked })}
-                                              />
-                                              <span>Featured</span>
-                                            </label>
-
-                                            <label className="admin-checkbox-row">
-                                              <input
-                                                type="checkbox"
-                                                checked={!!item.isVisible}
-                                                onChange={(e) => patchItem(item.id, { isVisible: e.target.checked })}
-                                              />
-                                              <span>Vizibil pe site</span>
-                                            </label>
-
-                                            <div className="admin-list-copy">
-                                              <span>
-                                                {item.category} • {folder.ownerName} • {formatDate(item.date)}
-                                              </span>
-                                            </div>
-
-                                            <div className="admin-inline-actions">
-                                              <button
-                                                type="button"
-                                                className="admin-submit"
-                                                onClick={() => saveItem(item)}
-                                                disabled={savingId === item.id}
-                                              >
-                                                {savingId === item.id ? "Se salvează..." : "Salvează"}
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    ) : null}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
+                <div className="admin-media-grid-2">
+                  {selectedItem.category === "foto" && selectedItem.personModel?.name ? (
+                    <div className="admin-form-field">
+                      <label>Outfit</label>
+                      <select
+                        className="admin-select"
+                        value={selectedItem.groupLabel || ""}
+                        onChange={(e) => applyPhotoGroup(selectedItem, e.target.value)}
+                      >
+                        {photoOutfitOptions().map((option) => (
+                          <option key={option.value || "empty"} value={option.value}>
+                            {option.label}
+                          </option>
                         ))}
-                      </div>
-                    ) : null}
+                      </select>
+                    </div>
+                  ) : null}
+
+                  {selectedItem.category === "grafica" ? (
+                    <div className="admin-form-field">
+                      <label>Graphic kind</label>
+                      <select
+                        className="admin-select"
+                        value={selectedItem.graphicKind || ""}
+                        onChange={(e) =>
+                          patchItem(selectedItem.id, { graphicKind: e.target.value })
+                        }
+                      >
+                        {graphicKindOptions().map((option) => (
+                          <option key={option.value || "empty"} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : null}
+
+                  <div className="admin-form-field">
+                    <label>Group order</label>
+                    <input
+                      type="number"
+                      value={selectedItem.groupOrder ?? 0}
+                      onChange={(e) =>
+                        patchItem(selectedItem.id, {
+                          groupOrder: Number(e.target.value || 0),
+                        })
+                      }
+                    />
                   </div>
-                );
-              })}
+
+                  <div className="admin-form-field">
+                    <label>Sort order</label>
+                    <input
+                      type="number"
+                      value={selectedItem.sortOrder ?? 0}
+                      onChange={(e) =>
+                        patchItem(selectedItem.id, {
+                          sortOrder: Number(e.target.value || 0),
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <label className="admin-checkbox-row">
+                  <input
+                    type="checkbox"
+                    checked={!!selectedItem.isFeatured}
+                    onChange={(e) =>
+                      patchItem(selectedItem.id, { isFeatured: e.target.checked })
+                    }
+                  />
+                  <span>Featured</span>
+                </label>
+
+                <label className="admin-checkbox-row">
+                  <input
+                    type="checkbox"
+                    checked={!!selectedItem.isVisible}
+                    onChange={(e) =>
+                      patchItem(selectedItem.id, { isVisible: e.target.checked })
+                    }
+                  />
+                  <span>Vizibil pe site</span>
+                </label>
+
+                <div className="admin-list-copy">
+                  <span>
+                    {selectedItem.category} • {getOwnerMeta(selectedItem).ownerName} •{" "}
+                    {formatDate(selectedItem.date)}
+                  </span>
+                </div>
+
+                <div className="admin-inline-actions">
+                  <button
+                    type="button"
+                    className="admin-submit"
+                    onClick={() => saveItem(selectedItem)}
+                    disabled={savingId === selectedItem.id}
+                  >
+                    {savingId === selectedItem.id ? "Se salvează..." : "Salvează"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="admin-danger-button"
+                    onClick={() => deleteItem(selectedItem)}
+                    disabled={deletingId === selectedItem.id}
+                  >
+                    {deletingId === selectedItem.id ? "Se șterge..." : "Șterge"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        ))}
-
-        {!items.length ? (
-          <p className="admin-helper-text">Nu există fișiere pentru editare.</p>
-        ) : null}
-      </div>
-    </div>
+        </div>
+      ) : null}
+    </>
   );
 }
