@@ -36,56 +36,28 @@ function getPreview(item: AdminMediaItem) {
   return item.thumbnailUrl || item.previewUrl || item.fileUrl || null;
 }
 
-function isVideoUrl(url?: string | null) {
-  if (!url) return false;
+function getVideoPreview(item: AdminMediaItem) {
+  return item.fileUrl || item.previewUrl || null;
+}
+
+function isVideoLike(item: AdminMediaItem) {
+  const url = item.fileUrl || item.previewUrl || item.thumbnailUrl || "";
   const clean = url.split("?")[0].toLowerCase();
   return [".mp4", ".webm", ".mov", ".m4v", ".ogg"].some((ext) =>
     clean.endsWith(ext)
   );
 }
 
-function PreviewMedia({
-  src,
-  alt,
-  className,
-}: {
-  src?: string | null;
-  alt: string;
-  className: string;
-}) {
-  if (!src) {
-    return <div className="media-thumb-fallback">MEDIA</div>;
-  }
-
-  if (isVideoUrl(src)) {
-    return (
-      <video
-        src={src}
-        className={className}
-        muted
-        playsInline
-        preload="metadata"
-        controls
-      />
-    );
-  }
-
-  return <img src={src} alt={alt} className={className} />;
-}
-
 function getOwnerMeta(item: AdminMediaItem): { ownerType: OwnerType; ownerName: string } {
   if (item.personModel?.name) {
     return { ownerType: "models", ownerName: item.personModel.name };
   }
-
   if (item.brand?.name) {
     return { ownerType: "brands", ownerName: item.brand.name };
   }
-
   if (item.audioProfile?.name) {
     return { ownerType: "audio", ownerName: item.audioProfile.name };
   }
-
   return { ownerType: "unassigned", ownerName: "Fără owner" };
 }
 
@@ -168,6 +140,54 @@ function formatDate(value: string | Date) {
   return new Date(value).toLocaleDateString("ro-RO");
 }
 
+function PreviewThumb({ item }: { item: AdminMediaItem }) {
+  if (isVideoLike(item)) {
+    const src = getVideoPreview(item);
+    return src ? (
+      <video
+        src={src}
+        className="admin-media-thumb-media"
+        muted
+        playsInline
+        preload="metadata"
+      />
+    ) : (
+      <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
+    );
+  }
+
+  const src = getPreview(item);
+  return src ? (
+    <img src={src} alt={item.title} className="admin-media-thumb-media" />
+  ) : (
+    <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
+  );
+}
+
+function PreviewLarge({ item }: { item: AdminMediaItem }) {
+  if (isVideoLike(item)) {
+    const src = getVideoPreview(item);
+    return src ? (
+      <video
+        src={src}
+        className="admin-media-edit-preview-media"
+        controls
+        playsInline
+        preload="metadata"
+      />
+    ) : (
+      <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
+    );
+  }
+
+  const src = getPreview(item);
+  return src ? (
+    <img src={src} alt={item.title} className="admin-media-edit-preview-media" />
+  ) : (
+    <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
+  );
+}
+
 export default function AdminMediaManager({
   initialItems,
 }: AdminMediaManagerClientProps) {
@@ -189,7 +209,6 @@ export default function AdminMediaManager({
         setSelectedItemId(null);
       }
     }
-
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
@@ -342,7 +361,7 @@ export default function AdminMediaManager({
               <div className="admin-folder-list">
                 {section.folders.map((folder) => {
                   const isOpen = !!openFolders[folder.key];
-                  const folderPreview = getPreview(folder.ownerItems[0]);
+                  const folderPreview = folder.ownerItems[0];
 
                   return (
                     <div key={folder.key} className="admin-folder-card">
@@ -352,11 +371,11 @@ export default function AdminMediaManager({
                         onClick={() => toggleFolder(folder.key)}
                       >
                         <div className="admin-folder-toggle-visual">
-                          <PreviewMedia
-                            src={folderPreview}
-                            alt={folder.ownerName}
-                            className="admin-folder-toggle-media"
-                          />
+                          {folderPreview ? (
+                            <PreviewThumb item={folderPreview} />
+                          ) : (
+                            <div className="media-thumb-fallback">FOLDER</div>
+                          )}
                         </div>
 
                         <div className="admin-folder-toggle-copy">
@@ -376,40 +395,32 @@ export default function AdminMediaManager({
                               </div>
 
                               <div className="admin-media-thumb-grid">
-                                {sectionGroup.items.map((item) => {
-                                  const preview = getPreview(item);
+                                {sectionGroup.items.map((item) => (
+                                  <div key={item.id} className="admin-media-thumb-card">
+                                    <div className="admin-media-thumb-top">
+                                      <button
+                                        type="button"
+                                        className="admin-media-thumb-delete"
+                                        onClick={() => deleteItem(item)}
+                                        disabled={deletingId === item.id}
+                                        aria-label={`Șterge ${item.title}`}
+                                        title="Șterge"
+                                      >
+                                        {deletingId === item.id ? "…" : "×"}
+                                      </button>
 
-                                  return (
-                                    <div key={item.id} className="admin-media-thumb-card">
-                                      <div className="admin-media-thumb-top">
-                                        <button
-                                          type="button"
-                                          className="admin-media-thumb-delete"
-                                          onClick={() => deleteItem(item)}
-                                          disabled={deletingId === item.id}
-                                          aria-label={`Șterge ${item.title}`}
-                                          title="Șterge"
-                                        >
-                                          {deletingId === item.id ? "…" : "×"}
-                                        </button>
-
-                                        <button
-                                          type="button"
-                                          className="admin-media-thumb-button"
-                                          onClick={() => setSelectedItemId(item.id)}
-                                        >
-                                          <div className="admin-media-thumb-visual">
-                                            <PreviewMedia
-                                              src={preview}
-                                              alt={item.title}
-                                              className="admin-media-thumb-media"
-                                            />
-                                          </div>
-                                        </button>
-                                      </div>
+                                      <button
+                                        type="button"
+                                        className="admin-media-thumb-button"
+                                        onClick={() => setSelectedItemId(item.id)}
+                                      >
+                                        <div className="admin-media-thumb-visual">
+                                          <PreviewThumb item={item} />
+                                        </div>
+                                      </button>
                                     </div>
-                                  );
-                                })}
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           ))}
@@ -449,11 +460,7 @@ export default function AdminMediaManager({
 
             <div className="admin-media-edit-layout admin-media-edit-layout-wide">
               <div className="admin-media-edit-preview">
-                <PreviewMedia
-                  src={getPreview(selectedItem)}
-                  alt={selectedItem.title}
-                  className="admin-media-edit-preview-media"
-                />
+                <PreviewLarge item={selectedItem} />
               </div>
 
               <div className="admin-media-edit-form">
