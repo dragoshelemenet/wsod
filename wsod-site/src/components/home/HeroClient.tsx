@@ -52,10 +52,7 @@ export default function HeroClient({
       </div>
 
       <div className="hero-copy hero-copy-reference">
-        <h1>
-          Te ajutăm cu video, foto, design, website-uri și content pentru social
-          media.
-        </h1>
+        <h1>WSOD.PROD — agenție media digitală & video</h1>
       </div>
 
       <div className="hero-home-actions">

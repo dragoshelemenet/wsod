@@ -14,6 +14,13 @@ export default async function HomePage() {
     <main className="home-page">
       <Hero />
       <HomeServicesCarousel />
+
+      <section className="section home-after-carousel-copy">
+        <p className="home-after-carousel-text">
+          Te ajutăm cu video, foto, design, website-uri și content pentru social media.
+        </p>
+      </section>
+
       <ServiceFolders />
 
       <section className="section brands-section">
@@ -23,6 +30,7 @@ export default async function HomePage() {
 
         <OwnerFolderGrid
           title="Brandurile cu care am lucrat"
+          ownerType="brand"
           items={brands.map((brand) => ({
             id: brand.id,
             name: brand.name,

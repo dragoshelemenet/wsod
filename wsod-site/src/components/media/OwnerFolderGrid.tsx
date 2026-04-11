@@ -18,6 +18,7 @@ interface OwnerFolderGridProps {
   items: FolderOwnerItem[];
   emptyText?: string;
   variant?: "default" | "compact-file";
+  ownerType?: "brand" | "model";
 }
 
 export default function OwnerFolderGrid({
@@ -25,10 +26,15 @@ export default function OwnerFolderGrid({
   items,
   emptyText = "Nu există elemente momentan.",
   variant = "default",
+  ownerType,
 }: OwnerFolderGridProps) {
   const isCompact = variant === "compact-file";
   const [startIndex, setStartIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
+
+  const resolvedOwnerType: "brand" | "model" =
+    ownerType ??
+    (title.toLowerCase().includes("model") ? "model" : "brand");
 
   useEffect(() => {
     const update = () => {
@@ -121,6 +127,7 @@ export default function OwnerFolderGrid({
               imageUrl={item.imageUrl}
               previewImages={item.previewImages}
               compact={isCompact}
+              variant={resolvedOwnerType}
             />
           ))}
         </div>
