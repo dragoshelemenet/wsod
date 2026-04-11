@@ -1972,277 +1972,47 @@
   }
 }
 
-/* fix broken folder hover preview positioning after seo image update */
-.owner-folder-card,
-.owner-folder-card-unified,
-.folder-card,
-.folder-card-rich {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.folder-body,
-.owner-folder-classic-body {
-  position: relative !important;
-  overflow: hidden !important;
-  min-height: 100% !important;
-}
-
-.folder-brand-art-wrap {
-  position: absolute !important;
-  inset: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  z-index: 1 !important;
-}
-
-.folder-brand-art {
-  position: relative !important;
-  max-width: 74% !important;
-  max-height: 96px !important;
-  object-fit: contain !important;
-  z-index: 1 !important;
-}
-
-.folder-hover-preview {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 3 !important;
-  pointer-events: none !important;
-  overflow: hidden !important;
-}
-
-.folder-hover-shot {
-  position: absolute !important;
-  overflow: hidden !important;
-  border-radius: 18px !important;
-  z-index: 4 !important;
-}
-
-.folder-hover-shot-1 {
-  left: 12% !important;
-  top: 18% !important;
-  width: 26% !important;
-  height: 54% !important;
-  transform: rotate(-8deg) translateY(18px) !important;
-}
-
-.folder-hover-shot-2 {
-  left: 37% !important;
-  top: 11% !important;
-  width: 28% !important;
-  height: 62% !important;
-  transform: rotate(-1deg) translateY(10px) !important;
-}
-
-.folder-hover-shot-3 {
-  right: 11% !important;
-  top: 18% !important;
-  width: 26% !important;
-  height: 54% !important;
-  transform: rotate(8deg) translateY(18px) !important;
-}
-
-.folder-hover-media {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-.owner-folder-card .folder-hover-preview,
-.owner-folder-card-unified .folder-hover-preview {
-  opacity: 0 !important;
-  transition: opacity 0.28s ease, transform 0.28s ease !important;
-}
-
-.owner-folder-card:hover .folder-hover-preview,
-.owner-folder-card:focus-visible .folder-hover-preview,
-.owner-folder-card-unified:hover .folder-hover-preview,
-.owner-folder-card-unified:focus-visible .folder-hover-preview {
-  opacity: 1 !important;
-}
-
-.owner-folder-card:hover .folder-brand-art-wrap,
-.owner-folder-card:focus-visible .folder-brand-art-wrap,
-.owner-folder-card-unified:hover .folder-brand-art-wrap,
-.owner-folder-card-unified:focus-visible .folder-brand-art-wrap {
-  opacity: 0 !important;
-  transition: opacity 0.22s ease !important;
-}
-
-@media (max-width: 768px) {
-  .folder-hover-shot-1 {
-    left: 10% !important;
-    width: 28% !important;
-    height: 50% !important;
-  }
-
-  .folder-hover-shot-2 {
-    left: 36% !important;
-    width: 30% !important;
-    height: 58% !important;
-  }
-
-  .folder-hover-shot-3 {
-    right: 9% !important;
-    width: 28% !important;
-    height: 50% !important;
-  }
-}
-
-/* fix broken folder hover preview positioning after seo image update */
-.owner-folder-card,
-.owner-folder-card-unified,
-.folder-card,
-.folder-card-rich {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.folder-body,
-.owner-folder-classic-body {
-  position: relative !important;
-  overflow: hidden !important;
-  min-height: 100% !important;
-}
-
-.folder-brand-art-wrap {
-  position: absolute !important;
-  inset: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  z-index: 1 !important;
-}
-
-.folder-brand-art {
-  position: relative !important;
-  max-width: 74% !important;
-  max-height: 96px !important;
-  object-fit: contain !important;
-  z-index: 1 !important;
-}
-
-.folder-hover-preview {
-  position: absolute !important;
-  inset: 0 !important;
-  z-index: 3 !important;
-  pointer-events: none !important;
-  overflow: hidden !important;
-}
-
-.folder-hover-shot {
-  position: absolute !important;
-  overflow: hidden !important;
-  border-radius: 18px !important;
-  z-index: 4 !important;
-}
-
-.folder-hover-shot-1 {
-  left: 12% !important;
-  top: 18% !important;
-  width: 26% !important;
-  height: 54% !important;
-  transform: rotate(-8deg) translateY(18px) !important;
-}
-
-.folder-hover-shot-2 {
-  left: 37% !important;
-  top: 11% !important;
-  width: 28% !important;
-  height: 62% !important;
-  transform: rotate(-1deg) translateY(10px) !important;
-}
-
-.folder-hover-shot-3 {
-  right: 11% !important;
-  top: 18% !important;
-  width: 26% !important;
-  height: 54% !important;
-  transform: rotate(8deg) translateY(18px) !important;
-}
-
-.folder-hover-media {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-.owner-folder-card .folder-hover-preview,
-.owner-folder-card-unified .folder-hover-preview {
-  opacity: 0 !important;
-  transition: opacity 0.28s ease, transform 0.28s ease !important;
-}
-
-.owner-folder-card:hover .folder-hover-preview,
-.owner-folder-card:focus-visible .folder-hover-preview,
-.owner-folder-card-unified:hover .folder-hover-preview,
-.owner-folder-card-unified:focus-visible .folder-hover-preview {
-  opacity: 1 !important;
-}
-
-.owner-folder-card:hover .folder-brand-art-wrap,
-.owner-folder-card:focus-visible .folder-brand-art-wrap,
-.owner-folder-card-unified:hover .folder-brand-art-wrap,
-.owner-folder-card-unified:focus-visible .folder-brand-art-wrap {
-  opacity: 0 !important;
-  transition: opacity 0.22s ease !important;
-}
-
-@media (max-width: 768px) {
-  .folder-hover-shot-1 {
-    left: 10% !important;
-    width: 28% !important;
-    height: 50% !important;
-  }
-
-  .folder-hover-shot-2 {
-    left: 36% !important;
-    width: 30% !important;
-    height: 58% !important;
-  }
-
-  .folder-hover-shot-3 {
-    right: 9% !important;
-    width: 28% !important;
-    height: 50% !important;
-  }
-}
-
-/* restore homepage service folder hover animation */
+/* single clean source of truth for homepage service folder hover previews */
 .folder-grid .folder-card-rich {
   position: relative !important;
   overflow: hidden !important;
 }
 
+.folder-grid .folder-card-rich .folder-top,
 .folder-grid .folder-card-rich .folder-body {
   position: relative !important;
   z-index: 1 !important;
-  overflow: hidden !important;
+}
+
+.folder-grid .folder-card-rich .folder-body {
+  transition: opacity 0.22s ease !important;
 }
 
 .folder-grid .folder-card-rich .folder-hover-preview {
   position: absolute !important;
   inset: 0 !important;
-  z-index: 3 !important;
-  pointer-events: none !important;
+  z-index: 20 !important;
   opacity: 0 !important;
-  transition: opacity 0.28s ease !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
   overflow: hidden !important;
+  transition: opacity 0.28s ease !important;
 }
 
 .folder-grid .folder-card-rich:hover .folder-hover-preview,
 .folder-grid .folder-card-rich:focus-visible .folder-hover-preview {
   opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.folder-grid .folder-card-rich:hover .folder-body,
+.folder-grid .folder-card-rich:focus-visible .folder-body {
+  opacity: 0.08 !important;
 }
 
 .folder-grid .folder-card-rich .folder-hover-shot {
   position: absolute !important;
+  z-index: 21 !important;
   overflow: hidden !important;
   border-radius: 18px !important;
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.28) !important;
@@ -2272,6 +2042,7 @@
   transform: rotate(8deg) translateY(16px) !important;
 }
 
+.folder-grid .folder-card-rich .folder-hover-media,
 .folder-grid .folder-card-rich .folder-hover-shot img,
 .folder-grid .folder-card-rich .folder-hover-shot video {
   width: 100% !important;
@@ -2283,12 +2054,6 @@
 
 .folder-grid .folder-card-rich .folder-hover-shot video {
   pointer-events: none !important;
-}
-
-.folder-grid .folder-card-rich:hover .folder-body,
-.folder-grid .folder-card-rich:focus-visible .folder-body {
-  opacity: 0.08 !important;
-  transition: opacity 0.22s ease !important;
 }
 
 @media (max-width: 768px) {
