@@ -99,15 +99,6 @@ function getOwnerHref(
   return null;
 }
 
-function getOwnerAllLabel(
-  item: NonNullable<Awaited<ReturnType<typeof getMediaItemBySlugFromDb>>>
-) {
-  if (item.owner.type === "model") return `Vezi toate pozele cu ${item.owner.name}`;
-  if (item.owner.type === "brand") return `Vezi toate pozele pentru ${item.owner.name}`;
-  if (item.owner.type === "audioProfile") return `Vezi toate pozele pentru ${item.owner.name}`;
-  return "Vezi toate pozele";
-}
-
 export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
   const { slug } = await params;
   const item = await getMediaItemBySlugFromDb(slug);
@@ -150,30 +141,6 @@ export default async function FotoDetailPage({ params }: FotoDetailPageProps) {
           ownerHref={ownerHref}
           backHref="/foto"
         />
-
-        <div className="owner-folder-section">
-          <div className="owner-folder-section-head">
-            <h2>
-              {item.owner.type === "model"
-                ? `Poze cu ${item.owner.name}`
-                : `Poze pentru ${item.owner.name}`}
-            </h2>
-          </div>
-
-          <MediaGrid
-            items={sameOwnerItems.filter((entry) => entry.id !== item.id)}
-            emptyText="Nu există alte poze similare momentan."
-            variant="compact-photos"
-          />
-
-          <div className="model-page-actions">
-            {ownerHref ? (
-              <Link href={ownerHref} className="media-open-button">
-                {getOwnerAllLabel(item)}
-              </Link>
-            ) : null}
-          </div>
-        </div>
 
         <div className="owner-folder-section">
           <div className="owner-folder-section-head">
