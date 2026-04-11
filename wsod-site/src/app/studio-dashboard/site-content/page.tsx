@@ -26,6 +26,7 @@ async function saveSiteContent(formData: FormData) {
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
+      packageCards: clean("packageCards"),
       pricingLabel: clean("pricingLabel") || "Servicii & prețuri",
       pricingHref: "/servicii-preturi",
       contactLabel: clean("contactLabel"),
@@ -38,6 +39,7 @@ async function saveSiteContent(formData: FormData) {
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
       servicesCards: clean("servicesCards"),
+      packageCards: clean("packageCards"),
       pricingLabel: clean("pricingLabel") || "Servicii & prețuri",
       pricingHref: "/servicii-preturi",
       contactLabel: clean("contactLabel"),
@@ -69,12 +71,12 @@ export default async function SiteContentDashboardPage() {
         </Link>
       </div>
 
-      <section className="inner-section admin-page-shell admin-page-shell-narrow">
+      <section className="inner-section admin-page-shell admin-page-shell-wide">
         <div className="admin-page-header">
           <span className="admin-kicker">Servicii</span>
           <h1>Pagina Servicii & prețuri</h1>
           <p className="inner-description">
-            Aici modifici conținutul paginii Servicii & prețuri și textele butoanelor principale.
+            Aici modifici separat intro-ul, serviciile și pachetele/certificatele.
           </p>
         </div>
 
@@ -99,7 +101,7 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field site-content-full">
-              <span>Text intro pagină — o linie pe rând</span>
+              <span>Texte intro — o linie pe rând</span>
               <textarea
                 name="servicesList"
                 defaultValue={content.servicesList || ""}
@@ -109,12 +111,30 @@ export default async function SiteContentDashboardPage() {
             </label>
 
             <label className="admin-field site-content-full">
-              <span>Carduri servicii — format: Titlu | Descriere | Preț</span>
+              <span>
+                Servicii — format:
+                <br />
+                Titlu | Descriere | Etichetă scurtă
+              </span>
               <textarea
                 name="servicesCards"
                 defaultValue={content.servicesCards || ""}
                 className="admin-textarea"
                 rows={14}
+              />
+            </label>
+
+            <label className="admin-field site-content-full">
+              <span>
+                Pachete / certificate — format:
+                <br />
+                Titlu | Ce include | Preț vechi | Preț nou | Badge
+              </span>
+              <textarea
+                name="packageCards"
+                defaultValue={content.packageCards || ""}
+                className="admin-textarea"
+                rows={12}
               />
             </label>
 

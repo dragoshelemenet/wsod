@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Servicii & prețuri | WSOD.PROD",
   description:
-    "Servicii video, foto, grafică, website, audio și content AI pentru branduri, artiști și afaceri. Vezi prețuri orientative și descrieri detaliate.",
+    "Servicii video, foto, grafică, website, audio și content AI pentru branduri, artiști și afaceri. Vezi pachete, prețuri și descrieri clare.",
   alternates: {
     canonical: "/servicii-preturi",
   },
@@ -21,18 +21,6 @@ export const metadata: Metadata = {
   },
 };
 
-function parseCards(text?: string | null) {
-  return String(text || "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [title, description, price] = line.split("|").map((part) => part?.trim() || "");
-      return { title, description, price };
-    })
-    .filter((item) => item.title);
-}
-
 function parseIntro(text?: string | null) {
   return String(text || "")
     .split("\n")
@@ -40,10 +28,37 @@ function parseIntro(text?: string | null) {
     .filter(Boolean);
 }
 
+function parseServices(text?: string | null) {
+  return String(text || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [title, description, eyebrow] = line.split("|").map((part) => part?.trim() || "");
+      return { title, description, eyebrow };
+    })
+    .filter((item) => item.title);
+}
+
+function parsePackages(text?: string | null) {
+  return String(text || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [title, includes, oldPrice, newPrice, badge] = line
+        .split("|")
+        .map((part) => part?.trim() || "");
+      return { title, includes, oldPrice, newPrice, badge };
+    })
+    .filter((item) => item.title);
+}
+
 export default async function ServicesPricingPage() {
   const content = await getSiteContentFromDb();
-  const cards = parseCards(content.servicesCards);
   const introLines = parseIntro(content.servicesList);
+  const services = parseServices(content.servicesCards);
+  const packages = parsePackages(content.packageCards);
 
   return (
     <main className="inner-page services-page">
@@ -53,45 +68,78 @@ export default async function ServicesPricingPage() {
         </Link>
       </div>
 
-      <section className="inner-section services-shell">
-        <div className="services-header">
+      <section className="inner-section services-shell services-shell-rich">
+        <div className="services-header services-header-rich">
           <span className="services-kicker">
-            {content.servicesEyebrow || "Servicii & prețuri"}
+            {content.servicesEyebrow || "Serviciile noastre"}
           </span>
 
           <h1>{content.servicesTitle || "Servicii & prețuri"}</h1>
 
-          <div className="services-intro">
-            {introLines.length ? (
-              introLines.map((line) => (
-                <p key={line} className="inner-description services-intro-line">
-                  {line}
-                </p>
-              ))
-            ) : (
-              <p className="inner-description services-intro-line">
-                Oferim producție video, fotografie, conținut AI hiper-realist, grafică,
-                website-uri moderne și servicii audio pentru branduri, afaceri, artiști
-                și proiecte care vor să arate premium online.
+          <div className="services-intro-grid">
+            {introLines.map((line, index) => (
+              <p key={`${index}-${line}`} className="services-intro-card">
+                {line}
               </p>
-            )}
+            ))}
           </div>
         </div>
 
-        <div className="services-pricing-grid">
-          {cards.map((item) => (
-            <article key={item.title} className="service-price-card">
-              <div className="service-price-top">
-                <h2>{item.title}</h2>
-                {item.price ? <span className="service-price-badge">{item.price}</span> : null}
-              </div>
+        <section className="services-section-block">
+          <div className="services-section-head">
+            <h2>Ce oferim</h2>
+            <p>Servicii prezentate mai clar, mai ușor de citit și mai premium vizual.</p>
+          </div>
 
-              {item.description ? (
-                <p className="service-price-description">{item.description}</p>
-              ) : null}
-            </article>
-          ))}
-        </div>
+          <div className="services-rich-grid">
+            {services.map((item) => (
+              <article key={item.title} className="service-rich-card">
+                {item.eyebrow ? (
+                  <span className="service-rich-eyebrow">{item.eyebrow}</span>
+                ) : null}
+
+                <h3>{item.title}</h3>
+
+                {item.description ? (
+                  <p className="service-rich-description">{item.description}</p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="services-section-block">
+          <div className="services-section-head">
+            <h2>Pachete & certificate</h2>
+            <p>Poți afișa pachete promo, pachete standard sau certificate cadou.</p>
+          </div>
+
+          <div className="packages-rich-grid">
+            {packages.map((item) => (
+              <article key={item.title} className="package-rich-card">
+                <div className="package-rich-top">
+                  <div>
+                    <h3>{item.title}</h3>
+                    {item.badge ? <span className="package-rich-badge">{item.badge}</span> : null}
+                  </div>
+
+                  <div className="package-rich-prices">
+                    {item.oldPrice ? (
+                      <span className="package-old-price">{item.oldPrice}</span>
+                    ) : null}
+                    {item.newPrice ? (
+                      <span className="package-new-price">{item.newPrice}</span>
+                    ) : null}
+                  </div>
+                </div>
+
+                {item.includes ? (
+                  <p className="package-rich-includes">{item.includes}</p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </section>
 
         <div className="services-cta-row">
           <a

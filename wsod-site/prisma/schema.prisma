@@ -142,6 +142,8 @@ model SiteContent {
   servicesEyebrow  String?
   servicesTitle    String?
   servicesList     String?
+  servicesCards    String?
+  packageCards     String?
   pricingLabel     String?
   pricingHref      String?
   contactLabel     String?
