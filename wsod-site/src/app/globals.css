@@ -4445,3 +4445,81 @@ textarea:focus {
     transform: none !important;
   }
 }
+
+/* ===== FINAL MOBILE FIX: brand folders show only centered logo on phone ===== */
+
+@media (max-width: 640px) {
+  .brands-section .owner-folder-card-brand,
+  .owner-folder-grid-carousel .owner-folder-card-brand {
+    aspect-ratio: 1 / 1 !important;
+    min-height: 0 !important;
+  }
+
+  .brands-section .owner-folder-card-brand .owner-folder-classic-body,
+  .owner-folder-grid-carousel .owner-folder-card-brand .owner-folder-classic-body {
+    position: relative !important;
+    min-height: 0 !important;
+    padding: 14px 10px 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-top,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-top {
+    display: none !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-model-title-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-model-title-wrap,
+  .brands-section .owner-folder-card-brand .folder-hover-preview,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-hover-preview {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    padding: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    z-index: 10 !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-brand-art-wrap-transparent,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap-transparent {
+    inset: 0 !important;
+    padding: 16px !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-brand-art,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art,
+  .brands-section .owner-folder-card-brand .folder-brand-art-transparent,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-transparent {
+    object-fit: contain !important;
+    object-position: center center !important;
+    padding: 18px !important;
+    filter: none !important;
+  }
+
+  .brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand:hover .folder-brand-art-wrap,
+  .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
+  .brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap-transparent,
+  .owner-folder-grid-carousel .owner-folder-card-brand:hover .folder-brand-art-wrap-transparent,
+  .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap-transparent,
+  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap-transparent {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+}
