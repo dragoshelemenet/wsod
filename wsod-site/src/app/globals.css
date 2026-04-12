@@ -4289,3 +4289,96 @@ textarea:focus {
     border-radius: 14px;
   }
 }
+/* ===== mobile fixes: less top hero space + 2 brand folders per row ===== */
+
+@media (max-width: 640px) {
+  .home-page {
+    padding-top: 10px !important;
+  }
+
+  .hero {
+    margin-top: 0 !important;
+    margin-bottom: 18px !important;
+    padding-top: 0 !important;
+    gap: 14px !important;
+  }
+
+  .hero-home-clean {
+    gap: 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-home-mobilebar {
+    margin-bottom: 0 !important;
+  }
+
+  .hero-logo-wrap,
+  .hero-logo-wrap-reference {
+    min-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .hero-logo-visual-shell {
+    min-height: 150px !important;
+    justify-content: center !important;
+  }
+
+  .hero-logo-image {
+    width: clamp(170px, 52vw, 250px) !important;
+  }
+
+  .hero-copy,
+  .hero-copy-reference {
+    margin-top: 0 !important;
+  }
+
+  .hero-copy-reference h1 {
+    font-size: clamp(22px, 8.2vw, 38px) !important;
+    line-height: 0.94 !important;
+    max-width: 100% !important;
+  }
+
+  .brands-section .owner-folder-grid,
+  .owner-folder-section .owner-folder-grid,
+  .owner-folder-grid-carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .brands-section .owner-folder-card,
+  .owner-folder-section .owner-folder-card,
+  .owner-folder-grid-carousel .owner-folder-card {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .brands-section .owner-folder-card .owner-folder-classic-body,
+  .owner-folder-section .owner-folder-card .owner-folder-classic-body,
+  .owner-folder-grid-carousel .owner-folder-card .owner-folder-classic-body {
+    min-height: 0 !important;
+    padding: 18px 10px 10px !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-brand-art,
+  .owner-folder-card-brand .folder-brand-art {
+    max-width: 78% !important;
+    max-height: 92px !important;
+  }
+
+  .owner-folder-card-brand .folder-model-title,
+  .owner-folder-card-model .folder-model-title {
+    font-size: 15px !important;
+    line-height: 1.04 !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .brands-section .owner-folder-grid,
+  .owner-folder-section .owner-folder-grid,
+  .owner-folder-grid-carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
