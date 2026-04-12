@@ -20,14 +20,6 @@ function isTransparentFriendlyAsset(url?: string | null) {
   return clean.endsWith(".png") || clean.endsWith(".webp");
 }
 
-function isVideoUrl(url?: string | null) {
-  if (!url) return false;
-  const clean = url.split("?")[0].toLowerCase();
-  return [".mp4", ".webm", ".mov", ".m4v", ".ogg"].some((ext) =>
-    clean.endsWith(ext)
-  );
-}
-
 function MainMedia({
   src,
   className,
@@ -39,28 +31,13 @@ function MainMedia({
   onError: () => void;
   alt: string;
 }) {
-  if (isVideoUrl(src)) {
-    return (
-      <video
-        src={src}
-        className={className}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        onError={onError}
-      />
-    );
-  }
-
   return (
     <Image
       src={src}
       alt={alt}
       fill
       className={className}
-      sizes="(max-width: 768px) 160px, 220px"
+      sizes="(max-width: 768px) 42vw, 280px"
       loading="lazy"
       fetchPriority="low"
       onError={onError}
@@ -77,21 +54,6 @@ function HoverMedia({
   className: string;
   onError: () => void;
 }) {
-  if (isVideoUrl(src)) {
-    return (
-      <video
-        src={src}
-        className={className}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        onError={onError}
-      />
-    );
-  }
-
   return (
     <img
       src={src}

@@ -21,6 +21,9 @@ export async function POST(request: Request) {
   const body = await request.json();
   const name = String(body.name || "").trim();
   const portraitImageUrl = String(body.portraitImageUrl || "").trim();
+  const hoverPreview1 = String(body.hoverPreview1 || "").trim();
+  const hoverPreview2 = String(body.hoverPreview2 || "").trim();
+  const hoverPreview3 = String(body.hoverPreview3 || "").trim();
   const description = String(body.description || "").trim();
   const seoTitle = String(body.seoTitle || "").trim();
   const metaDescription = String(body.metaDescription || "").trim();
@@ -50,6 +53,9 @@ export async function POST(request: Request) {
       name,
       slug,
       portraitImageUrl: portraitImageUrl || null,
+      hoverPreview1: hoverPreview1 || null,
+      hoverPreview2: hoverPreview2 || null,
+      hoverPreview3: hoverPreview3 || null,
       description: description || null,
       seoTitle: seoTitle || null,
       metaDescription: metaDescription || null,

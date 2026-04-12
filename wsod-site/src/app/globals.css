@@ -4126,3 +4126,166 @@ textarea:focus {
     width: clamp(200px, 62vw, 310px) !important;
   }
 }
+
+.owner-folder-grid-carousel {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.owner-folder-card-unified {
+  position: relative;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015)),
+    rgba(6, 6, 10, 0.94);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.owner-folder-card-brand {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
+    rgba(0, 0, 0, 0.96);
+}
+
+.owner-folder-card-model {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)),
+    rgba(8, 8, 12, 0.95);
+}
+
+.owner-folder-classic-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 24px;
+}
+
+.folder-brand-art-wrap {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.folder-brand-art-wrap-transparent {
+  inset: 14%;
+}
+
+.folder-brand-art {
+  object-fit: cover;
+  filter: brightness(0.88);
+}
+
+.folder-brand-art-transparent {
+  object-fit: contain;
+}
+
+.folder-model-title-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 3;
+  text-align: center;
+}
+
+.folder-model-title {
+  display: inline-block;
+  max-width: 100%;
+  color: #fff;
+  font-weight: 800;
+  font-size: clamp(1.1rem, 1.7vw, 1.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.owner-folder-card-brand .folder-model-title {
+  font-size: clamp(0.98rem, 1.45vw, 1.34rem);
+}
+
+.folder-hover-preview {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+}
+
+.folder-hover-shot {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.38);
+  background: rgba(0,0,0,0.55);
+}
+
+.folder-hover-shot-1 {
+  width: 34%;
+  height: 34%;
+  left: 11%;
+  top: 14%;
+  transform: rotate(-8deg);
+}
+
+.folder-hover-shot-2 {
+  width: 38%;
+  height: 38%;
+  left: 31%;
+  top: 26%;
+  z-index: 4;
+}
+
+.folder-hover-shot-3 {
+  width: 30%;
+  height: 30%;
+  right: 11%;
+  top: 17%;
+  transform: rotate(8deg);
+}
+
+.folder-hover-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.owner-folder-card-unified:hover .folder-brand-art-wrap {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.owner-folder-card-unified:hover .folder-hover-preview {
+  opacity: 1;
+}
+
+.owner-folder-card-unified:hover .folder-model-title-wrap {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .owner-folder-grid-carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .owner-folder-card-unified {
+    border-radius: 20px;
+  }
+
+  .folder-hover-shot {
+    border-radius: 14px;
+  }
+}

@@ -11,18 +11,12 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function revalidateAll(brandSlug?: string) {
+function revalidateAll(modelSlug?: string) {
   revalidatePath("/");
   revalidatePath("/foto");
-  revalidatePath("/video");
-  revalidatePath("/grafica");
-  revalidatePath("/website");
-  revalidatePath("/meta-ads");
-  revalidatePath("/audio");
   revalidatePath("/studio-dashboard");
-  revalidatePath("/studio-dashboard/brands");
-  revalidatePath("/studio-dashboard/visibility");
-  if (brandSlug) revalidatePath(`/brand/${brandSlug}`);
+  revalidatePath("/studio-dashboard/models");
+  if (modelSlug) revalidatePath(`/model/${modelSlug}`);
 }
 
 export async function PUT(
@@ -40,8 +34,7 @@ export async function PUT(
 
   const name = String(body.name || "").trim();
   const slug = slugify(String(body.slug || body.name || ""));
-  const logoUrl = String(body.logoUrl || "").trim();
-  const coverImageUrl = String(body.coverImageUrl || "").trim();
+  const portraitImageUrl = String(body.portraitImageUrl || "").trim();
   const hoverPreview1 = String(body.hoverPreview1 || "").trim();
   const hoverPreview2 = String(body.hoverPreview2 || "").trim();
   const hoverPreview3 = String(body.hoverPreview3 || "").trim();
@@ -52,31 +45,31 @@ export async function PUT(
 
   if (!name) {
     return NextResponse.json(
-      { ok: false, message: "Numele brandului este obligatoriu." },
+      { ok: false, message: "Numele modelului este obligatoriu." },
       { status: 400 }
     );
   }
 
   if (!slug) {
     return NextResponse.json(
-      { ok: false, message: "Slug invalid pentru brand." },
+      { ok: false, message: "Slug invalid pentru model." },
       { status: 400 }
     );
   }
 
-  const existing = await prisma.brand.findUnique({
+  const existing = await prisma.personModel.findUnique({
     where: { id },
     select: { id: true, slug: true },
   });
 
   if (!existing) {
     return NextResponse.json(
-      { ok: false, message: "Brandul nu există." },
+      { ok: false, message: "Modelul nu există." },
       { status: 404 }
     );
   }
 
-  const duplicate = await prisma.brand.findFirst({
+  const duplicate = await prisma.personModel.findFirst({
     where: {
       slug,
       NOT: { id },
@@ -91,13 +84,12 @@ export async function PUT(
     );
   }
 
-  const brand = await prisma.brand.update({
+  const personModel = await prisma.personModel.update({
     where: { id },
     data: {
       name,
       slug,
-      logoUrl: logoUrl || null,
-      coverImageUrl: coverImageUrl || null,
+      portraitImageUrl: portraitImageUrl || null,
       hoverPreview1: hoverPreview1 || null,
       hoverPreview2: hoverPreview2 || null,
       hoverPreview3: hoverPreview3 || null,
@@ -109,47 +101,11 @@ export async function PUT(
   });
 
   revalidateAll(existing.slug);
-  if (existing.slug !== brand.slug) revalidateAll(brand.slug);
+  if (existing.slug !== personModel.slug) revalidateAll(personModel.slug);
 
   return NextResponse.json({
     ok: true,
-    message: "Brand actualizat.",
-    brand,
-  });
-}
-
-export async function DELETE(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const isLoggedIn = await hasAdminSession();
-
-  if (!isLoggedIn) {
-    return NextResponse.json({ ok: false, message: "Unauthorized" }, { status: 401 });
-  }
-
-  const { id } = await params;
-
-  const existing = await prisma.brand.findUnique({
-    where: { id },
-    select: { id: true, slug: true },
-  });
-
-  if (!existing) {
-    return NextResponse.json(
-      { ok: false, message: "Brandul nu există." },
-      { status: 404 }
-    );
-  }
-
-  await prisma.brand.delete({
-    where: { id },
-  });
-
-  revalidateAll(existing.slug);
-
-  return NextResponse.json({
-    ok: true,
-    message: "Brand șters.",
+    message: "Model actualizat.",
+    personModel,
   });
 }

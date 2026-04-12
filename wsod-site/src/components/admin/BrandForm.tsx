@@ -76,6 +76,12 @@ export default function BrandForm({ brands }: BrandFormProps) {
   const [slugInput, setSlugInput] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [hoverPreview1, setHoverPreview1] = useState("");
+  const [hoverPreview2, setHoverPreview2] = useState("");
+  const [hoverPreview3, setHoverPreview3] = useState("");
+  const [hoverPreview1File, setHoverPreview1File] = useState<File | null>(null);
+  const [hoverPreview2File, setHoverPreview2File] = useState<File | null>(null);
+  const [hoverPreview3File, setHoverPreview3File] = useState<File | null>(null);
   const [description, setDescription] = useState("");
   const [seoTitle, setSeoTitle] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
@@ -104,10 +110,40 @@ export default function BrandForm({ brands }: BrandFormProps) {
       setMessage("");
 
       let finalLogoUrl = logoUrl.trim();
+      let finalHoverPreview1 = hoverPreview1.trim();
+      let finalHoverPreview2 = hoverPreview2.trim();
+      let finalHoverPreview3 = hoverPreview3.trim();
 
       if (logoFile) {
         const uploadedLogo = await presignAndUploadFile(logoFile, normalizedSlug, "brand-logo");
         finalLogoUrl = uploadedLogo.publicUrl;
+      }
+
+      if (hoverPreview1File) {
+        const uploaded = await presignAndUploadFile(
+          hoverPreview1File,
+          normalizedSlug,
+          "brand-hover-preview-1"
+        );
+        finalHoverPreview1 = uploaded.publicUrl;
+      }
+
+      if (hoverPreview2File) {
+        const uploaded = await presignAndUploadFile(
+          hoverPreview2File,
+          normalizedSlug,
+          "brand-hover-preview-2"
+        );
+        finalHoverPreview2 = uploaded.publicUrl;
+      }
+
+      if (hoverPreview3File) {
+        const uploaded = await presignAndUploadFile(
+          hoverPreview3File,
+          normalizedSlug,
+          "brand-hover-preview-3"
+        );
+        finalHoverPreview3 = uploaded.publicUrl;
       }
 
       const response = await fetch("/api/admin/brands", {
@@ -120,6 +156,9 @@ export default function BrandForm({ brands }: BrandFormProps) {
           slug: normalizedSlug,
           logoUrl: finalLogoUrl,
           coverImageUrl: "",
+          hoverPreview1: finalHoverPreview1,
+          hoverPreview2: finalHoverPreview2,
+          hoverPreview3: finalHoverPreview3,
           description,
           seoTitle,
           metaDescription,
@@ -140,6 +179,12 @@ export default function BrandForm({ brands }: BrandFormProps) {
       setSlugInput("");
       setLogoUrl("");
       setLogoFile(null);
+      setHoverPreview1("");
+      setHoverPreview2("");
+      setHoverPreview3("");
+      setHoverPreview1File(null);
+      setHoverPreview2File(null);
+      setHoverPreview3File(null);
       setDescription("");
       setSeoTitle("");
       setMetaDescription("");
@@ -198,6 +243,51 @@ export default function BrandForm({ brands }: BrandFormProps) {
             value={logoUrl}
             onChange={(e) => setLogoUrl(e.target.value)}
             placeholder="URL logo brand"
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="brand-hover-1-file">Hover preview 1</label>
+          <input
+            id="brand-hover-1-file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setHoverPreview1File(e.target.files?.[0] ?? null)}
+          />
+          <input
+            value={hoverPreview1}
+            onChange={(e) => setHoverPreview1(e.target.value)}
+            placeholder="URL hover preview 1"
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="brand-hover-2-file">Hover preview 2</label>
+          <input
+            id="brand-hover-2-file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setHoverPreview2File(e.target.files?.[0] ?? null)}
+          />
+          <input
+            value={hoverPreview2}
+            onChange={(e) => setHoverPreview2(e.target.value)}
+            placeholder="URL hover preview 2"
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="brand-hover-3-file">Hover preview 3</label>
+          <input
+            id="brand-hover-3-file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setHoverPreview3File(e.target.files?.[0] ?? null)}
+          />
+          <input
+            value={hoverPreview3}
+            onChange={(e) => setHoverPreview3(e.target.value)}
+            placeholder="URL hover preview 3"
           />
         </div>
 

@@ -12,6 +12,9 @@ model Brand {
   slug            String      @unique
   logoUrl         String?
   coverImageUrl   String?
+  hoverPreview1   String?
+  hoverPreview2   String?
+  hoverPreview3   String?
   description     String?
   seoTitle        String?
   metaDescription String?
@@ -26,6 +29,9 @@ model PersonModel {
   name             String
   slug             String      @unique
   portraitImageUrl String?
+  hoverPreview1    String?
+  hoverPreview2    String?
+  hoverPreview3    String?
   description      String?
   seoTitle         String?
   metaDescription  String?

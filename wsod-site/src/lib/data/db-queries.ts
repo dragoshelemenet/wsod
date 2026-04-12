@@ -63,6 +63,14 @@ function getPreviewSrc(item: {
   return item.thumbnailUrl ?? item.previewUrl ?? item.fileUrl ?? null;
 }
 
+function buildStaticHoverPreviews(item: {
+  hoverPreview1?: string | null;
+  hoverPreview2?: string | null;
+  hoverPreview3?: string | null;
+}) {
+  return [item.hoverPreview1, item.hoverPreview2, item.hoverPreview3].filter(Boolean) as string[];
+}
+
 async function getVisibleSectionKeys() {
   const sections = await prisma.siteSectionVisibility.findMany({
     where: { isVisible: true },
@@ -115,17 +123,19 @@ export async function getBrandsWithHomePreviewFromDb() {
 
   return brands
     .map((brand) => {
-      const previewImages = brand.mediaItems
+      const livePreviewImages = brand.mediaItems
         .map(getPreviewSrc)
         .filter(Boolean) as string[];
 
-      const shuffled = [...previewImages]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+      const staticPreviewImages = buildStaticHoverPreviews(brand);
+      const previewImages =
+        staticPreviewImages.length > 0
+          ? staticPreviewImages
+          : [...livePreviewImages].sort(() => Math.random() - 0.5).slice(0, 3);
 
       return {
         ...brand,
-        previewImages: shuffled,
+        previewImages,
       };
     })
     .filter((brand) => brand.previewImages.length > 0 || brand.logoUrl || brand.coverImageUrl);
@@ -162,11 +172,15 @@ export async function getBrandsWithCategoryPreviewFromDb(category: string) {
   });
 
   return brands
-    .map((brand) => ({
-      ...brand,
-      previewImages: brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-    }))
-    .filter((brand) => brand.previewImages.length > 0);
+    .map((brand) => {
+      const staticPreviewImages = buildStaticHoverPreviews(brand);
+      const livePreviewImages = brand.mediaItems.map(getPreviewSrc).filter(Boolean) as string[];
+      return {
+        ...brand,
+        previewImages: staticPreviewImages.length > 0 ? staticPreviewImages : livePreviewImages,
+      };
+    })
+    .filter((brand) => brand.previewImages.length > 0 || brand.logoUrl || brand.coverImageUrl);
 }
 
 export async function getModelsWithCategoryPreviewFromDb(category: string) {
@@ -191,10 +205,14 @@ export async function getModelsWithCategoryPreviewFromDb(category: string) {
   });
 
   return models
-    .map((model) => ({
-      ...model,
-      previewImages: model.mediaItems.map(getPreviewSrc).filter(Boolean) as string[],
-    }))
+    .map((model) => {
+      const staticPreviewImages = buildStaticHoverPreviews(model);
+      const livePreviewImages = model.mediaItems.map(getPreviewSrc).filter(Boolean) as string[];
+      return {
+        ...model,
+        previewImages: staticPreviewImages.length > 0 ? staticPreviewImages : livePreviewImages,
+      };
+    })
     .filter((model) => model.previewImages.length > 0 || model.portraitImageUrl);
 }
 
