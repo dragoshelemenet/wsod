@@ -4382,3 +4382,66 @@ textarea:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
+/* ===== mobile brand folder visual fix ===== */
+
+@media (max-width: 640px) {
+  .brands-section .owner-folder-card-brand,
+  .owner-folder-grid-carousel .owner-folder-card-brand {
+    aspect-ratio: 1 / 1 !important;
+    min-height: 0 !important;
+  }
+
+  .brands-section .owner-folder-card-brand .owner-folder-classic-body,
+  .owner-folder-grid-carousel .owner-folder-card-brand .owner-folder-classic-body {
+    position: relative !important;
+    min-height: 0 !important;
+    padding: 20px 10px 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 18px 12px 12px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    z-index: 8 !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-brand-art,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 78% !important;
+    max-height: 88px !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    filter: none !important;
+  }
+
+  .brands-section .owner-folder-card-brand .folder-model-title-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-model-title-wrap,
+  .brands-section .owner-folder-card-brand .folder-hover-preview,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-hover-preview {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  .brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand:hover .folder-brand-art-wrap,
+  .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+}
