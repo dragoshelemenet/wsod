@@ -205,14 +205,27 @@ export default function ModelForm({
       setSeoTitle("");
       setMetaDescription("");
 
-      if (result.personModel?.id) {
-        setModels((current) => [
-          {
-            ...result.personModel,
-            _count: { mediaItems: 0 },
-          },
-          ...current,
-        ]);
+      if (
+        result.personModel?.id &&
+        result.personModel.name &&
+        result.personModel.slug
+      ) {
+        const newModel: ModelListItem = {
+          id: result.personModel.id,
+          name: result.personModel.name,
+          slug: result.personModel.slug,
+          portraitImageUrl: result.personModel.portraitImageUrl ?? null,
+          hoverPreview1: result.personModel.hoverPreview1 ?? null,
+          hoverPreview2: result.personModel.hoverPreview2 ?? null,
+          hoverPreview3: result.personModel.hoverPreview3 ?? null,
+          description: result.personModel.description ?? null,
+          seoTitle: result.personModel.seoTitle ?? null,
+          metaDescription: result.personModel.metaDescription ?? null,
+          isVisible: result.personModel.isVisible ?? true,
+          _count: { mediaItems: 0 },
+        };
+
+        setModels((current) => [newModel, ...current]);
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
