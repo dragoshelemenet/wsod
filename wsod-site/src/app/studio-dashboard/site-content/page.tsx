@@ -36,6 +36,7 @@ async function saveSiteContent(formData: FormData) {
       claimHref: clean("claimHref"),
     },
     update: {
+      homeLogoUrl: clean("homeLogoUrl"),
       servicesEyebrow: clean("servicesEyebrow"),
       servicesTitle: clean("servicesTitle"),
       servicesList: clean("servicesList"),
