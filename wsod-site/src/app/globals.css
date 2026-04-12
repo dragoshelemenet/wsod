@@ -3997,7 +3997,8 @@ textarea:focus {
 }
 
 
-/* ===== home logo image + wider title ===== */
+//* ===== FINAL: hero + after-carousel + unified folder cards ===== */
+
 .hero-home-clean {
   align-items: center !important;
   justify-content: flex-start !important;
@@ -4026,7 +4027,9 @@ textarea:focus {
   max-width: 100% !important;
   height: auto !important;
   object-fit: contain !important;
-  filter: drop-shadow(0 0 28px rgba(255,255,255,0.10)) drop-shadow(0 0 58px rgba(145, 188, 255, 0.14)) !important;
+  filter:
+    drop-shadow(0 0 28px rgba(255,255,255,0.10))
+    drop-shadow(0 0 58px rgba(145, 188, 255, 0.14)) !important;
 }
 
 .hero-copy-reference {
@@ -4074,57 +4077,6 @@ textarea:focus {
   justify-content: center !important;
   align-items: center !important;
   gap: 12px !important;
-}
-
-/* smaller brand/model hover title */
-.owner-folder-card-brand .folder-model-title,
-.owner-folder-card-model .folder-model-title {
-  max-width: 82% !important;
-  font-size: clamp(18px, 1.9vw, 28px) !important;
-  line-height: 1.04 !important;
-  letter-spacing: -0.04em !important;
-}
-
-@media (max-width: 900px) {
-  .hero-home-clean {
-    gap: 26px !important;
-  }
-
-  .hero-logo-wrap-reference {
-    min-width: 0 !important;
-    padding-left: 0 !important;
-  }
-
-  .hero-copy-reference {
-    max-width: 100% !important;
-  }
-
-  .hero-copy-reference h1 {
-    font-size: clamp(24px, 7vw, 42px) !important;
-  }
-
-  .hero-logo-image {
-    width: clamp(220px, 48vw, 360px) !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .home-after-carousel-actions {
-    display: none !important;
-  }
-
-  .home-after-carousel-text {
-    max-width: 100% !important;
-    text-align: left !important;
-  }
-
-  .hero-copy-reference h1 {
-    max-width: 100% !important;
-  }
-
-  .hero-logo-image {
-    width: clamp(200px, 62vw, 310px) !important;
-  }
 }
 
 .owner-folder-grid-carousel {
@@ -4276,20 +4228,32 @@ textarea:focus {
   opacity: 1;
 }
 
-@media (max-width: 640px) {
-  .owner-folder-grid-carousel {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* ===== tablet / mobile hero ===== */
+
+@media (max-width: 900px) {
+  .hero-home-clean {
+    gap: 26px !important;
   }
 
-  .owner-folder-card-unified {
-    border-radius: 20px;
+  .hero-logo-wrap-reference {
+    min-width: 0 !important;
+    padding-left: 0 !important;
   }
 
-  .folder-hover-shot {
-    border-radius: 14px;
+  .hero-copy-reference {
+    max-width: 100% !important;
+  }
+
+  .hero-copy-reference h1 {
+    font-size: clamp(24px, 7vw, 42px) !important;
+  }
+
+  .hero-logo-image {
+    width: clamp(220px, 48vw, 360px) !important;
   }
 }
-/* ===== mobile fixes: less top hero space + 2 brand folders per row ===== */
+
+/* ===== mobile generic ===== */
 
 @media (max-width: 640px) {
   .home-page {
@@ -4325,7 +4289,7 @@ textarea:focus {
   }
 
   .hero-logo-image {
-    width: clamp(170px, 52vw, 250px) !important;
+    width: clamp(200px, 62vw, 310px) !important;
   }
 
   .hero-copy,
@@ -4334,9 +4298,18 @@ textarea:focus {
   }
 
   .hero-copy-reference h1 {
+    max-width: 100% !important;
     font-size: clamp(22px, 8.2vw, 38px) !important;
     line-height: 0.94 !important;
+  }
+
+  .home-after-carousel-actions {
+    display: none !important;
+  }
+
+  .home-after-carousel-text {
     max-width: 100% !important;
+    text-align: left !important;
   }
 
   .brands-section .owner-folder-grid,
@@ -4362,16 +4335,12 @@ textarea:focus {
     padding: 18px 10px 10px !important;
   }
 
-  .brands-section .owner-folder-card-brand .folder-brand-art,
-  .owner-folder-card-brand .folder-brand-art {
-    max-width: 78% !important;
-    max-height: 92px !important;
+  .owner-folder-card-unified {
+    border-radius: 20px;
   }
 
-  .owner-folder-card-brand .folder-model-title,
-  .owner-folder-card-model .folder-model-title {
-    font-size: 15px !important;
-    line-height: 1.04 !important;
+  .folder-hover-shot {
+    border-radius: 14px;
   }
 }
 
@@ -4382,95 +4351,18 @@ textarea:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
-/* ===== mobile brand folder visual fix ===== */
 
-@media (max-width: 640px) {
+/* ===== touch devices: brand cards show logo only ===== */
+
+@media (hover: none), (pointer: coarse) {
   .brands-section .owner-folder-card-brand,
   .owner-folder-grid-carousel .owner-folder-card-brand {
     aspect-ratio: 1 / 1 !important;
     min-height: 0 !important;
-  }
-
-  .brands-section .owner-folder-card-brand .owner-folder-classic-body,
-  .owner-folder-grid-carousel .owner-folder-card-brand .owner-folder-classic-body {
-    position: relative !important;
-    min-height: 0 !important;
-    padding: 20px 10px 10px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-  }
-
-  .brands-section .owner-folder-card-brand .folder-brand-art-wrap,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap {
-    position: absolute !important;
-    inset: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 18px 12px 12px !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-    z-index: 8 !important;
-  }
-
-  .brands-section .owner-folder-card-brand .folder-brand-art,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 78% !important;
-    max-height: 88px !important;
-    object-fit: contain !important;
-    object-position: center center !important;
-    filter: none !important;
-  }
-
-  .brands-section .owner-folder-card-brand .folder-model-title-wrap,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-model-title-wrap,
-  .brands-section .owner-folder-card-brand .folder-hover-preview,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-hover-preview {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-
-  .brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap,
-  .owner-folder-grid-carousel .owner-folder-card-brand:hover .folder-brand-art-wrap,
-  .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
-  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-  }
-}
-
-/* ===== FINAL MOBILE FIX: brand folders show only centered logo on phone ===== */
-
-@media (max-width: 640px) {
-  .brands-section .owner-folder-card-brand,
-  .owner-folder-grid-carousel .owner-folder-card-brand {
-    aspect-ratio: 1 / 1 !important;
-    min-height: 0 !important;
-  }
-
-  .brands-section .owner-folder-card-brand .owner-folder-classic-body,
-  .owner-folder-grid-carousel .owner-folder-card-brand .owner-folder-classic-body {
-    position: relative !important;
-    min-height: 0 !important;
-    padding: 14px 10px 10px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
   }
 
   .brands-section .owner-folder-card-brand .folder-top,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-top {
-    display: none !important;
-  }
-
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-top,
   .brands-section .owner-folder-card-brand .folder-model-title-wrap,
   .owner-folder-grid-carousel .owner-folder-card-brand .folder-model-title-wrap,
   .brands-section .owner-folder-card-brand .folder-hover-preview,
@@ -4478,13 +4370,27 @@ textarea:focus {
     display: none !important;
     opacity: 0 !important;
     visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .brands-section .owner-folder-card-brand .owner-folder-classic-body,
+  .owner-folder-grid-carousel .owner-folder-card-brand .owner-folder-classic-body {
+    position: relative !important;
+    min-height: 0 !important;
+    padding: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
   }
 
   .brands-section .owner-folder-card-brand .folder-brand-art-wrap,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap {
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap,
+  .brands-section .owner-folder-card-brand .folder-brand-art-wrap-transparent,
+  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap-transparent {
     position: absolute !important;
     inset: 0 !important;
-    padding: 16px !important;
+    padding: 14px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -4494,30 +4400,32 @@ textarea:focus {
     z-index: 10 !important;
   }
 
-  .brands-section .owner-folder-card-brand .folder-brand-art-wrap-transparent,
-  .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-wrap-transparent {
-    inset: 0 !important;
-    padding: 16px !important;
-  }
-
   .brands-section .owner-folder-card-brand .folder-brand-art,
   .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art,
   .brands-section .owner-folder-card-brand .folder-brand-art-transparent,
   .owner-folder-grid-carousel .owner-folder-card-brand .folder-brand-art-transparent {
+    width: 100% !important;
+    height: 100% !important;
     object-fit: contain !important;
     object-position: center center !important;
-    padding: 18px !important;
     filter: none !important;
+    transform: none !important;
+    inset: auto !important;
+    padding: 0 !important;
   }
 
   .brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap,
   .owner-folder-grid-carousel .owner-folder-card-brand:hover .folder-brand-art-wrap,
-  .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
-  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
   .brands-section .owner-folder-card-brand:hover .folder-brand-art-wrap-transparent,
   .owner-folder-grid-carousel .owner-folder-card-brand:hover .folder-brand-art-wrap-transparent,
+  .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
+  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap,
   .brands-section .owner-folder-card-brand:focus-visible .folder-brand-art-wrap-transparent,
-  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap-transparent {
+  .owner-folder-grid-carousel .owner-folder-card-brand:focus-visible .folder-brand-art-wrap-transparent,
+  .owner-folder-card-unified:hover .folder-brand-art-wrap,
+  .owner-folder-card-unified:hover .folder-brand-art-wrap-transparent,
+  .owner-folder-card-unified:focus-visible .folder-brand-art-wrap,
+  .owner-folder-card-unified:focus-visible .folder-brand-art-wrap-transparent {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
