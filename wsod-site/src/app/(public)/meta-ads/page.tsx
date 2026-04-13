@@ -1,10 +1,10 @@
+import { CategoryPageTemplate } from "@/components/public/category-page";
+
 export default function MetaAdsListingPage() {
   return (
-    <main className="inner-page">
-      <section className="inner-section">
-        <h1>Meta Ads</h1>
-        <p>Pagina publica pentru proiectele Meta Ads si materialele aferente.</p>
-      </section>
-    </main>
+    <CategoryPageTemplate
+      title="Meta Ads"
+      description="Creatives si materiale Meta Ads organizate simplu si rapid."
+    />
   );
 }
