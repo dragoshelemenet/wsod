@@ -6,5 +6,9 @@ type ContainerProps = {
 };
 
 export function Container({ children, className }: ContainerProps) {
-  return <div className={className ? `site-container ${className}` : "site-container"}>{children}</div>;
+  return (
+    <div className={className ? `site-container ${className}` : "site-container"}>
+      {children}
+    </div>
+  );
 }
