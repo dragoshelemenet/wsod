@@ -5075,89 +5075,131 @@ main,
   }
 }
 
-/* ===== HOME FOLDERS FIT BETTER ON PHONE ===== */
+/* ===== HOME BRANDS SECTION MORE LIKE REFERENCE ON PHONE ===== */
 @media (max-width: 900px) {
-  .reference-folders-v2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  .reference-brands-v2 {
+    padding: 16px 12px 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .brands-carousel {
     gap: 14px !important;
   }
 
-  .reference-folder-v2 {
-    padding: 10px !important;
-    border-radius: 18px !important;
+  .brands-carousel-head {
+    grid-template-columns: 28px 1fr 28px !important;
+    gap: 8px !important;
+    align-items: center !important;
   }
 
-  .reference-folder-v2-tab {
-    left: 10px !important;
-    width: 52px !important;
-    height: 14px !important;
-    border-radius: 0 0 10px 10px !important;
-  }
-
-  .reference-folder-v2-art {
-    aspect-ratio: 1.38 / 1 !important;
-    border-radius: 14px !important;
-  }
-
-  .reference-folder-overlay-copy {
-    left: 10px !important;
-    right: 10px !important;
-    bottom: 10px !important;
-    gap: 1px !important;
-  }
-
-  .reference-folder-overlay-copy strong {
-    font-size: 13px !important;
-    line-height: 1.05 !important;
+  .brands-carousel-head h2 {
+    font-size: 14px !important;
+    line-height: 1.1 !important;
     letter-spacing: -0.02em !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    white-space: nowrap !important;
   }
 
-  .reference-folder-overlay-copy span {
-    font-size: 9px !important;
-    line-height: 1.15 !important;
-    color: rgba(255,255,255,0.72) !important;
+  .brands-carousel-arrow {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
+    background: rgba(255,255,255,0.03) !important;
+    border-color: rgba(255,255,255,0.06) !important;
+  }
+
+  .brands-carousel-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .home-brand-card {
+    min-height: unset !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+  }
+
+  .home-brand-card .reference-folder-v2-tab.small {
+    left: 10px !important;
+    width: 44px !important;
+    height: 12px !important;
+    border-radius: 0 0 8px 8px !important;
+  }
+
+  .home-brand-art {
+    aspect-ratio: 1.28 / 1 !important;
+    border-radius: 12px !important;
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: rgba(34,34,40,0.96) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      0 8px 20px rgba(0,0,0,0.22) !important;
+  }
+
+  .reference-brand-v2-name {
+    padding-top: 8px !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+
+  .reference-brands-dots {
+    padding-top: 10px !important;
+    gap: 8px !important;
+  }
+
+  .brands-dot {
+    width: 7px !important;
+    height: 7px !important;
   }
 }
 
 @media (max-width: 640px) {
-  .reference-home-v2 {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+  .reference-brands-v2 {
+    padding: 14px 10px 12px !important;
+    border-radius: 18px !important;
   }
 
-  .reference-folders-v2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
+  .brands-carousel-head {
+    grid-template-columns: 24px 1fr 24px !important;
+    gap: 6px !important;
   }
 
-  .reference-folder-v2 {
-    padding: 9px !important;
-    border-radius: 16px !important;
+  .brands-carousel-head h2 {
+    font-size: 12px !important;
+    letter-spacing: 0 !important;
   }
 
-  .reference-folder-v2-tab {
-    left: 9px !important;
-    width: 46px !important;
-    height: 12px !important;
-  }
-
-  .reference-folder-v2-art {
-    aspect-ratio: 1.42 / 1 !important;
-    border-radius: 12px !important;
-  }
-
-  .reference-folder-overlay-copy {
-    left: 9px !important;
-    right: 9px !important;
-    bottom: 9px !important;
-  }
-
-  .reference-folder-overlay-copy strong {
+  .brands-carousel-arrow {
+    width: 24px !important;
+    height: 24px !important;
     font-size: 12px !important;
   }
 
-  .reference-folder-overlay-copy span {
-    font-size: 8px !important;
-    line-height: 1.1 !important;
+  .brands-carousel-grid {
+    gap: 8px !important;
+  }
+
+  .home-brand-card {
+    padding: 8px !important;
+    border-radius: 14px !important;
+  }
+
+  .home-brand-card .reference-folder-v2-tab.small {
+    left: 8px !important;
+    width: 38px !important;
+    height: 10px !important;
+  }
+
+  .home-brand-art {
+    aspect-ratio: 1.34 / 1 !important;
+    border-radius: 10px !important;
+  }
+
+  .reference-brand-v2-name {
+    padding-top: 6px !important;
+    font-size: 10px !important;
   }
 }

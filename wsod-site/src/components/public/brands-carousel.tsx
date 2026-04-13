@@ -39,13 +39,23 @@ export function BrandsCarousel({ items }: BrandsCarouselProps) {
   return (
     <section className="brands-carousel">
       <div className="brands-carousel-head">
-        <button type="button" className="brands-carousel-arrow" onClick={prev}>
+        <button
+          type="button"
+          className="brands-carousel-arrow"
+          onClick={prev}
+          aria-label="Brandurile anterioare"
+        >
           &lt;
         </button>
 
-        <h2>BRANDS WE WORKED WITH</h2>
+        <h2>BRANDURI CU CARE AM LUCRAT</h2>
 
-        <button type="button" className="brands-carousel-arrow" onClick={next}>
+        <button
+          type="button"
+          className="brands-carousel-arrow"
+          onClick={next}
+          aria-label="Brandurile urmatoare"
+        >
           &gt;
         </button>
       </div>
@@ -55,15 +65,15 @@ export function BrandsCarousel({ items }: BrandsCarouselProps) {
           <a
             key={brand.id}
             href={`/brand/${brand.slug}`}
-            className="reference-brand-v2-card"
+            className="reference-brand-v2-card home-brand-card"
           >
             <div className="reference-folder-v2-tab small" />
             <div
-              className="reference-brand-v2-art"
+              className="reference-brand-v2-art home-brand-art"
               style={
                 brand.imageUrl
                   ? {
-                      backgroundImage: `linear-gradient(rgba(20,20,24,0.34), rgba(20,20,24,0.34)), url(${brand.imageUrl})`,
+                      backgroundImage: `linear-gradient(rgba(20,20,24,0.26), rgba(20,20,24,0.26)), url(${brand.imageUrl})`,
                     }
                   : undefined
               }
