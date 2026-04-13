@@ -24,10 +24,6 @@ export function PublicNavbar() {
             </a>
           ))}
         </div>
-
-        <a className="public-navbar-cta" href="/studio-dashboard">
-          Dashboard
-        </a>
       </div>
     </nav>
   );
