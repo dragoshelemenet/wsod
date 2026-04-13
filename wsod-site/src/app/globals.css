@@ -3413,3 +3413,125 @@ textarea:focus {
   }
 }
 
+
+/* FIXED NAVBAR */
+.public-navbar {
+  position: fixed !important;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1080px, calc(100% - 32px));
+  z-index: 9999;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(24, 24, 28, 0.96) !important;
+}
+
+.public-navbar::before,
+.public-navbar::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+main,
+.inner-page,
+.public-shell,
+.public-page {
+  padding-top: 120px;
+}
+
+/* WEBSITE ZOOM PREVIEW */
+.website-preview-shell {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.website-preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.website-preview-btn {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.website-preview-zoom-label {
+  min-width: 64px;
+  text-align: center;
+  color: rgba(255,255,255,0.82);
+}
+
+.website-preview-frame {
+  width: 100%;
+  height: min(78vh, 980px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: #f3f3f3;
+}
+
+.website-preview-canvas {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+}
+
+.website-preview-image {
+  display: block;
+  height: auto;
+  transform-origin: top center;
+  will-change: transform;
+}
+
+/* THUMB GRID */
+.media-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.media-thumb-card {
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+}
+
+.media-thumb-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .public-navbar {
+    top: 10px;
+    width: calc(100% - 20px);
+  }
+
+  main,
+  .inner-page,
+  .public-shell,
+  .public-page {
+    padding-top: 108px;
+  }
+
+  .website-preview-frame {
+    height: 72vh;
+  }
+}
