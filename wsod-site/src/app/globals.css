@@ -787,7 +787,6 @@ button {
 }
 
 .blog-post-content {
-  margin-top: 18px;
 }
 
 .blog-post-content p {
@@ -2766,7 +2765,6 @@ textarea:focus {
 .inner-section-block {
   display: grid;
   gap: 12px;
-  margin-top: 18px;
 }
 
 .section-mini-head h2 {
@@ -2777,7 +2775,6 @@ textarea:focus {
 .inner-section-block {
   display: grid;
   gap: 12px;
-  margin-top: 18px;
 }
 
 .section-mini-head h2 {
@@ -3417,21 +3414,11 @@ textarea:focus {
 /* FIXED NAVBAR */
 .public-navbar {
   position: fixed !important;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1080px, calc(100% - 32px));
   z-index: 9999;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  background: rgba(24, 24, 28, 0.96) !important;
 }
 
 .public-navbar::before,
 .public-navbar::after {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  filter: none !important;
 }
 
 main,
@@ -3534,4 +3521,47 @@ main,
   .website-preview-frame {
     height: 72vh;
   }
+}
+
+.public-navbar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+  width: 100% !important;
+  max-width: none !important;
+  left: auto !important;
+  transform: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  background: #0b0b0f !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.public-navbar::before,
+.public-navbar::after {
+  display: none !important;
+  content: none !important;
+}
+
+.public-navbar-shell,
+.public-header,
+header:has(.public-navbar) {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+  background: #0b0b0f !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+main,
+.inner-page,
+.public-shell,
+.public-page {
+  padding-top: 24px !important;
 }
