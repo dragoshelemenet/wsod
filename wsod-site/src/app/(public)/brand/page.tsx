@@ -18,10 +18,10 @@ export default async function BrandIndexPage() {
         {items.map((item) => (
           <FolderFileCard
             key={item.id}
-            title={item.title}
+            title={item.name}
             kind="brand"
             href={`/brand/${item.slug}`}
-            imageUrl={item.logoUrl || item.coverUrl || item.mediaItems?.[0]?.coverUrl || item.mediaItems?.[0]?.fileUrl || null}
+            imageUrl={item.logoUrl || item.coverImageUrl || item.mediaItems?.[0]?.thumbnailUrl || item.mediaItems?.[0]?.previewUrl || item.mediaItems?.[0]?.fileUrl || null}
           />
         ))}
       </FileGrid>

@@ -29,12 +29,12 @@ export default async function ModelSlugPage({ params }: PageProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Modele", href: "/model" },
-            { label: model.title },
+            { label: model.name },
           ]}
         />
-        <h1>{model.title}</h1>
+        <h1>{model.name}</h1>
         <p className="inner-description">
-          Pagina individuala pentru model si proiectele sale publice.
+          {model.description || "Pagina individuala pentru model si proiectele sale publice."}
         </p>
 
         <PublicGrid>
@@ -44,7 +44,7 @@ export default async function ModelSlugPage({ params }: PageProps) {
               title={item.title}
               subtitle={item.category}
               href={`/${item.category}/${item.slug}`}
-              imageUrl={item.coverUrl || item.fileUrl}
+              imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             />
           ))}
         </PublicGrid>

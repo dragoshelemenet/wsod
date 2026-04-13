@@ -4,7 +4,7 @@ export async function getPublishedBrands() {
   try {
     const brands = await prisma.brand.findMany({
       where: {
-        isPublished: true,
+        isVisible: true,
       },
       orderBy: [
         { updatedAt: "desc" },
@@ -13,7 +13,7 @@ export async function getPublishedBrands() {
       include: {
         mediaItems: {
           where: {
-            isPublished: true,
+            isVisible: true,
           },
           orderBy: [
             { updatedAt: "desc" },
@@ -32,9 +32,9 @@ export async function getPublishedBrands() {
 
 export async function getPublishedModels() {
   try {
-    const models = await prisma.model.findMany({
+    const models = await prisma.personModel.findMany({
       where: {
-        isPublished: true,
+        isVisible: true,
       },
       orderBy: [
         { updatedAt: "desc" },
@@ -43,7 +43,7 @@ export async function getPublishedModels() {
       include: {
         mediaItems: {
           where: {
-            isPublished: true,
+            isVisible: true,
           },
           orderBy: [
             { updatedAt: "desc" },
@@ -64,7 +64,7 @@ export async function getPublishedMediaByCategory(category: string) {
   try {
     const items = await prisma.mediaItem.findMany({
       where: {
-        isPublished: true,
+        isVisible: true,
         category,
       },
       orderBy: [
@@ -83,12 +83,13 @@ export async function getPublishedMediaBySlug(slug: string) {
   try {
     const item = await prisma.mediaItem.findFirst({
       where: {
-        isPublished: true,
+        isVisible: true,
         slug,
       },
       include: {
         brand: true,
-        model: true,
+        personModel: true,
+        audioProfile: true,
       },
     });
 
@@ -102,13 +103,13 @@ export async function getPublishedBrandBySlug(slug: string) {
   try {
     const brand = await prisma.brand.findFirst({
       where: {
-        isPublished: true,
+        isVisible: true,
         slug,
       },
       include: {
         mediaItems: {
           where: {
-            isPublished: true,
+            isVisible: true,
           },
           orderBy: [
             { updatedAt: "desc" },
@@ -126,15 +127,15 @@ export async function getPublishedBrandBySlug(slug: string) {
 
 export async function getPublishedModelBySlug(slug: string) {
   try {
-    const model = await prisma.model.findFirst({
+    const model = await prisma.personModel.findFirst({
       where: {
-        isPublished: true,
+        isVisible: true,
         slug,
       },
       include: {
         mediaItems: {
           where: {
-            isPublished: true,
+            isVisible: true,
           },
           orderBy: [
             { updatedAt: "desc" },
@@ -154,32 +155,32 @@ export async function getHomepageCollections() {
   try {
     const [video, foto, grafica, website, metaAds, audio] = await Promise.all([
       prisma.mediaItem.findMany({
-        where: { isPublished: true, category: "video" },
+        where: { isVisible: true, category: "video" },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: 4,
       }),
       prisma.mediaItem.findMany({
-        where: { isPublished: true, category: "foto" },
+        where: { isVisible: true, category: "foto" },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: 4,
       }),
       prisma.mediaItem.findMany({
-        where: { isPublished: true, category: "grafica" },
+        where: { isVisible: true, category: "grafica" },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: 4,
       }),
       prisma.mediaItem.findMany({
-        where: { isPublished: true, category: "website" },
+        where: { isVisible: true, category: "website" },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: 4,
       }),
       prisma.mediaItem.findMany({
-        where: { isPublished: true, category: "meta-ads" },
+        where: { isVisible: true, category: "meta-ads" },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: 4,
       }),
       prisma.mediaItem.findMany({
-        where: { isPublished: true, category: "audio" },
+        where: { isVisible: true, category: "audio" },
         orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: 4,
       }),
@@ -203,7 +204,7 @@ export async function getDashboardOverviewCounts() {
     const [media, brands, models, audio] = await Promise.all([
       prisma.mediaItem.count(),
       prisma.brand.count(),
-      prisma.model.count(),
+      prisma.personModel.count(),
       prisma.mediaItem.count({
         where: {
           category: "audio",

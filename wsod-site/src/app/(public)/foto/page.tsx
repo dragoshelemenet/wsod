@@ -20,7 +20,7 @@ export default async function FotoPage() {
             title={item.title}
             subtitle="Foto"
             href={`/foto/${item.slug}`}
-            imageUrl={item.coverUrl || item.fileUrl}
+            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
           />
         ))}
       </PublicGrid>

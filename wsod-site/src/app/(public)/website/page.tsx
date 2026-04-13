@@ -20,7 +20,7 @@ export default async function WebsitePage() {
             title={item.title}
             subtitle="Website"
             href={`/website/${item.slug}`}
-            imageUrl={item.coverUrl || item.fileUrl}
+            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
           />
         ))}
       </PublicGrid>

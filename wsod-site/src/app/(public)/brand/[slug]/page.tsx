@@ -29,12 +29,12 @@ export default async function BrandSlugPage({ params }: PageProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Branduri", href: "/brand" },
-            { label: brand.title },
+            { label: brand.name },
           ]}
         />
-        <h1>{brand.title}</h1>
+        <h1>{brand.name}</h1>
         <p className="inner-description">
-          Pagina individuala pentru brand si proiectele sale publice.
+          {brand.description || "Pagina individuala pentru brand si proiectele sale publice."}
         </p>
 
         <PublicGrid>
@@ -44,7 +44,7 @@ export default async function BrandSlugPage({ params }: PageProps) {
               title={item.title}
               subtitle={item.category}
               href={`/${item.category}/${item.slug}`}
-              imageUrl={item.coverUrl || item.fileUrl}
+              imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             />
           ))}
         </PublicGrid>

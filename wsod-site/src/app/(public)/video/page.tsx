@@ -20,7 +20,7 @@ export default async function VideoPage() {
             title={item.title}
             subtitle="Video"
             href={`/video/${item.slug}`}
-            imageUrl={item.coverUrl || item.fileUrl}
+            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
           />
         ))}
       </PublicGrid>

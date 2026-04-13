@@ -18,10 +18,10 @@ export default async function ModelIndexPage() {
         {items.map((item) => (
           <FolderFileCard
             key={item.id}
-            title={item.title}
+            title={item.name}
             kind="model"
             href={`/model/${item.slug}`}
-            imageUrl={item.coverUrl || item.mediaItems?.[0]?.coverUrl || item.mediaItems?.[0]?.fileUrl || null}
+            imageUrl={item.portraitImageUrl || item.mediaItems?.[0]?.thumbnailUrl || item.mediaItems?.[0]?.previewUrl || item.mediaItems?.[0]?.fileUrl || null}
           />
         ))}
       </FileGrid>

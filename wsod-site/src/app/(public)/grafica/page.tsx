@@ -20,7 +20,7 @@ export default async function GraficaPage() {
             title={item.title}
             subtitle="Grafica"
             href={`/grafica/${item.slug}`}
-            imageUrl={item.coverUrl || item.fileUrl}
+            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
           />
         ))}
       </PublicGrid>

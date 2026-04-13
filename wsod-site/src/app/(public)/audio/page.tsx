@@ -8,10 +8,10 @@ export default async function AudioPage() {
   const items = await getPublishedMediaByCategory("audio");
 
   return (
-    <PublicShell title="Audio" description="Portofoliu audio cu before si after processing.">
+    <PublicShell title="Audio" description="Portofoliu audio cu processing si preview.">
       <CategoryHero
         title="Audio"
-        description="Aici apar proiectele audio cu comparatie intre sunetul initial si rezultatul final."
+        description="Aici apar proiectele audio publicate."
       />
       <PublicGrid>
         {items.map((item) => (
@@ -20,7 +20,7 @@ export default async function AudioPage() {
             title={item.title}
             subtitle="Audio"
             href={`/audio/${item.slug}`}
-            imageUrl={item.coverUrl || item.fileUrl}
+            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
           />
         ))}
       </PublicGrid>

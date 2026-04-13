@@ -11,37 +11,37 @@ export default async function HomePage() {
       title: "Video",
       subtitle: `${data.video.length} proiecte`,
       href: "/video",
-      imageUrl: data.video[0]?.coverUrl || data.video[0]?.fileUrl || null,
+      imageUrl: data.video[0]?.thumbnailUrl || data.video[0]?.previewUrl || data.video[0]?.fileUrl || null,
     },
     {
       title: "Foto",
       subtitle: `${data.foto.length} proiecte`,
       href: "/foto",
-      imageUrl: data.foto[0]?.coverUrl || data.foto[0]?.fileUrl || null,
+      imageUrl: data.foto[0]?.thumbnailUrl || data.foto[0]?.previewUrl || data.foto[0]?.fileUrl || null,
     },
     {
       title: "Grafica",
       subtitle: `${data.grafica.length} proiecte`,
       href: "/grafica",
-      imageUrl: data.grafica[0]?.coverUrl || data.grafica[0]?.fileUrl || null,
+      imageUrl: data.grafica[0]?.thumbnailUrl || data.grafica[0]?.previewUrl || data.grafica[0]?.fileUrl || null,
     },
     {
       title: "Website",
       subtitle: `${data.website.length} proiecte`,
       href: "/website",
-      imageUrl: data.website[0]?.coverUrl || data.website[0]?.fileUrl || null,
+      imageUrl: data.website[0]?.thumbnailUrl || data.website[0]?.previewUrl || data.website[0]?.fileUrl || null,
     },
     {
       title: "Meta Ads",
       subtitle: `${data.metaAds.length} proiecte`,
       href: "/meta-ads",
-      imageUrl: data.metaAds[0]?.coverUrl || data.metaAds[0]?.fileUrl || null,
+      imageUrl: data.metaAds[0]?.thumbnailUrl || data.metaAds[0]?.previewUrl || data.metaAds[0]?.fileUrl || null,
     },
     {
       title: "Audio",
       subtitle: `${data.audio.length} proiecte`,
       href: "/audio",
-      imageUrl: data.audio[0]?.coverUrl || data.audio[0]?.fileUrl || null,
+      imageUrl: data.audio[0]?.thumbnailUrl || data.audio[0]?.previewUrl || data.audio[0]?.fileUrl || null,
     },
   ];
 

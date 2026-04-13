@@ -20,7 +20,7 @@ export default async function MetaAdsPage() {
             title={item.title}
             subtitle="Meta Ads"
             href={`/meta-ads/${item.slug}`}
-            imageUrl={item.coverUrl || item.fileUrl}
+            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
           />
         ))}
       </PublicGrid>
