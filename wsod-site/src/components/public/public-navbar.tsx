@@ -49,7 +49,7 @@ export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
         const currentY = window.scrollY;
         const direction = currentY > lastScrollY.current ? "down" : "up";
 
-        if (currentY <= 50) {
+        if (currentY <= 20) {
           setHidden(false);
           anchorY.current = currentY;
           hiddenAtY.current = null;
@@ -73,7 +73,7 @@ export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
           if (direction === "down") {
             const downDistance = currentY - anchorY.current;
 
-            if (downDistance >= 50) {
+            if (downDistance >= 20) {
               setHidden(true);
               hiddenAtY.current = currentY;
               maxHiddenY.current = currentY;
@@ -90,7 +90,7 @@ export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
             const hidePoint = hiddenAtY.current ?? currentY;
             const farthestPoint = maxHiddenY.current ?? currentY;
             const extraDownAfterHide = Math.max(0, farthestPoint - hidePoint);
-            const showThreshold = extraDownAfterHide <= 50 ? 50 : 100;
+            const showThreshold = extraDownAfterHide <= 20 ? 20 : 100;
             const upDistance = farthestPoint - currentY;
 
             if (upDistance >= showThreshold) {
