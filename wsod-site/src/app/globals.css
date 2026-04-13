@@ -5203,3 +5203,90 @@ main,
     font-size: 10px !important;
   }
 }
+
+/* ===== HOME FOLDERS FIT BETTER ON PHONE ===== */
+@media (max-width: 900px) {
+  .reference-folders-v2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+  }
+
+  .reference-folder-v2 {
+    padding: 10px !important;
+    border-radius: 18px !important;
+  }
+
+  .reference-folder-v2-tab {
+    left: 10px !important;
+    width: 52px !important;
+    height: 14px !important;
+    border-radius: 0 0 10px 10px !important;
+  }
+
+  .reference-folder-v2-art {
+    aspect-ratio: 1.38 / 1 !important;
+    border-radius: 14px !important;
+  }
+
+  .reference-folder-overlay-copy {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    gap: 1px !important;
+  }
+
+  .reference-folder-overlay-copy strong {
+    font-size: 13px !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .reference-folder-overlay-copy span {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    color: rgba(255,255,255,0.72) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .reference-home-v2 {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .reference-folders-v2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .reference-folder-v2 {
+    padding: 9px !important;
+    border-radius: 16px !important;
+  }
+
+  .reference-folder-v2-tab {
+    left: 9px !important;
+    width: 46px !important;
+    height: 12px !important;
+  }
+
+  .reference-folder-v2-art {
+    aspect-ratio: 1.42 / 1 !important;
+    border-radius: 12px !important;
+  }
+
+  .reference-folder-overlay-copy {
+    left: 9px !important;
+    right: 9px !important;
+    bottom: 9px !important;
+  }
+
+  .reference-folder-overlay-copy strong {
+    font-size: 12px !important;
+  }
+
+  .reference-folder-overlay-copy span {
+    font-size: 8px !important;
+    line-height: 1.1 !important;
+  }
+}
