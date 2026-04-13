@@ -8,7 +8,7 @@ import PreviewRail from "@/components/public/PreviewRail";
 import { PublicShell } from "@/components/public/public-shell";
 
 export default async function FotoPage() {
-  const [items, models, brands] = await Promise.all([
+  const [items, allModels, allBrands] = await Promise.all([
     getMediaByCategoryFromDb("foto", { limit: 120 }),
     getModelsWithCategoryPreviewFromDb("foto"),
     getBrandsWithCategoryPreviewFromDb("foto"),
@@ -36,6 +36,18 @@ export default async function FotoPage() {
       showPlayIcon: false,
     }));
 
+  const models = allModels.filter(
+    (item) =>
+      Array.isArray(item.previewImages) &&
+      item.previewImages.length > 0
+  );
+
+  const brands = allBrands.filter(
+    (item) =>
+      Array.isArray(item.previewImages) &&
+      item.previewImages.length > 0
+  );
+
   return (
     <PublicShell title="Foto">
       <div className="foto-index-page">
@@ -52,14 +64,7 @@ export default async function FotoPage() {
                 key={item.id}
                 title={item.name}
                 href={`/model/${item.slug}`}
-                imageUrl={
-                  item.portraitImageUrl ||
-                  item.previewImages?.[0] ||
-                  item.mediaItems?.[0]?.thumbnailUrl ||
-                  item.mediaItems?.[0]?.previewUrl ||
-                  item.mediaItems?.[0]?.fileUrl ||
-                  null
-                }
+                imageUrl={item.previewImages?.[0] || null}
               />
             ))}
           </div>
@@ -78,15 +83,7 @@ export default async function FotoPage() {
                 key={item.id}
                 title={item.name}
                 href={`/brand/${item.slug}`}
-                imageUrl={
-                  item.logoUrl ||
-                  item.coverImageUrl ||
-                  item.previewImages?.[0] ||
-                  item.mediaItems?.[0]?.thumbnailUrl ||
-                  item.mediaItems?.[0]?.previewUrl ||
-                  item.mediaItems?.[0]?.fileUrl ||
-                  null
-                }
+                imageUrl={item.previewImages?.[0] || null}
               />
             ))}
           </div>
