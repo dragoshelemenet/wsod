@@ -4464,3 +4464,77 @@ main,
     max-width: 75% !important;
   }
 }
+
+/* ===== MENU LOGO BIGGER IMPORTANT ===== */
+.public-navbar-logo {
+  min-width: 112px !important;
+  min-height: 42px !important;
+  padding-right: 8px !important;
+}
+
+.public-navbar-logo-image {
+  display: block !important;
+  width: auto !important;
+  height: 28px !important;
+  max-width: 190px !important;
+  object-fit: contain !important;
+}
+
+@media (min-width: 901px) {
+  .public-navbar-logo {
+    min-width: 124px !important;
+    min-height: 44px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 30px !important;
+    max-width: 210px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .public-navbar-logo {
+    min-width: 96px !important;
+    min-height: 38px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 24px !important;
+    max-width: 160px !important;
+  }
+}
+
+/* ===== FOTO MODEL FOLDERS MOBILE NOT SQUARE ===== */
+@media (max-width: 768px) {
+  .foto-index-page .foto-model-folder-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .foto-index-page .foto-model-folder-grid .public-owner-folder-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+  }
+
+  .foto-index-page .foto-model-folder-grid .public-owner-folder-art {
+    width: 100% !important;
+    aspect-ratio: 3 / 4 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+  }
+
+  .foto-index-page .foto-model-folder-grid .public-owner-folder-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  .foto-index-page .foto-brand-folder-grid .public-owner-folder-art {
+    aspect-ratio: 1 / 1 !important;
+  }
+}

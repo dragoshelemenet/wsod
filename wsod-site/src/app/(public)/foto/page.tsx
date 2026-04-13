@@ -46,7 +46,7 @@ export default async function FotoPage() {
             <h2>Modele</h2>
           </div>
 
-          <div className="public-owner-folder-grid">
+          <div className="public-owner-folder-grid foto-model-folder-grid">
             {models.map((item) => (
               <OwnerFolderCard
                 key={item.id}
@@ -72,7 +72,7 @@ export default async function FotoPage() {
             <h2>Branduri</h2>
           </div>
 
-          <div className="public-owner-folder-grid">
+          <div className="public-owner-folder-grid foto-brand-folder-grid">
             {brands.map((item) => (
               <OwnerFolderCard
                 key={item.id}
