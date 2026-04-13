@@ -36,7 +36,7 @@ export default async function MetaAdsSlugPage({ params }: PageProps) {
         </p>
         <div className="media-detail-hero">
           <img
-            src={item.fileUrl}
+            src={item.fileUrl ?? undefined}
             alt={item.title}
             className="media-detail-image"
           />

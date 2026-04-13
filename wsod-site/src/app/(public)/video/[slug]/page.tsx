@@ -36,7 +36,7 @@ export default async function VideoSlugPage({ params }: PageProps) {
         </p>
         <div className="media-detail-hero">
           <video
-            src={item.fileUrl}
+            src={item.fileUrl ?? undefined}
             controls
             playsInline
             className="media-detail-image"

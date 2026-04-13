@@ -36,20 +36,20 @@ export default async function AudioSlugPage({ params }: PageProps) {
         </p>
 
         <div className="media-detail-hero">
-          <audio src={item.fileUrl} controls style={{ width: "100%" }} />
+          <audio src={item.fileUrl ?? undefined} controls style={{ width: "100%" }} />
         </div>
 
         {item.beforeUrl ? (
           <div className="media-detail-hero">
             <p className="inner-description">Before</p>
-            <audio src={item.beforeUrl} controls style={{ width: "100%" }} />
+            <audio src={item.beforeUrl ?? undefined} controls style={{ width: "100%" }} />
           </div>
         ) : null}
 
         {item.afterUrl ? (
           <div className="media-detail-hero">
             <p className="inner-description">After</p>
-            <audio src={item.afterUrl} controls style={{ width: "100%" }} />
+            <audio src={item.afterUrl ?? undefined} controls style={{ width: "100%" }} />
           </div>
         ) : null}
       </section>

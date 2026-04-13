@@ -36,7 +36,7 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
         </p>
         <div className="media-detail-hero">
           <iframe
-            src={item.fileUrl}
+            src={item.fileUrl ?? undefined}
             title={item.title}
             className="media-detail-image"
           />
