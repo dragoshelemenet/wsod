@@ -3,6 +3,7 @@ type FolderFileCardProps = {
   kind: "brand" | "model";
   href?: string;
   imageUrl?: string | null;
+  imageOnly?: boolean;
 };
 
 export function FolderFileCard({
@@ -10,18 +11,21 @@ export function FolderFileCard({
   kind,
   href,
   imageUrl,
+  imageOnly = false,
 }: FolderFileCardProps) {
-  const content = (
+  const media = imageUrl ? (
+    <img src={imageUrl} alt={title} className="folder-brand-art" />
+  ) : (
+    <div className="media-file-card-thumb" />
+  );
+
+  const content = imageOnly ? (
+    <div className="folder-brand-art-wrap">{media}</div>
+  ) : (
     <>
       <article className="owner-folder-card">
         <div className="owner-folder-classic-body">
-          <div className="folder-brand-art-wrap">
-            {imageUrl ? (
-              <img src={imageUrl} alt={title} className="folder-brand-art" />
-            ) : (
-              <div className="media-file-card-thumb" />
-            )}
-          </div>
+          <div className="folder-brand-art-wrap">{media}</div>
         </div>
       </article>
 
@@ -34,11 +38,15 @@ export function FolderFileCard({
 
   if (href) {
     return (
-      <a href={href} className="media-file-card">
+      <a href={href} className={imageOnly ? "media-file-card image-only-card" : "media-file-card"}>
         {content}
       </a>
     );
   }
 
-  return <div className="media-file-card">{content}</div>;
+  return (
+    <div className={imageOnly ? "media-file-card image-only-card" : "media-file-card"}>
+      {content}
+    </div>
+  );
 }

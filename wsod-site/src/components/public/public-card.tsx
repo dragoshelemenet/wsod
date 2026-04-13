@@ -3,6 +3,7 @@ type PublicCardProps = {
   subtitle?: string;
   href?: string;
   imageUrl?: string | null;
+  imageOnly?: boolean;
 };
 
 export function PublicCard({
@@ -10,6 +11,7 @@ export function PublicCard({
   subtitle,
   href,
   imageUrl,
+  imageOnly = false,
 }: PublicCardProps) {
   const media = imageUrl ? (
     <img src={imageUrl} alt={title} className="public-card-media" />
@@ -17,7 +19,9 @@ export function PublicCard({
     <div className="public-card-media" />
   );
 
-  const content = (
+  const content = imageOnly ? (
+    media
+  ) : (
     <>
       {media}
       <div className="public-card-copy">
@@ -29,11 +33,15 @@ export function PublicCard({
 
   if (href) {
     return (
-      <a href={href} className="public-card">
+      <a href={href} className={imageOnly ? "public-card image-only-card" : "public-card"}>
         {content}
       </a>
     );
   }
 
-  return <article className="public-card">{content}</article>;
+  return (
+    <article className={imageOnly ? "public-card image-only-card" : "public-card"}>
+      {content}
+    </article>
+  );
 }

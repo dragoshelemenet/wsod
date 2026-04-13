@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { MediaCarousel } from "@/components/public/media-carousel";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { getPublishedModelBySlug } from "@/lib/dashboard/queries";
@@ -22,6 +23,13 @@ export default async function ModelSlugPage({ params }: PageProps) {
     );
   }
 
+  const carouselItems = model.mediaItems.map((item) => ({
+    id: item.id,
+    title: item.title,
+    imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
+    href: `/${item.category}/${item.slug}`,
+  }));
+
   return (
     <main className="inner-page">
       <section className="inner-section">
@@ -32,19 +40,22 @@ export default async function ModelSlugPage({ params }: PageProps) {
             { label: model.name },
           ]}
         />
+
         <h1>{model.name}</h1>
         <p className="inner-description">
-          {model.description || "Pagina individuala pentru model si proiectele sale publice."}
+          {model.description || "Galerie pentru model si toate proiectele lui."}
         </p>
 
-        <PublicGrid>
+        <MediaCarousel items={carouselItems} />
+
+        <PublicGrid dense>
           {model.mediaItems.map((item) => (
             <PublicCard
               key={item.id}
               title={item.title}
-              subtitle={item.category}
               href={`/${item.category}/${item.slug}`}
               imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
+              imageOnly
             />
           ))}
         </PublicGrid>
