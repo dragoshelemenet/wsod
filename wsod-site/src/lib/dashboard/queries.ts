@@ -232,3 +232,17 @@ export async function getDashboardAudioProfiles() {
     return [];
   }
 }
+
+export async function getSiteContentRecord() {
+  try {
+    const item = await prisma.siteContent.findFirst({
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    return item;
+  } catch {
+    return null;
+  }
+}

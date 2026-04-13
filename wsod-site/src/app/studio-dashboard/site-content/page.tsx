@@ -1,16 +1,16 @@
-import { DashboardEmpty } from "@/components/dashboard/dashboard-empty";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { DashboardSiteContentForm } from "@/components/dashboard/dashboard-site-content-form";
+import { getSiteContentRecord } from "@/lib/dashboard/queries";
 
-export default function DashboardSiteContentPage() {
+export default async function DashboardSiteContentPage() {
+  const item = await getSiteContentRecord();
+
   return (
     <DashboardShell
       title="Site Content"
-      description="Administrare texte, sectiuni si continut static."
+      description="Administrare texte, linkuri si continut global pentru site."
     >
-      <DashboardEmpty
-        title="Site content editor"
-        description="Aici vor intra textele globale, continutul homepage, servicii si alte zone editabile."
-      />
+      <DashboardSiteContentForm item={item} />
     </DashboardShell>
   );
 }
