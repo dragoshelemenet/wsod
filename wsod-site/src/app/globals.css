@@ -4164,13 +4164,13 @@ main,
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  min-height: 38px !important;
-  min-width: 88px !important;
-  padding-right: 6px;
+  min-height: 42px !important;
+  min-width: 104px !important;
+  padding-right: 8px;
 }
 
 .public-navbar-logo-text {
-  font-size: 15px !important;
+  font-size: 16px !important;
   line-height: 1 !important;
   font-weight: 800 !important;
   letter-spacing: 0.18em !important;
@@ -4180,27 +4180,27 @@ main,
 
 .public-navbar-logo-image {
   display: block;
-  height: 22px !important;
+  height: 28px !important;
   width: auto !important;
-  max-width: 160px !important;
+  max-width: 190px !important;
   object-fit: contain !important;
 }
 
 @media (min-width: 901px) {
   .public-navbar-logo {
-    min-width: 96px !important;
+    min-width: 116px !important;
   }
 
   .public-navbar-logo-image {
-    height: 24px !important;
-    max-width: 176px !important;
+    height: 34px !important;
+    max-width: 220px !important;
   }
 }
 
 @media (max-width: 900px) {
   .public-navbar-logo-image {
-    height: 20px !important;
-    max-width: 132px !important;
+    height: 24px !important;
+    max-width: 150px !important;
   }
 }
 
