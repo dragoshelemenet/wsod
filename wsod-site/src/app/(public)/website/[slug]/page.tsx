@@ -19,6 +19,8 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
     );
   }
 
+  const previewImage = item.thumbnailUrl || item.previewUrl || null;
+
   return (
     <main className="inner-page">
       <section className="inner-section">
@@ -29,11 +31,19 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
 
         <div className="website-detail-square-wrap">
           <div className="website-detail-square">
-            <iframe
-              src={item.fileUrl ?? undefined}
-              title={item.title}
-              className="website-detail-frame"
-            />
+            {previewImage ? (
+              <img
+                src={previewImage}
+                alt={item.title}
+                className="website-detail-preview-image"
+              />
+            ) : (
+              <iframe
+                src={item.fileUrl ?? undefined}
+                title={item.title}
+                className="website-detail-frame"
+              />
+            )}
           </div>
         </div>
       </section>

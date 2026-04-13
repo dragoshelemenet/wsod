@@ -3234,40 +3234,57 @@ textarea:focus {
 
 .website-detail-square-wrap {
   width: 100%;
-  max-width: 980px;
+  max-width: 1120px;
 }
 
 .website-detail-square {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  max-height: 72vh;
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(255,255,255,0.03);
 }
 
+.website-detail-preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 78vh;
+  object-fit: contain;
+  object-position: top center;
+  background: #fff;
+}
+
 .website-detail-frame {
   width: 100%;
-  height: 100%;
+  height: min(78vh, 980px);
   border: 0;
   display: block;
   background: #fff;
 }
 
 @media (max-width: 900px) {
-  .website-detail-square {
-    aspect-ratio: 16 / 11;
-    max-height: 62vh;
+  .website-detail-preview-image {
+    max-height: 72vh;
+  }
+
+  .website-detail-frame {
+    height: 72vh;
   }
 }
 
 @media (max-width: 640px) {
   .website-detail-square {
-    aspect-ratio: 4 / 3;
-    max-height: 56vh;
     border-radius: 18px;
+  }
+
+  .website-detail-preview-image {
+    max-height: 64vh;
+  }
+
+  .website-detail-frame {
+    height: 64vh;
   }
 }
 
