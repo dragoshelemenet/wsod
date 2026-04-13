@@ -1,14 +1,9 @@
-export default function ServicesPricingPage() {
+export default function ServiciiPreturiPage() {
   return (
-    <main className="site-shell">
-      <section className="page-hero">
-        <div className="page-hero-copy">
-          <p className="page-kicker">Servicii</p>
-          <h1>Servicii si preturi</h1>
-          <p className="page-description">
-            Pagina dedicata serviciilor, pachetelor si ofertelor. In v2 va fi optimizata pentru SEO si conversie.
-          </p>
-        </div>
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Servicii si preturi</h1>
+        <p>Pagina publica pentru servicii, pachete si preturi.</p>
       </section>
     </main>
   );

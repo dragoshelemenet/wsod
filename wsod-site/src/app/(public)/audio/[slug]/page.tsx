@@ -2,19 +2,14 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export default async function AudioDetailPage({ params }: PageProps) {
+export default async function AudioSlugPage({ params }: PageProps) {
   const { slug } = await params;
 
   return (
-    <main className="site-shell">
-      <section className="page-hero">
-        <div className="page-hero-copy">
-          <p className="page-kicker">Audio</p>
-          <h1>{slug.replace(/-/g, " ")}</h1>
-          <p className="page-description">
-            Pagina de detaliu audio. In v2 aici va exista comparatie before / after si player clar.
-          </p>
-        </div>
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Audio: {slug}</h1>
+        <p>Pagina individuala pentru proiect audio.</p>
       </section>
     </main>
   );
