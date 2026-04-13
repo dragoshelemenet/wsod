@@ -3,7 +3,7 @@ export default function GraficaPage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Grafica</h1>
-        <p>Lista publica pentru lucrari de grafica.</p>
+        <p>Lista publica pentru proiectele de grafica.</p>
       </section>
     </main>
   );
