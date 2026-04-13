@@ -543,9 +543,7 @@ export default function AdminMediaManager({
 
             <div className="admin-media-edit-layout admin-media-edit-layout-wide">
               <div className="admin-media-edit-preview">
-                <div className="admin-rotate-preview-wrap">
-                  <PreviewLarge item={selectedItem} />
-                </div>
+                <PreviewLarge item={selectedItem} />
               </div>
 
               <div className="admin-media-edit-form">
