@@ -4886,3 +4886,39 @@ main,
     margin-bottom: 12px !important;
   }
 }
+
+/* ===== NAVBAR DISTANCE LOGIC + SMALLER TOP GAP ===== */
+.public-navbar {
+  transition:
+    transform 0.26s ease,
+    opacity 0.26s ease !important;
+}
+
+.public-navbar.is-hidden:not(.is-menu-open) {
+  transform: translateY(-120%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.public-navbar:not(.is-hidden) {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+.home-page,
+.inner-page,
+main,
+.public-shell,
+.public-page {
+  padding-top: 82px !important;
+}
+
+@media (max-width: 900px) {
+  .home-page,
+  .inner-page,
+  main,
+  .public-shell,
+  .public-page {
+    padding-top: 78px !important;
+  }
+}

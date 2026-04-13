@@ -20,7 +20,11 @@ type PublicNavbarProps = {
 export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
+
   const lastScrollY = useRef(0);
+  const anchorY = useRef(0);
+  const hiddenAtY = useRef<number | null>(null);
+  const maxHiddenY = useRef<number | null>(null);
 
   useEffect(() => {
     const onResize = () => {
@@ -32,41 +36,70 @@ export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
   }, []);
 
   useEffect(() => {
+    lastScrollY.current = window.scrollY;
+    anchorY.current = window.scrollY;
+
     let ticking = false;
 
     const onScroll = () => {
       if (ticking) return;
-
       ticking = true;
 
       window.requestAnimationFrame(() => {
         const currentY = window.scrollY;
-        const diff = currentY - lastScrollY.current;
+        const direction = currentY > lastScrollY.current ? "down" : "up";
 
-        // mereu vizibil aproape de top
-        if (currentY < 80) {
+        if (currentY <= 50) {
           setHidden(false);
+          anchorY.current = currentY;
+          hiddenAtY.current = null;
+          maxHiddenY.current = null;
           lastScrollY.current = currentY;
           ticking = false;
           return;
         }
 
-        // daca meniul mobil e deschis,nu il ascunde
         if (open) {
           setHidden(false);
+          anchorY.current = currentY;
+          hiddenAtY.current = null;
+          maxHiddenY.current = null;
           lastScrollY.current = currentY;
           ticking = false;
           return;
         }
 
-        // scroll down mai clar -> ascunde
-        if (diff > 14) {
-          setHidden(true);
-        }
+        if (!hidden) {
+          if (direction === "down") {
+            const downDistance = currentY - anchorY.current;
 
-        // scroll up mai clar -> arata
-        if (diff < -14) {
-          setHidden(false);
+            if (downDistance >= 50) {
+              setHidden(true);
+              hiddenAtY.current = currentY;
+              maxHiddenY.current = currentY;
+            }
+          } else {
+            anchorY.current = currentY;
+          }
+        } else {
+          if (direction === "down") {
+            if (maxHiddenY.current === null || currentY > maxHiddenY.current) {
+              maxHiddenY.current = currentY;
+            }
+          } else {
+            const hidePoint = hiddenAtY.current ?? currentY;
+            const farthestPoint = maxHiddenY.current ?? currentY;
+            const extraDownAfterHide = Math.max(0, farthestPoint - hidePoint);
+            const showThreshold = extraDownAfterHide <= 50 ? 50 : 100;
+            const upDistance = farthestPoint - currentY;
+
+            if (upDistance >= showThreshold) {
+              setHidden(false);
+              anchorY.current = currentY;
+              hiddenAtY.current = null;
+              maxHiddenY.current = null;
+            }
+          }
         }
 
         lastScrollY.current = currentY;
@@ -76,7 +109,7 @@ export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [open]);
+  }, [open, hidden]);
 
   return (
     <nav
