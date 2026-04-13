@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
 
 type OptionItem = {
   id: string;
@@ -251,6 +252,10 @@ function DashboardMediaEditCard({
           <button className="admin-submit" type="button" onClick={onSave} disabled={loading}>
             {loading ? "Saving..." : "Save"}
           </button>
+          <DashboardDeleteButton
+            endpoint={`/api/admin/media/${item.id}`}
+            label={title}
+          />
         </div>
       </div>
 

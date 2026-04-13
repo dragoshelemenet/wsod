@@ -1,3 +1,5 @@
+import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
+
 type DashboardModelListItem = {
   id: string;
   name: string;
@@ -35,6 +37,10 @@ export function DashboardModelList({ items }: DashboardModelListProps) {
             <span>Slug: {item.slug}</span>
             <span>Vizibil: {item.isVisible ? "Da" : "Nu"}</span>
             {item.description ? <span>{item.description}</span> : null}
+            <DashboardDeleteButton
+              endpoint={`/api/admin/models/${item.id}`}
+              label={item.name}
+            />
           </div>
 
           <div className="admin-folder-toggle-visual">

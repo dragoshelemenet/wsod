@@ -1,3 +1,5 @@
+import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
+
 type DashboardBrandListItem = {
   id: string;
   name: string;
@@ -36,6 +38,10 @@ export function DashboardBrandList({ items }: DashboardBrandListProps) {
             <span>Slug: {item.slug}</span>
             <span>Vizibil: {item.isVisible ? "Da" : "Nu"}</span>
             {item.description ? <span>{item.description}</span> : null}
+            <DashboardDeleteButton
+              endpoint={`/api/admin/brands/${item.id}`}
+              label={item.name}
+            />
           </div>
 
           <div className="admin-folder-toggle-visual">

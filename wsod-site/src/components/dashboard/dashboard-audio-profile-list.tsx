@@ -1,3 +1,5 @@
+import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
+
 type DashboardAudioProfileListItem = {
   id: string;
   name: string;
@@ -34,6 +36,10 @@ export function DashboardAudioProfileList({
             <span>Kind: {item.kind}</span>
             <span>Vizibil: {item.isVisible ? "Da" : "Nu"}</span>
             {item.description ? <span>{item.description}</span> : null}
+            <DashboardDeleteButton
+              endpoint={`/api/admin/audio-profiles/${item.id}`}
+              label={item.name}
+            />
           </div>
 
           <div className="admin-folder-toggle-visual">
