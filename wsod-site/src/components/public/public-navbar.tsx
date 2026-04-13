@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
@@ -19,6 +19,8 @@ type PublicNavbarProps = {
 
 export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const onResize = () => {
@@ -29,8 +31,58 @@ export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  useEffect(() => {
+    let ticking = false;
+
+    const onScroll = () => {
+      if (ticking) return;
+
+      ticking = true;
+
+      window.requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const diff = currentY - lastScrollY.current;
+
+        // mereu vizibil aproape de top
+        if (currentY < 80) {
+          setHidden(false);
+          lastScrollY.current = currentY;
+          ticking = false;
+          return;
+        }
+
+        // daca meniul mobil e deschis,nu il ascunde
+        if (open) {
+          setHidden(false);
+          lastScrollY.current = currentY;
+          ticking = false;
+          return;
+        }
+
+        // scroll down mai clar -> ascunde
+        if (diff > 14) {
+          setHidden(true);
+        }
+
+        // scroll up mai clar -> arata
+        if (diff < -14) {
+          setHidden(false);
+        }
+
+        lastScrollY.current = currentY;
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [open]);
+
   return (
-    <nav className="public-navbar" aria-label="Public navigation">
+    <nav
+      className={`public-navbar ${hidden ? "is-hidden" : ""} ${open ? "is-menu-open" : ""}`}
+      aria-label="Public navigation"
+    >
       <div className="public-navbar-inner">
         <div className="public-navbar-top">
           <a className="public-navbar-logo" href="/" aria-label="WSOD Home">

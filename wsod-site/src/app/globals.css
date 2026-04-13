@@ -4661,3 +4661,36 @@ main,
     min-width: 0 !important;
   }
 }
+
+/* ===== SMART HIDE/SHOW NAVBAR ON SCROLL ===== */
+.public-navbar {
+  position: sticky;
+  top: 10px;
+  z-index: 1000;
+  transition:
+    transform 0.28s ease,
+    opacity 0.28s ease,
+    top 0.28s ease;
+  will-change: transform, opacity;
+}
+
+.public-navbar.is-hidden:not(.is-menu-open) {
+  transform: translateY(-140%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.public-navbar:not(.is-hidden) {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .public-navbar {
+    top: 8px;
+  }
+
+  .public-navbar.is-hidden:not(.is-menu-open) {
+    transform: translateY(-130%);
+  }
+}
