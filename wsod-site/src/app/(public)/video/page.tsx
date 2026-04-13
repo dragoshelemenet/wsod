@@ -1,5 +1,5 @@
 import { getPublishedBrands, getPublishedMediaByCategory } from "@/lib/dashboard/queries";
-import { BrandFolderCard } from "@/components/public/brand-folder-card";
+import { OwnerFolderCard } from "@/components/public/owner-folder-card";
 import { CategoryHero } from "@/components/public/category-hero";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
@@ -23,7 +23,6 @@ export default async function VideoPage() {
           <PublicCard
             key={item.id}
             title={item.title}
-            subtitle="Video"
             href={`/video/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             imageOnly
@@ -36,9 +35,9 @@ export default async function VideoPage() {
           <h2>Branduri</h2>
         </div>
 
-        <div className="folder-grid">
+        <div className="public-owner-folder-grid">
           {brands.map((item) => (
-            <BrandFolderCard
+            <OwnerFolderCard
               key={item.id}
               title={item.name}
               href={`/brand/${item.slug}`}

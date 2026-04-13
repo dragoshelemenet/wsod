@@ -1,7 +1,5 @@
 import { getPublishedBrands, getPublishedMediaByCategory, getPublishedModels } from "@/lib/dashboard/queries";
-import { BrandFolderCard } from "@/components/public/brand-folder-card";
-import { FileGrid } from "@/components/public/file-grid";
-import { FolderFileCard } from "@/components/public/folder-file-card";
+import { OwnerFolderCard } from "@/components/public/owner-folder-card";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
@@ -32,12 +30,11 @@ export default async function FotoPage() {
           <h2>Modele</h2>
         </div>
 
-        <FileGrid dense>
+        <div className="public-owner-folder-grid">
           {models.map((item) => (
-            <FolderFileCard
+            <OwnerFolderCard
               key={item.id}
               title={item.name}
-              kind="model"
               href={`/model/${item.slug}`}
               imageUrl={
                 item.portraitImageUrl ||
@@ -46,10 +43,9 @@ export default async function FotoPage() {
                 item.mediaItems?.[0]?.fileUrl ||
                 null
               }
-              imageOnly
             />
           ))}
-        </FileGrid>
+        </div>
       </section>
 
       <section className="inner-section-block">
@@ -57,9 +53,9 @@ export default async function FotoPage() {
           <h2>Branduri</h2>
         </div>
 
-        <div className="folder-grid">
+        <div className="public-owner-folder-grid">
           {brands.map((item) => (
-            <BrandFolderCard
+            <OwnerFolderCard
               key={item.id}
               title={item.name}
               href={`/brand/${item.slug}`}
