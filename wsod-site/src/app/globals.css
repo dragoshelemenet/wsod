@@ -4444,3 +4444,23 @@ main,
     max-width: 140px !important;
   }
 }
+
+/* ===== HOME LOGO 25% SMALLER ===== */
+.reference-logo-image {
+  width: 75% !important;
+  max-width: 75% !important;
+  height: auto !important;
+}
+
+.reference-logo-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .reference-logo-image {
+    width: 75% !important;
+    max-width: 75% !important;
+  }
+}
