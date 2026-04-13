@@ -40,6 +40,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
       isVisible: true,
       category: "foto",
       id: { not: item.id },
+      personModelId: { not: null },
       ...(item.personModel?.id
         ? { NOT: { personModelId: item.personModel.id } }
         : {}),
