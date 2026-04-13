@@ -271,7 +271,6 @@ function DashboardMediaEditCard({
   const [brandId, setBrandId] = useState(item.brandId || "");
   const [personModelId, setPersonModelId] = useState(item.personModelId || "");
   const [audioProfileId, setAudioProfileId] = useState(item.audioProfileId || "");
-  const [rotation, setRotation] = useState(item.rotation || 0);
   const [isVisible, setIsVisible] = useState(item.isVisible);
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
   const [loading, setLoading] = useState(false);
@@ -288,14 +287,12 @@ function DashboardMediaEditCard({
     item.category === "meta-ads";
 
   function rotateLeft() {
-    setRotation((current) => {
       const next = current - 90;
       return next < 0 ? 270 : next;
     });
   }
 
   function rotateRight() {
-    setRotation((current) => {
       const next = current + 90;
       return next > 270 ? 0 : next;
     });
@@ -318,7 +315,6 @@ function DashboardMediaEditCard({
           thumbnailUrl,
           previewUrl,
           fileUrl,
-          rotation,
           brandId: brandId || null,
           personModelId: personModelId || null,
           audioProfileId: audioProfileId || null,
@@ -356,7 +352,6 @@ function DashboardMediaEditCard({
                 src={previewImage}
                 alt={title}
                 style={{
-                  transform: `rotate(${rotation}deg)`,
                   transformOrigin: "center",
                 }}
               />
@@ -492,15 +487,6 @@ function DashboardMediaEditCard({
 
           {isImageType ? (
             <div className="site-content-actions">
-              <button type="button" className="admin-ghost-button" onClick={rotateLeft}>
-                Rotate left
-              </button>
-
-              <button type="button" className="admin-ghost-button" onClick={rotateRight}>
-                Rotate right
-              </button>
-
-              <span className="admin-helper-text">Rotation: {rotation}°</span>
             </div>
           ) : null}
 
