@@ -2,6 +2,7 @@ import { CategoryHero } from "@/components/public/category-hero";
 import { FileGrid } from "@/components/public/file-grid";
 import { FolderFileCard } from "@/components/public/folder-file-card";
 import { PublicShell } from "@/components/public/public-shell";
+import { Pagination } from "@/components/shared/pagination";
 
 export default function BrandIndexPage() {
   return (
@@ -23,6 +24,7 @@ export default function BrandIndexPage() {
         <FolderFileCard title="Brand 07" kind="brand" />
         <FolderFileCard title="Brand 08" kind="brand" />
       </FileGrid>
+      <Pagination nextHref="/brand?page=2" />
     </PublicShell>
   );
 }
