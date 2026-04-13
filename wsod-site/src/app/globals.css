@@ -2743,3 +2743,14 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+
+.inner-section-block {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.section-mini-head h2 {
+  font-size: clamp(22px, 3vw, 34px);
+  letter-spacing: -0.04em;
+}
