@@ -1,6 +1,5 @@
 import { getPublishedBrands } from "@/lib/dashboard/queries";
-import { FileGrid } from "@/components/public/file-grid";
-import { FolderFileCard } from "@/components/public/folder-file-card";
+import { BrandFolderCard } from "@/components/public/brand-folder-card";
 import { PublicShell } from "@/components/public/public-shell";
 
 export default async function BrandIndexPage() {
@@ -8,12 +7,11 @@ export default async function BrandIndexPage() {
 
   return (
     <PublicShell title="Branduri" description="Lista publica de branduri.">
-      <FileGrid dense>
+      <div className="folder-grid">
         {items.map((item) => (
-          <FolderFileCard
+          <BrandFolderCard
             key={item.id}
             title={item.name}
-            kind="brand"
             href={`/brand/${item.slug}`}
             imageUrl={
               item.logoUrl ||
@@ -23,10 +21,9 @@ export default async function BrandIndexPage() {
               item.mediaItems?.[0]?.fileUrl ||
               null
             }
-            imageOnly
           />
         ))}
-      </FileGrid>
+      </div>
     </PublicShell>
   );
 }

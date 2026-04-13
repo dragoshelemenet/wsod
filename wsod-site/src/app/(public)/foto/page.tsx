@@ -1,4 +1,5 @@
 import { getPublishedBrands, getPublishedMediaByCategory, getPublishedModels } from "@/lib/dashboard/queries";
+import { BrandFolderCard } from "@/components/public/brand-folder-card";
 import { FileGrid } from "@/components/public/file-grid";
 import { FolderFileCard } from "@/components/public/folder-file-card";
 import { PublicCard } from "@/components/public/public-card";
@@ -56,12 +57,11 @@ export default async function FotoPage() {
           <h2>Branduri</h2>
         </div>
 
-        <FileGrid dense>
+        <div className="folder-grid">
           {brands.map((item) => (
-            <FolderFileCard
+            <BrandFolderCard
               key={item.id}
               title={item.name}
-              kind="brand"
               href={`/brand/${item.slug}`}
               imageUrl={
                 item.logoUrl ||
@@ -71,10 +71,9 @@ export default async function FotoPage() {
                 item.mediaItems?.[0]?.fileUrl ||
                 null
               }
-              imageOnly
             />
           ))}
-        </FileGrid>
+        </div>
       </section>
     </PublicShell>
   );
