@@ -90,7 +90,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
                   alt={photo.title}
                   className="detail-thumb-image"
-                  style={{ transform: `rotate(${((photo as any).rotation ?? 0)}deg)` }}
+                 
                 />
               </a>
             ))}

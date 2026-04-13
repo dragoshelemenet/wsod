@@ -176,7 +176,6 @@ function PreviewThumb({ item }: { item: AdminMediaItem }) {
       src={src}
       alt={item.title}
       className="admin-media-thumb-media"
-      style={{ transform: `rotate(${normalizeRotation(item.rotation ?? 0)}deg)` }}
     />
   ) : (
     <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
@@ -205,7 +204,6 @@ function PreviewLarge({ item }: { item: AdminMediaItem }) {
       src={src}
       alt={item.title}
       className="admin-media-edit-preview-media"
-      style={{ transform: `rotate(${normalizeRotation(item.rotation ?? 0)}deg)` }}
     />
   ) : (
     <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
@@ -238,7 +236,6 @@ export default function AdminMediaManager({
   const [message, setMessage] = useState("");
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [rotationById, setRotationById] = useState<Record<string, number>>({});
 
   const selectedItem = useMemo(
     () => items.find((item) => item.id === selectedItemId) || null,
@@ -308,7 +305,6 @@ export default function AdminMediaManager({
           sortOrder: item.sortOrder ?? 0,
           isFeatured: !!item.isFeatured,
           isVisible: item.isVisible ?? true,
-          rotation: normalizeRotation(item.rotation ?? 0),
           date: item.date,
         }),
       });
@@ -419,29 +415,37 @@ export default function AdminMediaManager({
     setSelectedItemId(id);
   }
 
-  function getRotation(id: string) {
-    return rotationById[id] ?? 0;
-  }
+  async function rotatePhysical(item: AdminMediaItem, direction: "left" | "right") {
+    setSavingId(item.id);
+    setMessage("");
 
-  function rotateSelectedItem(id: string, direction: "left" | "right") {
-    setRotationById((current) => {
-      const currentValue = current[id] ?? 0;
-      const nextValue = direction === "left" ? currentValue - 90 : currentValue + 90;
-      const normalized = ((nextValue % 360) + 360) % 360;
-      return { ...current, [id]: normalized };
-    });
-  }
+    try {
+      const response = await fetch(`/api/admin/media/${item.id}/rotate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ direction }),
+      });
 
+      const result = await response.json();
 
-  function rotateItem(id: string, direction: "left" | "right") {
-    const current = items.find((item) => item.id === id);
-    const currentRotation = normalizeRotation(current?.rotation ?? 0);
-    const nextRotation =
-      direction === "left"
-        ? normalizeRotation(currentRotation - 90)
-        : normalizeRotation(currentRotation + 90);
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Nu s-a putut roti imaginea.");
+      }
 
-    patchItem(id, { rotation: nextRotation });
+      if (result.mediaItem?.id) {
+        setItems((current) =>
+          current.map((entry) =>
+            entry.id === item.id ? { ...entry, ...result.mediaItem } : entry
+          )
+        );
+      }
+
+      setMessage("Imagine rotită fizic și salvată.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
+    } finally {
+      setSavingId(null);
+    }
   }
 
   function applyPhotoGroup(item: AdminMediaItem, value: string) {
@@ -578,7 +582,9 @@ export default function AdminMediaManager({
 
             <div className="admin-media-edit-layout admin-media-edit-layout-wide">
               <div className="admin-media-edit-preview">
-                <div className="admin-rotate-preview-wrap">\n                  <PreviewLarge item={selectedItem} />\n                </div>
+                <div className="admin-rotate-preview-wrap">
+                  <PreviewLarge item={selectedItem} />
+                </div>
               </div>
 
               <div className="admin-media-edit-form">
@@ -741,47 +747,24 @@ export default function AdminMediaManager({
                     {selectedItem.category} • {getOwnerMeta(selectedItem).ownerName}
                   </span>
                 </div>
-
-
-                <div className="admin-inline-actions admin-rotate-actions">
-                  <button
-                    type="button"
-                    className="admin-secondary-button"
-                    onClick={() => rotateSelectedItem(selectedItem.id, "left")}
-                  >
-                    Rotire stânga
-                  </button>
-
-                  <button
-                    type="button"
-                    className="admin-secondary-button"
-                    onClick={() => rotateSelectedItem(selectedItem.id, "right")}
-                  >
-                    Rotire dreapta
-                  </button>
-
-                  <span className="admin-helper-text">
-                    Rotire curentă: {getRotation(selectedItem.id)}°
-                  </span>
-                </div>
-
-
                 <div className="admin-inline-actions admin-inline-actions-wrap">
                   {!isVideoLike(selectedItem) ? (
                     <>
                       <button
                         type="button"
                         className="admin-secondary-button"
-                        onClick={() => rotateItem(selectedItem.id, "left")}
+                        onClick={() => rotatePhysical(selectedItem, "left")}
+                        disabled={savingId === selectedItem.id}
                       >
-                        Rotate left
+                        Rotire fizică stânga
                       </button>
                       <button
                         type="button"
                         className="admin-secondary-button"
-                        onClick={() => rotateItem(selectedItem.id, "right")}
+                        onClick={() => rotatePhysical(selectedItem, "right")}
+                        disabled={savingId === selectedItem.id}
                       >
-                        Rotate right
+                        Rotire fizică dreapta
                       </button>
                     </>
                   ) : null}

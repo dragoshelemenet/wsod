@@ -20,7 +20,7 @@ export default async function WebsitePage() {
             href={`/website/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             imageOnly
-            rotation={(item as any).rotation ?? 0}
+           
           />
         ))}
       </PublicGrid>

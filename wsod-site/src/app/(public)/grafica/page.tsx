@@ -20,7 +20,7 @@ export default async function GraficaPage() {
             href={`/grafica/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             imageOnly
-            rotation={(item as any).rotation ?? 0}
+           
           />
         ))}
       </PublicGrid>

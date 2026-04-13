@@ -60,7 +60,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             src={item.fileUrl ?? item.previewUrl ?? item.thumbnailUrl ?? undefined}
             alt={item.title}
             className="media-detail-image"
-            style={{ transform: `rotate(${((item as any).rotation ?? 0)}deg)` }}
+           
           />
         </div>
 
@@ -78,7 +78,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
                   href={`/grafica/${graphic.slug}`}
                   imageUrl={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl}
                   imageOnly
-                  rotation={(graphic as any).rotation ?? 0}
+                 
                 />
               ))}
             </PublicGrid>
@@ -99,7 +99,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
                   href={`/grafica/${graphic.slug}`}
                   imageUrl={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl}
                   imageOnly
-                  rotation={(graphic as any).rotation ?? 0}
+                 
                 />
               ))}
             </PublicGrid>
