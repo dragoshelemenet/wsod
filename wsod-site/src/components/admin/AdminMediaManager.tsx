@@ -222,6 +222,7 @@ export default function AdminMediaManager({
   const [message, setMessage] = useState("");
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [rotationById, setRotationById] = useState<Record<string, number>>({});
 
   const selectedItem = useMemo(
     () => items.find((item) => item.id === selectedItemId) || null,
@@ -401,6 +402,19 @@ export default function AdminMediaManager({
     setSelectedItemId(id);
   }
 
+  function getRotation(id: string) {
+    return rotationById[id] ?? 0;
+  }
+
+  function rotateSelectedItem(id: string, direction: "left" | "right") {
+    setRotationById((current) => {
+      const currentValue = current[id] ?? 0;
+      const nextValue = direction === "left" ? currentValue - 90 : currentValue + 90;
+      const normalized = ((nextValue % 360) + 360) % 360;
+      return { ...current, [id]: normalized };
+    });
+  }
+
   function applyPhotoGroup(item: AdminMediaItem, value: string) {
     const matched = photoOutfitOptions().find((entry) => entry.value === value);
     patchItem(item.id, {
@@ -535,7 +549,7 @@ export default function AdminMediaManager({
 
             <div className="admin-media-edit-layout admin-media-edit-layout-wide">
               <div className="admin-media-edit-preview">
-                <PreviewLarge item={selectedItem} />
+                <div className="admin-rotate-preview-wrap">\n                  <PreviewLarge item={selectedItem} />\n                </div>
               </div>
 
               <div className="admin-media-edit-form">
@@ -698,6 +712,30 @@ export default function AdminMediaManager({
                     {selectedItem.category} • {getOwnerMeta(selectedItem).ownerName}
                   </span>
                 </div>
+
+
+                <div className="admin-inline-actions admin-rotate-actions">
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => rotateSelectedItem(selectedItem.id, "left")}
+                  >
+                    Rotire stânga
+                  </button>
+
+                  <button
+                    type="button"
+                    className="admin-secondary-button"
+                    onClick={() => rotateSelectedItem(selectedItem.id, "right")}
+                  >
+                    Rotire dreapta
+                  </button>
+
+                  <span className="admin-helper-text">
+                    Rotire curentă: {getRotation(selectedItem.id)}°
+                  </span>
+                </div>
+
 
                 <div className="admin-inline-actions">
                   <button

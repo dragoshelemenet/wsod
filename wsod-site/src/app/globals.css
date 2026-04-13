@@ -4163,3 +4163,22 @@ main,
     padding-top: 96px !important;
   }
 }
+\n\n
+.admin-rotate-preview-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.admin-rotate-preview-wrap .admin-media-edit-preview-media {
+  transform: rotate(var(--admin-rotate, 0deg));
+  transform-origin: center center;
+  transition: transform 180ms ease;
+}
+
+.admin-rotate-actions {
+  align-items: center;
+}
