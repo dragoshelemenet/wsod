@@ -16,6 +16,7 @@ export default async function MetaAdsPage() {
             subtitle="Meta Ads"
             href={`/meta-ads/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
+            rotation={item.rotation ?? 0}
           />
         ))}
       </PublicGrid>

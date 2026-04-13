@@ -21,6 +21,7 @@ export default async function FotoPage() {
             href={`/foto/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             imageOnly
+            rotation={item.rotation ?? 0}
           />
         ))}
       </PublicGrid>

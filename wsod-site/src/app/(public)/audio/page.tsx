@@ -16,6 +16,7 @@ export default async function AudioPage() {
             subtitle="Audio"
             href={`/audio/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
+            rotation={item.rotation ?? 0}
           />
         ))}
       </PublicGrid>

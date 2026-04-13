@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import {
@@ -51,14 +50,6 @@ export default async function GraficaSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Grafica", href: "/grafica" },
-            { label: item.title },
-          ]}
-        />
-
         <h1>{item.title}</h1>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect grafic."}
@@ -69,6 +60,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             src={item.fileUrl ?? item.previewUrl ?? item.thumbnailUrl ?? undefined}
             alt={item.title}
             className="media-detail-image"
+            style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
           />
         </div>
 
@@ -86,6 +78,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
                   href={`/grafica/${graphic.slug}`}
                   imageUrl={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl}
                   imageOnly
+                  rotation={graphic.rotation ?? 0}
                 />
               ))}
             </PublicGrid>
@@ -106,6 +99,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
                   href={`/grafica/${graphic.slug}`}
                   imageUrl={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl}
                   imageOnly
+                  rotation={graphic.rotation ?? 0}
                 />
               ))}
             </PublicGrid>

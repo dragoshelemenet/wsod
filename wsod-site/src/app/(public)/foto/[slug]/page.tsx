@@ -55,12 +55,14 @@ export default async function FotoSlugPage({ params }: PageProps) {
       title: item.title,
       src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
       thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
+      rotation: item.rotation ?? 0,
     },
     ...sameModelPhotos.map((photo) => ({
       id: photo.id,
       title: photo.title,
       src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
       thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
+      rotation: photo.rotation ?? 0,
     })),
   ].filter((entry) => entry.src);
 
@@ -88,6 +90,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
                   alt={photo.title}
                   className="detail-thumb-image"
+                  style={{ transform: `rotate(${photo.rotation ?? 0}deg)` }}
                 />
               </a>
             ))}

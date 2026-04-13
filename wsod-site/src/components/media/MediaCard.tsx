@@ -98,6 +98,7 @@ export default function MediaCard({ item }: MediaCardProps) {
                   alt={item.title}
                   className="media-card-photo-image"
                   loading="lazy"
+                  style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
                   onError={() => {
                     if (imageIndex < imageCandidates.length - 1) {
                       setImageIndex((current) => current + 1);
@@ -129,6 +130,7 @@ export default function MediaCard({ item }: MediaCardProps) {
                   src={videoSrc}
                   className="media-card-photo-image"
                   controls
+                  style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
                   playsInline
                   preload="metadata"
                   poster={previewSrc || undefined}
@@ -139,6 +141,7 @@ export default function MediaCard({ item }: MediaCardProps) {
                   alt={item.title}
                   className="media-card-photo-image"
                   loading="lazy"
+                  style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
                   onError={() => {
                     if (imageIndex < imageCandidates.length - 1) {
                       setImageIndex((current) => current + 1);
@@ -172,6 +175,7 @@ export default function MediaCard({ item }: MediaCardProps) {
                 alt={item.title}
                 className="media-thumb-image"
                 loading="lazy"
+                style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
                 onError={() => {
                   if (imageIndex < imageCandidates.length - 1) {
                     setImageIndex((current) => current + 1);

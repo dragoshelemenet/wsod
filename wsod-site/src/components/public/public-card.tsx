@@ -5,6 +5,7 @@ type PublicCardProps = {
   imageUrl?: string | null;
   imageOnly?: boolean;
   showPlayIcon?: boolean;
+  rotation?: number;
 };
 
 export function PublicCard({
@@ -14,10 +15,16 @@ export function PublicCard({
   imageUrl,
   imageOnly = false,
   showPlayIcon = false,
+  rotation = 0,
 }: PublicCardProps) {
   const media = imageUrl ? (
     <div className="public-card-media-wrap">
-      <img src={imageUrl} alt={title} className="public-card-media" />
+      <img
+        src={imageUrl}
+        alt={title}
+        className="public-card-media"
+        style={{ transform: `rotate(${rotation}deg)` }}
+      />
       {showPlayIcon ? (
         <div className="public-card-play-badge" aria-hidden="true">
           <svg viewBox="0 0 24 24" className="public-card-play-icon">
