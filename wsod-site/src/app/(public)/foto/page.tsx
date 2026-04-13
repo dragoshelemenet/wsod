@@ -35,7 +35,7 @@ export default async function FotoPage() {
     }));
 
   return (
-    <PublicShell title="Foto">
+    <PublicShell title="Foto">\n      <div className="foto-index-page">
       <PreviewRail title="Poze cu modele" items={modelPhotos} />
 
       <section className="inner-section-block">
@@ -88,6 +88,6 @@ export default async function FotoPage() {
           ))}
         </div>
       </section>
-    </PublicShell>
+      </div>\n    </PublicShell>
   );
 }
