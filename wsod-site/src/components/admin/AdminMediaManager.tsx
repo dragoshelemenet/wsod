@@ -221,7 +221,6 @@ function buildMonthYearIso(month: number, year: number) {
   return new Date(Date.UTC(year, month, 1)).toISOString();
 }
 
-
 export default function AdminMediaManager({
   initialItems,
 }: AdminMediaManagerClientProps) {
