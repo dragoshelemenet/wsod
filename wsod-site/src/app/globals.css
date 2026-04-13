@@ -3254,22 +3254,12 @@ textarea:focus {
   background: #fff;
 }
 
-.website-detail-frame {
-  width: 100%;
-  height: min(78vh, 980px);
-  border: 0;
-  display: block;
-  background: #fff;
-}
-
 @media (max-width: 900px) {
   .website-detail-preview-image {
     max-height: 72vh;
   }
 
-  .website-detail-frame {
-    height: 72vh;
-  }
+  
 }
 
 @media (max-width: 640px) {
@@ -3281,9 +3271,7 @@ textarea:focus {
     max-height: 64vh;
   }
 
-  .website-detail-frame {
-    height: 64vh;
-  }
+  
 }
 
 .services-clean-hero {
@@ -3389,77 +3377,6 @@ textarea:focus {
   }
 }
 
-/* FIXED NAVBAR */
-.public-navbar {
-  position: fixed !important;
-  z-index: 9999;
-}
-
-.public-navbar::before,
-.public-navbar::after {
-}
-
-main,
-.inner-page,
-.public-shell,
-.public-page {
-  padding-top: 120px;
-}
-
-/* WEBSITE ZOOM PREVIEW */
-.website-preview-shell {
-  width: 100%;
-  max-width: 1100px;
-}
-
-.website-preview-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.website-preview-btn {
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  border-radius: 12px;
-  padding: 10px 14px;
-  cursor: pointer;
-}
-
-.website-preview-zoom-label {
-  min-width: 64px;
-  text-align: center;
-  color: rgba(255,255,255,0.82);
-}
-
-.website-preview-frame {
-  width: 100%;
-  height: min(78vh, 980px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: #f3f3f3;
-}
-
-.website-preview-canvas {
-  width: 100%;
-  min-height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0;
-}
-
-.website-preview-image {
-  display: block;
-  height: auto;
-  transform-origin: top center;
-  will-change: transform;
-}
-
 /* THUMB GRID */
 .media-thumb-grid {
   display: grid;
@@ -3542,68 +3459,6 @@ main,
 .public-shell,
 .public-page {
   padding-top: 24px !important;
-}
-
-.website-preview-shell {
-  width: 100%;
-  max-width: 100%;
-}
-
-.website-preview-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.website-preview-toolbar button {
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  border-radius: 999px;
-  padding: 8px 14px;
-  cursor: pointer;
-}
-
-.website-preview-toolbar span {
-  min-width: 64px;
-  text-align: center;
-  color: #fff;
-}
-
-.website-preview-viewport {
-  width: 100%;
-  overflow: auto;
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: #fff;
-  max-height: 78vh;
-}
-
-.website-preview-scale {
-  transform-origin: top left;
-  width: fit-content;
-  min-width: 100%;
-}
-
-.website-detail-frame {
-  width: 1440px;
-  height: 2200px;
-  border: 0;
-  display: block;
-  background: #fff;
-}
-
-.website-preview-shell {
-  width: 100%;
-  max-width: 100%;
-}
-
-.website-preview-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
 }
 
 .website-preview-toolbar button {
@@ -3690,140 +3545,6 @@ main,
   width: 100%;
   height: auto;
   display: block;
-}
-
-/* MOBILE COLLAPSIBLE NAV */
-.public-navbar {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 9999 !important;
-  padding: 12px 14px !important;
-  background: #0b0b0f !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-}
-
-.public-navbar::before,
-.public-navbar::after {
-  display: none !important;
-  content: none !important;
-}
-
-.public-navbar-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: grid;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
-    rgba(12,12,16,0.96);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    0 14px 28px rgba(0,0,0,0.22);
-}
-
-.public-navbar-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.public-navbar-logo {
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.public-navbar-toggle {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  min-height: 38px;
-  padding: 0 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.9);
-}
-
-.public-navbar-toggle-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.public-navbar-toggle-arrow {
-  display: inline-block;
-  font-size: 18px;
-  line-height: 1;
-  transform: rotate(90deg);
-  transition: transform 160ms ease;
-}
-
-.public-navbar-toggle.is-open .public-navbar-toggle-arrow {
-  transform: rotate(-90deg);
-}
-
-.public-navbar-links-desktop {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-
-.public-navbar-mobile {
-  display: none;
-}
-
-@media (max-width: 900px) {
-  .home-page,
-  .inner-page {
-    padding-top: 128px !important;
-  }
-
-  .public-global-footer {
-    margin-top: 28px;
-  }
-
-  .public-navbar-inner {
-    gap: 0;
-  }
-
-  .public-navbar-toggle {
-    display: inline-flex;
-  }
-
-  .public-navbar-links-desktop {
-    display: none;
-  }
-
-  .public-navbar-mobile {
-    display: none;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    padding-top: 12px;
-  }
-
-  .public-navbar-mobile.is-open {
-    display: grid;
-  }
-
-  .public-navbar-link {
-    min-height: 36px;
-    padding: 0 10px;
-    font-size: 12px;
-  }
 }
 
 /* MOBILE COLLAPSIBLE NAV */
@@ -4141,20 +3862,9 @@ main,
     padding-top: 96px !important;
   }
 }
-\n\n
-.admin-rotate-preview-wrap {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: auto;
-}
 
 .admin-rotate-preview-wrap .admin-media-edit-preview-media {
-  transform: rotate(var(--admin-rotate, 0deg));
-  transform-origin: center center;
-  transition: transform 180ms ease;
+
 }
 
 .preview-rail-head {
