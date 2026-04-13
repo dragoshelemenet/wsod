@@ -4648,3 +4648,73 @@ div {
     max-width: 100% !important;
   }
 }
+
+/* ===== HARD STOP FOR HORIZONTAL PAGE SCROLL ===== */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+body > * {
+  max-width: 100%;
+}
+
+main,
+section,
+footer,
+nav,
+div {
+  max-width: 100%;
+}
+
+.reference-home-v2 {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+.reference-home-v2 > section,
+.reference-home-v2 > footer {
+  width: 100%;
+  max-width: 100%;
+}
+
+.reference-hero-v2,
+.reference-folders-v2,
+.reference-brands-v2,
+.reference-footer-v2,
+.reference-topbar {
+  overflow-x: hidden !important;
+}
+
+.reference-folders-v2 {
+  box-sizing: border-box;
+}
+
+.reference-folder-v2 {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.reference-folder-v2-art,
+.reference-folder-overlay-copy {
+  max-width: 100% !important;
+}
+
+@media (max-width: 900px) {
+  .reference-home-v2 {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .reference-topbar,
+  .reference-hero-v2,
+  .reference-folders-v2,
+  .reference-brands-v2,
+  .reference-footer-v2 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
