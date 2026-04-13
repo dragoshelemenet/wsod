@@ -53,7 +53,6 @@ export function FotoDetailGalleryClient({ items }: Props) {
             src={active.src}
             alt={active.title}
             className="foto-detail-main-image"
-            style={{ transform: `rotate(${active.rotation ?? 0}deg)` }}
           />
         </button>
 
