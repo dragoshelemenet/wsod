@@ -1,10 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+type PresignResponse = {
+  ok?: boolean;
+  uploadUrl?: string;
+  fileUrl?: string;
+  publicUrl?: string;
+  key?: string;
+  fields?: Record<string, string>;
+  error?: string;
+};
 
 export function DashboardUploadForm() {
   const router = useRouter();
+
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [category, setCategory] = useState("foto");
@@ -15,12 +26,88 @@ export function DashboardUploadForm() {
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const acceptValue = useMemo(() => {
+    if (type === "image") return "image/*";
+    if (type === "video") return "video/*";
+    if (type === "audio") return "audio/*";
+    return "*/*";
+  }, [type]);
+
+  async function handleDirectUpload() {
+    if (!selectedFile) {
+      setMessage("Alege mai intai un fisier.");
+      return;
+    }
+
+    setUploading(true);
+    setMessage("");
+
+    try {
+      const presignResponse = await fetch("/api/uploads/presign", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName: selectedFile.name,
+          contentType: selectedFile.type || "application/octet-stream",
+          category,
+        }),
+      });
+
+      const presignData: PresignResponse = await presignResponse.json().catch(() => ({}));
+
+      if (!presignResponse.ok) {
+        throw new Error(presignData?.error || "Nu s-a putut genera presign URL.");
+      }
+
+      const uploadUrl = presignData.uploadUrl;
+      const finalUrl =
+        presignData.fileUrl || presignData.publicUrl || "";
+
+      if (!uploadUrl || !finalUrl) {
+        throw new Error("Raspuns invalid de la presign endpoint.");
+      }
+
+      const uploadResult = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": selectedFile.type || "application/octet-stream",
+        },
+        body: selectedFile,
+      });
+
+      if (!uploadResult.ok) {
+        throw new Error("Upload-ul fisierului a esuat.");
+      }
+
+      setFileUrl(finalUrl);
+
+      if (type === "image" && !thumbnailUrl) {
+        setThumbnailUrl(finalUrl);
+      }
+
+      if ((type === "video" || type === "audio") && !previewUrl) {
+        setPreviewUrl(finalUrl);
+      }
+
+      setMessage("Fisier uploadat cu succes. Acum poti salva media item.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscuta la upload.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
+    setCreating(true);
     setMessage("");
 
     try {
@@ -60,12 +147,13 @@ export function DashboardUploadForm() {
       setDescription("");
       setIsVisible(true);
       setIsFeatured(false);
+      setSelectedFile(null);
       setMessage("Media item creat cu succes.");
       router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {
-      setLoading(false);
+      setCreating(false);
     }
   }
 
@@ -131,6 +219,30 @@ export function DashboardUploadForm() {
         </div>
 
         <div className="admin-form-field">
+          <label htmlFor="media-file-input">Upload file</label>
+          <input
+            id="media-file-input"
+            type="file"
+            accept={acceptValue}
+            onChange={(event) => {
+              const file = event.target.files?.[0] || null;
+              setSelectedFile(file);
+            }}
+          />
+        </div>
+
+        <div className="site-content-actions">
+          <button
+            className="admin-submit"
+            type="button"
+            onClick={handleDirectUpload}
+            disabled={uploading || !selectedFile}
+          >
+            {uploading ? "Uploading..." : "Upload to Spaces"}
+          </button>
+        </div>
+
+        <div className="admin-form-field">
           <label htmlFor="media-file-url">File URL</label>
           <input
             id="media-file-url"
@@ -190,8 +302,8 @@ export function DashboardUploadForm() {
         </label>
 
         <div className="site-content-actions">
-          <button className="admin-submit" type="submit" disabled={loading}>
-            {loading ? "Creating..." : "Create media item"}
+          <button className="admin-submit" type="submit" disabled={creating}>
+            {creating ? "Creating..." : "Create media item"}
           </button>
         </div>
 
