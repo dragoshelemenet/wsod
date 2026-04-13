@@ -13,13 +13,19 @@ type PresignResponse = {
   error?: string;
 };
 
+function getTypeFromCategory(category: string) {
+  if (category === "video") return "video";
+  if (category === "audio") return "audio";
+  if (category === "website") return "website";
+  return "image";
+}
+
 export function DashboardUploadForm() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [category, setCategory] = useState("foto");
-  const [type, setType] = useState("image");
   const [fileUrl, setFileUrl] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
@@ -31,6 +37,8 @@ export function DashboardUploadForm() {
   const [uploading, setUploading] = useState(false);
   const [creating, setCreating] = useState(false);
   const [message, setMessage] = useState("");
+
+  const type = useMemo(() => getTypeFromCategory(category), [category]);
 
   const acceptValue = useMemo(() => {
     if (type === "image") return "image/*";
@@ -68,8 +76,7 @@ export function DashboardUploadForm() {
       }
 
       const uploadUrl = presignData.uploadUrl;
-      const finalUrl =
-        presignData.fileUrl || presignData.publicUrl || "";
+      const finalUrl = presignData.fileUrl || presignData.publicUrl || "";
 
       if (!uploadUrl || !finalUrl) {
         throw new Error("Raspuns invalid de la presign endpoint.");
@@ -140,7 +147,6 @@ export function DashboardUploadForm() {
       setTitle("");
       setSlug("");
       setCategory("foto");
-      setType("image");
       setFileUrl("");
       setThumbnailUrl("");
       setPreviewUrl("");
@@ -204,18 +210,8 @@ export function DashboardUploadForm() {
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="media-type">Type</label>
-          <select
-            id="media-type"
-            className="admin-select"
-            value={type}
-            onChange={(event) => setType(event.target.value)}
-          >
-            <option value="image">Image</option>
-            <option value="video">Video</option>
-            <option value="audio">Audio</option>
-            <option value="website">Website</option>
-          </select>
+          <label>Detected type</label>
+          <input value={type} readOnly />
         </div>
 
         <div className="admin-form-field">
