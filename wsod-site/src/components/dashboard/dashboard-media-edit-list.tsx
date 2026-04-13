@@ -39,6 +39,7 @@ export function DashboardMediaEditList({
   audioProfiles,
 }: DashboardMediaEditListProps) {
   const [message, setMessage] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   if (!items.length) {
     return (
@@ -50,7 +51,7 @@ export function DashboardMediaEditList({
   }
 
   return (
-    <div className="admin-list">
+    <div className="admin-list compact-admin-list">
       {items.map((item) => (
         <DashboardMediaEditCard
           key={item.id}
@@ -59,6 +60,8 @@ export function DashboardMediaEditList({
           models={models}
           audioProfiles={audioProfiles}
           onMessage={setMessage}
+          isOpen={openId === item.id}
+          onToggle={() => setOpenId((current) => (current === item.id ? null : item.id))}
         />
       ))}
 
@@ -73,12 +76,16 @@ function DashboardMediaEditCard({
   models,
   audioProfiles,
   onMessage,
+  isOpen,
+  onToggle,
 }: {
   item: MediaItem;
   brands: OptionItem[];
   models: OptionItem[];
   audioProfiles: OptionItem[];
   onMessage: (value: string) => void;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
   const [title, setTitle] = useState(item.title);
   const [slug, setSlug] = useState(item.slug);
@@ -138,130 +145,157 @@ function DashboardMediaEditCard({
   }
 
   return (
-    <article className="admin-list-item">
-      <div className="admin-list-copy" style={{ gap: 12 }}>
-        <strong>{item.title}</strong>
+    <article className={`admin-list-item media-compact-card ${isOpen ? "is-open" : ""}`}>
+      <button
+        type="button"
+        className="media-compact-head"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+      >
+        <div className="media-compact-left">
+          <div className="media-compact-thumb">
+            {previewImage ? <img src={previewImage} alt={title} /> : null}
+          </div>
 
-        <div className="admin-form-field">
-          <label>Title</label>
-          <input value={title} onChange={(event) => setTitle(event.target.value)} />
+          <div className="media-compact-meta">
+            <strong>{title}</strong>
+            <span>{item.category} • {item.type}</span>
+            <span>{item.slug}</span>
+            <span>
+              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"}
+            </span>
+          </div>
         </div>
 
-        <div className="admin-form-field">
-          <label>Slug</label>
-          <input value={slug} onChange={(event) => setSlug(event.target.value)} />
+        <div className="media-compact-right">
+          <span className="admin-ghost-button">{isOpen ? "Close" : "Edit"}</span>
         </div>
+      </button>
 
-        <div className="admin-form-field">
-          <label>Description</label>
-          <textarea
-            className="admin-textarea"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
+      {isOpen ? (
+        <div className="media-compact-editor">
+          <div className="admin-grid-two">
+            <div className="admin-form-field">
+              <label>Title</label>
+              <input value={title} onChange={(event) => setTitle(event.target.value)} />
+            </div>
+
+            <div className="admin-form-field">
+              <label>Slug</label>
+              <input value={slug} onChange={(event) => setSlug(event.target.value)} />
+            </div>
+
+            <div className="admin-form-field admin-grid-full">
+              <label>Description</label>
+              <textarea
+                className="admin-textarea"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+            </div>
+
+            <div className="admin-form-field">
+              <label>Thumbnail URL</label>
+              <input
+                value={thumbnailUrl}
+                onChange={(event) => setThumbnailUrl(event.target.value)}
+              />
+            </div>
+
+            <div className="admin-form-field">
+              <label>Preview URL</label>
+              <input
+                value={previewUrl}
+                onChange={(event) => setPreviewUrl(event.target.value)}
+              />
+            </div>
+
+            <div className="admin-form-field admin-grid-full">
+              <label>File URL</label>
+              <input value={fileUrl} onChange={(event) => setFileUrl(event.target.value)} />
+            </div>
+
+            <div className="admin-form-field">
+              <label>Brand</label>
+              <select
+                className="admin-select"
+                value={brandId}
+                onChange={(event) => setBrandId(event.target.value)}
+              >
+                <option value="">No brand</option>
+                {brands.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-form-field">
+              <label>Model</label>
+              <select
+                className="admin-select"
+                value={personModelId}
+                onChange={(event) => setPersonModelId(event.target.value)}
+              >
+                <option value="">No model</option>
+                {models.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-form-field">
+              <label>Audio Profile</label>
+              <select
+                className="admin-select"
+                value={audioProfileId}
+                onChange={(event) => setAudioProfileId(event.target.value)}
+              >
+                <option value="">No audio profile</option>
+                {audioProfiles.map((profile) => (
+                  <option key={profile.id} value={profile.id}>
+                    {profile.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="admin-grid-full admin-inline-toggles">
+              <label className="admin-toggle-row">
+                <span>Visible</span>
+                <input
+                  type="checkbox"
+                  checked={isVisible}
+                  onChange={(event) => setIsVisible(event.target.checked)}
+                />
+              </label>
+
+              <label className="admin-toggle-row">
+                <span>Featured</span>
+                <input
+                  type="checkbox"
+                  checked={isFeatured}
+                  onChange={(event) => setIsFeatured(event.target.checked)}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className="site-content-actions">
+            <button className="admin-submit" type="button" onClick={onSave} disabled={loading}>
+              {loading ? "Saving..." : "Save"}
+            </button>
+
+            <DashboardDeleteButton
+              endpoint={`/api/admin/media/${item.id}`}
+              label={title}
+            />
+          </div>
         </div>
-
-        <div className="admin-form-field">
-          <label>Thumbnail URL</label>
-          <input
-            value={thumbnailUrl}
-            onChange={(event) => setThumbnailUrl(event.target.value)}
-          />
-        </div>
-
-        <div className="admin-form-field">
-          <label>Preview URL</label>
-          <input
-            value={previewUrl}
-            onChange={(event) => setPreviewUrl(event.target.value)}
-          />
-        </div>
-
-        <div className="admin-form-field">
-          <label>File URL</label>
-          <input value={fileUrl} onChange={(event) => setFileUrl(event.target.value)} />
-        </div>
-
-        <div className="admin-form-field">
-          <label>Brand</label>
-          <select
-            className="admin-select"
-            value={brandId}
-            onChange={(event) => setBrandId(event.target.value)}
-          >
-            <option value="">No brand</option>
-            {brands.map((brand) => (
-              <option key={brand.id} value={brand.id}>
-                {brand.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="admin-form-field">
-          <label>Model</label>
-          <select
-            className="admin-select"
-            value={personModelId}
-            onChange={(event) => setPersonModelId(event.target.value)}
-          >
-            <option value="">No model</option>
-            {models.map((model) => (
-              <option key={model.id} value={model.id}>
-                {model.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="admin-form-field">
-          <label>Audio Profile</label>
-          <select
-            className="admin-select"
-            value={audioProfileId}
-            onChange={(event) => setAudioProfileId(event.target.value)}
-          >
-            <option value="">No audio profile</option>
-            {audioProfiles.map((profile) => (
-              <option key={profile.id} value={profile.id}>
-                {profile.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <label className="admin-toggle-row">
-          <span>Visible</span>
-          <input
-            type="checkbox"
-            checked={isVisible}
-            onChange={(event) => setIsVisible(event.target.checked)}
-          />
-        </label>
-
-        <label className="admin-toggle-row">
-          <span>Featured</span>
-          <input
-            type="checkbox"
-            checked={isFeatured}
-            onChange={(event) => setIsFeatured(event.target.checked)}
-          />
-        </label>
-
-        <div className="site-content-actions">
-          <button className="admin-submit" type="button" onClick={onSave} disabled={loading}>
-            {loading ? "Saving..." : "Save"}
-          </button>
-          <DashboardDeleteButton
-            endpoint={`/api/admin/media/${item.id}`}
-            label={title}
-          />
-        </div>
-      </div>
-
-      <div className="admin-folder-toggle-visual">
-        {previewImage ? <img src={previewImage} alt={title} /> : null}
-      </div>
+      ) : null}
     </article>
   );
 }
