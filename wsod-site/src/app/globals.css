@@ -4405,3 +4405,42 @@ main,
     text-align: center !important;
   }
 }
+
+/* ===== FINAL MENU LOGO SIZE ===== */
+.public-navbar-logo {
+  min-width: 96px !important;
+  min-height: 38px !important;
+  padding-right: 6px !important;
+}
+
+.public-navbar-logo-image {
+  display: block !important;
+  width: auto !important;
+  height: 24px !important;
+  max-width: 170px !important;
+  object-fit: contain !important;
+}
+
+@media (min-width: 901px) {
+  .public-navbar-logo {
+    min-width: 106px !important;
+    min-height: 40px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 26px !important;
+    max-width: 184px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .public-navbar-logo {
+    min-width: 82px !important;
+    min-height: 34px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 20px !important;
+    max-width: 140px !important;
+  }
+}

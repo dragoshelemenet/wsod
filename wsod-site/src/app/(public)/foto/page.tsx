@@ -1,4 +1,8 @@
-import { getBrandsWithCategoryPreviewFromDb, getMediaByCategoryFromDb, getModelsWithCategoryPreviewFromDb } from "@/lib/data/db-queries";
+import {
+  getBrandsWithCategoryPreviewFromDb,
+  getMediaByCategoryFromDb,
+  getModelsWithCategoryPreviewFromDb,
+} from "@/lib/data/db-queries";
 import { OwnerFolderCard } from "@/components/public/owner-folder-card";
 import PreviewRail from "@/components/public/PreviewRail";
 import { PublicShell } from "@/components/public/public-shell";
@@ -18,7 +22,6 @@ export default async function FotoPage() {
       title: item.title,
       href: `/foto/${item.slug}`,
       imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
-      rotation: (item as any).rotation ?? 0,
       showPlayIcon: false,
     }));
 
@@ -30,64 +33,65 @@ export default async function FotoPage() {
       title: item.title,
       href: `/foto/${item.slug}`,
       imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
-      rotation: (item as any).rotation ?? 0,
       showPlayIcon: false,
     }));
 
   return (
-    <PublicShell title="Foto">\n      <div className="foto-index-page">
-      <PreviewRail title="Poze cu modele" items={modelPhotos} />
+    <PublicShell title="Foto">
+      <div className="foto-index-page">
+        <PreviewRail title="Poze cu modele" items={modelPhotos} />
 
-      <section className="inner-section-block">
-        <div className="section-mini-head">
-          <h2>Modele</h2>
-        </div>
+        <section className="inner-section-block">
+          <div className="section-mini-head">
+            <h2>Modele</h2>
+          </div>
 
-        <div className="public-owner-folder-grid">
-          {models.map((item) => (
-            <OwnerFolderCard
-              key={item.id}
-              title={item.name}
-              href={`/model/${item.slug}`}
-              imageUrl={
-                item.portraitImageUrl ||
-                item.previewImages?.[0] ||
-                item.mediaItems?.[0]?.thumbnailUrl ||
-                item.mediaItems?.[0]?.previewUrl ||
-                item.mediaItems?.[0]?.fileUrl ||
-                null
-              }
-            />
-          ))}
-        </div>
-      </section>
+          <div className="public-owner-folder-grid">
+            {models.map((item) => (
+              <OwnerFolderCard
+                key={item.id}
+                title={item.name}
+                href={`/model/${item.slug}`}
+                imageUrl={
+                  item.portraitImageUrl ||
+                  item.previewImages?.[0] ||
+                  item.mediaItems?.[0]?.thumbnailUrl ||
+                  item.mediaItems?.[0]?.previewUrl ||
+                  item.mediaItems?.[0]?.fileUrl ||
+                  null
+                }
+              />
+            ))}
+          </div>
+        </section>
 
-      <PreviewRail title="Poze brand" items={brandPhotos} />
+        <PreviewRail title="Poze brand" items={brandPhotos} />
 
-      <section className="inner-section-block">
-        <div className="section-mini-head">
-          <h2>Branduri</h2>
-        </div>
+        <section className="inner-section-block">
+          <div className="section-mini-head">
+            <h2>Branduri</h2>
+          </div>
 
-        <div className="public-owner-folder-grid">
-          {brands.map((item) => (
-            <OwnerFolderCard
-              key={item.id}
-              title={item.name}
-              href={`/brand/${item.slug}`}
-              imageUrl={
-                item.logoUrl ||
-                item.coverImageUrl ||
-                item.previewImages?.[0] ||
-                item.mediaItems?.[0]?.thumbnailUrl ||
-                item.mediaItems?.[0]?.previewUrl ||
-                item.mediaItems?.[0]?.fileUrl ||
-                null
-              }
-            />
-          ))}
-        </div>
-      </section>
-      </div>\n    </PublicShell>
+          <div className="public-owner-folder-grid">
+            {brands.map((item) => (
+              <OwnerFolderCard
+                key={item.id}
+                title={item.name}
+                href={`/brand/${item.slug}`}
+                imageUrl={
+                  item.logoUrl ||
+                  item.coverImageUrl ||
+                  item.previewImages?.[0] ||
+                  item.mediaItems?.[0]?.thumbnailUrl ||
+                  item.mediaItems?.[0]?.previewUrl ||
+                  item.mediaItems?.[0]?.fileUrl ||
+                  null
+                }
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+    </PublicShell>
   );
 }
