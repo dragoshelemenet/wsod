@@ -1,30 +1,31 @@
+import { getPublishedBrands } from "@/lib/dashboard/queries";
 import { CategoryHero } from "@/components/public/category-hero";
 import { FileGrid } from "@/components/public/file-grid";
 import { FolderFileCard } from "@/components/public/folder-file-card";
 import { PublicShell } from "@/components/public/public-shell";
 import { Pagination } from "@/components/shared/pagination";
 
-export default function BrandIndexPage() {
+export default async function BrandIndexPage() {
+  const items = await getPublishedBrands();
+
   return (
-    <PublicShell
-      title="Branduri"
-      description="Lista publica de branduri, compacta si rapida."
-    >
+    <PublicShell title="Branduri" description="Lista publica de branduri, compacta si rapida.">
       <CategoryHero
         title="Branduri"
         description="Brandurile sunt afisate simplu, fara carousel, in grid rapid cu paginare clasica."
       />
       <FileGrid>
-        <FolderFileCard title="Brand 01" kind="brand" />
-        <FolderFileCard title="Brand 02" kind="brand" />
-        <FolderFileCard title="Brand 03" kind="brand" />
-        <FolderFileCard title="Brand 04" kind="brand" />
-        <FolderFileCard title="Brand 05" kind="brand" />
-        <FolderFileCard title="Brand 06" kind="brand" />
-        <FolderFileCard title="Brand 07" kind="brand" />
-        <FolderFileCard title="Brand 08" kind="brand" />
+        {items.map((item) => (
+          <FolderFileCard
+            key={item.id}
+            title={item.title}
+            kind="brand"
+            href={`/brand/${item.slug}`}
+            imageUrl={item.logoUrl || item.coverUrl || item.mediaItems?.[0]?.coverUrl || item.mediaItems?.[0]?.fileUrl || null}
+          />
+        ))}
       </FileGrid>
-      <Pagination nextHref="/brand?page=2" />
+      <Pagination />
     </PublicShell>
   );
 }

@@ -1,9 +1,12 @@
+import { getPublishedMediaByCategory } from "@/lib/dashboard/queries";
 import { CategoryHero } from "@/components/public/category-hero";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
-export default function MetaAdsPage() {
+export default async function MetaAdsPage() {
+  const items = await getPublishedMediaByCategory("meta-ads");
+
   return (
     <PublicShell title="Meta Ads" description="Portofoliu public pentru reclame si creatii ads.">
       <CategoryHero
@@ -11,10 +14,15 @@ export default function MetaAdsPage() {
         description="Zona pentru creatii, vizualuri si rezultate Meta Ads."
       />
       <PublicGrid>
-        <PublicCard title="Meta Ads Project 01" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-01" />
-        <PublicCard title="Meta Ads Project 02" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-02" />
-        <PublicCard title="Meta Ads Project 03" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-03" />
-        <PublicCard title="Meta Ads Project 04" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-04" />
+        {items.map((item) => (
+          <PublicCard
+            key={item.id}
+            title={item.title}
+            subtitle="Meta Ads"
+            href={`/meta-ads/${item.slug}`}
+            imageUrl={item.coverUrl || item.fileUrl}
+          />
+        ))}
       </PublicGrid>
     </PublicShell>
   );
