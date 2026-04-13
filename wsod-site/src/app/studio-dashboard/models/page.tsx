@@ -1,14 +1,9 @@
 export default function DashboardModelsPage() {
   return (
-    <main className="dashboard-shell">
-      <section className="dashboard-page-head">
-        <div>
-          <p className="dashboard-kicker">Dashboard</p>
-          <h1>Models</h1>
-          <p className="dashboard-description">
-            Administrare modele, asociere media si control publicare.
-          </p>
-        </div>
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Models</h1>
+        <p>Administrare modele.</p>
       </section>
     </main>
   );
