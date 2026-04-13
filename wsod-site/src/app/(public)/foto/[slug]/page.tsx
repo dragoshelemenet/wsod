@@ -1,4 +1,4 @@
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { prisma } from "@/lib/prisma";
 import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
@@ -20,28 +20,95 @@ export default async function FotoSlugPage({ params }: PageProps) {
     );
   }
 
+  const sameModelPhotos =
+    item.personModel?.id
+      ? await prisma.mediaItem.findMany({
+          where: {
+            isVisible: true,
+            category: "foto",
+            personModelId: item.personModel.id,
+            id: { not: item.id },
+          },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+          take: 24,
+        })
+      : [];
+
+  const randomPhotos = await prisma.mediaItem.findMany({
+    where: {
+      isVisible: true,
+      category: "foto",
+      id: { not: item.id },
+      ...(item.personModel?.id
+        ? { NOT: { personModelId: item.personModel.id } }
+        : {}),
+    },
+    orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+    take: 18,
+  });
+
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Foto", href: "/foto" },
-            { label: item.title },
-          ]}
-        />
         <h1>{item.title}</h1>
-        <p className="inner-description">
-          {item.description || "Pagina individuala pentru proiect foto."}
-        </p>
+        {item.description ? <p className="inner-description">{item.description}</p> : null}
+
         <div className="media-detail-hero">
           <img
-            src={item.fileUrl ?? undefined}
+            src={item.fileUrl ?? item.previewUrl ?? item.thumbnailUrl ?? undefined}
             alt={item.title}
             className="media-detail-image"
           />
         </div>
       </section>
+
+      {sameModelPhotos.length ? (
+        <section className="inner-section">
+          <h2 className="detail-section-title">
+            {item.personModel?.name ? `Alte poze cu ${item.personModel.name}` : "Alte poze"}
+          </h2>
+
+          <div className="detail-thumb-grid">
+            {sameModelPhotos.map((photo) => (
+              <a
+                key={photo.id}
+                href={photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "#"}
+                target="_blank"
+                rel="noreferrer"
+                className="detail-thumb-link"
+              >
+                <img
+                  src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
+                  alt={photo.title}
+                  className="detail-thumb-image"
+                />
+              </a>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {randomPhotos.length ? (
+        <section className="inner-section">
+          <h2 className="detail-section-title">Vezi alte poze:</h2>
+
+          <div className="detail-thumb-grid">
+            {randomPhotos.map((photo) => (
+              <a
+                key={photo.id}
+                href={`/foto/${photo.slug}`}
+                className="detail-thumb-link"
+              >
+                <img
+                  src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
+                  alt={photo.title}
+                  className="detail-thumb-image"
+                />
+              </a>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }
