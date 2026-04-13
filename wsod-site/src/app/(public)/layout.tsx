@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PublicFooter } from "@/components/public/public-footer";
 import { PublicNavbar } from "@/components/public/public-navbar";
 
 type PublicLayoutProps = {
@@ -10,6 +11,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     <>
       <PublicNavbar />
       {children}
+      <PublicFooter />
     </>
   );
 }
