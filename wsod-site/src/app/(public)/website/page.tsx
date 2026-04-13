@@ -1,10 +1,10 @@
-import { CategoryPageTemplate } from "@/components/public/category-page";
-
-export default function WebsiteListingPage() {
+export default function WebsitePage() {
   return (
-    <CategoryPageTemplate
-      title="Website"
-      description="Proiecte website cu accent pe preview clar si incarcare rapida."
-    />
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Website</h1>
+        <p>Lista publica pentru proiectele web.</p>
+      </section>
+    </main>
   );
 }

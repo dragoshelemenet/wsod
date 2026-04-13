@@ -1,10 +1,10 @@
-import { CategoryPageTemplate } from "@/components/public/category-page";
-
-export default function VideoListingPage() {
+export default function VideoPage() {
   return (
-    <CategoryPageTemplate
-      title="Video"
-      description="Toate proiectele video intr-un grid compact, rapid si usor de navigat."
-    />
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Video</h1>
+        <p>Lista publica pentru proiectele video.</p>
+      </section>
+    </main>
   );
 }

@@ -1,10 +1,10 @@
-import { CategoryPageTemplate } from "@/components/public/category-page";
-
-export default function AudioListingPage() {
+export default function AudioPage() {
   return (
-    <CategoryPageTemplate
-      title="Audio"
-      description="Proiecte audio si comparatii before / after intr-o structura compacta."
-    />
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Audio</h1>
+        <p>Lista publica pentru proiectele audio.</p>
+      </section>
+    </main>
   );
 }

@@ -1,10 +1,10 @@
-import { CategoryPageTemplate } from "@/components/public/category-page";
-
-export default function GraficaListingPage() {
+export default function GraficaPage() {
   return (
-    <CategoryPageTemplate
-      title="Grafica"
-      description="Lucrari grafice afisate curat, compact si foarte rapid."
-    />
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Grafica</h1>
+        <p>Lista publica pentru lucrari de grafica.</p>
+      </section>
+    </main>
   );
 }

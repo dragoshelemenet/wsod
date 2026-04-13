@@ -1,10 +1,10 @@
-import { CategoryPageTemplate } from "@/components/public/category-page";
-
-export default function FotoListingPage() {
+export default function FotoPage() {
   return (
-    <CategoryPageTemplate
-      title="Foto"
-      description="Galerie foto compacta, fara descrieri inutile, optimizata pentru viteza."
-    />
+    <main className="inner-page">
+      <section className="inner-section">
+        <h1>Foto</h1>
+        <p>Lista publica pentru proiectele foto.</p>
+      </section>
+    </main>
   );
 }
