@@ -1,16 +1,27 @@
 type PublicCardProps = {
   title: string;
   subtitle?: string;
+  href?: string;
 };
 
-export function PublicCard({ title, subtitle }: PublicCardProps) {
-  return (
-    <article className="public-card">
+export function PublicCard({ title, subtitle, href }: PublicCardProps) {
+  const content = (
+    <>
       <div className="public-card-media" />
       <div className="public-card-copy">
         <h3>{title}</h3>
         {subtitle ? <p>{subtitle}</p> : null}
       </div>
-    </article>
+    </>
   );
+
+  if (href) {
+    return (
+      <a href={href} className="public-card">
+        {content}
+      </a>
+    );
+  }
+
+  return <article className="public-card">{content}</article>;
 }

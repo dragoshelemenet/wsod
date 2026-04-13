@@ -1,5 +1,5 @@
 import { CategoryHero } from "@/components/public/category-hero";
-import { MediaFileCard } from "@/components/public/media-file-card";
+import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
@@ -11,12 +11,12 @@ export default function FotoPage() {
         description="Pozele trebuie sa fie mici in listare, multe pe ecran, iar la deschidere mari si curate."
       />
       <PublicGrid>
-        <MediaFileCard title="Foto Project 01" category="Foto" />
-        <MediaFileCard title="Foto Project 02" category="Foto" />
-        <MediaFileCard title="Foto Project 03" category="Foto" />
-        <MediaFileCard title="Foto Project 04" category="Foto" />
-        <MediaFileCard title="Foto Project 05" category="Foto" />
-        <MediaFileCard title="Foto Project 06" category="Foto" />
+        <PublicCard title="Foto Project 01" subtitle="Foto" href="/foto/foto-project-01" />
+        <PublicCard title="Foto Project 02" subtitle="Foto" href="/foto/foto-project-02" />
+        <PublicCard title="Foto Project 03" subtitle="Foto" href="/foto/foto-project-03" />
+        <PublicCard title="Foto Project 04" subtitle="Foto" href="/foto/foto-project-04" />
+        <PublicCard title="Foto Project 05" subtitle="Foto" href="/foto/foto-project-05" />
+        <PublicCard title="Foto Project 06" subtitle="Foto" href="/foto/foto-project-06" />
       </PublicGrid>
     </PublicShell>
   );

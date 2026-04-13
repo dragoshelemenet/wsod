@@ -1,3 +1,5 @@
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -8,6 +10,13 @@ export default async function AudioSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Audio", href: "/audio" },
+            { label: slug },
+          ]}
+        />
         <h1>Audio: {slug}</h1>
         <p className="inner-description">
           Pagina individuala pentru proiect audio. Aici va intra player before,

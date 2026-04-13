@@ -1,5 +1,5 @@
 import { CategoryHero } from "@/components/public/category-hero";
-import { MediaFileCard } from "@/components/public/media-file-card";
+import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
@@ -11,10 +11,10 @@ export default function MetaAdsPage() {
         description="Zona pentru creatii, vizualuri si rezultate Meta Ads."
       />
       <PublicGrid>
-        <MediaFileCard title="Meta Ads Project 01" category="Meta Ads" />
-        <MediaFileCard title="Meta Ads Project 02" category="Meta Ads" />
-        <MediaFileCard title="Meta Ads Project 03" category="Meta Ads" />
-        <MediaFileCard title="Meta Ads Project 04" category="Meta Ads" />
+        <PublicCard title="Meta Ads Project 01" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-01" />
+        <PublicCard title="Meta Ads Project 02" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-02" />
+        <PublicCard title="Meta Ads Project 03" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-03" />
+        <PublicCard title="Meta Ads Project 04" subtitle="Meta Ads" href="/meta-ads/meta-ads-project-04" />
       </PublicGrid>
     </PublicShell>
   );

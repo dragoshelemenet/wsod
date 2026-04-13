@@ -1,5 +1,5 @@
 import { CategoryHero } from "@/components/public/category-hero";
-import { MediaFileCard } from "@/components/public/media-file-card";
+import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
@@ -11,10 +11,10 @@ export default function AudioPage() {
         description="Aici vor aparea proiectele audio cu comparatie intre sunetul initial si rezultatul final."
       />
       <PublicGrid>
-        <MediaFileCard title="Audio Project 01" category="Audio" />
-        <MediaFileCard title="Audio Project 02" category="Audio" />
-        <MediaFileCard title="Audio Project 03" category="Audio" />
-        <MediaFileCard title="Audio Project 04" category="Audio" />
+        <PublicCard title="Audio Project 01" subtitle="Audio" href="/audio/audio-project-01" />
+        <PublicCard title="Audio Project 02" subtitle="Audio" href="/audio/audio-project-02" />
+        <PublicCard title="Audio Project 03" subtitle="Audio" href="/audio/audio-project-03" />
+        <PublicCard title="Audio Project 04" subtitle="Audio" href="/audio/audio-project-04" />
       </PublicGrid>
     </PublicShell>
   );

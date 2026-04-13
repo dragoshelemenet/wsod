@@ -9,12 +9,36 @@ export default function HomePage() {
       description="Portofoliu public pentru video, foto, grafica, website, meta ads si audio."
     >
       <PublicGrid>
-        <PublicCard title="Video" subtitle="Proiecte video publice" />
-        <PublicCard title="Foto" subtitle="Proiecte foto publice" />
-        <PublicCard title="Grafica" subtitle="Proiecte grafice publice" />
-        <PublicCard title="Website" subtitle="Proiecte web publice" />
-        <PublicCard title="Meta Ads" subtitle="Campanii si creatii ads" />
-        <PublicCard title="Audio" subtitle="Before / after audio" />
+        <PublicCard
+          title="Video"
+          subtitle="Proiecte video publice"
+          href="/video"
+        />
+        <PublicCard
+          title="Foto"
+          subtitle="Proiecte foto publice"
+          href="/foto"
+        />
+        <PublicCard
+          title="Grafica"
+          subtitle="Proiecte grafice publice"
+          href="/grafica"
+        />
+        <PublicCard
+          title="Website"
+          subtitle="Proiecte web publice"
+          href="/website"
+        />
+        <PublicCard
+          title="Meta Ads"
+          subtitle="Campanii si creatii ads"
+          href="/meta-ads"
+        />
+        <PublicCard
+          title="Audio"
+          subtitle="Before / after audio"
+          href="/audio"
+        />
       </PublicGrid>
     </PublicShell>
   );

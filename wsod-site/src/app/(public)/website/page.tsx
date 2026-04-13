@@ -1,5 +1,5 @@
 import { CategoryHero } from "@/components/public/category-hero";
-import { MediaFileCard } from "@/components/public/media-file-card";
+import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
@@ -11,10 +11,10 @@ export default function WebsitePage() {
         description="Aici vor intra proiecte website, inclusiv preview si demo accesare site."
       />
       <PublicGrid>
-        <MediaFileCard title="Website Project 01" category="Website" />
-        <MediaFileCard title="Website Project 02" category="Website" />
-        <MediaFileCard title="Website Project 03" category="Website" />
-        <MediaFileCard title="Website Project 04" category="Website" />
+        <PublicCard title="Website Project 01" subtitle="Website" href="/website/website-project-01" />
+        <PublicCard title="Website Project 02" subtitle="Website" href="/website/website-project-02" />
+        <PublicCard title="Website Project 03" subtitle="Website" href="/website/website-project-03" />
+        <PublicCard title="Website Project 04" subtitle="Website" href="/website/website-project-04" />
       </PublicGrid>
     </PublicShell>
   );
