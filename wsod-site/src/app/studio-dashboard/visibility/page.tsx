@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardVisibilityPage() {
   return (
-    <>
-      <h1>Visibility</h1>
-      <p>Control publicare si vizibilitate.</p>
-    </>
+    <DashboardShell
+      title="Visibility"
+      description="Control publicare si vizibilitate."
+    />
   );
 }

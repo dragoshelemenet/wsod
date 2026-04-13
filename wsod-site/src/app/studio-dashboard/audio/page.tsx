@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardAudioPage() {
   return (
-    <>
-      <h1>Audio</h1>
-      <p>Administrare proiecte audio si comparatie before/after.</p>
-    </>
+    <DashboardShell
+      title="Audio"
+      description="Administrare proiecte audio si comparatie before / after."
+    />
   );
 }

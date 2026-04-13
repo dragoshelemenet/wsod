@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardSiteContentPage() {
   return (
-    <>
-      <h1>Site Content</h1>
-      <p>Administrare texte, sectiuni si continut static.</p>
-    </>
+    <DashboardShell
+      title="Site Content"
+      description="Administrare texte, sectiuni si continut static."
+    />
   );
 }

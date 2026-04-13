@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardSeoPage() {
   return (
-    <>
-      <h1>SEO</h1>
-      <p>Administrare metadata SEO, titluri, descrieri si indexare.</p>
-    </>
+    <DashboardShell
+      title="SEO"
+      description="Administrare metadata SEO, titluri, descrieri si indexare."
+    />
   );
 }

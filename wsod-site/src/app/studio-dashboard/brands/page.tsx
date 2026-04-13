@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardBrandsPage() {
   return (
-    <>
-      <h1>Brands</h1>
-      <p>Administrare branduri.</p>
-    </>
+    <DashboardShell
+      title="Brands"
+      description="Administrare branduri publice."
+    />
   );
 }

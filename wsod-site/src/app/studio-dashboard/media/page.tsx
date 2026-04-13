@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardMediaPage() {
   return (
-    <>
-      <h1>Media</h1>
-      <p>Administrare media pentru toate categoriile publice.</p>
-    </>
+    <DashboardShell
+      title="Media"
+      description="Administrare media pentru toate categoriile publice."
+    />
   );
 }

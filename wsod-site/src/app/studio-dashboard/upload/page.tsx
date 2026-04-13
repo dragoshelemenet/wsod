@@ -1,8 +1,10 @@
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+
 export default function DashboardUploadPage() {
   return (
-    <>
-      <h1>Upload</h1>
-      <p>Zona de upload pentru fisiere noi.</p>
-    </>
+    <DashboardShell
+      title="Upload"
+      description="Zona de upload pentru fisiere noi."
+    />
   );
 }
