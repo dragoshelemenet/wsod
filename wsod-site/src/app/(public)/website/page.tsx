@@ -1,14 +1,21 @@
-import { getPublishedBrands, getPublishedMediaByCategory } from "@/lib/dashboard/queries";
+import { getBrandsWithCategoryPreviewFromDb } from "@/lib/data/db-queries";
+import { getPublishedMediaByCategory } from "@/lib/dashboard/queries";
 import { OwnerFolderCard } from "@/components/public/owner-folder-card";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
 export default async function WebsitePage() {
-  const [items, brands] = await Promise.all([
+  const [items, allBrands] = await Promise.all([
     getPublishedMediaByCategory("website"),
-    getPublishedBrands(),
+    getBrandsWithCategoryPreviewFromDb("website"),
   ]);
+
+  const brands = allBrands.filter(
+    (item) =>
+      Array.isArray(item.previewImages) &&
+      item.previewImages.length > 0
+  );
 
   return (
     <PublicShell title="Website" description="Website-uri create de WSOD.PROD">
@@ -20,7 +27,6 @@ export default async function WebsitePage() {
             href={`/website/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             imageOnly
-           
           />
         ))}
       </PublicGrid>
@@ -36,14 +42,7 @@ export default async function WebsitePage() {
               key={item.id}
               title={item.name}
               href={`/brand/${item.slug}`}
-              imageUrl={
-                item.logoUrl ||
-                item.coverImageUrl ||
-                item.mediaItems?.[0]?.thumbnailUrl ||
-                item.mediaItems?.[0]?.previewUrl ||
-                item.mediaItems?.[0]?.fileUrl ||
-                null
-              }
+              imageUrl={item.previewImages?.[0] || null}
             />
           ))}
         </div>
