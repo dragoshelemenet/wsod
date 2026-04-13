@@ -2,29 +2,17 @@ import { prisma } from "@/lib/prisma";
 
 export async function getPublishedBrands() {
   try {
-    const brands = await prisma.brand.findMany({
-      where: {
-        isVisible: true,
-      },
-      orderBy: [
-        { updatedAt: "desc" },
-        { createdAt: "desc" },
-      ],
+    return await prisma.brand.findMany({
+      where: { isVisible: true },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
       include: {
         mediaItems: {
-          where: {
-            isVisible: true,
-          },
-          orderBy: [
-            { updatedAt: "desc" },
-            { createdAt: "desc" },
-          ],
+          where: { isVisible: true },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
           take: 1,
         },
       },
     });
-
-    return brands;
   } catch {
     return [];
   }
@@ -32,29 +20,17 @@ export async function getPublishedBrands() {
 
 export async function getPublishedModels() {
   try {
-    const models = await prisma.personModel.findMany({
-      where: {
-        isVisible: true,
-      },
-      orderBy: [
-        { updatedAt: "desc" },
-        { createdAt: "desc" },
-      ],
+    return await prisma.personModel.findMany({
+      where: { isVisible: true },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
       include: {
         mediaItems: {
-          where: {
-            isVisible: true,
-          },
-          orderBy: [
-            { updatedAt: "desc" },
-            { createdAt: "desc" },
-          ],
+          where: { isVisible: true },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
           take: 1,
         },
       },
     });
-
-    return models;
   } catch {
     return [];
   }
@@ -62,18 +38,13 @@ export async function getPublishedModels() {
 
 export async function getPublishedMediaByCategory(category: string) {
   try {
-    const items = await prisma.mediaItem.findMany({
+    return await prisma.mediaItem.findMany({
       where: {
         isVisible: true,
         category,
       },
-      orderBy: [
-        { updatedAt: "desc" },
-        { createdAt: "desc" },
-      ],
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
     });
-
-    return items;
   } catch {
     return [];
   }
@@ -81,7 +52,7 @@ export async function getPublishedMediaByCategory(category: string) {
 
 export async function getPublishedMediaBySlug(slug: string) {
   try {
-    const item = await prisma.mediaItem.findFirst({
+    return await prisma.mediaItem.findFirst({
       where: {
         isVisible: true,
         slug,
@@ -92,8 +63,6 @@ export async function getPublishedMediaBySlug(slug: string) {
         audioProfile: true,
       },
     });
-
-    return item;
   } catch {
     return null;
   }
@@ -101,25 +70,18 @@ export async function getPublishedMediaBySlug(slug: string) {
 
 export async function getPublishedBrandBySlug(slug: string) {
   try {
-    const brand = await prisma.brand.findFirst({
+    return await prisma.brand.findFirst({
       where: {
         isVisible: true,
         slug,
       },
       include: {
         mediaItems: {
-          where: {
-            isVisible: true,
-          },
-          orderBy: [
-            { updatedAt: "desc" },
-            { createdAt: "desc" },
-          ],
+          where: { isVisible: true },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         },
       },
     });
-
-    return brand;
   } catch {
     return null;
   }
@@ -127,25 +89,18 @@ export async function getPublishedBrandBySlug(slug: string) {
 
 export async function getPublishedModelBySlug(slug: string) {
   try {
-    const model = await prisma.personModel.findFirst({
+    return await prisma.personModel.findFirst({
       where: {
         isVisible: true,
         slug,
       },
       include: {
         mediaItems: {
-          where: {
-            isVisible: true,
-          },
-          orderBy: [
-            { updatedAt: "desc" },
-            { createdAt: "desc" },
-          ],
+          where: { isVisible: true },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         },
       },
     });
-
-    return model;
   } catch {
     return null;
   }
@@ -206,35 +161,20 @@ export async function getDashboardOverviewCounts() {
       prisma.brand.count(),
       prisma.personModel.count(),
       prisma.mediaItem.count({
-        where: {
-          category: "audio",
-        },
+        where: { category: "audio" },
       }),
     ]);
 
-    return {
-      media,
-      brands,
-      models,
-      audio,
-    };
+    return { media, brands, models, audio };
   } catch {
-    return {
-      media: 0,
-      brands: 0,
-      models: 0,
-      audio: 0,
-    };
+    return { media: 0, brands: 0, models: 0, audio: 0 };
   }
 }
 
 export async function getDashboardMediaItems() {
   try {
-    const items = await prisma.mediaItem.findMany({
-      orderBy: [
-        { updatedAt: "desc" },
-        { createdAt: "desc" },
-      ],
+    return await prisma.mediaItem.findMany({
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
       include: {
         brand: true,
         personModel: true,
@@ -242,29 +182,6 @@ export async function getDashboardMediaItems() {
       },
       take: 100,
     });
-
-    return items;
-  } catch {
-    return [];
-  }
-}
-
-export async function getDashboardMediaItems() {
-  try {
-    const items = await prisma.mediaItem.findMany({
-      orderBy: [
-        { updatedAt: "desc" },
-        { createdAt: "desc" },
-      ],
-      include: {
-        brand: true,
-        personModel: true,
-        audioProfile: true,
-      },
-      take: 100,
-    });
-
-    return items;
   } catch {
     return [];
   }
