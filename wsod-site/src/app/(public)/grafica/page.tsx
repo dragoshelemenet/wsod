@@ -1,14 +1,21 @@
-import { getPublishedBrands, getPublishedMediaByCategory } from "@/lib/dashboard/queries";
+import { getBrandsWithCategoryPreviewFromDb } from "@/lib/data/db-queries";
+import { getPublishedMediaByCategory } from "@/lib/dashboard/queries";
 import { OwnerFolderCard } from "@/components/public/owner-folder-card";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
 
 export default async function GraficaPage() {
-  const [items, brands] = await Promise.all([
+  const [items, allBrands] = await Promise.all([
     getPublishedMediaByCategory("grafica"),
-    getPublishedBrands(),
+    getBrandsWithCategoryPreviewFromDb("grafica"),
   ]);
+
+  const brands = allBrands.filter(
+    (item) =>
+      Array.isArray(item.previewImages) &&
+      item.previewImages.length > 0
+  );
 
   return (
     <PublicShell title="Grafica" description="Portofoliu public pentru proiecte grafice.">
@@ -37,14 +44,7 @@ export default async function GraficaPage() {
               key={item.id}
               title={item.name}
               href={`/brand/${item.slug}`}
-              imageUrl={
-                item.logoUrl ||
-                item.coverImageUrl ||
-                item.mediaItems?.[0]?.thumbnailUrl ||
-                item.mediaItems?.[0]?.previewUrl ||
-                item.mediaItems?.[0]?.fileUrl ||
-                null
-              }
+              imageUrl={item.previewImages?.[0] || null}
             />
           ))}
         </div>
