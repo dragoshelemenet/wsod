@@ -2,12 +2,24 @@ type PublicCardProps = {
   title: string;
   subtitle?: string;
   href?: string;
+  imageUrl?: string | null;
 };
 
-export function PublicCard({ title, subtitle, href }: PublicCardProps) {
+export function PublicCard({
+  title,
+  subtitle,
+  href,
+  imageUrl,
+}: PublicCardProps) {
+  const media = imageUrl ? (
+    <img src={imageUrl} alt={title} className="public-card-media" />
+  ) : (
+    <div className="public-card-media" />
+  );
+
   const content = (
     <>
-      <div className="public-card-media" />
+      {media}
       <div className="public-card-copy">
         <h3>{title}</h3>
         {subtitle ? <p>{subtitle}</p> : null}
