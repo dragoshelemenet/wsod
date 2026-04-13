@@ -1,5 +1,6 @@
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
-import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
+import { PublicCard } from "@/components/public/public-card";
+import { PublicGrid } from "@/components/public/public-grid";
+import { getPublishedMediaByCategory, getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -20,20 +21,29 @@ export default async function VideoSlugPage({ params }: PageProps) {
     );
   }
 
+  const allVideos = await getPublishedMediaByCategory("video");
+
+  const sameBrandVideos = allVideos.filter(
+    (video) =>
+      video.id !== item.id &&
+      item.brandId &&
+      video.brandId === item.brandId
+  );
+
+  const otherVideos = allVideos.filter(
+    (video) =>
+      video.id !== item.id &&
+      (!item.brandId || video.brandId !== item.brandId)
+  );
+
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Video", href: "/video" },
-            { label: item.title },
-          ]}
-        />
         <h1>{item.title}</h1>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect video."}
         </p>
+
         <div className="media-detail-hero">
           <video
             src={item.fileUrl ?? undefined}
@@ -43,6 +53,46 @@ export default async function VideoSlugPage({ params }: PageProps) {
           />
         </div>
       </section>
+
+      {sameBrandVideos.length > 0 ? (
+        <section className="inner-section">
+          <div className="section-mini-head">
+            <h2>Alte video de la acest brand</h2>
+          </div>
+
+          <PublicGrid dense>
+            {sameBrandVideos.map((video) => (
+              <PublicCard
+                key={video.id}
+                title={video.title}
+                href={`/video/${video.slug}`}
+                imageUrl={video.thumbnailUrl || video.previewUrl || video.fileUrl}
+                imageOnly
+              />
+            ))}
+          </PublicGrid>
+        </section>
+      ) : null}
+
+      {otherVideos.length > 0 ? (
+        <section className="inner-section">
+          <div className="section-mini-head">
+            <h2>Alte video</h2>
+          </div>
+
+          <PublicGrid dense>
+            {otherVideos.map((video) => (
+              <PublicCard
+                key={video.id}
+                title={video.title}
+                href={`/video/${video.slug}`}
+                imageUrl={video.thumbnailUrl || video.previewUrl || video.fileUrl}
+                imageOnly
+              />
+            ))}
+          </PublicGrid>
+        </section>
+      ) : null}
     </main>
   );
 }
