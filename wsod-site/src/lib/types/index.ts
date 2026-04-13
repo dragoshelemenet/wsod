@@ -29,7 +29,6 @@ export interface MediaItem {
   description?: string | null;
   seoTitle?: string | null;
   metaDescription?: string | null;
-  rotation?: number;
 }
 
 export interface BlogPost {
@@ -63,7 +62,6 @@ export interface DbMediaCardItem {
   description: string | null;
   seoTitle: string | null;
   metaDescription: string | null;
-  rotation: number;
   brand: {
     name: string;
     slug: string;

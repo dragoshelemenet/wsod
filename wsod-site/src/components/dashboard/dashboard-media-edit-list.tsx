@@ -18,7 +18,6 @@ type MediaItem = {
   thumbnailUrl: string | null;
   previewUrl: string | null;
   fileUrl: string | null;
-  rotation: number;
   isVisible: boolean;
   isFeatured: boolean;
   brandId: string | null;

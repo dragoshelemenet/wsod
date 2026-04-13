@@ -5,7 +5,6 @@ type PublicCardProps = {
   imageUrl?: string | null;
   imageOnly?: boolean;
   showPlayIcon?: boolean;
-  rotation?: number;
 };
 
 export function PublicCard({

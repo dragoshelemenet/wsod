@@ -7,7 +7,6 @@ type GalleryItem = {
   title: string;
   src: string;
   thumb: string;
-  rotation?: number;
 };
 
 type Props = {
@@ -83,7 +82,7 @@ export function FotoDetailGalleryClient({ items }: Props) {
                 src={item.thumb}
                 alt={item.title}
                 className="foto-detail-thumb-image"
-                style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
+               
               />
             </button>
           ))}

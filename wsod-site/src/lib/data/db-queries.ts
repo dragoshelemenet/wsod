@@ -100,7 +100,6 @@ export async function getBrandsFromDb() {
   });
 }
 
-
 export async function getBrandsWithHomePreviewFromDb() {
   const brands = await prisma.brand.findMany({
     where: { isVisible: true },
@@ -140,8 +139,6 @@ export async function getBrandsWithHomePreviewFromDb() {
     })
     .filter((brand) => brand.previewImages.length > 0 || brand.logoUrl || brand.coverImageUrl);
 }
-
-
 
 export async function getModelsFromDb() {
   return prisma.personModel.findMany({
