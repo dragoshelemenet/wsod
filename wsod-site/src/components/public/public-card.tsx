@@ -1,73 +1,48 @@
+import Link from "next/link";
+
 type PublicCardProps = {
   title: string;
-  subtitle?: string;
-  href?: string;
+  href: string;
   imageUrl?: string | null;
+  subtitle?: string;
   imageOnly?: boolean;
   showPlayIcon?: boolean;
 };
 
 export function PublicCard({
   title,
-  subtitle,
   href,
   imageUrl,
+  subtitle,
   imageOnly = false,
   showPlayIcon = false,
-  rotation = 0,
 }: PublicCardProps) {
   const media = imageUrl ? (
     <div className="public-card-media-wrap">
-      <img
-        src={imageUrl}
-        alt={title}
-        className="public-card-media"
-        style={{ transform: `rotate(${rotation}deg)` }}
-      />
-      {showPlayIcon ? (
-        <div className="public-card-play-badge" aria-hidden="true">
-          <svg viewBox="0 0 24 24" className="public-card-play-icon">
-            <path d="M8 6.5v11l9-5.5-9-5.5Z" fill="currentColor" />
-          </svg>
-        </div>
-      ) : null}
+      <img src={imageUrl} alt={title} className="public-card-media" />
+      {showPlayIcon ? <span className="public-card-play">▶</span> : null}
     </div>
   ) : (
-    <div className="public-card-media-wrap">
-      <div className="public-card-media" />
-      {showPlayIcon ? (
-        <div className="public-card-play-badge" aria-hidden="true">
-          <svg viewBox="0 0 24 24" className="public-card-play-icon">
-            <path d="M8 6.5v11l9-5.5-9-5.5Z" fill="currentColor" />
-          </svg>
-        </div>
-      ) : null}
+    <div className="public-card-media-wrap public-card-media-empty">
+      <span>{title}</span>
     </div>
   );
 
-  const content = imageOnly ? (
-    media
-  ) : (
-    <>
-      {media}
-      <div className="public-card-copy">
-        <h3>{title}</h3>
-        {subtitle ? <p>{subtitle}</p> : null}
-      </div>
-    </>
-  );
-
-  if (href) {
+  if (imageOnly) {
     return (
-      <a href={href} className={imageOnly ? "public-card image-only-card" : "public-card"}>
-        {content}
-      </a>
+      <Link href={href} className="public-card public-card-image-only">
+        {media}
+      </Link>
     );
   }
 
   return (
-    <article className={imageOnly ? "public-card image-only-card" : "public-card"}>
-      {content}
-    </article>
+    <Link href={href} className="public-card">
+      {media}
+      <div className="public-card-body">
+        <h3>{title}</h3>
+        {subtitle ? <p>{subtitle}</p> : null}
+      </div>
+    </Link>
   );
 }
