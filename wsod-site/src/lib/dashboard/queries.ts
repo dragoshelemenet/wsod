@@ -235,13 +235,11 @@ export async function getDashboardAudioProfiles() {
 
 export async function getSiteContentRecord() {
   try {
-    const item = await prisma.siteContent.findFirst({
+    return await prisma.siteContent.findFirst({
       orderBy: {
         updatedAt: "desc",
       },
     });
-
-    return item;
   } catch {
     return null;
   }
@@ -255,5 +253,15 @@ export async function getDashboardBlogPosts() {
     });
   } catch {
     return [];
+  }
+}
+
+export async function getDashboardBlogPostById(id: string) {
+  try {
+    return await prisma.blogPost.findUnique({
+      where: { id },
+    });
+  } catch {
+    return null;
   }
 }
