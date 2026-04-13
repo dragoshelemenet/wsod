@@ -1,16 +1,16 @@
-import { DashboardEmpty } from "@/components/dashboard/dashboard-empty";
+import { DashboardMediaList } from "@/components/dashboard/dashboard-media-list";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getDashboardMediaItems } from "@/lib/dashboard/queries";
 
-export default function DashboardMediaPage() {
+export default async function DashboardMediaPage() {
+  const items = await getDashboardMediaItems();
+
   return (
     <DashboardShell
       title="Media"
       description="Administrare media pentru toate categoriile publice."
     >
-      <DashboardEmpty
-        title="Media list"
-        description="Aici va intra lista reala de fisiere media, filtre si actiuni."
-      />
+      <DashboardMediaList items={items} />
     </DashboardShell>
   );
 }
