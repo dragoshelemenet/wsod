@@ -11,29 +11,51 @@ export default function WebsitePreviewZoom({ src, title }: Props) {
   const [zoom, setZoom] = useState(1);
 
   const zoomIn = () => setZoom((z) => Math.min(z + 0.1, 2.5));
-  const zoomOut = () => setZoom((z) => Math.max(z - 0.1, 0.5));
+  const zoomOut = () => setZoom((z) => Math.max(z - 0.1, 0.6));
   const resetZoom = () => setZoom(1);
 
   return (
     <div className="website-preview-shell">
       <div className="website-preview-toolbar">
-        <button type="button" onClick={zoomOut}>-</button>
-        <span>{Math.round(zoom * 100)}%</span>
-        <button type="button" onClick={zoomIn}>+</button>
-        <button type="button" onClick={resetZoom}>Reset</button>
+        <button
+          type="button"
+          className="website-preview-zoom-btn"
+          onClick={zoomOut}
+        >
+          -
+        </button>
+        <button
+          type="button"
+          className="website-preview-zoom-btn"
+          onClick={resetZoom}
+        >
+          100%
+        </button>
+        <button
+          type="button"
+          className="website-preview-zoom-btn"
+          onClick={zoomIn}
+        >
+          +
+        </button>
       </div>
 
-      <div className="website-preview-viewport">
-        <div
-          className="website-preview-scale"
-          style={{ transform: `scale(${zoom})` }}
-        >
-          <iframe
-            src={src}
-            title={title}
-            className="website-detail-frame"
-            loading="lazy"
-          />
+      <div className="website-detail-square-wrap">
+        <div className="website-detail-square">
+          <div
+            className="website-preview-zoom-stage"
+            style={{ overflow: "auto" }}
+          >
+            <img
+              src={src}
+              alt={title}
+              className="website-preview-zoom-image"
+              style={{
+                transform: `scale(${zoom})`,
+                transformOrigin: "top center",
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

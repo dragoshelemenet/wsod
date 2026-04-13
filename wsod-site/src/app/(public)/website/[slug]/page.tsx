@@ -17,28 +17,30 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
     return (
       <main className="inner-page">
         <section className="inner-section">
-          <h1>Website not found</h1>
-          <p className="inner-description">Proiectul website nu a fost gasit.</p>
+          <h1>Website-ul nu a fost găsit</h1>
+          <p className="inner-description">Proiectul website nu a fost găsit.</p>
         </section>
       </main>
     );
   }
 
   const allWebsites = await getPublishedMediaByCategory("website");
-  const sameBrand =
-    item.brandId != null
-      ? allWebsites.filter(
-          (entry) => entry.slug !== item.slug && entry.brandId === item.brandId
-        )
-      : [];
 
-  const otherBrands = allWebsites.filter(
-    (entry) =>
-      entry.slug !== item.slug &&
-      (item.brandId == null || entry.brandId !== item.brandId)
+  const sameBrand = allWebsites.filter(
+    (website) =>
+      website.id !== item.id &&
+      item.brandId &&
+      website.brandId === item.brandId
   );
 
-  const previewSrc = item.fileUrl || item.previewUrl || item.thumbnailUrl || "";
+  const otherBrands = allWebsites.filter(
+    (website) =>
+      website.id !== item.id &&
+      (!item.brandId || website.brandId !== item.brandId)
+  );
+
+  const previewSrc =
+    item.fileUrl || item.previewUrl || item.thumbnailUrl || "";
 
   return (
     <main className="inner-page">
@@ -50,7 +52,7 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
         ) : null}
 
         {previewSrc ? (
-          <WebsitePreviewZoom src={previewSrc} alt={item.title} />
+          <WebsitePreviewZoom src={previewSrc} title={item.title} />
         ) : null}
 
         {sameBrand.length > 0 ? (
@@ -59,20 +61,30 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
               <h2>Alte website-uri ale aceluiași brand</h2>
             </div>
 
-            <div className="media-thumb-grid">
-              {sameBrand.map((entry) => (
-                <Link
-                  key={entry.id}
-                  href={`/website/${entry.slug}`}
-                  className="media-thumb-card"
-                >
-                  <img
-                    src={entry.thumbnailUrl || entry.previewUrl || entry.fileUrl || ""}
-                    alt={entry.title}
-                    className="media-thumb-image"
-                  />
-                </Link>
-              ))}
+            <div className="public-grid public-grid-dense">
+              {sameBrand.map((website) => {
+                const imageUrl =
+                  website.thumbnailUrl ||
+                  website.previewUrl ||
+                  website.fileUrl ||
+                  "";
+
+                return (
+                  <Link
+                    key={website.id}
+                    href={`/website/${website.slug}`}
+                    className="public-card public-card-image-only"
+                  >
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={website.title}
+                        className="public-card-image"
+                      />
+                    ) : null}
+                  </Link>
+                );
+              })}
             </div>
           </section>
         ) : null}
@@ -83,20 +95,30 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
               <h2>Alte website-uri</h2>
             </div>
 
-            <div className="media-thumb-grid">
-              {otherBrands.slice(0, 12).map((entry) => (
-                <Link
-                  key={entry.id}
-                  href={`/website/${entry.slug}`}
-                  className="media-thumb-card"
-                >
-                  <img
-                    src={entry.thumbnailUrl || entry.previewUrl || entry.fileUrl || ""}
-                    alt={entry.title}
-                    className="media-thumb-image"
-                  />
-                </Link>
-              ))}
+            <div className="public-grid public-grid-dense">
+              {otherBrands.map((website) => {
+                const imageUrl =
+                  website.thumbnailUrl ||
+                  website.previewUrl ||
+                  website.fileUrl ||
+                  "";
+
+                return (
+                  <Link
+                    key={website.id}
+                    href={`/website/${website.slug}`}
+                    className="public-card public-card-image-only"
+                  >
+                    {imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={website.title}
+                        className="public-card-image"
+                      />
+                    ) : null}
+                  </Link>
+                );
+              })}
             </div>
           </section>
         ) : null}
