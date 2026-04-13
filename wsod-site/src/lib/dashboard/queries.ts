@@ -248,3 +248,24 @@ export async function getDashboardMediaItems() {
     return [];
   }
 }
+
+export async function getDashboardMediaItems() {
+  try {
+    const items = await prisma.mediaItem.findMany({
+      orderBy: [
+        { updatedAt: "desc" },
+        { createdAt: "desc" },
+      ],
+      include: {
+        brand: true,
+        personModel: true,
+        audioProfile: true,
+      },
+      take: 100,
+    });
+
+    return items;
+  } catch {
+    return [];
+  }
+}
