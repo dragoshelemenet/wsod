@@ -9,7 +9,10 @@ export default async function ModelSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Model: {slug}</h1>
-        <p>Pagina publica dedicata modelului selectat.</p>
+        <p className="inner-description">
+          Pagina individuala pentru model. Aici vor intra proiectele asociate
+          acelui model, afisate curat si rapid.
+        </p>
       </section>
     </main>
   );

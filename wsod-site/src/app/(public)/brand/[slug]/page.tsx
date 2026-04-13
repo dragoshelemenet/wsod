@@ -9,7 +9,10 @@ export default async function BrandSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Brand: {slug}</h1>
-        <p>Pagina publica dedicata brandului selectat.</p>
+        <p className="inner-description">
+          Pagina individuala pentru brand. Aici vor intra proiectele asociate
+          acelui brand, cu paginare simpla.
+        </p>
       </section>
     </main>
   );

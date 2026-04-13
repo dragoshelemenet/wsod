@@ -9,7 +9,10 @@ export default async function VideoSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Video: {slug}</h1>
-        <p>Pagina individuala pentru proiect video.</p>
+        <p className="inner-description">
+          Pagina individuala pentru proiect video. Aici va intra playerul mare,
+          preview-ul si galeria asociata.
+        </p>
       </section>
     </main>
   );

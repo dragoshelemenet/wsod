@@ -9,7 +9,10 @@ export default async function GraficaSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Grafica: {slug}</h1>
-        <p>Pagina individuala pentru proiect de grafica.</p>
+        <p className="inner-description">
+          Pagina individuala pentru proiect grafic. Aici va intra vizualul mare
+          si eventual alte variante sau mockup-uri.
+        </p>
       </section>
     </main>
   );

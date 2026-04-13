@@ -9,7 +9,10 @@ export default async function FotoSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Foto: {slug}</h1>
-        <p>Pagina individuala pentru proiect foto.</p>
+        <p className="inner-description">
+          Pagina individuala pentru proiect foto. Aici vor aparea imaginile mari,
+          curate, fara aglomeratie inutila.
+        </p>
       </section>
     </main>
   );
