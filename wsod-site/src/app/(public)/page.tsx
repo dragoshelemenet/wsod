@@ -1,3 +1,4 @@
+import { BrandsCarousel } from "@/components/public/brands-carousel";
 import { getHomepageCollections, getPublishedBrands } from "@/lib/dashboard/queries";
 
 export default async function HomePage() {
@@ -67,7 +68,18 @@ export default async function HomePage() {
     },
   ];
 
-  const featuredBrands = brands.slice(0, 3);
+  const featuredBrands = brands.map((brand) => ({
+    id: brand.id,
+    name: brand.name,
+    slug: brand.slug,
+    imageUrl:
+      brand.logoUrl ||
+      brand.coverImageUrl ||
+      brand.mediaItems?.[0]?.thumbnailUrl ||
+      brand.mediaItems?.[0]?.previewUrl ||
+      brand.mediaItems?.[0]?.fileUrl ||
+      null,
+  }));
 
   return (
     <main className="reference-home-v2">
@@ -101,65 +113,18 @@ export default async function HomePage() {
                     }
                   : undefined
               }
-            />
-            <div className="reference-folder-v2-copy">
-              <strong>{folder.title}</strong>
-              {folder.meta ? <span>{folder.meta}</span> : null}
+            >
+              <div className="reference-folder-overlay-copy">
+                <strong>{folder.title}</strong>
+                {folder.meta ? <span>{folder.meta}</span> : null}
+              </div>
             </div>
           </a>
         ))}
       </section>
 
       <section className="reference-brands-v2">
-        <h2>BRANDS WE WORKED WITH</h2>
-
-        <div className="reference-brands-v2-grid">
-          {featuredBrands.length ? (
-            featuredBrands.map((brand) => {
-              const imageUrl =
-                brand.logoUrl ||
-                brand.coverImageUrl ||
-                brand.mediaItems?.[0]?.thumbnailUrl ||
-                brand.mediaItems?.[0]?.previewUrl ||
-                brand.mediaItems?.[0]?.fileUrl ||
-                null;
-
-              return (
-                <a
-                  key={brand.id}
-                  href={`/brand/${brand.slug}`}
-                  className="reference-brand-v2-card"
-                >
-                  <div className="reference-folder-v2-tab small" />
-                  <div
-                    className="reference-brand-v2-art"
-                    style={
-                      imageUrl
-                        ? {
-                            backgroundImage: `linear-gradient(rgba(20,20,24,0.34), rgba(20,20,24,0.34)), url(${imageUrl})`,
-                          }
-                        : undefined
-                    }
-                  />
-                  <div className="reference-brand-v2-name">{brand.name}</div>
-                </a>
-              );
-            })
-          ) : (
-            <div className="empty-state-block">
-              <h3>No brands yet</h3>
-              <p>Brandurile vor aparea aici dupa publicare.</p>
-            </div>
-          )}
-        </div>
-
-        <div className="reference-brands-dots">
-          <span />
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
+        <BrandsCarousel items={featuredBrands} />
       </section>
 
       <footer className="reference-footer-v2">
