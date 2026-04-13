@@ -1,9 +1,9 @@
-export default function FotoPage() {
+export default function FotoListingPage() {
   return (
     <main className="inner-page">
       <section className="inner-section">
         <h1>Foto</h1>
-        <p>Pagina Foto placeholder. Urmeaza grid-ul nou optimizat.</p>
+        <p>Pagina publica pentru fotografii. Grid compact, multe imagini, fara descrieri inutile.</p>
       </section>
     </main>
   );
