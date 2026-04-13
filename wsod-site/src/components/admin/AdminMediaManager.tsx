@@ -301,6 +301,14 @@ export default function AdminMediaManager({
         throw new Error(result.message || "Nu s-a putut salva.");
       }
 
+      if (result.mediaItem?.id) {
+        setItems((current) =>
+          current.map((entry) =>
+            entry.id === item.id ? { ...entry, ...result.mediaItem } : entry
+          )
+        );
+      }
+
       setMessage("Fișier actualizat.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");

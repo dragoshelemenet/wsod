@@ -3,6 +3,40 @@ import { prisma } from "@/lib/db/prisma";
 import { hasAdminSession } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 
+function slugify(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function makeUniqueSlug(baseSlug: string, excludeId?: string) {
+  const cleanBase = slugify(baseSlug) || "media-item";
+  let slug = cleanBase;
+  let counter = 2;
+
+  while (true) {
+    const existing = await prisma.mediaItem.findFirst({
+      where: excludeId
+        ? {
+            slug,
+            NOT: { id: excludeId },
+          }
+        : { slug },
+      select: { id: true },
+    });
+
+    if (!existing) return slug;
+
+    slug = `${cleanBase}-${counter}`;
+    counter += 1;
+  }
+}
+
+
 async function revalidateMediaPaths(existing: {
   slug: string;
   brand?: { slug: string } | null;
@@ -68,6 +102,7 @@ export async function PUT(
     select: {
       id: true,
       slug: true,
+      title: true,
       brand: { select: { slug: true } },
       personModel: { select: { slug: true } },
       audioProfile: { select: { slug: true } },
@@ -81,10 +116,14 @@ export async function PUT(
     );
   }
 
+  const nextTitle = title || existing.title;
+  const nextSlug = await makeUniqueSlug(nextTitle || "media-item", id);
+
   const updated = await prisma.mediaItem.update({
     where: { id },
     data: {
-      title: title || undefined,
+      title: nextTitle,
+      slug: nextSlug,
       description: description || null,
       seoTitle: seoTitle || null,
       metaDescription: metaDescription || null,
@@ -99,6 +138,12 @@ export async function PUT(
   });
 
   await revalidateMediaPaths(existing);
+  if (updated.slug !== existing.slug) {
+    await revalidateMediaPaths({
+      ...existing,
+      slug: updated.slug,
+    });
+  }
 
   return NextResponse.json({
     ok: true,
@@ -124,6 +169,7 @@ export async function DELETE(
     select: {
       id: true,
       slug: true,
+      title: true,
       brand: { select: { slug: true } },
       personModel: { select: { slug: true } },
       audioProfile: { select: { slug: true } },

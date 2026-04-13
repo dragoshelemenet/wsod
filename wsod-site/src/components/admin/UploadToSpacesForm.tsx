@@ -89,12 +89,23 @@ function fileNameToTitle(fileName: string) {
   return fileName.replace(/\.[^/.]+$/, "").replace(/[_-]+/g, " ").trim();
 }
 
-function buildItemTitle(baseTitle: string, file: File, totalFiles: number) {
-  if (totalFiles === 1 && baseTitle.trim()) {
-    return baseTitle.trim();
+function buildItemTitle(
+  baseTitle: string,
+  file: File,
+  totalFiles: number,
+  index: number
+) {
+  const cleanBaseTitle = baseTitle.trim();
+
+  if (totalFiles === 1) {
+    return cleanBaseTitle || fileNameToTitle(file.name) || "Media item";
   }
 
-  return fileNameToTitle(file.name) || baseTitle.trim() || "Media item";
+  if (cleanBaseTitle) {
+    return `${cleanBaseTitle} ${index + 1}`;
+  }
+
+  return fileNameToTitle(file.name) || `Media item ${index + 1}`;
 }
 
 export default function UploadToSpacesForm({
@@ -369,7 +380,7 @@ export default function UploadToSpacesForm({
     return { publicUrl };
   }
 
-  async function uploadSingleFile(file: File, totalFiles: number) {
+  async function uploadSingleFile(file: File, totalFiles: number, index: number) {
     let uploadOwnerSlug = brandSlug;
     if (category === "foto" && ownerType === "model") {
       uploadOwnerSlug = personModelSlug;
@@ -498,7 +509,7 @@ export default function UploadToSpacesForm({
         audioProfileSlug: ownerType === "audioProfile" ? audioProfileSlug : "",
         category,
         type: inferredType,
-        title: buildItemTitle(title, file, totalFiles),
+        title: buildItemTitle(title, file, totalFiles, index),
         description,
         seoTitle,
         metaDescription,
@@ -570,8 +581,8 @@ export default function UploadToSpacesForm({
       setIsUploading(true);
       setMessage("");
 
-      for (const file of selectedFiles) {
-        await uploadSingleFile(file, selectedFiles.length);
+      for (const [index, file] of selectedFiles.entries()) {
+        await uploadSingleFile(file, selectedFiles.length, index);
       }
 
       setMessage(

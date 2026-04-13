@@ -5,25 +5,33 @@ import { revalidatePath } from "next/cache";
 
 function slugify(value: string) {
   return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
 
-async function makeUniqueSlug(baseSlug: string) {
-  let slug = baseSlug;
+async function makeUniqueSlug(baseSlug: string, excludeId?: string) {
+  const cleanBase = slugify(baseSlug) || "media-item";
+  let slug = cleanBase;
   let counter = 2;
 
   while (true) {
-    const existing = await prisma.mediaItem.findUnique({
-      where: { slug },
+    const existing = await prisma.mediaItem.findFirst({
+      where: excludeId
+        ? {
+            slug,
+            NOT: { id: excludeId },
+          }
+        : { slug },
       select: { id: true },
     });
 
     if (!existing) return slug;
 
-    slug = `${baseSlug}-${counter}`;
+    slug = `${cleanBase}-${counter}`;
     counter += 1;
   }
 }
@@ -188,7 +196,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const baseSlug = slugify(title || fileNameOriginal || "media-item");
+  const baseSlug = title || fileNameOriginal || "media-item";
   const slug = await makeUniqueSlug(baseSlug);
 
   const parsedDate = new Date(dateRaw);
