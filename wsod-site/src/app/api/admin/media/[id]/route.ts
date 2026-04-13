@@ -161,7 +161,6 @@ async function handleUpdate(
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       isFeatured,
       isVisible,
-      rotation: normalizedRotation,
       ...(parsedDate ? { date: parsedDate } : {}),
     },
   });

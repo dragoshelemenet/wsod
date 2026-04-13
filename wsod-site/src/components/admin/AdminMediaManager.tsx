@@ -21,7 +21,6 @@ interface AdminMediaItem {
   thumbnailUrl?: string | null;
   previewUrl?: string | null;
   fileUrl?: string | null;
-  rotation?: number;
   brand?: { name: string; slug: string } | null;
   personModel?: { name: string; slug: string } | null;
   audioProfile?: { name: string; slug: string; kind: string } | null;
@@ -222,10 +221,6 @@ function buildMonthYearIso(month: number, year: number) {
   return new Date(Date.UTC(year, month, 1)).toISOString();
 }
 
-function normalizeRotation(value: number) {
-  const normalized = ((value % 360) + 360) % 360;
-  return normalized === 90 || normalized === 180 || normalized === 270 ? normalized : 0;
-}
 
 export default function AdminMediaManager({
   initialItems,
@@ -413,39 +408,6 @@ export default function AdminMediaManager({
   function openEditor(id: string) {
     window.scrollTo({ top: 0, behavior: "auto" });
     setSelectedItemId(id);
-  }
-
-  async function rotatePhysical(item: AdminMediaItem, direction: "left" | "right") {
-    setSavingId(item.id);
-    setMessage("");
-
-    try {
-      const response = await fetch(`/api/admin/media/${item.id}/rotate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ direction }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.ok) {
-        throw new Error(result.message || "Nu s-a putut roti imaginea.");
-      }
-
-      if (result.mediaItem?.id) {
-        setItems((current) =>
-          current.map((entry) =>
-            entry.id === item.id ? { ...entry, ...result.mediaItem } : entry
-          )
-        );
-      }
-
-      setMessage("Imagine rotită fizic și salvată.");
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
-    } finally {
-      setSavingId(null);
-    }
   }
 
   function applyPhotoGroup(item: AdminMediaItem, value: string) {
@@ -746,28 +708,6 @@ export default function AdminMediaManager({
                   <span>
                     {selectedItem.category} • {getOwnerMeta(selectedItem).ownerName}
                   </span>
-                </div>
-                <div className="admin-inline-actions admin-inline-actions-wrap">
-                  {!isVideoLike(selectedItem) ? (
-                    <>
-                      <button
-                        type="button"
-                        className="admin-secondary-button"
-                        onClick={() => rotatePhysical(selectedItem, "left")}
-                        disabled={savingId === selectedItem.id}
-                      >
-                        Rotire fizică stânga
-                      </button>
-                      <button
-                        type="button"
-                        className="admin-secondary-button"
-                        onClick={() => rotatePhysical(selectedItem, "right")}
-                        disabled={savingId === selectedItem.id}
-                      >
-                        Rotire fizică dreapta
-                      </button>
-                    </>
-                  ) : null}
                 </div>
 
                 <div className="admin-inline-actions">
