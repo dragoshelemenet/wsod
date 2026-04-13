@@ -4003,3 +4003,35 @@ main,
     font-size: 22px;
   }
 }
+
+.public-card-media-wrap {
+  position: relative;
+}
+
+.public-card-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 820px) {
+  .public-card-play {
+    width: 48px;
+    height: 48px;
+    font-size: 19px;
+  }
+}
