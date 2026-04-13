@@ -13,6 +13,18 @@ type PresignResponse = {
   error?: string;
 };
 
+type UploadItem = {
+  id: string;
+  file: File;
+  title: string;
+  slug: string;
+  fileUrl: string;
+  thumbnailUrl: string;
+  previewUrl: string;
+  status: "pending" | "uploading" | "uploaded" | "creating" | "done" | "error";
+  error: string;
+};
+
 function getTypeFromCategory(category: string) {
   if (category === "video") return "video";
   if (category === "audio") return "audio";
@@ -20,22 +32,45 @@ function getTypeFromCategory(category: string) {
   return "image";
 }
 
+function slugify(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getBaseName(fileName: string) {
+  return fileName.replace(/\.[^/.]+$/, "").trim();
+}
+
+function createId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export function DashboardUploadForm() {
   const router = useRouter();
 
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
   const [category, setCategory] = useState("foto");
-  const [fileUrl, setFileUrl] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
-  const [previewUrl, setPreviewUrl] = useState("");
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [audioOriginalTitle, setAudioOriginalTitle] = useState("");
+  const [audioOriginalSlug, setAudioOriginalSlug] = useState("");
+  const [audioProcessedTitle, setAudioProcessedTitle] = useState("");
+  const [audioProcessedSlug, setAudioProcessedSlug] = useState("");
+  const [audioOriginalFile, setAudioOriginalFile] = useState<File | null>(null);
+  const [audioProcessedFile, setAudioProcessedFile] = useState<File | null>(null);
+  const [audioOriginalUrl, setAudioOriginalUrl] = useState("");
+  const [audioProcessedUrl, setAudioProcessedUrl] = useState("");
+
+  const [items, setItems] = useState<UploadItem[]>([]);
   const [uploading, setUploading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
   const [message, setMessage] = useState("");
 
   const type = useMemo(() => getTypeFromCategory(category), [category]);
@@ -48,9 +83,79 @@ export function DashboardUploadForm() {
     return "*/*";
   }, [type]);
 
-  async function handleDirectUpload() {
-    if (!selectedFile) {
-      setMessage("Alege mai intai un fisier.");
+  function updateItem(id: string, patch: Partial<UploadItem>) {
+    setItems((current) =>
+      current.map((item) => (item.id === id ? { ...item, ...patch } : item))
+    );
+  }
+
+  function addFiles(fileList: FileList | File[]) {
+    const incoming = Array.from(fileList);
+
+    if (!incoming.length) return;
+
+    const nextItems = incoming.map((file) => {
+      const title = getBaseName(file.name) || "media item";
+      return {
+        id: createId(),
+        file,
+        title,
+        slug: slugify(title),
+        fileUrl: "",
+        thumbnailUrl: "",
+        previewUrl: "",
+        status: "pending" as const,
+        error: "",
+      };
+    });
+
+    setItems((current) => [...current, ...nextItems]);
+  }
+
+  async function presignAndUpload(file: File) {
+    const presignResponse = await fetch("/api/uploads/presign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fileName: file.name,
+        contentType: file.type || "application/octet-stream",
+        category,
+      }),
+    });
+
+    const presignData: PresignResponse = await presignResponse.json().catch(() => ({}));
+
+    if (!presignResponse.ok) {
+      throw new Error(presignData?.error || "Nu s-a putut genera presign URL.");
+    }
+
+    const uploadUrl = presignData.uploadUrl;
+    const finalUrl = presignData.fileUrl || presignData.publicUrl || "";
+
+    if (!uploadUrl || !finalUrl) {
+      throw new Error("Raspuns invalid de la presign endpoint.");
+    }
+
+    const uploadResult = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream",
+      },
+      body: file,
+    });
+
+    if (!uploadResult.ok) {
+      throw new Error("Upload-ul fisierului a esuat.");
+    }
+
+    return finalUrl;
+  }
+
+  async function handleUploadAll() {
+    if (!items.length) {
+      setMessage("Adauga fisiere mai intai.");
       return;
     }
 
@@ -58,67 +163,35 @@ export function DashboardUploadForm() {
     setMessage("");
 
     try {
-      const presignResponse = await fetch("/api/uploads/presign", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fileName: selectedFile.name,
-          contentType: selectedFile.type || "application/octet-stream",
-          category,
-        }),
-      });
+      for (const item of items) {
+        updateItem(item.id, { status: "uploading", error: "" });
 
-      const presignData: PresignResponse = await presignResponse.json().catch(() => ({}));
+        try {
+          const finalUrl = await presignAndUpload(item.file);
 
-      if (!presignResponse.ok) {
-        throw new Error(presignData?.error || "Nu s-a putut genera presign URL.");
-      }
+          const patch: Partial<UploadItem> = {
+            fileUrl: finalUrl,
+            status: "uploaded",
+          };
 
-      const uploadUrl = presignData.uploadUrl;
-      const finalUrl = presignData.fileUrl || presignData.publicUrl || "";
+          if (type === "image") {
+            patch.thumbnailUrl = finalUrl;
+          }
 
-      if (!uploadUrl || !finalUrl) {
-        throw new Error("Raspuns invalid de la presign endpoint.");
-      }
+          if (type === "video") {
+            patch.previewUrl = finalUrl;
+          }
 
-      const uploadResult = await fetch(uploadUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": selectedFile.type || "application/octet-stream",
-        },
-        body: selectedFile,
-      });
-
-      if (!uploadResult.ok) {
-        throw new Error("Upload-ul fisierului a esuat.");
-      }
-
-      if (isAudio) {
-        if (!fileUrl) {
-          setFileUrl(finalUrl);
-          setMessage("Audio original uploadat. Acum incarca si varianta procesata.");
-        } else if (!previewUrl) {
-          setPreviewUrl(finalUrl);
-          setMessage("Audio procesat uploadat. Acum poti salva media item.");
-        } else {
-          setPreviewUrl(finalUrl);
-          setMessage("Audio procesat a fost actualizat. Acum poti salva media item.");
+          updateItem(item.id, patch);
+        } catch (error) {
+          updateItem(item.id, {
+            status: "error",
+            error: error instanceof Error ? error.message : "Eroare upload",
+          });
         }
-      } else {
-        setFileUrl(finalUrl);
-
-        if (type === "image" && !thumbnailUrl) {
-          setThumbnailUrl(finalUrl);
-        }
-
-        if ((type === "video" || type === "audio") && !previewUrl) {
-          setPreviewUrl(finalUrl);
-        }
-
-        setMessage("Fisier uploadat cu succes. Acum poti salva media item.");
       }
+
+      setMessage("Upload terminat. Acum apasa Create all media items.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta la upload.");
     } finally {
@@ -126,49 +199,160 @@ export function DashboardUploadForm() {
     }
   }
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCreateAll() {
+    const readyItems = items.filter((item) => item.fileUrl);
+
+    if (!readyItems.length) {
+      setMessage("Fa upload la fisiere mai intai.");
+      return;
+    }
+
+    setCreating(true);
+    setMessage("");
+
+    let successCount = 0;
+    let failCount = 0;
+
+    try {
+      for (const item of readyItems) {
+        updateItem(item.id, { status: "creating", error: "" });
+
+        try {
+          const response = await fetch("/api/admin/media", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title: item.title,
+              slug: item.slug,
+              category,
+              type,
+              date: new Date().toISOString(),
+              fileUrl: item.fileUrl,
+              thumbnailUrl: item.thumbnailUrl,
+              previewUrl: item.previewUrl,
+              description,
+              isVisible,
+              isFeatured,
+              fileNameOriginal: item.file.name,
+            }),
+          });
+
+          const data = await response.json().catch(() => null);
+
+          if (!response.ok) {
+            throw new Error(data?.message || data?.error || "Nu s-a putut crea media item.");
+          }
+
+          updateItem(item.id, { status: "done" });
+          successCount += 1;
+        } catch (error) {
+          updateItem(item.id, {
+            status: "error",
+            error: error instanceof Error ? error.message : "Eroare creare",
+          });
+          failCount += 1;
+        }
+      }
+
+      setMessage(`Create finished: ${successCount} ok, ${failCount} failed.`);
+      router.refresh();
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function handleUploadAudio(which: "original" | "processed") {
+    const file = which === "original" ? audioOriginalFile : audioProcessedFile;
+
+    if (!file) {
+      setMessage(which === "original" ? "Alege audio original." : "Alege audio procesat.");
+      return;
+    }
+
+    setUploading(true);
+    setMessage("");
+
+    try {
+      const finalUrl = await presignAndUpload(file);
+
+      if (which === "original") {
+        setAudioOriginalUrl(finalUrl);
+        if (!audioOriginalTitle) {
+          const base = getBaseName(file.name) || "audio-original";
+          setAudioOriginalTitle(base);
+          setAudioOriginalSlug(slugify(base));
+        }
+      } else {
+        setAudioProcessedUrl(finalUrl);
+        if (!audioProcessedTitle) {
+          const base = getBaseName(file.name) || "audio-procesat";
+          setAudioProcessedTitle(base);
+          setAudioProcessedSlug(slugify(base));
+        }
+      }
+
+      setMessage("Audio uploadat cu succes.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare upload audio.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleCreateAudioPair(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!audioOriginalUrl || !audioProcessedUrl) {
+      setMessage("Incarca si originalul si varianta procesata.");
+      return;
+    }
+
     setCreating(true);
     setMessage("");
 
     try {
-      const response = await fetch("/api/admin/media", {
+      const originalResponse = await fetch("/api/admin/media", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title,
-          slug,
-          category,
-          type,
+          title: audioOriginalTitle || "Audio original",
+          slug: audioOriginalSlug || slugify(audioOriginalTitle || "audio-original"),
+          category: "audio",
+          type: "audio",
           date: new Date().toISOString(),
-          fileUrl,
-          thumbnailUrl,
-          previewUrl,
+          fileUrl: audioOriginalUrl,
+          previewUrl: audioProcessedUrl,
           description,
           isVisible,
           isFeatured,
+          fileNameOriginal: audioOriginalFile?.name || "",
         }),
       });
 
-      const data = await response.json().catch(() => null);
+      const originalData = await originalResponse.json().catch(() => null);
 
-      if (!response.ok) {
-        throw new Error(data?.error || "Nu s-a putut crea media item.");
+      if (!originalResponse.ok) {
+        throw new Error(
+          originalData?.message || originalData?.error || "Nu s-a putut crea itemul audio."
+        );
       }
 
-      setTitle("");
-      setSlug("");
-      setCategory("foto");
-      setFileUrl("");
-      setThumbnailUrl("");
-      setPreviewUrl("");
+      setAudioOriginalTitle("");
+      setAudioOriginalSlug("");
+      setAudioProcessedTitle("");
+      setAudioProcessedSlug("");
+      setAudioOriginalFile(null);
+      setAudioProcessedFile(null);
+      setAudioOriginalUrl("");
+      setAudioProcessedUrl("");
       setDescription("");
       setIsVisible(true);
       setIsFeatured(false);
-      setSelectedFile(null);
-      setMessage("Media item creat cu succes.");
+      setMessage("Audio media item creat cu succes.");
       router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
@@ -177,42 +361,26 @@ export function DashboardUploadForm() {
     }
   }
 
+  const canCreateAll = items.some((item) => item.fileUrl);
+  const canUploadAll = items.some((item) => !item.fileUrl);
+
   return (
-    <form className="admin-form" onSubmit={onSubmit}>
+    <div className="admin-form">
       <div className="admin-card-head">
         <h2>Create media item</h2>
       </div>
 
       <div className="admin-stack">
         <div className="admin-form-field">
-          <label htmlFor="media-title">Title</label>
-          <input
-            id="media-title"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Titlu"
-            required
-          />
-        </div>
-
-        <div className="admin-form-field">
-          <label htmlFor="media-slug">Slug</label>
-          <input
-            id="media-slug"
-            value={slug}
-            onChange={(event) => setSlug(event.target.value)}
-            placeholder="media-item-slug"
-            required
-          />
-        </div>
-
-        <div className="admin-form-field">
           <label htmlFor="media-category">Category</label>
           <select
             id="media-category"
             className="admin-select"
             value={category}
-            onChange={(event) => setCategory(event.target.value)}
+            onChange={(event) => {
+              setCategory(event.target.value);
+              setMessage("");
+            }}
           >
             <option value="foto">Foto</option>
             <option value="video">Video</option>
@@ -223,114 +391,307 @@ export function DashboardUploadForm() {
           </select>
         </div>
 
-        <div className="admin-form-field">
-          <label htmlFor="media-file-input">
-            {isAudio ? "Upload audio original sau procesat" : "Upload file"}
-          </label>
-          <input
-            id="media-file-input"
-            type="file"
-            accept={acceptValue}
-            onChange={(event) => {
-              const file = event.target.files?.[0] || null;
-              setSelectedFile(file);
-            }}
-          />
-          {isAudio ? (
-            <p className="admin-helper-text">
-              Primul upload merge la audio ORIGINAL. Al doilea upload merge la audio PROCESAT.
-            </p>
-          ) : null}
-        </div>
+        {isAudio ? (
+          <form className="admin-stack" onSubmit={handleCreateAudioPair}>
+            <div className="admin-upload-box">
+              <div className="admin-form-field">
+                <label htmlFor="audio-original-title">Titlu audio original</label>
+                <input
+                  id="audio-original-title"
+                  value={audioOriginalTitle}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    setAudioOriginalTitle(value);
+                    setAudioOriginalSlug(slugify(value));
+                  }}
+                  placeholder="Original"
+                />
+              </div>
 
-        <div className="site-content-actions">
-          <button
-            className="admin-submit"
-            type="button"
-            onClick={handleDirectUpload}
-            disabled={uploading || !selectedFile}
-          >
-            {uploading ? "Uploading..." : "Upload to Spaces"}
-          </button>
-        </div>
+              <div className="admin-form-field">
+                <label htmlFor="audio-original-slug">Slug original</label>
+                <input
+                  id="audio-original-slug"
+                  value={audioOriginalSlug}
+                  onChange={(event) => setAudioOriginalSlug(slugify(event.target.value))}
+                  placeholder="audio-original"
+                />
+              </div>
 
-        <div className="admin-form-field">
-          <label htmlFor="media-file-url">
-            {isAudio ? "Audio original URL (inainte de procesare)" : "File URL"}
-          </label>
-          <input
-            id="media-file-url"
-            value={fileUrl}
-            onChange={(event) => setFileUrl(event.target.value)}
-            placeholder="https://..."
-          />
-        </div>
+              <div className="admin-form-field">
+                <label htmlFor="audio-original-file">Audio original</label>
+                <input
+                  id="audio-original-file"
+                  type="file"
+                  accept="audio/*"
+                  onChange={(event) => setAudioOriginalFile(event.target.files?.[0] || null)}
+                />
+              </div>
 
-        {!isAudio ? (
-          <div className="admin-form-field">
-            <label htmlFor="media-thumb-url">Thumbnail URL</label>
-            <input
-              id="media-thumb-url"
-              value={thumbnailUrl}
-              onChange={(event) => setThumbnailUrl(event.target.value)}
-              placeholder="https://..."
-            />
-          </div>
-        ) : null}
+              <div className="site-content-actions">
+                <button
+                  className="admin-submit"
+                  type="button"
+                  onClick={() => handleUploadAudio("original")}
+                  disabled={uploading || !audioOriginalFile}
+                >
+                  {uploading ? "Uploading..." : "Upload original"}
+                </button>
+              </div>
 
-        <div className="admin-form-field">
-          <label htmlFor="media-preview-url">
-            {isAudio ? "Audio procesat URL (dupa procesare)" : "Preview URL"}
-          </label>
-          <input
-            id="media-preview-url"
-            value={previewUrl}
-            onChange={(event) => setPreviewUrl(event.target.value)}
-            placeholder="https://..."
-          />
-        </div>
+              <div className="admin-form-field">
+                <label>Audio original URL</label>
+                <input
+                  value={audioOriginalUrl}
+                  onChange={(event) => setAudioOriginalUrl(event.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
 
-        <div className="admin-form-field">
-          <label htmlFor="media-description">Description</label>
-          <textarea
-            id="media-description"
-            className="admin-textarea"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder={
-              isAudio
-                ? "Ex: comparatie intre varianta originala si varianta procesata."
-                : "Descriere"
-            }
-          />
-        </div>
+            <div className="admin-upload-box">
+              <div className="admin-form-field">
+                <label htmlFor="audio-processed-title">Titlu audio procesat</label>
+                <input
+                  id="audio-processed-title"
+                  value={audioProcessedTitle}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    setAudioProcessedTitle(value);
+                    setAudioProcessedSlug(slugify(value));
+                  }}
+                  placeholder="Procesat"
+                />
+              </div>
 
-        <label className="admin-toggle-row">
-          <span>Visible</span>
-          <input
-            type="checkbox"
-            checked={isVisible}
-            onChange={(event) => setIsVisible(event.target.checked)}
-          />
-        </label>
+              <div className="admin-form-field">
+                <label htmlFor="audio-processed-slug">Slug procesat</label>
+                <input
+                  id="audio-processed-slug"
+                  value={audioProcessedSlug}
+                  onChange={(event) => setAudioProcessedSlug(slugify(event.target.value))}
+                  placeholder="audio-procesat"
+                />
+              </div>
 
-        <label className="admin-toggle-row">
-          <span>Featured</span>
-          <input
-            type="checkbox"
-            checked={isFeatured}
-            onChange={(event) => setIsFeatured(event.target.checked)}
-          />
-        </label>
+              <div className="admin-form-field">
+                <label htmlFor="audio-processed-file">Audio procesat</label>
+                <input
+                  id="audio-processed-file"
+                  type="file"
+                  accept="audio/*"
+                  onChange={(event) => setAudioProcessedFile(event.target.files?.[0] || null)}
+                />
+              </div>
 
-        <div className="site-content-actions">
-          <button className="admin-submit" type="submit" disabled={creating}>
-            {creating ? "Creating..." : "Create media item"}
-          </button>
-        </div>
+              <div className="site-content-actions">
+                <button
+                  className="admin-submit"
+                  type="button"
+                  onClick={() => handleUploadAudio("processed")}
+                  disabled={uploading || !audioProcessedFile}
+                >
+                  {uploading ? "Uploading..." : "Upload processed"}
+                </button>
+              </div>
+
+              <div className="admin-form-field">
+                <label>Audio procesat URL</label>
+                <input
+                  value={audioProcessedUrl}
+                  onChange={(event) => setAudioProcessedUrl(event.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+
+            <div className="admin-form-field">
+              <label htmlFor="media-description-audio">Description</label>
+              <textarea
+                id="media-description-audio"
+                className="admin-textarea"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Comparatie intre varianta originala si varianta procesata."
+              />
+            </div>
+
+            <label className="admin-toggle-row">
+              <span>Visible</span>
+              <input
+                type="checkbox"
+                checked={isVisible}
+                onChange={(event) => setIsVisible(event.target.checked)}
+              />
+            </label>
+
+            <label className="admin-toggle-row">
+              <span>Featured</span>
+              <input
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(event) => setIsFeatured(event.target.checked)}
+              />
+            </label>
+
+            <div className="site-content-actions">
+              <button className="admin-submit" type="submit" disabled={creating}>
+                {creating ? "Creating..." : "Create audio media item"}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <div
+              className={`admin-dropzone ${dragOver ? "is-dragover" : ""}`}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setDragOver(true);
+              }}
+              onDragLeave={(event) => {
+                event.preventDefault();
+                setDragOver(false);
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                setDragOver(false);
+                if (event.dataTransfer.files?.length) {
+                  addFiles(event.dataTransfer.files);
+                }
+              }}
+            >
+              <input
+                className="admin-dropzone-input"
+                type="file"
+                accept={acceptValue}
+                multiple
+                onChange={(event) => {
+                  if (event.target.files?.length) {
+                    addFiles(event.target.files);
+                    event.currentTarget.value = "";
+                  }
+                }}
+              />
+              <div className="admin-dropzone-copy">
+                <strong>Drag & drop multiple files here</strong>
+                <span>or click and select multiple files</span>
+              </div>
+            </div>
+
+            {items.length ? (
+              <div className="admin-stack">
+                {items.map((item, index) => (
+                  <div key={item.id} className="admin-list-item">
+                    <div className="admin-form-field">
+                      <label>File {index + 1}</label>
+                      <input value={item.file.name} readOnly />
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>Title</label>
+                      <input
+                        value={item.title}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          updateItem(item.id, {
+                            title: value,
+                            slug: slugify(value),
+                          });
+                        }}
+                      />
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>Slug</label>
+                      <input
+                        value={item.slug}
+                        onChange={(event) =>
+                          updateItem(item.id, { slug: slugify(event.target.value) })
+                        }
+                      />
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>Status</label>
+                      <input
+                        value={
+                          item.status === "error" && item.error
+                            ? `${item.status}: ${item.error}`
+                            : item.status
+                        }
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            <div className="admin-form-field">
+              <label htmlFor="media-description">Description for all</label>
+              <textarea
+                id="media-description"
+                className="admin-textarea"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                placeholder="Descriere comuna pentru toate itemurile create acum."
+              />
+            </div>
+
+            <label className="admin-toggle-row">
+              <span>Visible</span>
+              <input
+                type="checkbox"
+                checked={isVisible}
+                onChange={(event) => setIsVisible(event.target.checked)}
+              />
+            </label>
+
+            <label className="admin-toggle-row">
+              <span>Featured</span>
+              <input
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(event) => setIsFeatured(event.target.checked)}
+              />
+            </label>
+
+            <div className="site-content-actions">
+              <button
+                className="admin-submit"
+                type="button"
+                onClick={handleUploadAll}
+                disabled={uploading || !canUploadAll}
+              >
+                {uploading ? "Uploading..." : "Upload all to Spaces"}
+              </button>
+
+              <button
+                className="admin-submit"
+                type="button"
+                onClick={handleCreateAll}
+                disabled={creating || !canCreateAll}
+              >
+                {creating ? "Creating..." : "Create all media items"}
+              </button>
+
+              <button
+                className="admin-ghost-button"
+                type="button"
+                onClick={() => {
+                  setItems([]);
+                  setMessage("");
+                }}
+                disabled={uploading || creating}
+              >
+                Clear list
+              </button>
+            </div>
+          </>
+        )}
 
         {message ? <p className="admin-helper-text">{message}</p> : null}
       </div>
-    </form>
+    </div>
   );
 }
