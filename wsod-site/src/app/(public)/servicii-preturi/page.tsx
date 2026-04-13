@@ -3,7 +3,7 @@ export default function ServiciiPreturiPage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Servicii si preturi</h1>
-        <p>Pricing page placeholder.</p>
+        <p>Pagina Servicii si Preturi placeholder. Urmeaza structura finala.</p>
       </section>
     </main>
   );

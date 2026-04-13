@@ -3,7 +3,7 @@ export default function WebsitePage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Website</h1>
-        <p>Website archive page placeholder.</p>
+        <p>Pagina Website placeholder. Urmeaza grid-ul nou optimizat.</p>
       </section>
     </main>
   );

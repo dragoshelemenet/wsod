@@ -3,7 +3,7 @@ export default function MetaAdsPage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Meta Ads</h1>
-        <p>Meta Ads archive page placeholder.</p>
+        <p>Pagina Meta Ads placeholder. Urmeaza grid-ul nou optimizat.</p>
       </section>
     </main>
   );

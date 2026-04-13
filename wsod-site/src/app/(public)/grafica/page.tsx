@@ -3,7 +3,7 @@ export default function GraficaPage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Grafica</h1>
-        <p>Grafica archive page placeholder.</p>
+        <p>Pagina Grafica placeholder. Urmeaza grid-ul nou optimizat.</p>
       </section>
     </main>
   );

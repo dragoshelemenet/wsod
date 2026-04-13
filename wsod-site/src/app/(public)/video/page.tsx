@@ -3,7 +3,7 @@ export default function VideoPage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Video</h1>
-        <p>Video archive page placeholder.</p>
+        <p>Pagina Video placeholder. Urmeaza grid-ul nou optimizat.</p>
       </section>
     </main>
   );

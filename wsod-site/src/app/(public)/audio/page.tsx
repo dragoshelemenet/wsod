@@ -3,7 +3,7 @@ export default function AudioPage() {
     <main className="inner-page">
       <section className="inner-section">
         <h1>Audio</h1>
-        <p>Audio archive page placeholder.</p>
+        <p>Pagina Audio placeholder. Urmeaza player-ul before/after nou.</p>
       </section>
     </main>
   );
