@@ -1,9 +1,14 @@
 export default function DashboardModelsPage() {
   return (
-    <main className="inner-page">
-      <section className="inner-section">
-        <h1>Dashboard / Models</h1>
-        <p>Aici va veni managementul pentru folderele de tip model.</p>
+    <main className="dashboard-shell">
+      <section className="dashboard-page-head">
+        <div>
+          <p className="dashboard-kicker">Dashboard</p>
+          <h1>Models</h1>
+          <p className="dashboard-description">
+            Administrare modele, asociere media si control publicare.
+          </p>
+        </div>
       </section>
     </main>
   );

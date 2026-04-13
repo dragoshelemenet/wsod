@@ -1,9 +1,14 @@
 export default function DashboardMediaPage() {
   return (
-    <main className="inner-page">
-      <section className="inner-section">
-        <h1>Dashboard / Media</h1>
-        <p>Aici va veni managementul pentru toate fisierele media publice.</p>
+    <main className="dashboard-shell">
+      <section className="dashboard-page-head">
+        <div>
+          <p className="dashboard-kicker">Dashboard</p>
+          <h1>Media</h1>
+          <p className="dashboard-description">
+            Zona pentru toate fisierele publice: video, foto, grafica, website, meta ads si audio.
+          </p>
+        </div>
       </section>
     </main>
   );
