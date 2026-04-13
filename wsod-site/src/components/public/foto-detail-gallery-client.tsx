@@ -81,7 +81,6 @@ export function FotoDetailGalleryClient({ items }: Props) {
                 src={item.thumb}
                 alt={item.title}
                 className="foto-detail-thumb-image"
-               
               />
             </button>
           ))}

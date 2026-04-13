@@ -329,15 +329,7 @@ function DashboardMediaEditCard({
       >
         <div className="media-compact-left">
           <div className="media-compact-thumb">
-            {previewImage ? (
-              <img
-                src={previewImage}
-                alt={title}
-                style={{
-                  transformOrigin: "center",
-                }}
-              />
-            ) : null}
+            {previewImage ? <img src={previewImage} alt={title} /> : null}
           </div>
 
           <div className="media-compact-meta">
