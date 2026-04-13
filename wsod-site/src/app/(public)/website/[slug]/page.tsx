@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ZoomableWebsitePreview from "@/components/public/ZoomableWebsitePreview";
 import {
+import WebsitePreviewZoom from "@/components/public/WebsitePreviewZoom";
   getPublishedMediaByCategory,
   getPublishedMediaBySlug,
 } from "@/lib/dashboard/queries";
