@@ -1,16 +1,18 @@
-import { DashboardEmpty } from "@/components/dashboard/dashboard-empty";
+import { DashboardAudioProfileForm } from "@/components/dashboard/dashboard-audio-profile-form";
+import { DashboardAudioProfileList } from "@/components/dashboard/dashboard-audio-profile-list";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getDashboardAudioProfiles } from "@/lib/dashboard/queries";
 
-export default function DashboardAudioPage() {
+export default async function DashboardAudioPage() {
+  const items = await getDashboardAudioProfiles();
+
   return (
     <DashboardShell
       title="Audio"
-      description="Administrare proiecte audio si comparatie before / after."
+      description="Administrare audio profiles si legarea lor la proiecte."
     >
-      <DashboardEmpty
-        title="Audio projects"
-        description="Aici va intra upload-ul de before si after, plus player-ele pentru comparatie."
-      />
+      <DashboardAudioProfileForm />
+      <DashboardAudioProfileList items={items} />
     </DashboardShell>
   );
 }
