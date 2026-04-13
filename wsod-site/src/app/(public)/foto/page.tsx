@@ -35,7 +35,7 @@ export default async function FotoPage() {
     }));
 
   return (
-    <PublicShell title="Foto" description="Portofoliu foto public cu afisare compacta.">
+    <PublicShell title="Foto">
       <PreviewRail title="Poze cu modele" items={modelPhotos} />
 
       <section className="inner-section-block">

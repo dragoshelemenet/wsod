@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 type RailItem = {
   id: string;
@@ -19,6 +19,10 @@ type Props = {
 
 export default function PreviewRail({ title, items }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const rowsClass = useMemo(() => {
+    return items.length > 8 ? "preview-rail-grid is-two-rows" : "preview-rail-grid is-one-row";
+  }, [items.length]);
 
   function scrollByAmount(direction: "left" | "right") {
     if (!ref.current) return;
@@ -59,7 +63,7 @@ export default function PreviewRail({ title, items }: Props) {
 
       <div className="preview-rail-shell">
         <div ref={ref} className="preview-rail-scroll">
-          <div className="preview-rail-grid">
+          <div className={rowsClass}>
             {items.map((item) => (
               <Link key={item.id} href={item.href} className="preview-rail-card">
                 <div className="preview-rail-card-image-wrap">
@@ -68,9 +72,6 @@ export default function PreviewRail({ title, items }: Props) {
                       src={item.imageUrl}
                       alt={item.title}
                       className="preview-rail-card-image"
-                      style={{
-                        transform: `rotate(${item.rotation ?? 0}deg)`,
-                      }}
                     />
                   ) : (
                     <div className="preview-rail-card-empty">{item.title}</div>
