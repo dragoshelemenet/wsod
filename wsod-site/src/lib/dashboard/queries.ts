@@ -203,3 +203,20 @@ export async function getDashboardBrands() {
     return [];
   }
 }
+
+export async function getDashboardModels() {
+  try {
+    return await prisma.personModel.findMany({
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      include: {
+        mediaItems: {
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+          take: 1,
+        },
+      },
+      take: 100,
+    });
+  } catch {
+    return [];
+  }
+}
