@@ -2765,3 +2765,15 @@ textarea:focus {
   font-size: clamp(22px, 3vw, 34px);
   letter-spacing: -0.04em;
 }
+
+.reference-logo-image {
+  display: block;
+  max-width: min(420px, 100%);
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 18px rgba(255,255,255,0.10))
+    drop-shadow(0 0 34px rgba(123, 118, 255, 0.22))
+    drop-shadow(0 0 54px rgba(92, 206, 255, 0.12));
+}

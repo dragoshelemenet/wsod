@@ -1,71 +1,46 @@
 import { BrandsCarousel } from "@/components/public/brands-carousel";
-import { getHomepageCollections, getPublishedBrands } from "@/lib/dashboard/queries";
+import {
+  getPublishedBrands,
+  getSiteContentRecord,
+} from "@/lib/dashboard/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const data = await getHomepageCollections();
-  const brands = await getPublishedBrands();
+  const [brands, siteContent] = await Promise.all([
+    getPublishedBrands(),
+    getSiteContentRecord(),
+  ]);
 
   const folders = [
     {
       title: "PHOTO",
       href: "/foto",
-      imageUrl:
-        data.foto[0]?.thumbnailUrl ||
-        data.foto[0]?.previewUrl ||
-        data.foto[0]?.fileUrl ||
-        null,
       meta: "",
     },
     {
       title: "VIDEO",
       href: "/video",
-      imageUrl:
-        data.video[0]?.thumbnailUrl ||
-        data.video[0]?.previewUrl ||
-        data.video[0]?.fileUrl ||
-        null,
       meta: "",
     },
     {
       title: "AUDIO",
       href: "/audio",
-      imageUrl:
-        data.audio[0]?.thumbnailUrl ||
-        data.audio[0]?.previewUrl ||
-        data.audio[0]?.fileUrl ||
-        null,
       meta: "",
     },
     {
       title: "GRAPHICA",
       href: "/grafica",
-      imageUrl:
-        data.grafica[0]?.thumbnailUrl ||
-        data.grafica[0]?.previewUrl ||
-        data.grafica[0]?.fileUrl ||
-        null,
       meta: "FLYERE · COVERURI · CARTI VIZITA",
     },
     {
       title: "WEBSITE-URI",
       href: "/website",
-      imageUrl:
-        data.website[0]?.thumbnailUrl ||
-        data.website[0]?.previewUrl ||
-        data.website[0]?.fileUrl ||
-        null,
       meta: "",
     },
     {
       title: "META ADS",
       href: "/meta-ads",
-      imageUrl:
-        data.metaAds[0]?.thumbnailUrl ||
-        data.metaAds[0]?.previewUrl ||
-        data.metaAds[0]?.fileUrl ||
-        null,
       meta: "LEAD-URI",
     },
   ];
@@ -93,8 +68,18 @@ export default async function HomePage() {
 
       <section className="reference-hero-v2">
         <div className="reference-logo-column">
-          <div className="reference-logo-3d">WSOD</div>
-          <div className="reference-logo-prod">PROD</div>
+          {siteContent?.homeLogoUrl ? (
+            <img
+              src={siteContent.homeLogoUrl}
+              alt="WSOD"
+              className="reference-logo-image"
+            />
+          ) : (
+            <>
+              <div className="reference-logo-3d">WSOD</div>
+              <div className="reference-logo-prod">PROD</div>
+            </>
+          )}
         </div>
 
         <div className="reference-title-column">
@@ -106,16 +91,7 @@ export default async function HomePage() {
         {folders.map((folder) => (
           <a key={folder.href} href={folder.href} className="reference-folder-v2">
             <div className="reference-folder-v2-tab" />
-            <div
-              className="reference-folder-v2-art"
-              style={
-                folder.imageUrl
-                  ? {
-                      backgroundImage: `linear-gradient(rgba(14,14,18,0.22), rgba(14,14,18,0.22)), url(${folder.imageUrl})`,
-                    }
-                  : undefined
-              }
-            >
+            <div className="reference-folder-v2-art">
               <div className="reference-folder-overlay-copy">
                 <strong>{folder.title}</strong>
                 {folder.meta ? <span>{folder.meta}</span> : null}
