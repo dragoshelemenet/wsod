@@ -84,7 +84,7 @@ button {
 .inner-page {
   width: 100%;
   min-height: 100vh;
-  padding: 26px 16px 44px;
+  padding: 120px 16px 44px;
   position: relative;
   isolation: isolate;
 }
@@ -143,9 +143,11 @@ button {
    ========================= */
 
 .public-navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 60;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   padding: 14px 16px;
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -2620,6 +2622,23 @@ textarea:focus {
 .reference-footer-v2 a:hover {
   opacity: 1;
   transform: translateY(-1px);
+}
+
+
+.public-global-footer {
+  max-width: var(--max-width);
+  margin: 36px auto 28px;
+}
+
+@media (max-width: 640px) {
+  .home-page,
+  .inner-page {
+    padding-top: 108px;
+  }
+
+  .public-global-footer {
+    margin-top: 28px;
+  }
 }
 
 @media (max-width: 900px) {
