@@ -1,70 +1,147 @@
-import Hero from "@/components/home/Hero";
-import ServiceFolders from "@/components/home/ServiceFolders";
-import HomeBlogSection from "@/components/home/HomeBlogSection";
-import OwnerFolderGrid from "@/components/media/OwnerFolderGrid";
-import { getBrandsWithHomePreviewFromDb } from "@/lib/data/db-queries";
-import { getSiteContentFromDb } from "@/lib/data/site-content";
+import { BrandsCarousel } from "@/components/public/brands-carousel";
+import { getHomepageCollections, getPublishedBrands } from "@/lib/dashboard/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const brands = await getBrandsWithHomePreviewFromDb();
-  const content = await getSiteContentFromDb();
+  const data = await getHomepageCollections();
+  const brands = await getPublishedBrands();
 
-  const contactHref = content.contactHref || "https://wa.me/40727205689";
-  const claimHref =
-    content.claimHref ||
-    "https://wa.me/40727205689?text=Salut%2C%20vreau%20primul%20video%20sau%20foto%20gratis";
+  const folders = [
+    {
+      title: "PHOTO",
+      href: "/foto",
+      imageUrl:
+        data.foto[0]?.thumbnailUrl ||
+        data.foto[0]?.previewUrl ||
+        data.foto[0]?.fileUrl ||
+        null,
+      meta: "",
+    },
+    {
+      title: "VIDEO",
+      href: "/video",
+      imageUrl:
+        data.video[0]?.thumbnailUrl ||
+        data.video[0]?.previewUrl ||
+        data.video[0]?.fileUrl ||
+        null,
+      meta: "",
+    },
+    {
+      title: "AUDIO",
+      href: "/audio",
+      imageUrl:
+        data.audio[0]?.thumbnailUrl ||
+        data.audio[0]?.previewUrl ||
+        data.audio[0]?.fileUrl ||
+        null,
+      meta: "",
+    },
+    {
+      title: "GRAPHICA",
+      href: "/grafica",
+      imageUrl:
+        data.grafica[0]?.thumbnailUrl ||
+        data.grafica[0]?.previewUrl ||
+        data.grafica[0]?.fileUrl ||
+        null,
+      meta: "FLYERE · COVERURI · CARTI VIZITA",
+    },
+    {
+      title: "WEBSITE-URI",
+      href: "/website",
+      imageUrl:
+        data.website[0]?.thumbnailUrl ||
+        data.website[0]?.previewUrl ||
+        data.website[0]?.fileUrl ||
+        null,
+      meta: "",
+    },
+    {
+      title: "META ADS",
+      href: "/meta-ads",
+      imageUrl:
+        data.metaAds[0]?.thumbnailUrl ||
+        data.metaAds[0]?.previewUrl ||
+        data.metaAds[0]?.fileUrl ||
+        null,
+      meta: "LEAD-URI",
+    },
+  ];
+
+  const featuredBrands = brands.map((brand) => ({
+    id: brand.id,
+    name: brand.name,
+    slug: brand.slug,
+    imageUrl:
+      brand.logoUrl ||
+      brand.coverImageUrl ||
+      brand.mediaItems?.[0]?.thumbnailUrl ||
+      brand.mediaItems?.[0]?.previewUrl ||
+      brand.mediaItems?.[0]?.fileUrl ||
+      null,
+  }));
 
   return (
-    <main className="home-page">
-      <Hero />
+    <main className="reference-home-v2">
+      <section className="reference-topbar">
+        <a href="/servicii-preturi">Servicii & preturi</a>
+        <a href="/servicii-preturi">Contact</a>
+        <a href="/servicii-preturi">Primul video/foto gratis</a>
+      </section>
 
-      <section className="section home-after-carousel-copy">
-        <p className="home-after-carousel-text">
-          Te ajutăm cu video, foto, design, website-uri și content pentru social media.
-        </p>
+      <section className="reference-hero-v2">
+        <div className="reference-logo-column">
+          <div className="reference-logo-3d">WSOD</div>
+          <div className="reference-logo-prod">PROD</div>
+        </div>
 
-        <div className="home-after-carousel-actions">
-          <a href="/servicii-preturi" className="hero-quick-link">
-            Servicii & prețuri
-          </a>
-
-          <a href={contactHref} className="hero-quick-link">
-            {content.contactLabel || "Contact"}
-          </a>
-
-          <a href={claimHref} className="hero-quick-link hero-quick-link-primary">
-            {content.claimLabel || "Primul video/foto gratis"}
-          </a>
+        <div className="reference-title-column">
+          <h1>AGENTIE MEDIA DIGITALA &amp; VIDEO</h1>
         </div>
       </section>
 
-      <ServiceFolders />
-
-      <section className="section brands-section">
-        <div className="brands-section-copy">
-          <p className="brands-section-kicker">Vezi portofoliul nostru:</p>
-        </div>
-
-        <OwnerFolderGrid
-          title="Brandurile cu care am lucrat"
-          ownerType="brand"
-          items={brands.map((brand) => ({
-            id: brand.id,
-            name: brand.name,
-            slug: brand.slug,
-            imageUrl:
-              brand.logoUrl ?? brand.coverImageUrl ?? brand.previewImages?.[0] ?? null,
-            previewImages: brand.previewImages ?? [],
-            href: `/brand/${brand.slug}`,
-          }))}
-          emptyText="Nu există branduri momentan."
-          variant="compact-file"
-        />
+      <section className="reference-folders-v2">
+        {folders.map((folder) => (
+          <a key={folder.href} href={folder.href} className="reference-folder-v2">
+            <div className="reference-folder-v2-tab" />
+            <div
+              className="reference-folder-v2-art"
+              style={
+                folder.imageUrl
+                  ? {
+                      backgroundImage: `linear-gradient(rgba(14,14,18,0.22), rgba(14,14,18,0.22)), url(${folder.imageUrl})`,
+                    }
+                  : undefined
+              }
+            >
+              <div className="reference-folder-overlay-copy">
+                <strong>{folder.title}</strong>
+                {folder.meta ? <span>{folder.meta}</span> : null}
+              </div>
+            </div>
+          </a>
+        ))}
       </section>
 
-      <HomeBlogSection />
+      <section className="reference-brands-v2">
+        <BrandsCarousel items={featuredBrands} />
+      </section>
+
+      <footer className="reference-footer-v2">
+        <a href="https://instagram.com/wsod.prod" target="_blank" rel="noreferrer">
+          INSTA
+        </a>
+        <a href="https://youtube.com" target="_blank" rel="noreferrer">
+          YOUTUBE
+        </a>
+        <a href="https://tiktok.com" target="_blank" rel="noreferrer">
+          TIKTOK
+        </a>
+        <a href="tel:+40727205689">+40727205689</a>
+        <a href="/servicii-preturi">CONTACT</a>
+      </footer>
     </main>
   );
 }
