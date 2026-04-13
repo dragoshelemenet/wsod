@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DashboardModelForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [portraitImageUrl, setPortraitImageUrl] = useState("");
@@ -41,7 +43,8 @@ export function DashboardModelForm() {
       setPortraitImageUrl("");
       setDescription("");
       setIsVisible(true);
-      setMessage("Model creat cu succes. Da refresh paginii.");
+      setMessage("Model creat cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {

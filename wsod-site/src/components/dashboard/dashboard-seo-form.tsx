@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type SiteContentRecord = {
@@ -23,6 +24,7 @@ type DashboardSeoFormProps = {
 };
 
 export function DashboardSeoForm({ item }: DashboardSeoFormProps) {
+  const router = useRouter();
   const [servicesEyebrow, setServicesEyebrow] = useState(item?.servicesEyebrow || "");
   const [servicesTitle, setServicesTitle] = useState(item?.servicesTitle || "");
   const [pricingLabel, setPricingLabel] = useState(item?.pricingLabel || "");
@@ -69,6 +71,7 @@ export function DashboardSeoForm({ item }: DashboardSeoFormProps) {
       }
 
       setMessage("SEO content salvat cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {

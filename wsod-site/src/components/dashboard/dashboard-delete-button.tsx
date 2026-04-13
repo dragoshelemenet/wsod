@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type DashboardDeleteButtonProps = {
@@ -11,6 +12,7 @@ export function DashboardDeleteButton({
   endpoint,
   label,
 }: DashboardDeleteButtonProps) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -32,7 +34,8 @@ export function DashboardDeleteButton({
         throw new Error(data?.error || "Nu s-a putut sterge itemul.");
       }
 
-      setMessage("Sters cu succes. Da refresh paginii.");
+      setMessage("Sters cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {

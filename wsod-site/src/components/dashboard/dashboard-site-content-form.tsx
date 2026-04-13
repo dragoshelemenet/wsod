@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type SiteContentRecord = {
@@ -25,6 +26,7 @@ type DashboardSiteContentFormProps = {
 export function DashboardSiteContentForm({
   item,
 }: DashboardSiteContentFormProps) {
+  const router = useRouter();
   const [homeLogoUrl, setHomeLogoUrl] = useState(item?.homeLogoUrl || "");
   const [servicesEyebrow, setServicesEyebrow] = useState(item?.servicesEyebrow || "");
   const [servicesTitle, setServicesTitle] = useState(item?.servicesTitle || "");
@@ -74,7 +76,8 @@ export function DashboardSiteContentForm({
         throw new Error(data?.error || "Nu s-a putut salva Site Content.");
       }
 
-      setMessage("Site Content salvat cu succes. Da refresh daca vrei sa vezi valorile noi.");
+      setMessage("Site Content salvat cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {

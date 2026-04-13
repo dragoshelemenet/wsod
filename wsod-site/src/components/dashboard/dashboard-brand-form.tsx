@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DashboardBrandForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
@@ -44,7 +46,8 @@ export function DashboardBrandForm() {
       setCoverImageUrl("");
       setDescription("");
       setIsVisible(true);
-      setMessage("Brand creat cu succes. Da refresh paginii.");
+      setMessage("Brand creat cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {

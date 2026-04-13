@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DashboardAudioProfileForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [kind, setKind] = useState("mix");
@@ -45,7 +47,8 @@ export function DashboardAudioProfileForm() {
       setCoverImageUrl("");
       setDescription("");
       setIsVisible(true);
-      setMessage("Audio profile creat cu succes. Da refresh paginii.");
+      setMessage("Audio profile creat cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {

@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DashboardUploadForm() {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [category, setCategory] = useState("foto");
@@ -58,7 +60,8 @@ export function DashboardUploadForm() {
       setDescription("");
       setIsVisible(true);
       setIsFeatured(false);
-      setMessage("Media item creat cu succes. Da refresh paginii Media.");
+      setMessage("Media item creat cu succes.");
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
     } finally {
