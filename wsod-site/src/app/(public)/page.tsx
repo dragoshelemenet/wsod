@@ -13,7 +13,7 @@ export default async function HomePage() {
         data.foto[0]?.previewUrl ||
         data.foto[0]?.fileUrl ||
         null,
-      meta: `${data.foto.length} proiecte`,
+      meta: "",
     },
     {
       title: "VIDEO",
@@ -23,7 +23,7 @@ export default async function HomePage() {
         data.video[0]?.previewUrl ||
         data.video[0]?.fileUrl ||
         null,
-      meta: `${data.video.length} proiecte`,
+      meta: "",
     },
     {
       title: "AUDIO",
@@ -33,7 +33,7 @@ export default async function HomePage() {
         data.audio[0]?.previewUrl ||
         data.audio[0]?.fileUrl ||
         null,
-      meta: `${data.audio.length} proiecte`,
+      meta: "",
     },
     {
       title: "GRAPHICA",
@@ -43,7 +43,7 @@ export default async function HomePage() {
         data.grafica[0]?.previewUrl ||
         data.grafica[0]?.fileUrl ||
         null,
-      meta: "Flyere • Coveruri • Carti de vizita",
+      meta: "FLYERE · COVERURI · CARTI VIZITA",
     },
     {
       title: "WEBSITE-URI",
@@ -53,7 +53,7 @@ export default async function HomePage() {
         data.website[0]?.previewUrl ||
         data.website[0]?.fileUrl ||
         null,
-      meta: `${data.website.length} proiecte`,
+      meta: "",
     },
     {
       title: "META ADS",
@@ -63,49 +63,57 @@ export default async function HomePage() {
         data.metaAds[0]?.previewUrl ||
         data.metaAds[0]?.fileUrl ||
         null,
-      meta: `${data.metaAds.length} proiecte`,
+      meta: "LEAD-URI",
     },
   ];
 
   const featuredBrands = brands.slice(0, 3);
 
   return (
-    <main className="reference-home">
-      <section className="reference-hero">
-        <div className="reference-brand-mark">
-          <div className="reference-logo-box">WSOD</div>
-          <div className="reference-logo-sub">PROD</div>
+    <main className="reference-home-v2">
+      <section className="reference-topbar">
+        <a href="/servicii-preturi">Servicii & preturi</a>
+        <a href="/servicii-preturi">Contact</a>
+        <a href="/servicii-preturi">Primul video/foto gratis</a>
+      </section>
+
+      <section className="reference-hero-v2">
+        <div className="reference-logo-column">
+          <div className="reference-logo-3d">WSOD</div>
+          <div className="reference-logo-prod">PROD</div>
         </div>
 
-        <div className="reference-hero-copy">
+        <div className="reference-title-column">
           <h1>AGENTIE MEDIA DIGITALA &amp; VIDEO</h1>
         </div>
       </section>
 
-      <section className="reference-folder-grid">
+      <section className="reference-folders-v2">
         {folders.map((folder) => (
-          <a key={folder.href} href={folder.href} className="reference-folder-card">
-            <div className="reference-folder-tab" />
+          <a key={folder.href} href={folder.href} className="reference-folder-v2">
+            <div className="reference-folder-v2-tab" />
             <div
-              className="reference-folder-art"
+              className="reference-folder-v2-art"
               style={
                 folder.imageUrl
-                  ? { backgroundImage: `linear-gradient(rgba(10,10,14,0.28), rgba(10,10,14,0.28)), url(${folder.imageUrl})` }
+                  ? {
+                      backgroundImage: `linear-gradient(rgba(14,14,18,0.22), rgba(14,14,18,0.22)), url(${folder.imageUrl})`,
+                    }
                   : undefined
               }
             />
-            <div className="reference-folder-copy">
+            <div className="reference-folder-v2-copy">
               <strong>{folder.title}</strong>
-              <span>{folder.meta}</span>
+              {folder.meta ? <span>{folder.meta}</span> : null}
             </div>
           </a>
         ))}
       </section>
 
-      <section className="reference-brands-panel">
+      <section className="reference-brands-v2">
         <h2>BRANDS WE WORKED WITH</h2>
 
-        <div className="reference-brands-grid">
+        <div className="reference-brands-v2-grid">
           {featuredBrands.length ? (
             featuredBrands.map((brand) => {
               const imageUrl =
@@ -120,20 +128,20 @@ export default async function HomePage() {
                 <a
                   key={brand.id}
                   href={`/brand/${brand.slug}`}
-                  className="reference-brand-folder"
+                  className="reference-brand-v2-card"
                 >
-                  <div className="reference-folder-tab small" />
+                  <div className="reference-folder-v2-tab small" />
                   <div
-                    className="reference-brand-art"
+                    className="reference-brand-v2-art"
                     style={
                       imageUrl
                         ? {
-                            backgroundImage: `linear-gradient(rgba(20,20,24,0.35), rgba(20,20,24,0.35)), url(${imageUrl})`,
+                            backgroundImage: `linear-gradient(rgba(20,20,24,0.34), rgba(20,20,24,0.34)), url(${imageUrl})`,
                           }
                         : undefined
                     }
                   />
-                  <div className="reference-brand-name">{brand.name}</div>
+                  <div className="reference-brand-v2-name">{brand.name}</div>
                 </a>
               );
             })
@@ -144,9 +152,17 @@ export default async function HomePage() {
             </div>
           )}
         </div>
+
+        <div className="reference-brands-dots">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
       </section>
 
-      <footer className="reference-home-footer">
+      <footer className="reference-footer-v2">
         <a href="https://instagram.com/wsod.prod" target="_blank" rel="noreferrer">
           INSTA
         </a>
