@@ -32,7 +32,7 @@ export default async function VideoSlugPage({ params }: PageProps) {
         />
         <h1>{item.title}</h1>
         <p className="inner-description">
-          {item.excerpt || "Pagina individuala pentru proiect video."}
+          {item.description || "Pagina individuala pentru proiect video."}
         </p>
         <div className="media-detail-hero">
           <video

@@ -32,7 +32,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
         />
         <h1>{item.title}</h1>
         <p className="inner-description">
-          {item.excerpt || "Pagina individuala pentru proiect foto."}
+          {item.description || "Pagina individuala pentru proiect foto."}
         </p>
         <div className="media-detail-hero">
           <img
