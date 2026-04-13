@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
 
 type OptionItem = {
@@ -49,6 +49,8 @@ const visibilityOptions = [
   "featured",
 ] as const;
 
+const PAGE_SIZE = 18;
+
 export function DashboardMediaEditList({
   items,
   brands,
@@ -61,6 +63,7 @@ export function DashboardMediaEditList({
   const [category, setCategory] = useState<(typeof categoryOptions)[number]>("all");
   const [visibilityFilter, setVisibilityFilter] =
     useState<(typeof visibilityOptions)[number]>("all");
+  const [page, setPage] = useState(1);
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -78,12 +81,33 @@ export function DashboardMediaEditList({
               ? !item.isVisible
               : item.isFeatured;
 
-      const haystack = `${item.title} ${item.slug} ${item.category} ${item.type}`.toLowerCase();
-      const matchesQuery = normalizedQuery ? haystack.includes(normalizedQuery) : true;
+      const haystack =
+        `${item.title} ${item.slug} ${item.category} ${item.type}`.toLowerCase();
+
+      const matchesQuery = normalizedQuery
+        ? haystack.includes(normalizedQuery)
+        : true;
 
       return matchesCategory && matchesVisibility && matchesQuery;
     });
   }, [items, query, category, visibilityFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE));
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, category, visibilityFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
+  const paginatedItems = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE;
+    return filteredItems.slice(start, start + PAGE_SIZE);
+  }, [filteredItems, page]);
 
   if (!items.length) {
     return (
@@ -145,12 +169,38 @@ export function DashboardMediaEditList({
         </div>
       </div>
 
-      <p className="admin-helper-text">
-        {filteredItems.length} / {items.length} itemi afisati
-      </p>
+      <div className="media-pagination-bar">
+        <p className="admin-helper-text">
+          {paginatedItems.length} afisate pe pagina • {filteredItems.length} rezultate • {items.length} total
+        </p>
+
+        <div className="media-pagination-controls">
+          <button
+            type="button"
+            className="admin-ghost-button"
+            onClick={() => setPage((current) => Math.max(1, current - 1))}
+            disabled={page === 1}
+          >
+            ‹ Prev
+          </button>
+
+          <span className="media-pagination-indicator">
+            Pagina {page} / {totalPages}
+          </span>
+
+          <button
+            type="button"
+            className="admin-ghost-button"
+            onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+            disabled={page === totalPages}
+          >
+            Next ›
+          </button>
+        </div>
+      </div>
 
       <div className="admin-list compact-admin-list">
-        {filteredItems.map((item) => (
+        {paginatedItems.map((item) => (
           <DashboardMediaEditCard
             key={item.id}
             item={item}
@@ -162,6 +212,32 @@ export function DashboardMediaEditList({
             onToggle={() => setOpenId((current) => (current === item.id ? null : item.id))}
           />
         ))}
+      </div>
+
+      <div className="media-pagination-bar media-pagination-bottom">
+        <div className="media-pagination-controls">
+          <button
+            type="button"
+            className="admin-ghost-button"
+            onClick={() => setPage((current) => Math.max(1, current - 1))}
+            disabled={page === 1}
+          >
+            ‹ Prev
+          </button>
+
+          <span className="media-pagination-indicator">
+            Pagina {page} / {totalPages}
+          </span>
+
+          <button
+            type="button"
+            className="admin-ghost-button"
+            onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+            disabled={page === totalPages}
+          >
+            Next ›
+          </button>
+        </div>
       </div>
 
       {message ? <p className="admin-helper-text">{message}</p> : null}
