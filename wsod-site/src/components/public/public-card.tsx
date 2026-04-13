@@ -7,6 +7,8 @@ type PublicCardProps = {
   subtitle?: string;
   imageOnly?: boolean;
   showPlayIcon?: boolean;
+  imageFit?: "cover" | "contain";
+  mediaRatio?: "portrait" | "wide" | "square";
 };
 
 export function PublicCard({
@@ -16,14 +18,31 @@ export function PublicCard({
   subtitle,
   imageOnly = false,
   showPlayIcon = false,
+  imageFit = "cover",
+  mediaRatio = "portrait",
 }: PublicCardProps) {
+  const wrapClass = [
+    "public-card-media-wrap",
+    mediaRatio === "wide" ? "is-wide" : "",
+    mediaRatio === "square" ? "is-square" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const mediaClass = [
+    "public-card-media",
+    imageFit === "contain" ? "is-contain" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   const media = imageUrl ? (
-    <div className="public-card-media-wrap">
-      <img src={imageUrl} alt={title} className="public-card-media" />
+    <div className={wrapClass}>
+      <img src={imageUrl} alt={title} className={mediaClass} />
       {showPlayIcon ? <span className="public-card-play">▶</span> : null}
     </div>
   ) : (
-    <div className="public-card-media-wrap public-card-media-empty">
+    <div className={`${wrapClass} public-card-media-empty`}>
       <span>{title}</span>
     </div>
   );

@@ -13,7 +13,11 @@ const links = [
   { href: "/servicii-preturi", label: "Servicii" },
 ];
 
-export function PublicNavbar() {
+type PublicNavbarProps = {
+  logoUrl?: string | null;
+};
+
+export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -29,8 +33,16 @@ export function PublicNavbar() {
     <nav className="public-navbar" aria-label="Public navigation">
       <div className="public-navbar-inner">
         <div className="public-navbar-top">
-          <a className="public-navbar-logo" href="/">
-            WSOD
+          <a className="public-navbar-logo" href="/" aria-label="WSOD Home">
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt="WSOD"
+                className="public-navbar-logo-image"
+              />
+            ) : (
+              <span className="public-navbar-logo-text">WSOD</span>
+            )}
           </a>
 
           <button
