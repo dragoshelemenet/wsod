@@ -2,18 +2,37 @@ import { DashboardActionCard } from "@/components/dashboard/dashboard-action-car
 import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { DashboardStatCard } from "@/components/dashboard/dashboard-stat-card";
+import { getDashboardOverviewCounts } from "@/lib/dashboard/queries";
 
-export default function StudioDashboardPage() {
+export default async function StudioDashboardPage() {
+  const counts = await getDashboardOverviewCounts();
+
   return (
     <DashboardShell
       title="Studio Dashboard"
       description="Panou rapid pentru administrare media, continut, SEO si publicare."
     >
       <div className="dashboard-stats-grid">
-        <DashboardStatCard label="Media" value="0" helper="Fisiere publice" />
-        <DashboardStatCard label="Brands" value="0" helper="Branduri active" />
-        <DashboardStatCard label="Models" value="0" helper="Modele active" />
-        <DashboardStatCard label="Audio" value="0" helper="Before / after" />
+        <DashboardStatCard
+          label="Media"
+          value={String(counts.media)}
+          helper="Fisiere totale"
+        />
+        <DashboardStatCard
+          label="Brands"
+          value={String(counts.brands)}
+          helper="Branduri totale"
+        />
+        <DashboardStatCard
+          label="Models"
+          value={String(counts.models)}
+          helper="Modele totale"
+        />
+        <DashboardStatCard
+          label="Audio"
+          value={String(counts.audio)}
+          helper="Proiecte audio"
+        />
       </div>
 
       <DashboardGrid>
