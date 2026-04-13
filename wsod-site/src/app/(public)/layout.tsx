@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
-export default function PublicLayout({
-  children,
-}: {
+type PublicLayoutProps = {
   children: ReactNode;
-}) {
+};
+
+export default function PublicLayout({ children }: PublicLayoutProps) {
   return <>{children}</>;
 }
