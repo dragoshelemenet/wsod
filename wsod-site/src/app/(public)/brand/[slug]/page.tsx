@@ -1,5 +1,3 @@
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
-import { MediaCarousel } from "@/components/public/media-carousel";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { getPublishedBrandBySlug } from "@/lib/dashboard/queries";
@@ -23,39 +21,25 @@ export default async function BrandSlugPage({ params }: PageProps) {
     );
   }
 
-  const carouselItems = brand.mediaItems.map((item) => ({
-    id: item.id,
-    title: item.title,
-    imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
-    href: `/${item.category}/${item.slug}`,
-  }));
+  const items = brand.mediaItems ?? [];
 
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Branduri", href: "/brand" },
-            { label: brand.name },
-          ]}
-        />
-
         <h1>{brand.name}</h1>
         <p className="inner-description">
-          {brand.description || "Galerie pentru brand si toate proiectele lui."}
+          {brand.description || "Proiecte din portofoliul acestui brand."}
         </p>
 
-        <MediaCarousel items={carouselItems} />
-
         <PublicGrid dense>
-          {brand.mediaItems.map((item) => (
+          {items.map((item) => (
             <PublicCard
               key={item.id}
               title={item.title}
               href={`/${item.category}/${item.slug}`}
               imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
               imageOnly
+              showPlayIcon={item.category === "video"}
             />
           ))}
         </PublicGrid>
