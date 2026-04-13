@@ -1,16 +1,18 @@
-import { DashboardEmpty } from "@/components/dashboard/dashboard-empty";
+import { DashboardBlogForm } from "@/components/dashboard/dashboard-blog-form";
+import { DashboardBlogList } from "@/components/dashboard/dashboard-blog-list";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getDashboardBlogPosts } from "@/lib/dashboard/queries";
 
-export default function DashboardBlogPage() {
+export default async function DashboardBlogPage() {
+  const items = await getDashboardBlogPosts();
+
   return (
     <DashboardShell
       title="Blog"
       description="Administrare articole blog."
     >
-      <DashboardEmpty
-        title="Blog manager"
-        description="Aici vor intra lista articolelor, editorul de continut si publicarea lor."
-      />
+      <DashboardBlogForm />
+      <DashboardBlogList items={items} />
     </DashboardShell>
   );
 }

@@ -246,3 +246,14 @@ export async function getSiteContentRecord() {
     return null;
   }
 }
+
+export async function getDashboardBlogPosts() {
+  try {
+    return await prisma.blogPost.findMany({
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      take: 100,
+    });
+  } catch {
+    return [];
+  }
+}
