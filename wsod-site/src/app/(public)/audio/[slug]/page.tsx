@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
@@ -23,28 +22,21 @@ export default async function AudioSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Audio", href: "/audio" },
-            { label: item.title },
-          ]}
-        />
         <h1>{item.title}</h1>
         <p className="inner-description">
-          {item.description || "Pagina individuala pentru proiect audio."}
+          {item.description || "Comparatie intre audio original si audio procesat."}
         </p>
 
         {item.fileUrl ? (
           <div className="media-detail-hero">
-            <p className="inner-description">Main audio</p>
+            <p className="inner-description">Inainte de procesare</p>
             <audio src={item.fileUrl} controls style={{ width: "100%" }} />
           </div>
         ) : null}
 
         {item.previewUrl ? (
           <div className="media-detail-hero">
-            <p className="inner-description">Preview</p>
+            <p className="inner-description">Dupa procesare</p>
             <audio src={item.previewUrl} controls style={{ width: "100%" }} />
           </div>
         ) : null}

@@ -39,6 +39,7 @@ export function DashboardUploadForm() {
   const [message, setMessage] = useState("");
 
   const type = useMemo(() => getTypeFromCategory(category), [category]);
+  const isAudio = category === "audio";
 
   const acceptValue = useMemo(() => {
     if (type === "image") return "image/*";
@@ -94,17 +95,30 @@ export function DashboardUploadForm() {
         throw new Error("Upload-ul fisierului a esuat.");
       }
 
-      setFileUrl(finalUrl);
+      if (isAudio) {
+        if (!fileUrl) {
+          setFileUrl(finalUrl);
+          setMessage("Audio original uploadat. Acum incarca si varianta procesata.");
+        } else if (!previewUrl) {
+          setPreviewUrl(finalUrl);
+          setMessage("Audio procesat uploadat. Acum poti salva media item.");
+        } else {
+          setPreviewUrl(finalUrl);
+          setMessage("Audio procesat a fost actualizat. Acum poti salva media item.");
+        }
+      } else {
+        setFileUrl(finalUrl);
 
-      if (type === "image" && !thumbnailUrl) {
-        setThumbnailUrl(finalUrl);
+        if (type === "image" && !thumbnailUrl) {
+          setThumbnailUrl(finalUrl);
+        }
+
+        if ((type === "video" || type === "audio") && !previewUrl) {
+          setPreviewUrl(finalUrl);
+        }
+
+        setMessage("Fisier uploadat cu succes. Acum poti salva media item.");
       }
-
-      if ((type === "video" || type === "audio") && !previewUrl) {
-        setPreviewUrl(finalUrl);
-      }
-
-      setMessage("Fisier uploadat cu succes. Acum poti salva media item.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscuta la upload.");
     } finally {
@@ -210,12 +224,9 @@ export function DashboardUploadForm() {
         </div>
 
         <div className="admin-form-field">
-          <label>Detected type</label>
-          <input value={type} readOnly />
-        </div>
-
-        <div className="admin-form-field">
-          <label htmlFor="media-file-input">Upload file</label>
+          <label htmlFor="media-file-input">
+            {isAudio ? "Upload audio original sau procesat" : "Upload file"}
+          </label>
           <input
             id="media-file-input"
             type="file"
@@ -225,6 +236,11 @@ export function DashboardUploadForm() {
               setSelectedFile(file);
             }}
           />
+          {isAudio ? (
+            <p className="admin-helper-text">
+              Primul upload merge la audio ORIGINAL. Al doilea upload merge la audio PROCESAT.
+            </p>
+          ) : null}
         </div>
 
         <div className="site-content-actions">
@@ -239,7 +255,9 @@ export function DashboardUploadForm() {
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="media-file-url">File URL</label>
+          <label htmlFor="media-file-url">
+            {isAudio ? "Audio original URL (inainte de procesare)" : "File URL"}
+          </label>
           <input
             id="media-file-url"
             value={fileUrl}
@@ -248,18 +266,22 @@ export function DashboardUploadForm() {
           />
         </div>
 
-        <div className="admin-form-field">
-          <label htmlFor="media-thumb-url">Thumbnail URL</label>
-          <input
-            id="media-thumb-url"
-            value={thumbnailUrl}
-            onChange={(event) => setThumbnailUrl(event.target.value)}
-            placeholder="https://..."
-          />
-        </div>
+        {!isAudio ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-thumb-url">Thumbnail URL</label>
+            <input
+              id="media-thumb-url"
+              value={thumbnailUrl}
+              onChange={(event) => setThumbnailUrl(event.target.value)}
+              placeholder="https://..."
+            />
+          </div>
+        ) : null}
 
         <div className="admin-form-field">
-          <label htmlFor="media-preview-url">Preview URL</label>
+          <label htmlFor="media-preview-url">
+            {isAudio ? "Audio procesat URL (dupa procesare)" : "Preview URL"}
+          </label>
           <input
             id="media-preview-url"
             value={previewUrl}
@@ -275,7 +297,11 @@ export function DashboardUploadForm() {
             className="admin-textarea"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            placeholder="Descriere"
+            placeholder={
+              isAudio
+                ? "Ex: comparatie intre varianta originala si varianta procesata."
+                : "Descriere"
+            }
           />
         </div>
 
