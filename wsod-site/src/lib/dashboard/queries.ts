@@ -220,3 +220,15 @@ export async function getDashboardModels() {
     return [];
   }
 }
+
+export async function getDashboardAudioProfiles() {
+  try {
+    return await prisma.audioProfile.findMany({
+      where: { isVisible: true },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      take: 100,
+    });
+  } catch {
+    return [];
+  }
+}
