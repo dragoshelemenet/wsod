@@ -1,16 +1,18 @@
-import { DashboardEmpty } from "@/components/dashboard/dashboard-empty";
+import { DashboardBrandForm } from "@/components/dashboard/dashboard-brand-form";
+import { DashboardBrandList } from "@/components/dashboard/dashboard-brand-list";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getDashboardBrands } from "@/lib/dashboard/queries";
 
-export default function DashboardBrandsPage() {
+export default async function DashboardBrandsPage() {
+  const items = await getDashboardBrands();
+
   return (
     <DashboardShell
       title="Brands"
       description="Administrare branduri publice."
     >
-      <DashboardEmpty
-        title="Brands list"
-        description="Aici va intra lista reala de branduri si ordinea lor in paginare."
-      />
+      <DashboardBrandForm />
+      <DashboardBrandList items={items} />
     </DashboardShell>
   );
 }

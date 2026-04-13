@@ -186,3 +186,20 @@ export async function getDashboardMediaItems() {
     return [];
   }
 }
+
+export async function getDashboardBrands() {
+  try {
+    return await prisma.brand.findMany({
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      include: {
+        mediaItems: {
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+          take: 1,
+        },
+      },
+      take: 100,
+    });
+  } catch {
+    return [];
+  }
+}
