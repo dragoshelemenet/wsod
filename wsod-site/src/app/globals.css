@@ -4579,66 +4579,72 @@ main,
   }
 }
 
-/* ===== HARD STOP FOR HORIZONTAL PAGE SCROLL ===== */
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
+/* ===== CLEAN HOME OVERFLOW FIX ===== */
 
-body > * {
-  max-width: 100%;
-}
-
-main,
-section,
-footer,
-nav,
-div {
-  max-width: 100%;
-}
-
-.reference-home-v2 {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
-
-.reference-home-v2 > section,
-.reference-home-v2 > footer {
-  width: 100%;
-  max-width: 100%;
-}
-
-.reference-hero-v2,
-.reference-folders-v2,
-.reference-brands-v2,
-.reference-footer-v2,
-.reference-topbar {
-  overflow-x: hidden !important;
-}
-
-.reference-folders-v2 {
-  box-sizing: border-box;
-}
-
-.reference-folder-v2 {
-  min-width: 0 !important;
-  max-width: 100% !important;
-}
-
-.reference-folder-v2-art,
-.reference-folder-overlay-copy {
-  max-width: 100% !important;
-}
-
-@media (max-width: 900px) {
+/* desktop normal */
+@media (min-width: 901px) {
   .reference-home-v2 {
+    max-width: 980px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 26px 18px 54px !important;
+    overflow-x: visible !important;
+  }
+
+  .reference-hero-v2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 34px !important;
+    align-items: center !important;
+    min-height: 240px !important;
+    overflow: visible !important;
+  }
+
+  .reference-logo-column,
+  .reference-title-column {
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .reference-folders-v2 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 22px !important;
+    overflow: visible !important;
+  }
+
+  .reference-brands-v2 {
+    overflow: visible !important;
+  }
+
+  .reference-footer-v2 {
+    overflow: visible !important;
+  }
+}
+
+/* mobil: fara scroll orizontal gol */
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  body > * {
+    max-width: 100%;
+  }
+
+  .reference-home-v2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
     padding-left: 14px !important;
     padding-right: 14px !important;
   }
 
+  .reference-home-v2 > section,
+  .reference-home-v2 > footer,
   .reference-topbar,
   .reference-hero-v2,
   .reference-folders-v2,
@@ -4647,74 +4653,11 @@ div {
     width: 100% !important;
     max-width: 100% !important;
   }
-}
 
-/* ===== HARD STOP FOR HORIZONTAL PAGE SCROLL ===== */
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
-
-body > * {
-  max-width: 100%;
-}
-
-main,
-section,
-footer,
-nav,
-div {
-  max-width: 100%;
-}
-
-.reference-home-v2 {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
-
-.reference-home-v2 > section,
-.reference-home-v2 > footer {
-  width: 100%;
-  max-width: 100%;
-}
-
-.reference-hero-v2,
-.reference-folders-v2,
-.reference-brands-v2,
-.reference-footer-v2,
-.reference-topbar {
-  overflow-x: hidden !important;
-}
-
-.reference-folders-v2 {
-  box-sizing: border-box;
-}
-
-.reference-folder-v2 {
-  min-width: 0 !important;
-  max-width: 100% !important;
-}
-
-.reference-folder-v2-art,
-.reference-folder-overlay-copy {
-  max-width: 100% !important;
-}
-
-@media (max-width: 900px) {
-  .reference-home-v2 {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-
-  .reference-topbar,
-  .reference-hero-v2,
-  .reference-folders-v2,
-  .reference-brands-v2,
-  .reference-footer-v2 {
-    width: 100% !important;
+  .reference-folder-v2,
+  .reference-folder-v2-art,
+  .reference-folder-overlay-copy {
     max-width: 100% !important;
+    min-width: 0 !important;
   }
 }
