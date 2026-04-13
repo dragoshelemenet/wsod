@@ -72,6 +72,7 @@ export default function PreviewRail({ title, items }: Props) {
                       src={item.imageUrl}
                       alt={item.title}
                       className="preview-rail-card-image"
+                      style={{ transform: `rotate(${item.rotation ?? 0}deg)` }}
                     />
                   ) : (
                     <div className="preview-rail-card-empty">{item.title}</div>
