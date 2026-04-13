@@ -4694,3 +4694,42 @@ main,
     transform: translateY(-130%);
   }
 }
+
+/* ===== MENU LOGO SLIGHTLY BIGGER FINAL ===== */
+.public-navbar-logo {
+  min-width: 118px !important;
+  min-height: 44px !important;
+  padding-right: 8px !important;
+}
+
+.public-navbar-logo-image {
+  display: block !important;
+  width: auto !important;
+  height: 30px !important;
+  max-width: 200px !important;
+  object-fit: contain !important;
+}
+
+@media (min-width: 901px) {
+  .public-navbar-logo {
+    min-width: 128px !important;
+    min-height: 46px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 32px !important;
+    max-width: 214px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .public-navbar-logo {
+    min-width: 98px !important;
+    min-height: 38px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 24px !important;
+    max-width: 162px !important;
+  }
+}
