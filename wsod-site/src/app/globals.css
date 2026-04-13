@@ -1832,3 +1832,13 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+
+.media-toolbar-wide {
+  grid-template-columns: minmax(0, 1fr) 220px 220px;
+}
+
+@media (max-width: 1100px) {
+  .media-toolbar-wide {
+    grid-template-columns: 1fr;
+  }
+}

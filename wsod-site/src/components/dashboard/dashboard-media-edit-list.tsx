@@ -40,7 +40,14 @@ const categoryOptions = [
   "website",
   "meta-ads",
   "audio",
-];
+] as const;
+
+const visibilityOptions = [
+  "all",
+  "visible",
+  "hidden",
+  "featured",
+] as const;
 
 export function DashboardMediaEditList({
   items,
@@ -51,7 +58,9 @@ export function DashboardMediaEditList({
   const [message, setMessage] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState<(typeof categoryOptions)[number]>("all");
+  const [visibilityFilter, setVisibilityFilter] =
+    useState<(typeof visibilityOptions)[number]>("all");
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -60,12 +69,21 @@ export function DashboardMediaEditList({
       const matchesCategory =
         category === "all" ? true : item.category === category;
 
+      const matchesVisibility =
+        visibilityFilter === "all"
+          ? true
+          : visibilityFilter === "visible"
+            ? item.isVisible
+            : visibilityFilter === "hidden"
+              ? !item.isVisible
+              : item.isFeatured;
+
       const haystack = `${item.title} ${item.slug} ${item.category} ${item.type}`.toLowerCase();
       const matchesQuery = normalizedQuery ? haystack.includes(normalizedQuery) : true;
 
-      return matchesCategory && matchesQuery;
+      return matchesCategory && matchesVisibility && matchesQuery;
     });
-  }, [items, query, category]);
+  }, [items, query, category, visibilityFilter]);
 
   if (!items.length) {
     return (
@@ -78,7 +96,7 @@ export function DashboardMediaEditList({
 
   return (
     <div className="admin-stack">
-      <div className="media-toolbar">
+      <div className="media-toolbar media-toolbar-wide">
         <div className="admin-form-field">
           <label htmlFor="media-search">Search</label>
           <input
@@ -95,13 +113,34 @@ export function DashboardMediaEditList({
             id="media-category-filter"
             className="admin-select"
             value={category}
-            onChange={(event) => setCategory(event.target.value)}
+            onChange={(event) =>
+              setCategory(event.target.value as (typeof categoryOptions)[number])
+            }
           >
             {categoryOptions.map((option) => (
               <option key={option} value={option}>
                 {option === "all" ? "Toate" : option}
               </option>
             ))}
+          </select>
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="media-visibility-filter">Visibility</label>
+          <select
+            id="media-visibility-filter"
+            className="admin-select"
+            value={visibilityFilter}
+            onChange={(event) =>
+              setVisibilityFilter(
+                event.target.value as (typeof visibilityOptions)[number]
+              )
+            }
+          >
+            <option value="all">Toate</option>
+            <option value="visible">Visible</option>
+            <option value="hidden">Hidden</option>
+            <option value="featured">Featured</option>
           </select>
         </div>
       </div>
