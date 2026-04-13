@@ -1,16 +1,16 @@
-import { DashboardEmpty } from "@/components/dashboard/dashboard-empty";
+import { DashboardSeoForm } from "@/components/dashboard/dashboard-seo-form";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getSiteContentRecord } from "@/lib/dashboard/queries";
 
-export default function DashboardSeoPage() {
+export default async function DashboardSeoPage() {
+  const item = await getSiteContentRecord();
+
   return (
     <DashboardShell
       title="SEO"
-      description="Administrare metadata SEO, titluri, descrieri si indexare."
+      description="Administrare etichete globale, texte si valori folosite pentru SEO/content."
     >
-      <DashboardEmpty
-        title="SEO controls"
-        description="Aici vor intra titlurile SEO, descrierile, canonical, noindex si OG image."
-      />
+      <DashboardSeoForm item={item} />
     </DashboardShell>
   );
 }
