@@ -21,6 +21,7 @@ interface AdminMediaItem {
   thumbnailUrl?: string | null;
   previewUrl?: string | null;
   fileUrl?: string | null;
+  rotation?: number;
   brand?: { name: string; slug: string } | null;
   personModel?: { name: string; slug: string } | null;
   audioProfile?: { name: string; slug: string; kind: string } | null;
@@ -171,7 +172,12 @@ function PreviewThumb({ item }: { item: AdminMediaItem }) {
 
   const src = getPreview(item);
   return src ? (
-    <img src={src} alt={item.title} className="admin-media-thumb-media" />
+    <img
+      src={src}
+      alt={item.title}
+      className="admin-media-thumb-media"
+      style={{ transform: `rotate(${normalizeRotation(item.rotation ?? 0)}deg)` }}
+    />
   ) : (
     <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
   );
@@ -195,7 +201,12 @@ function PreviewLarge({ item }: { item: AdminMediaItem }) {
 
   const src = getPreview(item);
   return src ? (
-    <img src={src} alt={item.title} className="admin-media-edit-preview-media" />
+    <img
+      src={src}
+      alt={item.title}
+      className="admin-media-edit-preview-media"
+      style={{ transform: `rotate(${normalizeRotation(item.rotation ?? 0)}deg)` }}
+    />
   ) : (
     <div className="media-thumb-fallback">{item.type.toUpperCase()}</div>
   );
@@ -211,6 +222,11 @@ function getYearValue(value: string | Date) {
 
 function buildMonthYearIso(month: number, year: number) {
   return new Date(Date.UTC(year, month, 1)).toISOString();
+}
+
+function normalizeRotation(value: number) {
+  const normalized = ((value % 360) + 360) % 360;
+  return normalized === 90 || normalized === 180 || normalized === 270 ? normalized : 0;
 }
 
 export default function AdminMediaManager({
@@ -292,6 +308,7 @@ export default function AdminMediaManager({
           sortOrder: item.sortOrder ?? 0,
           isFeatured: !!item.isFeatured,
           isVisible: item.isVisible ?? true,
+          rotation: normalizeRotation(item.rotation ?? 0),
           date: item.date,
         }),
       });
@@ -413,6 +430,18 @@ export default function AdminMediaManager({
       const normalized = ((nextValue % 360) + 360) % 360;
       return { ...current, [id]: normalized };
     });
+  }
+
+
+  function rotateItem(id: string, direction: "left" | "right") {
+    const current = items.find((item) => item.id === id);
+    const currentRotation = normalizeRotation(current?.rotation ?? 0);
+    const nextRotation =
+      direction === "left"
+        ? normalizeRotation(currentRotation - 90)
+        : normalizeRotation(currentRotation + 90);
+
+    patchItem(id, { rotation: nextRotation });
   }
 
   function applyPhotoGroup(item: AdminMediaItem, value: string) {
@@ -736,6 +765,27 @@ export default function AdminMediaManager({
                   </span>
                 </div>
 
+
+                <div className="admin-inline-actions admin-inline-actions-wrap">
+                  {!isVideoLike(selectedItem) ? (
+                    <>
+                      <button
+                        type="button"
+                        className="admin-secondary-button"
+                        onClick={() => rotateItem(selectedItem.id, "left")}
+                      >
+                        Rotate left
+                      </button>
+                      <button
+                        type="button"
+                        className="admin-secondary-button"
+                        onClick={() => rotateItem(selectedItem.id, "right")}
+                      >
+                        Rotate right
+                      </button>
+                    </>
+                  ) : null}
+                </div>
 
                 <div className="admin-inline-actions">
                   <button
