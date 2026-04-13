@@ -4998,3 +4998,79 @@ main,
     margin-bottom: 18px !important;
   }
 }
+
+/* ===== BALANCE TOP GAP BETWEEN NAVBAR AND PAGE TITLE ===== */
+
+/* pagini lista: video, foto, grafica, website, meta ads, audio */
+.public-shell {
+  gap: 18px !important;
+}
+
+.public-shell-head {
+  margin-top: 2px !important;
+  margin-bottom: 22px !important;
+  gap: 0 !important;
+}
+
+.public-shell-head h1 {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+}
+
+/* pagini brand/model/folder individuale */
+.inner-page .inner-section > h1:first-child {
+  margin-top: 18px !important;
+  margin-bottom: 12px !important;
+}
+
+.inner-page .inner-description {
+  margin-bottom: 22px !important;
+}
+
+/* un pic mai compact pe desktop */
+@media (min-width: 901px) {
+  .home-page,
+  .inner-page,
+  main,
+  .public-shell,
+  .public-page {
+    padding-top: 76px !important;
+  }
+
+  .public-shell-head {
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .inner-page .inner-section > h1:first-child {
+    margin-top: 20px !important;
+  }
+}
+
+/* pe mobil lasam un pic mai mult aer */
+@media (max-width: 900px) {
+  .home-page,
+  .inner-page,
+  main,
+  .public-shell,
+  .public-page {
+    padding-top: 74px !important;
+  }
+
+  .public-shell-head {
+    margin-top: 0 !important;
+    margin-bottom: 18px !important;
+  }
+
+  .public-shell-head h1 {
+    margin-bottom: 10px !important;
+  }
+
+  .inner-page .inner-section > h1:first-child {
+    margin-top: 16px !important;
+  }
+
+  .inner-page .inner-description {
+    margin-bottom: 18px !important;
+  }
+}
