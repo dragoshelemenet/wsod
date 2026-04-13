@@ -4760,3 +4760,67 @@ main,
     max-width: 170px !important;
   }
 }
+
+/* ===== BETTER DESCRIPTION STYLE EVERYWHERE ===== */
+.public-shell-head,
+.inner-section > h1,
+.inner-section > .inner-description,
+.inner-section .inner-description {
+  max-width: 900px;
+}
+
+.public-shell-head {
+  margin-bottom: 28px !important;
+}
+
+.public-shell-head h1,
+.inner-section > h1 {
+  margin-bottom: 14px !important;
+}
+
+.public-shell-head p,
+.inner-description {
+  max-width: 920px !important;
+  margin: 0 0 30px 0 !important;
+  font-size: 19px !important;
+  line-height: 1.75 !important;
+  font-weight: 400 !important;
+  color: rgba(255,255,255,0.82) !important;
+  letter-spacing: 0.01em !important;
+  text-wrap: pretty;
+}
+
+.public-shell-head p {
+  white-space: normal !important;
+}
+
+.inner-section-block {
+  margin-top: 18px !important;
+}
+
+.section-mini-head {
+  margin-bottom: 14px !important;
+}
+
+@media (max-width: 900px) {
+  .public-shell-head {
+    margin-bottom: 22px !important;
+  }
+
+  .public-shell-head h1,
+  .inner-section > h1 {
+    margin-bottom: 12px !important;
+  }
+
+  .public-shell-head p,
+  .inner-description {
+    font-size: 16px !important;
+    line-height: 1.65 !important;
+    margin: 0 0 24px 0 !important;
+    color: rgba(255,255,255,0.84) !important;
+  }
+
+  .inner-section-block {
+    margin-top: 14px !important;
+  }
+}
