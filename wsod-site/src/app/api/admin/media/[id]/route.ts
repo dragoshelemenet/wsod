@@ -91,6 +91,9 @@ async function handleUpdate(
   const sortOrder = Number(body.sortOrder ?? 0);
   const isFeatured = Boolean(body.isFeatured);
   const isVisible = Boolean(body.isVisible);
+  const rotationRaw = Number(body.rotation ?? 0);
+  const normalizedRotation =
+    rotationRaw === 90 || rotationRaw === 180 || rotationRaw === 270 ? rotationRaw : 0;
 
   const brandId =
     body.brandId === null || body.brandId === "" || body.brandId === undefined
@@ -158,6 +161,7 @@ async function handleUpdate(
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       isFeatured,
       isVisible,
+      rotation: normalizedRotation,
       ...(parsedDate ? { date: parsedDate } : {}),
     },
   });

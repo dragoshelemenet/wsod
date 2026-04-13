@@ -18,6 +18,7 @@ type MediaItem = {
   thumbnailUrl: string | null;
   previewUrl: string | null;
   fileUrl: string | null;
+  rotation: number;
   isVisible: boolean;
   isFeatured: boolean;
   brandId: string | null;
@@ -271,6 +272,7 @@ function DashboardMediaEditCard({
   const [brandId, setBrandId] = useState(item.brandId || "");
   const [personModelId, setPersonModelId] = useState(item.personModelId || "");
   const [audioProfileId, setAudioProfileId] = useState(item.audioProfileId || "");
+  const [rotation, setRotation] = useState(item.rotation || 0);
   const [isVisible, setIsVisible] = useState(item.isVisible);
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
   const [loading, setLoading] = useState(false);
@@ -279,6 +281,26 @@ function DashboardMediaEditCard({
     () => thumbnailUrl || previewUrl || fileUrl || "",
     [thumbnailUrl, previewUrl, fileUrl]
   );
+
+  const isImageType =
+    item.category === "foto" ||
+    item.category === "grafica" ||
+    item.category === "website" ||
+    item.category === "meta-ads";
+
+  function rotateLeft() {
+    setRotation((current) => {
+      const next = current - 90;
+      return next < 0 ? 270 : next;
+    });
+  }
+
+  function rotateRight() {
+    setRotation((current) => {
+      const next = current + 90;
+      return next > 270 ? 0 : next;
+    });
+  }
 
   async function onSave() {
     setLoading(true);
@@ -297,6 +319,7 @@ function DashboardMediaEditCard({
           thumbnailUrl,
           previewUrl,
           fileUrl,
+          rotation,
           brandId: brandId || null,
           personModelId: personModelId || null,
           audioProfileId: audioProfileId || null,
@@ -329,7 +352,16 @@ function DashboardMediaEditCard({
       >
         <div className="media-compact-left">
           <div className="media-compact-thumb">
-            {previewImage ? <img src={previewImage} alt={title} /> : null}
+            {previewImage ? (
+              <img
+                src={previewImage}
+                alt={title}
+                style={{
+                  transform: `rotate(${rotation}deg)`,
+                  transformOrigin: "center",
+                }}
+              />
+            ) : null}
           </div>
 
           <div className="media-compact-meta">
@@ -458,6 +490,20 @@ function DashboardMediaEditCard({
               </label>
             </div>
           </div>
+
+          {isImageType ? (
+            <div className="site-content-actions">
+              <button type="button" className="admin-ghost-button" onClick={rotateLeft}>
+                Rotate left
+              </button>
+
+              <button type="button" className="admin-ghost-button" onClick={rotateRight}>
+                Rotate right
+              </button>
+
+              <span className="admin-helper-text">Rotation: {rotation}°</span>
+            </div>
+          ) : null}
 
           <div className="site-content-actions">
             <button className="admin-submit" type="button" onClick={onSave} disabled={loading}>

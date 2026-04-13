@@ -71,6 +71,8 @@ model MediaItem {
   seoTitle         String?
   metaDescription  String?
 
+  rotation         Int      @default(0)
+
   groupLabel       String?
   groupOrder       Int      @default(0)
   sortOrder        Int      @default(0)
