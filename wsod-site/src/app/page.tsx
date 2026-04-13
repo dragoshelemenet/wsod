@@ -116,7 +116,6 @@ export default async function HomePage() {
           TIKTOK
         </a>
         <a href="tel:+40727205689">+40727205689</a>
-        <a href="/servicii-preturi">CONTACT</a>
       </footer>
     </main>
   );
