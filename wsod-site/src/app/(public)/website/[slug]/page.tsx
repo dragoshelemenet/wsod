@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
@@ -23,23 +22,19 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Website", href: "/website" },
-            { label: item.title },
-          ]}
-        />
         <h1>{item.title}</h1>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect website."}
         </p>
-        <div className="media-detail-hero">
-          <iframe
-            src={item.fileUrl ?? undefined}
-            title={item.title}
-            className="media-detail-image"
-          />
+
+        <div className="website-detail-square-wrap">
+          <div className="website-detail-square">
+            <iframe
+              src={item.fileUrl ?? undefined}
+              title={item.title}
+              className="website-detail-frame"
+            />
+          </div>
         </div>
       </section>
     </main>
