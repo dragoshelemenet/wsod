@@ -50,7 +50,7 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
         ) : null}
 
         {previewSrc ? (
-          <ZoomableWebsitePreview src={previewSrc} alt={item.title} />
+          <WebsitePreviewZoom src={previewSrc} alt={item.title} />
         ) : null}
 
         {sameBrand.length > 0 ? (
