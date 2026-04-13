@@ -3240,7 +3240,8 @@ textarea:focus {
 .website-detail-square {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 10;
+  max-height: 72vh;
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.10);
@@ -3253,6 +3254,21 @@ textarea:focus {
   border: 0;
   display: block;
   background: #fff;
+}
+
+@media (max-width: 900px) {
+  .website-detail-square {
+    aspect-ratio: 16 / 11;
+    max-height: 62vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .website-detail-square {
+    aspect-ratio: 4 / 3;
+    max-height: 56vh;
+    border-radius: 18px;
+  }
 }
 
 
