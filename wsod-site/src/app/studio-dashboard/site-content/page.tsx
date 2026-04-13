@@ -1,9 +1,14 @@
 export default function DashboardSiteContentPage() {
   return (
-    <main className="inner-page">
-      <section className="inner-section">
-        <h1>Dashboard / Site Content</h1>
-        <p>Aici va veni editarea continutului principal al site-ului.</p>
+    <main className="dashboard-shell">
+      <section className="dashboard-page-head">
+        <div>
+          <p className="dashboard-kicker">Dashboard</p>
+          <h1>Site content</h1>
+          <p className="dashboard-description">
+            Editare continut global: home, servicii, texte publice si blocuri vizibile.
+          </p>
+        </div>
       </section>
     </main>
   );

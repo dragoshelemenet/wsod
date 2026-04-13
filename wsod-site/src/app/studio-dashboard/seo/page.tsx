@@ -1,9 +1,14 @@
 export default function DashboardSeoPage() {
   return (
-    <main className="inner-page">
-      <section className="inner-section">
-        <h1>Dashboard / SEO</h1>
-        <p>Aici va veni managementul metadata, canonical, OG si indexare.</p>
+    <main className="dashboard-shell">
+      <section className="dashboard-page-head">
+        <div>
+          <p className="dashboard-kicker">Dashboard</p>
+          <h1>SEO</h1>
+          <p className="dashboard-description">
+            Titluri SEO, descrieri, canonical, Open Graph si noindex unde este nevoie.
+          </p>
+        </div>
       </section>
     </main>
   );

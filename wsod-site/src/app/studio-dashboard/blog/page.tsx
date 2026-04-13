@@ -1,9 +1,14 @@
 export default function DashboardBlogPage() {
   return (
-    <main className="inner-page">
-      <section className="inner-section">
-        <h1>Dashboard / Blog</h1>
-        <p>Aici va veni managementul articolelor de blog.</p>
+    <main className="dashboard-shell">
+      <section className="dashboard-page-head">
+        <div>
+          <p className="dashboard-kicker">Dashboard</p>
+          <h1>Blog</h1>
+          <p className="dashboard-description">
+            Administrare articole, meta info, publicare si organizare continut editorial.
+          </p>
+        </div>
       </section>
     </main>
   );
