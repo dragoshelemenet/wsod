@@ -1,30 +1,42 @@
-import { getPublishedBrands, getPublishedMediaByCategory, getPublishedModels } from "@/lib/dashboard/queries";
+import { getBrandsWithCategoryPreviewFromDb, getMediaByCategoryFromDb, getModelsWithCategoryPreviewFromDb } from "@/lib/data/db-queries";
 import { OwnerFolderCard } from "@/components/public/owner-folder-card";
-import { PublicCard } from "@/components/public/public-card";
-import { PublicGrid } from "@/components/public/public-grid";
+import PreviewRail from "@/components/public/PreviewRail";
 import { PublicShell } from "@/components/public/public-shell";
 
 export default async function FotoPage() {
   const [items, models, brands] = await Promise.all([
-    getPublishedMediaByCategory("foto"),
-    getPublishedModels(),
-    getPublishedBrands(),
+    getMediaByCategoryFromDb("foto", { limit: 120 }),
+    getModelsWithCategoryPreviewFromDb("foto"),
+    getBrandsWithCategoryPreviewFromDb("foto"),
   ]);
+
+  const modelPhotos = items
+    .filter((item) => item.owner?.type === "model")
+    .slice(0, 24)
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      href: `/foto/${item.slug}`,
+      imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
+      rotation: (item as any).rotation ?? 0,
+      showPlayIcon: false,
+    }));
+
+  const brandPhotos = items
+    .filter((item) => item.owner?.type === "brand")
+    .slice(0, 24)
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      href: `/foto/${item.slug}`,
+      imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
+      rotation: (item as any).rotation ?? 0,
+      showPlayIcon: false,
+    }));
 
   return (
     <PublicShell title="Foto" description="Portofoliu foto public cu afisare compacta.">
-      <PublicGrid dense>
-        {items.map((item) => (
-          <PublicCard
-            key={item.id}
-            title={item.title}
-            href={`/foto/${item.slug}`}
-            imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
-            imageOnly
-            rotation={(item as any).rotation ?? 0}
-          />
-        ))}
-      </PublicGrid>
+      <PreviewRail title="Poze cu modele" items={modelPhotos} />
 
       <section className="inner-section-block">
         <div className="section-mini-head">
@@ -39,6 +51,7 @@ export default async function FotoPage() {
               href={`/model/${item.slug}`}
               imageUrl={
                 item.portraitImageUrl ||
+                item.previewImages?.[0] ||
                 item.mediaItems?.[0]?.thumbnailUrl ||
                 item.mediaItems?.[0]?.previewUrl ||
                 item.mediaItems?.[0]?.fileUrl ||
@@ -48,6 +61,8 @@ export default async function FotoPage() {
           ))}
         </div>
       </section>
+
+      <PreviewRail title="Poze brand" items={brandPhotos} />
 
       <section className="inner-section-block">
         <div className="section-mini-head">
@@ -63,6 +78,7 @@ export default async function FotoPage() {
               imageUrl={
                 item.logoUrl ||
                 item.coverImageUrl ||
+                item.previewImages?.[0] ||
                 item.mediaItems?.[0]?.thumbnailUrl ||
                 item.mediaItems?.[0]?.previewUrl ||
                 item.mediaItems?.[0]?.fileUrl ||
