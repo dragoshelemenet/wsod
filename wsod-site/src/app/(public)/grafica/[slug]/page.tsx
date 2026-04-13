@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -6,6 +7,18 @@ type PageProps = {
 
 export default async function GraficaSlugPage({ params }: PageProps) {
   const { slug } = await params;
+  const item = await getPublishedMediaBySlug(slug);
+
+  if (!item) {
+    return (
+      <main className="inner-page">
+        <section className="inner-section">
+          <h1>Grafica not found</h1>
+          <p className="inner-description">Proiectul grafic nu a fost gasit.</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="inner-page">
@@ -14,14 +27,20 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Grafica", href: "/grafica" },
-            { label: slug },
+            { label: item.title },
           ]}
         />
-        <h1>Grafica: {slug}</h1>
+        <h1>{item.title}</h1>
         <p className="inner-description">
-          Pagina individuala pentru proiect grafic. Aici va intra vizualul mare
-          si eventual alte variante sau mockup-uri.
+          {item.excerpt || "Pagina individuala pentru proiect grafic."}
         </p>
+        <div className="media-detail-hero">
+          <img
+            src={item.fileUrl}
+            alt={item.title}
+            className="media-detail-image"
+          />
+        </div>
       </section>
     </main>
   );

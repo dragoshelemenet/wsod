@@ -1,4 +1,7 @@
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PublicCard } from "@/components/public/public-card";
+import { PublicGrid } from "@/components/public/public-grid";
+import { getPublishedModelBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -6,6 +9,18 @@ type PageProps = {
 
 export default async function ModelSlugPage({ params }: PageProps) {
   const { slug } = await params;
+  const model = await getPublishedModelBySlug(slug);
+
+  if (!model) {
+    return (
+      <main className="inner-page">
+        <section className="inner-section">
+          <h1>Model not found</h1>
+          <p className="inner-description">Modelul nu a fost gasit.</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="inner-page">
@@ -14,14 +29,25 @@ export default async function ModelSlugPage({ params }: PageProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Modele", href: "/model" },
-            { label: slug },
+            { label: model.title },
           ]}
         />
-        <h1>Model: {slug}</h1>
+        <h1>{model.title}</h1>
         <p className="inner-description">
-          Pagina individuala pentru model. Aici vor intra proiectele asociate
-          acelui model, afisate curat si rapid.
+          Pagina individuala pentru model si proiectele sale publice.
         </p>
+
+        <PublicGrid>
+          {model.mediaItems.map((item) => (
+            <PublicCard
+              key={item.id}
+              title={item.title}
+              subtitle={item.category}
+              href={`/${item.category}/${item.slug}`}
+              imageUrl={item.coverUrl || item.fileUrl}
+            />
+          ))}
+        </PublicGrid>
       </section>
     </main>
   );

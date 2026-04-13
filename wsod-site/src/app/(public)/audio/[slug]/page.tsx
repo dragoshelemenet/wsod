@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -6,6 +7,18 @@ type PageProps = {
 
 export default async function AudioSlugPage({ params }: PageProps) {
   const { slug } = await params;
+  const item = await getPublishedMediaBySlug(slug);
+
+  if (!item) {
+    return (
+      <main className="inner-page">
+        <section className="inner-section">
+          <h1>Audio not found</h1>
+          <p className="inner-description">Proiectul audio nu a fost gasit.</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="inner-page">
@@ -14,14 +27,31 @@ export default async function AudioSlugPage({ params }: PageProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Audio", href: "/audio" },
-            { label: slug },
+            { label: item.title },
           ]}
         />
-        <h1>Audio: {slug}</h1>
+        <h1>{item.title}</h1>
         <p className="inner-description">
-          Pagina individuala pentru proiect audio. Aici va intra player before,
-          player after si comparatia clara intre ele.
+          {item.excerpt || "Pagina individuala pentru proiect audio."}
         </p>
+
+        <div className="media-detail-hero">
+          <audio src={item.fileUrl} controls style={{ width: "100%" }} />
+        </div>
+
+        {item.beforeUrl ? (
+          <div className="media-detail-hero">
+            <p className="inner-description">Before</p>
+            <audio src={item.beforeUrl} controls style={{ width: "100%" }} />
+          </div>
+        ) : null}
+
+        {item.afterUrl ? (
+          <div className="media-detail-hero">
+            <p className="inner-description">After</p>
+            <audio src={item.afterUrl} controls style={{ width: "100%" }} />
+          </div>
+        ) : null}
       </section>
     </main>
   );

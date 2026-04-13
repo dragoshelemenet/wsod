@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -6,6 +7,18 @@ type PageProps = {
 
 export default async function FotoSlugPage({ params }: PageProps) {
   const { slug } = await params;
+  const item = await getPublishedMediaBySlug(slug);
+
+  if (!item) {
+    return (
+      <main className="inner-page">
+        <section className="inner-section">
+          <h1>Foto not found</h1>
+          <p className="inner-description">Proiectul foto nu a fost gasit.</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="inner-page">
@@ -14,14 +27,20 @@ export default async function FotoSlugPage({ params }: PageProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Foto", href: "/foto" },
-            { label: slug },
+            { label: item.title },
           ]}
         />
-        <h1>Foto: {slug}</h1>
+        <h1>{item.title}</h1>
         <p className="inner-description">
-          Pagina individuala pentru proiect foto. Aici vor aparea imaginile mari,
-          curate, fara aglomeratie inutila.
+          {item.excerpt || "Pagina individuala pentru proiect foto."}
         </p>
+        <div className="media-detail-hero">
+          <img
+            src={item.fileUrl}
+            alt={item.title}
+            className="media-detail-image"
+          />
+        </div>
       </section>
     </main>
   );
