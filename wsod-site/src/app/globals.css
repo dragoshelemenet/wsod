@@ -4538,3 +4538,23 @@ main,
     aspect-ratio: 1 / 1 !important;
   }
 }
+
+/* ===== HOME HERO LOGO 25 PERCENT SMALLER ===== */
+.reference-logo-image {
+  width: 75% !important;
+  max-width: 75% !important;
+  height: auto !important;
+}
+
+.reference-logo-column {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 900px) {
+  .reference-logo-image {
+    width: 75% !important;
+    max-width: 75% !important;
+  }
+}
