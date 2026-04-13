@@ -32,6 +32,16 @@ type DashboardMediaEditListProps = {
   audioProfiles: OptionItem[];
 };
 
+const categoryOptions = [
+  "all",
+  "foto",
+  "video",
+  "grafica",
+  "website",
+  "meta-ads",
+  "audio",
+];
+
 export function DashboardMediaEditList({
   items,
   brands,
@@ -40,6 +50,22 @@ export function DashboardMediaEditList({
 }: DashboardMediaEditListProps) {
   const [message, setMessage] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("all");
+
+  const filteredItems = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return items.filter((item) => {
+      const matchesCategory =
+        category === "all" ? true : item.category === category;
+
+      const haystack = `${item.title} ${item.slug} ${item.category} ${item.type}`.toLowerCase();
+      const matchesQuery = normalizedQuery ? haystack.includes(normalizedQuery) : true;
+
+      return matchesCategory && matchesQuery;
+    });
+  }, [items, query, category]);
 
   if (!items.length) {
     return (
@@ -51,19 +77,53 @@ export function DashboardMediaEditList({
   }
 
   return (
-    <div className="admin-list compact-admin-list">
-      {items.map((item) => (
-        <DashboardMediaEditCard
-          key={item.id}
-          item={item}
-          brands={brands}
-          models={models}
-          audioProfiles={audioProfiles}
-          onMessage={setMessage}
-          isOpen={openId === item.id}
-          onToggle={() => setOpenId((current) => (current === item.id ? null : item.id))}
-        />
-      ))}
+    <div className="admin-stack">
+      <div className="media-toolbar">
+        <div className="admin-form-field">
+          <label htmlFor="media-search">Search</label>
+          <input
+            id="media-search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Cauta dupa title sau slug"
+          />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="media-category-filter">Category</label>
+          <select
+            id="media-category-filter"
+            className="admin-select"
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+          >
+            {categoryOptions.map((option) => (
+              <option key={option} value={option}>
+                {option === "all" ? "Toate" : option}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <p className="admin-helper-text">
+        {filteredItems.length} / {items.length} itemi afisati
+      </p>
+
+      <div className="admin-list compact-admin-list">
+        {filteredItems.map((item) => (
+          <DashboardMediaEditCard
+            key={item.id}
+            item={item}
+            brands={brands}
+            models={models}
+            audioProfiles={audioProfiles}
+            onMessage={setMessage}
+            isOpen={openId === item.id}
+            onToggle={() => setOpenId((current) => (current === item.id ? null : item.id))}
+          />
+        ))}
+      </div>
 
       {message ? <p className="admin-helper-text">{message}</p> : null}
     </div>

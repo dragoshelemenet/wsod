@@ -1819,3 +1819,16 @@ textarea:focus {
     flex-basis: 60px;
   }
 }
+
+.media-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 14px;
+  align-items: end;
+}
+
+@media (max-width: 900px) {
+  .media-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
