@@ -15,8 +15,6 @@ export type MediaKind =
   | "website"
   | "graphic";
 
-export type VisibilityStatus = "public" | "private" | "hidden";
-
 export interface PublicCardItem {
   id: string;
   title: string;
