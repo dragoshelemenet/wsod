@@ -2623,7 +2623,6 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
-
 .public-global-footer {
   max-width: var(--max-width);
   margin: 36px auto 28px;
@@ -2825,8 +2824,6 @@ textarea:focus {
   letter-spacing: -0.04em;
 }
 
-
-
 .public-owner-folder-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2928,9 +2925,6 @@ textarea:focus {
   }
 }
 
-
-
-
 .detail-thumb-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -2976,9 +2970,6 @@ textarea:focus {
     gap: 8px;
   }
 }
-
-
-
 
 .foto-detail-gallery {
   display: flex;
@@ -3127,9 +3118,6 @@ textarea:focus {
   }
 }
 
-
-
-
 .foto-detail-stage {
   position: relative;
 }
@@ -3205,9 +3193,6 @@ textarea:focus {
   }
 }
 
-
-
-
 .public-card-media-wrap {
   position: relative;
 }
@@ -3244,9 +3229,6 @@ textarea:focus {
     height: 20px;
   }
 }
-
-
-
 
 .website-detail-square-wrap {
   width: 100%;
@@ -3303,9 +3285,6 @@ textarea:focus {
     height: 64vh;
   }
 }
-
-
-
 
 .services-clean-hero {
   display: grid;
@@ -3409,7 +3388,6 @@ textarea:focus {
     font-size: 16px;
   }
 }
-
 
 /* FIXED NAVBAR */
 .public-navbar {
@@ -4177,10 +4155,6 @@ main,
   transform: rotate(var(--admin-rotate, 0deg));
   transform-origin: center center;
   transition: transform 180ms ease;
-}
-
-.admin-rotate-actions {
-  align-items: center;
 }
 
 .preview-rail-head {
