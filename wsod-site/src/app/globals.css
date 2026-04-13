@@ -4733,3 +4733,30 @@ main,
     max-width: 162px !important;
   }
 }
+
+/* ===== MENU LOGO A BIT BIGGER ===== */
+.public-navbar-logo {
+  min-width: 124px !important;
+  min-height: 46px !important;
+  padding-right: 8px !important;
+}
+
+.public-navbar-logo-image {
+  display: block !important;
+  width: auto !important;
+  height: 34px !important;
+  max-width: 220px !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 900px) {
+  .public-navbar-logo {
+    min-width: 102px !important;
+    min-height: 40px !important;
+  }
+
+  .public-navbar-logo-image {
+    height: 26px !important;
+    max-width: 170px !important;
+  }
+}
