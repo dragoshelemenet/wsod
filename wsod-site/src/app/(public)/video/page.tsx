@@ -1,6 +1,5 @@
 import { getPublishedBrands, getPublishedMediaByCategory } from "@/lib/dashboard/queries";
 import { OwnerFolderCard } from "@/components/public/owner-folder-card";
-import { CategoryHero } from "@/components/public/category-hero";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { PublicShell } from "@/components/public/public-shell";
@@ -12,12 +11,7 @@ export default async function VideoPage() {
   ]);
 
   return (
-    <PublicShell title="Video" description="Portofoliu video public, rapid si curat.">
-      <CategoryHero
-        title="Video"
-        description="Aici apar proiectele video publicate, afisate compact, fara descrieri inutile."
-      />
-
+    <PublicShell title="Video">
       <PublicGrid dense>
         {items.map((item) => (
           <PublicCard
@@ -26,6 +20,7 @@ export default async function VideoPage() {
             href={`/video/${item.slug}`}
             imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
             imageOnly
+            showPlayIcon
           />
         ))}
       </PublicGrid>

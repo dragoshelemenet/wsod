@@ -4,6 +4,7 @@ type PublicCardProps = {
   href?: string;
   imageUrl?: string | null;
   imageOnly?: boolean;
+  showPlayIcon?: boolean;
 };
 
 export function PublicCard({
@@ -12,11 +13,30 @@ export function PublicCard({
   href,
   imageUrl,
   imageOnly = false,
+  showPlayIcon = false,
 }: PublicCardProps) {
   const media = imageUrl ? (
-    <img src={imageUrl} alt={title} className="public-card-media" />
+    <div className="public-card-media-wrap">
+      <img src={imageUrl} alt={title} className="public-card-media" />
+      {showPlayIcon ? (
+        <div className="public-card-play-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="public-card-play-icon">
+            <path d="M8 6.5v11l9-5.5-9-5.5Z" fill="currentColor" />
+          </svg>
+        </div>
+      ) : null}
+    </div>
   ) : (
-    <div className="public-card-media" />
+    <div className="public-card-media-wrap">
+      <div className="public-card-media" />
+      {showPlayIcon ? (
+        <div className="public-card-play-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="public-card-play-icon">
+            <path d="M8 6.5v11l9-5.5-9-5.5Z" fill="currentColor" />
+          </svg>
+        </div>
+      ) : null}
+    </div>
   );
 
   const content = imageOnly ? (

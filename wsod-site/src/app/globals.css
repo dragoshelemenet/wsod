@@ -3189,3 +3189,43 @@ textarea:focus {
   }
 }
 
+
+
+
+.public-card-media-wrap {
+  position: relative;
+}
+
+.public-card-play-badge {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  color: white;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  pointer-events: none;
+}
+
+.public-card-play-icon {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 700px) {
+  .public-card-play-badge {
+    width: 46px;
+    height: 46px;
+  }
+
+  .public-card-play-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
