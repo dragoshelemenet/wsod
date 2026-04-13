@@ -35,21 +35,17 @@ export default async function AudioSlugPage({ params }: PageProps) {
           {item.description || "Pagina individuala pentru proiect audio."}
         </p>
 
-        <div className="media-detail-hero">
-          <audio src={item.fileUrl ?? undefined} controls style={{ width: "100%" }} />
-        </div>
-
-        {item.beforeUrl ? (
+        {item.fileUrl ? (
           <div className="media-detail-hero">
-            <p className="inner-description">Before</p>
-            <audio src={item.beforeUrl ?? undefined} controls style={{ width: "100%" }} />
+            <p className="inner-description">Main audio</p>
+            <audio src={item.fileUrl} controls style={{ width: "100%" }} />
           </div>
         ) : null}
 
-        {item.afterUrl ? (
+        {item.previewUrl ? (
           <div className="media-detail-hero">
-            <p className="inner-description">After</p>
-            <audio src={item.afterUrl ?? undefined} controls style={{ width: "100%" }} />
+            <p className="inner-description">Preview</p>
+            <audio src={item.previewUrl} controls style={{ width: "100%" }} />
           </div>
         ) : null}
       </section>
