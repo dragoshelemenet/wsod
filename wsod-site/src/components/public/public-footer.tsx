@@ -19,11 +19,6 @@ const footerLinks = [
     label: "+40727205689",
     external: false,
   },
-  {
-    href: "/servicii-preturi",
-    label: "CONTACT",
-    external: false,
-  },
 ];
 
 export function PublicFooter() {
