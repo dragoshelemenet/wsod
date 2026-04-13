@@ -280,24 +280,6 @@ function DashboardMediaEditCard({
     [thumbnailUrl, previewUrl, fileUrl]
   );
 
-  const isImageType =
-    item.category === "foto" ||
-    item.category === "grafica" ||
-    item.category === "website" ||
-    item.category === "meta-ads";
-
-  function rotateLeft() {
-      const next = current - 90;
-      return next < 0 ? 270 : next;
-    });
-  }
-
-  function rotateRight() {
-      const next = current + 90;
-      return next > 270 ? 0 : next;
-    });
-  }
-
   async function onSave() {
     setLoading(true);
     onMessage("");
@@ -484,11 +466,6 @@ function DashboardMediaEditCard({
               </label>
             </div>
           </div>
-
-          {isImageType ? (
-            <div className="site-content-actions">
-            </div>
-          ) : null}
 
           <div className="site-content-actions">
             <button className="admin-submit" type="button" onClick={onSave} disabled={loading}>
