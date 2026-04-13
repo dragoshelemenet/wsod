@@ -40,7 +40,7 @@ export default async function BrandSlugPage({ params }: PageProps) {
               imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
               imageOnly
               showPlayIcon={item.category === "video"}
-              rotation={item.rotation ?? 0}
+              rotation={(item as any).rotation ?? 0}
             />
           ))}
         </PublicGrid>
