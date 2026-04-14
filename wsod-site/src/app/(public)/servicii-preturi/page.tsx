@@ -49,7 +49,7 @@ export default async function ServicesPricingPage() {
 
             <div className="services-clean-grid">
               {serviceCards.map((item, index) => (
-                <article key={`${item.title}-${index}`} className="services-clean-card"><br></br>
+                <article key={`${item.title}-${index}`} className="services-clean-card">
                   <h3>{item.title}</h3>
                   {item.description ? <p>{item.description}</p> : null}
                   {item.tags ? <span>{item.tags}</span> : null}
