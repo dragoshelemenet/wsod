@@ -4285,3 +4285,78 @@ main,
     margin-top: 16px !important;
   }
 }
+
+/* ===== CLEANER HOME BRANDS HEADER + BETTER ARROWS ===== */
+
+/* scoate umbrele/lateralele negre din spatele titlului */
+.reference-brands-v2::before,
+.reference-brands-v2::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* un pic mai curat containerul sus */
+.brands-carousel-head {
+  align-items: center !important;
+}
+
+.brands-carousel-head h2 {
+  text-shadow: none !important;
+}
+
+/* arrows mai solide,mai UI */
+.brands-carousel-arrow {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+    rgba(18,18,24,0.92) !important;
+  color: rgba(255,255,255,0.96) !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 8px 20px rgba(0,0,0,0.22) !important;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease !important;
+}
+
+.brands-carousel-arrow:hover {
+  transform: translateY(-1px) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.04)),
+    rgba(22,22,30,0.96) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 10px 24px rgba(0,0,0,0.28) !important;
+}
+
+.brands-carousel-arrow:active {
+  transform: translateY(0) scale(0.97) !important;
+}
+
+@media (max-width: 900px) {
+  .brands-carousel-arrow {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .brands-carousel-arrow {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 15px !important;
+  }
+}
