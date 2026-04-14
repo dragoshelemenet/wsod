@@ -2086,7 +2086,6 @@ textarea:focus {
   backdrop-filter: blur(8px);
 }
 
-
 /* =========================
    SERVICES
    ========================= */
@@ -2164,19 +2163,19 @@ textarea:focus {
   font-size: 15px;
 }
 
-/* services page needs its own spacing because global heading fix is not enough here */
+/* services page spacing */
 .services-clean-hero {
   display: grid;
   gap: 18px;
-  padding-top: 22px;
-  margin-bottom: 28px;
+  padding-top: 34px;
+  margin-bottom: 34px;
 }
 
 .services-clean-intro {
   display: grid;
   gap: 10px;
   max-width: 820px;
-  padding-top: 6px;
+  padding-top: 14px;
 }
 
 .services-clean-intro p {
@@ -2188,8 +2187,8 @@ textarea:focus {
 
 .services-clean-section {
   display: grid;
-  gap: 18px;
-  padding-top: 12px;
+  gap: 20px;
+  padding-top: 22px;
 }
 
 .services-clean-grid {
@@ -2291,16 +2290,16 @@ textarea:focus {
 
 @media (max-width: 900px) {
   .services-clean-hero {
-    padding-top: 16px;
-    margin-bottom: 22px;
+    padding-top: 24px;
+    margin-bottom: 24px;
   }
 
   .services-clean-intro {
-    padding-top: 4px;
+    padding-top: 10px;
   }
 
   .services-clean-section {
-    padding-top: 8px;
+    padding-top: 14px;
     gap: 16px;
   }
 
@@ -2320,6 +2319,7 @@ textarea:focus {
     font-size: 16px;
   }
 }
+
 /* =========================
    FOOTER
    ========================= */
