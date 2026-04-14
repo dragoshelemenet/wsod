@@ -4139,7 +4139,7 @@ body:has(.public-navbar) .section-mini-head {
 .inner-page .inner-section > h1:first-child,
 .inner-page .public-shell-head,
 .inner-page .category-hero {
-  margin-top: 90px !important;
+  margin-top: 35px !important;
 }
 
 /* text under title */
@@ -4153,6 +4153,6 @@ body:has(.public-navbar) .section-mini-head {
   .inner-page .inner-section > h1:first-child,
   .inner-page .public-shell-head,
   .inner-page .category-hero {
-    margin-top: 64px !important;
+    margin-top: 34px !important;
   }
 }
