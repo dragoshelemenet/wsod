@@ -2152,7 +2152,7 @@ textarea:focus {
 .services-clean-hero {
   display: grid;
   gap: 18px;
-  margin-top: 28px;
+  margin-top: 28px !important;
   margin-bottom: 36px;
 }
 
@@ -2171,7 +2171,7 @@ textarea:focus {
 
 /* section title "Servicii" lower than intro */
 .services-clean-section {
-  margin-top: 52px;
+  margin-top: 52px !important;
 }
 
 .services-clean-grid {
@@ -2273,12 +2273,12 @@ textarea:focus {
 
 @media (max-width: 900px) {
   .services-clean-hero {
-    margin-top: 22px;
+    margin-top: 22px !important;
     margin-bottom: 28px;
   }
 
   .services-clean-section {
-    margin-top: 40px;
+    margin-top: 40px !important;
   }
 
   .services-clean-grid {
