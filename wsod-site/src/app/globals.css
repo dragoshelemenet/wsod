@@ -2164,16 +2164,19 @@ textarea:focus {
   font-size: 15px;
 }
 
+/* services page needs its own spacing because global heading fix is not enough here */
 .services-clean-hero {
   display: grid;
-  gap: 16px;
-  margin: 0 0 24px;
+  gap: 18px;
+  padding-top: 22px;
+  margin-bottom: 28px;
 }
 
 .services-clean-intro {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   max-width: 820px;
+  padding-top: 6px;
 }
 
 .services-clean-intro p {
@@ -2186,8 +2189,7 @@ textarea:focus {
 .services-clean-section {
   display: grid;
   gap: 18px;
-  margin-top: 0;
-  padding-top: 0;
+  padding-top: 12px;
 }
 
 .services-clean-grid {
@@ -2289,11 +2291,16 @@ textarea:focus {
 
 @media (max-width: 900px) {
   .services-clean-hero {
-    gap: 14px;
-    margin-bottom: 20px;
+    padding-top: 16px;
+    margin-bottom: 22px;
+  }
+
+  .services-clean-intro {
+    padding-top: 4px;
   }
 
   .services-clean-section {
+    padding-top: 8px;
     gap: 16px;
   }
 
