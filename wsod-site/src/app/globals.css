@@ -4135,14 +4135,26 @@ body:has(.public-navbar) .section-mini-head {
     grid-template-columns: 1fr 1fr;
   }
 }
-/* brand / website / detail pages title spacing */
-.inner-page .inner-section > h1:first-child,
-.inner-page .public-shell-head,
+/* =========================
+   INNER PAGE TITLE SPACING
+   ========================= */
+
+/* Foto / Video / Website / Grafica */
+.inner-page .public-shell-head {
+  margin-top: 35px !important;
+}
+
+/* Brands / detail pages care au h1 direct în inner-section */
+.inner-page .inner-section > h1:first-child {
+  margin-top: 52px !important;
+}
+
+/* dacă există category hero separat */
 .inner-page .category-hero {
   margin-top: 35px !important;
 }
 
-/* text under title */
+/* text sub titlu */
 .inner-page .inner-description,
 .inner-page .category-hero p,
 .inner-page .public-shell-head p {
@@ -4150,8 +4162,14 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 @media (max-width: 900px) {
-  .inner-page .inner-section > h1:first-child,
-  .inner-page .public-shell-head,
+  .inner-page .public-shell-head {
+    margin-top: 34px !important;
+  }
+
+  .inner-page .inner-section > h1:first-child {
+    margin-top: 46px !important;
+  }
+
   .inner-page .category-hero {
     margin-top: 34px !important;
   }
