@@ -2173,7 +2173,7 @@ textarea:focus {
 
 /* aici cobori exact "Serviciile noastre" */
 .services-page .public-shell-head {
-  margin-top: 54px !important;
+  margin-top: 110px !important;
   margin-bottom: 18px !important;
 }
 
@@ -2309,7 +2309,7 @@ textarea:focus {
   }
 
   .services-page .public-shell-head {
-    margin-top: 38px !important;
+    margin-top: 70px !important;
     margin-bottom: 14px !important;
   }
 
@@ -4133,5 +4133,26 @@ body:has(.public-navbar) .section-mini-head {
 
   .footer {
     grid-template-columns: 1fr 1fr;
+  }
+}
+/* brand / website / detail pages title spacing */
+.inner-page .inner-section > h1:first-child,
+.inner-page .public-shell-head,
+.inner-page .category-hero {
+  margin-top: 90px !important;
+}
+
+/* text under title */
+.inner-page .inner-description,
+.inner-page .category-hero p,
+.inner-page .public-shell-head p {
+  margin-bottom: 18px !important;
+}
+
+@media (max-width: 900px) {
+  .inner-page .inner-section > h1:first-child,
+  .inner-page .public-shell-head,
+  .inner-page .category-hero {
+    margin-top: 64px !important;
   }
 }
