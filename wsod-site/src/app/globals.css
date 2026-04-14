@@ -2163,32 +2163,27 @@ textarea:focus {
   font-size: 15px;
 }
 
-/* mută doar titlul mare + intro mai jos pe pagina servicii */
-.services-page .public-shell-head {
-  margin-top: 104px;
-  margin-bottom: 26px;
-}
-
-.services-page .public-shell-head h1 {
-  margin-top: 0;
-  margin-bottom: 22px;
-}
-
-.services-page .public-shell-head p {
-  margin: 0 0 20px 0;
-}
-
-/* nu mai împinge inutil titlul "Servicii" */
-.services-page .services-clean-section {
-  margin-top: 0;
-  padding-top: 8px;
-}
-
+/* blocul de sus: SERVICIILE NOASTRE */
 .services-clean-hero {
   display: grid;
   gap: 18px;
-  margin-top: 0;
-  margin-bottom: 36px;
+  margin-top: 46px !important;
+  margin-bottom: 20px !important;
+}
+
+/* aici cobori exact "Serviciile noastre" */
+.services-page .public-shell-head {
+  margin-top: 54px !important;
+  margin-bottom: 18px !important;
+}
+
+.services-page .public-shell-head h1 {
+  margin-top: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+.services-page .public-shell-head p {
+  margin: 0 !important;
 }
 
 .services-clean-intro {
@@ -2204,8 +2199,10 @@ textarea:focus {
   line-height: 1.7;
 }
 
+/* blocul cu SERVICII */
 .services-clean-section {
-  margin-top: 34px;
+  margin-top: 22px !important;
+  padding-top: 0 !important;
 }
 
 .services-clean-grid {
@@ -2306,26 +2303,22 @@ textarea:focus {
 }
 
 @media (max-width: 900px) {
+  .services-clean-hero {
+    margin-top: 30px !important;
+    margin-bottom: 16px !important;
+  }
+
   .services-page .public-shell-head {
-    margin-top: 52px;
-    margin-bottom: 22px;
+    margin-top: 38px !important;
+    margin-bottom: 14px !important;
   }
 
   .services-page .public-shell-head h1 {
-    margin-bottom: 18px;
+    margin-bottom: 14px !important;
   }
 
-  .services-page .public-shell-head p {
-    margin: 0 0 18px 0;
-  }
-
-  .services-page .services-clean-section {
-    padding-top: 6px;
-  }
-
-  .services-clean-hero {
-    margin-top: 0;
-    margin-bottom: 28px;
+  .services-clean-section {
+    margin-top: 18px !important;
   }
 
   .services-clean-grid {
