@@ -2153,8 +2153,8 @@ textarea:focus {
 .services-clean-hero {
   display: grid;
   gap: 18px;
-  margin-top: 102px !important;
-  margin-bottom: 108px !important;
+  margin-top: 34px !important;
+  margin-bottom: 14px !important;
 }
 
 .services-clean-intro {
@@ -2173,7 +2173,7 @@ textarea:focus {
 /* title "Servicii" + cards */
 .services-clean-section {
   margin-top: 0 !important;
-  padding-top: 84px !important;
+  padding-top: 8px !important;
 }
 
 .services-clean-grid {
@@ -2275,13 +2275,13 @@ textarea:focus {
 
 @media (max-width: 900px) {
   .services-clean-hero {
-    margin-top: 78px !important;
-    margin-bottom: 84px !important;
+    margin-top: 26px !important;
+    margin-bottom: 12px !important;
   }
 
   .services-clean-section {
     margin-top: 0 !important;
-    padding-top: 60px !important;
+    padding-top: 6px !important;
   }
 
   .services-clean-grid {
