@@ -4274,3 +4274,14 @@ main,
     aspect-ratio: 1 / 1 !important;
   }
 }
+
+/* ===== SERVICES PAGE TOP GAP FIX ===== */
+.services-clean-hero {
+  margin-top: 20px !important;
+}
+
+@media (max-width: 900px) {
+  .services-clean-hero {
+    margin-top: 16px !important;
+  }
+}
