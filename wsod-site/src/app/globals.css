@@ -2297,6 +2297,13 @@ textarea:focus {
     font-size: 16px;
   }
 }
+.services-clean-section {
+  margin-top: 52px !important;
+}
+
+.services-clean-section h2 {
+  margin-bottom: 24px !important;
+}
 /* =========================
    FOOTER
    ========================= */
