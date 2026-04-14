@@ -2148,69 +2148,68 @@ textarea:focus {
   font-size: 15px;
 }
 
-/* clean hero spacing, no !important needed */
-.services-page .services-clean-hero {
+/* top of services page */
+.services-clean-hero {
   display: grid;
   gap: 18px;
-  margin-top: 34px;
+  margin-top: 28px;
   margin-bottom: 36px;
 }
 
-.services-page .services-clean-intro {
+.services-clean-intro {
   display: grid;
   gap: 10px;
   max-width: 820px;
 }
 
-.services-page .services-clean-intro h1,
-.services-page .services-clean-hero h1 {
-  margin: 0 0 18px;
-}
-
-.services-page .services-clean-intro p,
-.services-page .services-clean-hero p {
-  margin: 0 0 26px;
+.services-clean-intro p {
+  margin: 0;
   color: rgba(255, 255, 255, 0.78);
   font-size: 18px;
   line-height: 1.7;
 }
 
-.services-page .services-clean-section {
-  margin-top: 54px;
+/* section title "Servicii" lower than intro */
+.services-clean-section {
+  margin-top: 52px;
 }
 
-.services-page .services-clean-grid {
+.services-clean-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
-.services-page .services-clean-card {
+.services-clean-card {
+  position: relative;
+  min-height: 220px;
+  display: grid;
+  gap: 14px;
+  padding: 26px;
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03)),
     linear-gradient(90deg, rgba(42, 56, 255, 0.1), rgba(0, 0, 0, 0) 40%, rgba(120, 0, 60, 0.1));
-  padding: 26px;
-  display: grid;
-  gap: 14px;
-  min-height: 220px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 16px 34px rgba(0, 0, 0, 0.22);
 }
 
-.services-page .services-clean-card h3 {
+.services-clean-card h3 {
   margin: 0;
   font-size: clamp(28px, 3vw, 42px);
   line-height: 1.02;
 }
 
-.services-page .services-clean-card p {
+.services-clean-card p {
   margin: 0;
   color: rgba(255, 255, 255, 0.82);
   font-size: 17px;
   line-height: 1.65;
 }
 
-.services-page .services-clean-card span {
+.services-clean-card span {
   display: inline-flex;
   align-self: end;
   width: fit-content;
@@ -2221,38 +2220,38 @@ textarea:focus {
   font-size: 13px;
 }
 
-.services-page .packages-grid .services-clean-card {
+.packages-grid .services-clean-card {
   min-height: 190px;
 }
 
-.services-page .package-prices {
+.package-prices {
   display: grid;
   gap: 4px;
 }
 
-.services-page .package-prices small {
+.package-prices small {
   color: rgba(255, 255, 255, 0.45);
   text-decoration: line-through;
   font-size: 15px;
 }
 
-.services-page .package-prices strong {
+.package-prices strong {
   font-size: 30px;
   line-height: 1;
 }
 
-.services-page .services-stack-section {
+.services-stack-section {
   display: grid;
   gap: 14px;
   margin-top: 24px;
 }
 
-.services-page .services-stack-grid {
+.services-stack-grid {
   display: grid;
   gap: 14px;
 }
 
-.services-page .services-stack-card {
+.services-stack-card {
   display: grid;
   gap: 8px;
   padding: 24px;
@@ -2266,42 +2265,38 @@ textarea:focus {
     0 16px 34px rgba(0, 0, 0, 0.22);
 }
 
-.services-page .services-stack-card strong {
+.services-stack-card strong {
   font-size: clamp(22px, 3vw, 46px);
   line-height: 1;
   letter-spacing: -0.04em;
 }
 
 @media (max-width: 900px) {
-  .services-page .services-clean-hero {
-    margin-top: 42px;
-    margin-bottom: 30px;
+  .services-clean-hero {
+    margin-top: 22px;
+    margin-bottom: 28px;
   }
 
-  .services-page .services-clean-intro h1,
-  .services-page .services-clean-hero h1 {
-    margin-bottom: 14px;
+  .services-clean-section {
+    margin-top: 40px;
   }
 
-  .services-page .services-clean-intro p,
-  .services-page .services-clean-hero p {
-    margin-bottom: 20px;
-    font-size: 16px;
-  }
-
-  .services-page .services-clean-grid {
+  .services-clean-grid {
     grid-template-columns: 1fr;
   }
 
-  .services-page .services-clean-card {
+  .services-clean-card {
     min-height: unset;
   }
 
-  .services-page .services-clean-card h3 {
+  .services-clean-card h3 {
     font-size: clamp(22px, 7vw, 34px);
   }
-}
 
+  .services-clean-intro p {
+    font-size: 16px;
+  }
+}
 /* =========================
    FOOTER
    ========================= */
