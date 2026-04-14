@@ -9,6 +9,7 @@ datasource db {
 model Brand {
   id              String      @id @default(cuid())
   name            String
+  logoUrl         String?
   slug            String      @unique
   coverImageUrl   String?
   hoverPreview1   String?
@@ -43,6 +44,7 @@ model PersonModel {
 model AudioProfile {
   id              String      @id @default(cuid())
   name            String
+  logoUrl         String?
   slug            String      @unique
   kind            String
   coverImageUrl   String?
@@ -144,6 +146,8 @@ model SiteSectionVisibility {
 
 model SiteContent {
   id               String   @id
+  homeLogoUrl      String?
+  homeLogoUrl      String?
   servicesEyebrow  String?
   servicesTitle    String?
   servicesList     String?

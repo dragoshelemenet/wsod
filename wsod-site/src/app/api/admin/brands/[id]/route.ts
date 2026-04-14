@@ -19,6 +19,7 @@ export async function PUT(request: NextRequest, context: Context) {
 
     const name = String(body?.name || "").trim();
     const slug = normalizeSlug(String(body?.slug || ""));
+    const logoUrl = String(body?.logoUrl || "").trim();
     const coverImageUrl = String(body?.coverImageUrl || "").trim();
     const description = String(body?.description || "").trim();
     const isVisible = Boolean(body?.isVisible);
@@ -49,6 +50,7 @@ export async function PUT(request: NextRequest, context: Context) {
       data: {
         name,
         slug,
+        logoUrl: logoUrl || null,
         coverImageUrl: coverImageUrl || null,
         description: description || null,
         isVisible,

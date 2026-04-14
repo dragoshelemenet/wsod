@@ -12,15 +12,13 @@ export async function POST(request: NextRequest) {
 
     const name = String(body?.name || "").trim();
     const slug = normalizeSlug(String(body?.slug || ""));
+    const logoUrl = String(body?.logoUrl || "").trim();
     const coverImageUrl = String(body?.coverImageUrl || "").trim();
     const description = String(body?.description || "").trim();
     const isVisible = Boolean(body?.isVisible);
 
     if (!name || !slug) {
-      return NextResponse.json(
-        { error: "Name and slug are required." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Name and slug are required." }, { status: 400 });
     }
 
     const existing = await prisma.brand.findUnique({
@@ -28,16 +26,14 @@ export async function POST(request: NextRequest) {
     });
 
     if (existing) {
-      return NextResponse.json(
-        { error: "Slug already exists." },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: "Slug already exists." }, { status: 409 });
     }
 
     const brand = await prisma.brand.create({
       data: {
         name,
         slug,
+        logoUrl: logoUrl || null,
         coverImageUrl: coverImageUrl || null,
         description: description || null,
         isVisible,
@@ -56,9 +52,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, brand });
   } catch (error) {
     console.error("CREATE_BRAND_ERROR", error);
-    return NextResponse.json(
-      { error: "Nu s-a putut crea brandul." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Nu s-a putut crea brandul." }, { status: 500 });
   }
 }

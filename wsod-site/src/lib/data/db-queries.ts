@@ -137,7 +137,7 @@ export async function getBrandsWithHomePreviewFromDb() {
         previewImages,
       };
     })
-    .filter((brand) => brand.previewImages.length > 0 || brand.coverImageUrl);
+    .filter((brand) => brand.previewImages.length > 0 || brand.logoUrl || brand.coverImageUrl);
 }
 
 export async function getModelsFromDb() {
@@ -177,7 +177,7 @@ export async function getBrandsWithCategoryPreviewFromDb(category: string) {
         previewImages: staticPreviewImages.length > 0 ? staticPreviewImages : livePreviewImages,
       };
     })
-    .filter((brand) => brand.previewImages.length > 0 || brand.coverImageUrl);
+    .filter((brand) => brand.previewImages.length > 0 || brand.logoUrl || brand.coverImageUrl);
 }
 
 export async function getModelsWithCategoryPreviewFromDb(category: string) {

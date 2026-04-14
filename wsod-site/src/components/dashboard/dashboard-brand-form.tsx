@@ -8,6 +8,7 @@ type DashboardBrandFormProps = {
     id: string;
     name: string;
     slug: string;
+    logoUrl?: string | null;
     coverImageUrl?: string | null;
     description?: string | null;
     isVisible?: boolean;
@@ -26,6 +27,7 @@ export function DashboardBrandForm({
 
   const [name, setName] = useState(brand?.name || "");
   const [slug, setSlug] = useState(brand?.slug || "");
+  const [logoUrl, setLogoUrl] = useState(brand?.logoUrl || "");
   const [coverImageUrl, setCoverImageUrl] = useState(brand?.coverImageUrl || "");
   const [description, setDescription] = useState(brand?.description || "");
   const [isVisible, setIsVisible] = useState(brand?.isVisible ?? true);
@@ -53,8 +55,8 @@ export function DashboardBrandForm({
         throw new Error(data?.error || "Upload failed");
       }
 
-      setCoverImageUrl(data.url || "");
-      setMessage("Imagine încărcată.");
+      setLogoUrl(data.url || "");
+      setMessage("Logo uploaded.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -77,6 +79,7 @@ export function DashboardBrandForm({
       const payload = {
         name,
         slug,
+        logoUrl,
         coverImageUrl,
         description,
         isVisible,
@@ -108,6 +111,7 @@ export function DashboardBrandForm({
       if (mode === "create") {
         setName("");
         setSlug("");
+        setLogoUrl("");
         setCoverImageUrl("");
         setDescription("");
         setIsVisible(true);
@@ -155,10 +159,10 @@ export function DashboardBrandForm({
         </div>
 
         <div className="admin-form-field">
-          <label>Brand image</label>
+          <label>Logo image</label>
 
           <div
-            className={`admin-dropzone${uploading ? " is-dragover" : ""}`}
+            className="admin-dropzone"
             onClick={() => fileInputRef.current?.click()}
             onDragOver={(event) => {
               event.preventDefault();
@@ -179,28 +183,55 @@ export function DashboardBrandForm({
             />
 
             <div className="admin-dropzone-copy">
-              <strong>{uploading ? "Uploading..." : "Drag & drop image here"}</strong>
+              <strong>{uploading ? "Uploading..." : "Drag & drop logo here"}</strong>
               <span>or click to choose file</span>
             </div>
           </div>
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor={`brand-cover-${mode}-${brand?.id || "new"}`}>Image URL</label>
+          <label htmlFor={`brand-logo-${mode}-${brand?.id || "new"}`}>Logo URL</label>
+          <input
+            id={`brand-logo-${mode}-${brand?.id || "new"}`}
+            value={logoUrl}
+            onChange={(event) => setLogoUrl(event.target.value)}
+            placeholder="/uploads/brands/..."
+          />
+        </div>
+
+        {logoUrl ? (
+          <div
+            style={{
+              width: "220px",
+              maxWidth: "100%",
+              padding: "12px",
+              borderRadius: "16px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.04)",
+            }}
+          >
+            <img
+              src={logoUrl}
+              alt={name || "Brand logo"}
+              style={{
+                width: "100%",
+                maxHeight: "120px",
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
+          </div>
+        ) : null}
+
+        <div className="admin-form-field">
+          <label htmlFor={`brand-cover-${mode}-${brand?.id || "new"}`}>Cover image URL</label>
           <input
             id={`brand-cover-${mode}-${brand?.id || "new"}`}
             value={coverImageUrl}
             onChange={(event) => setCoverImageUrl(event.target.value)}
-            placeholder="/uploads/brands/..."
-            required
+            placeholder="/uploads/brands/cover..."
           />
         </div>
-
-        {coverImageUrl ? (
-          <div className="admin-media-edit-preview">
-            <img src={coverImageUrl} alt={name || "Brand preview"} />
-          </div>
-        ) : null}
 
         <div className="admin-form-field">
           <label htmlFor={`brand-description-${mode}-${brand?.id || "new"}`}>Description</label>

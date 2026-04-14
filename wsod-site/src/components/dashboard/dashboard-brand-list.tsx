@@ -7,6 +7,7 @@ type BrandItem = {
   id: string;
   name: string;
   slug: string;
+  logoUrl?: string | null;
   coverImageUrl?: string | null;
   description?: string | null;
   isVisible?: boolean;
@@ -47,9 +48,9 @@ export function DashboardBrandList({ brands }: DashboardBrandListProps) {
               </div>
             </div>
 
-            {brand.coverImageUrl ? (
+            {brand.logoUrl || brand.coverImageUrl ? (
               <div className="admin-media-edit-preview">
-                <img src={brand.coverImageUrl} alt={brand.name} />
+                <img src={brand.logoUrl || brand.coverImageUrl || ""} alt={brand.name} />
               </div>
             ) : null}
 

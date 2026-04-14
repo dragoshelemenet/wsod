@@ -22,6 +22,7 @@ export default async function StudioDashboardBrandsPage() {
         brands={brands.map((brand) => ({
           id: brand.id,
           name: brand.name,
+          logoUrl: brand.logoUrl,
           slug: brand.slug,
           coverImageUrl: brand.coverImageUrl,
           description: brand.description,
