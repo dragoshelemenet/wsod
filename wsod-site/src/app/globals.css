@@ -4141,7 +4141,7 @@ body:has(.public-navbar) .section-mini-head {
 
 /* Foto / Video / Website / Grafica / Audio */
 .inner-page .public-shell-head {
-  margin-top: 0px !important;
+  margin-top: -5px !important;
 }
 
 /* Brands / detail pages */
@@ -4163,7 +4163,7 @@ body:has(.public-navbar) .section-mini-head {
 
 @media (max-width: 900px) {
   .inner-page .public-shell-head {
-    margin-top: 10px !important;
+    margin-top: -5px !important;
   }
 
   .inner-page .inner-section > h1:first-child {
