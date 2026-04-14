@@ -2163,10 +2163,10 @@ textarea:focus {
   font-size: 15px;
 }
 
-/* services page specific spacing */
+/* mută doar titlul mare + intro mai jos pe pagina servicii */
 .services-page .public-shell-head {
-  margin-top: 56px;
-  margin-bottom: 22px;
+  margin-top: 84px;
+  margin-bottom: 26px;
 }
 
 .services-page .public-shell-head h1 {
@@ -2175,12 +2175,13 @@ textarea:focus {
 }
 
 .services-page .public-shell-head p {
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
 }
 
+/* nu mai împinge inutil titlul "Servicii" */
 .services-page .services-clean-section {
   margin-top: 0;
-  padding-top: 34px;
+  padding-top: 8px;
 }
 
 .services-clean-hero {
@@ -2306,8 +2307,8 @@ textarea:focus {
 
 @media (max-width: 900px) {
   .services-page .public-shell-head {
-    margin-top: 34px;
-    margin-bottom: 18px;
+    margin-top: 52px;
+    margin-bottom: 22px;
   }
 
   .services-page .public-shell-head h1 {
@@ -2319,7 +2320,7 @@ textarea:focus {
   }
 
   .services-page .services-clean-section {
-    padding-top: 24px;
+    padding-top: 6px;
   }
 
   .services-clean-hero {
