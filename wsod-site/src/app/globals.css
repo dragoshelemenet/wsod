@@ -2071,7 +2071,6 @@ textarea:focus {
   font-size: 14px;
   backdrop-filter: blur(8px);
 }
-
 /* =========================
    SERVICES
    ========================= */
@@ -2149,37 +2148,44 @@ textarea:focus {
   font-size: 15px;
 }
 
-.services-clean-hero {
+/* clean hero spacing, no !important needed */
+.services-page .services-clean-hero {
   display: grid;
   gap: 18px;
-  margin-top: 20px;
+  margin-top: 34px;
   margin-bottom: 36px;
 }
 
-.services-clean-intro {
+.services-page .services-clean-intro {
   display: grid;
   gap: 10px;
   max-width: 820px;
 }
 
-.services-clean-intro p {
-  margin: 0;
+.services-page .services-clean-intro h1,
+.services-page .services-clean-hero h1 {
+  margin: 0 0 18px;
+}
+
+.services-page .services-clean-intro p,
+.services-page .services-clean-hero p {
+  margin: 0 0 26px;
   color: rgba(255, 255, 255, 0.78);
   font-size: 18px;
   line-height: 1.7;
 }
 
-.services-clean-section {
+.services-page .services-clean-section {
   margin-top: 34px;
 }
 
-.services-clean-grid {
+.services-page .services-clean-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
-.services-clean-card {
+.services-page .services-clean-card {
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background:
@@ -2191,20 +2197,20 @@ textarea:focus {
   min-height: 220px;
 }
 
-.services-clean-card h3 {
+.services-page .services-clean-card h3 {
   margin: 0;
   font-size: clamp(28px, 3vw, 42px);
   line-height: 1.02;
 }
 
-.services-clean-card p {
+.services-page .services-clean-card p {
   margin: 0;
   color: rgba(255, 255, 255, 0.82);
   font-size: 17px;
   line-height: 1.65;
 }
 
-.services-clean-card span {
+.services-page .services-clean-card span {
   display: inline-flex;
   align-self: end;
   width: fit-content;
@@ -2215,38 +2221,38 @@ textarea:focus {
   font-size: 13px;
 }
 
-.packages-grid .services-clean-card {
+.services-page .packages-grid .services-clean-card {
   min-height: 190px;
 }
 
-.package-prices {
+.services-page .package-prices {
   display: grid;
   gap: 4px;
 }
 
-.package-prices small {
+.services-page .package-prices small {
   color: rgba(255, 255, 255, 0.45);
   text-decoration: line-through;
   font-size: 15px;
 }
 
-.package-prices strong {
+.services-page .package-prices strong {
   font-size: 30px;
   line-height: 1;
 }
 
-.services-stack-section {
+.services-page .services-stack-section {
   display: grid;
   gap: 14px;
   margin-top: 24px;
 }
 
-.services-stack-grid {
+.services-page .services-stack-grid {
   display: grid;
   gap: 14px;
 }
 
-.services-stack-card {
+.services-page .services-stack-card {
   display: grid;
   gap: 8px;
   padding: 24px;
@@ -2260,10 +2266,40 @@ textarea:focus {
     0 16px 34px rgba(0, 0, 0, 0.22);
 }
 
-.services-stack-card strong {
+.services-page .services-stack-card strong {
   font-size: clamp(22px, 3vw, 46px);
   line-height: 1;
   letter-spacing: -0.04em;
+}
+
+@media (max-width: 900px) {
+  .services-page .services-clean-hero {
+    margin-top: 28px;
+    margin-bottom: 30px;
+  }
+
+  .services-page .services-clean-intro h1,
+  .services-page .services-clean-hero h1 {
+    margin-bottom: 14px;
+  }
+
+  .services-page .services-clean-intro p,
+  .services-page .services-clean-hero p {
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .services-page .services-clean-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-page .services-clean-card {
+    min-height: unset;
+  }
+
+  .services-page .services-clean-card h3 {
+    font-size: clamp(22px, 7vw, 34px);
+  }
 }
 
 /* =========================
