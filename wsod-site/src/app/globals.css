@@ -4139,19 +4139,19 @@ body:has(.public-navbar) .section-mini-head {
    INNER PAGE TITLE SPACING
    ========================= */
 
-/* Foto / Video / Website / Grafica */
+/* Foto / Video / Website / Grafica / Audio */
 .inner-page .public-shell-head {
-  margin-top: 35px !important;
+  margin-top: 12px !important;
 }
 
-/* Brands / detail pages care au h1 direct în inner-section */
+/* Brands / detail pages */
 .inner-page .inner-section > h1:first-child {
   margin-top: 52px !important;
 }
 
 /* dacă există category hero separat */
 .inner-page .category-hero {
-  margin-top: 35px !important;
+  margin-top: 12px !important;
 }
 
 /* text sub titlu */
@@ -4163,7 +4163,7 @@ body:has(.public-navbar) .section-mini-head {
 
 @media (max-width: 900px) {
   .inner-page .public-shell-head {
-    margin-top: 34px !important;
+    margin-top: 10px !important;
   }
 
   .inner-page .inner-section > h1:first-child {
@@ -4171,6 +4171,6 @@ body:has(.public-navbar) .section-mini-head {
   }
 
   .inner-page .category-hero {
-    margin-top: 34px !important;
+    margin-top: 10px !important;
   }
 }
