@@ -10,7 +10,6 @@ model Brand {
   id              String      @id @default(cuid())
   name            String
   slug            String      @unique
-  logoUrl         String?
   coverImageUrl   String?
   hoverPreview1   String?
   hoverPreview2   String?
@@ -145,7 +144,6 @@ model SiteSectionVisibility {
 
 model SiteContent {
   id               String   @id
-  homeLogoUrl      String?
   servicesEyebrow  String?
   servicesTitle    String?
   servicesList     String?

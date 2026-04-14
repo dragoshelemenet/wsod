@@ -1,66 +1,72 @@
-import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
+"use client";
 
-type DashboardBrandListItem = {
+import { useState } from "react";
+import { DashboardBrandForm } from "./dashboard-brand-form";
+
+type BrandItem = {
   id: string;
   name: string;
   slug: string;
-  logoUrl: string | null;
-  coverImageUrl: string | null;
-  description: string | null;
-  isVisible: boolean;
-  mediaItems?: Array<{
-    thumbnailUrl: string | null;
-    previewUrl: string | null;
-    fileUrl: string | null;
-  }>;
+  coverImageUrl?: string | null;
+  description?: string | null;
+  isVisible?: boolean;
 };
 
 type DashboardBrandListProps = {
-  items: DashboardBrandListItem[];
+  brands: BrandItem[];
 };
 
-export function DashboardBrandList({ items }: DashboardBrandListProps) {
-  if (!items.length) {
-    return (
-      <div className="empty-state-block">
-        <h3>No brands yet</h3>
-        <p>Nu exista branduri in baza de date.</p>
-      </div>
-    );
+export function DashboardBrandList({ brands }: DashboardBrandListProps) {
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  if (!brands.length) {
+    return <p className="admin-helper-text">Nu există branduri încă.</p>;
   }
 
   return (
-    <div className="admin-list">
-      {items.map((item) => (
-        <article key={item.id} className="admin-list-item">
-          <div className="admin-list-copy">
-            <strong>{item.name}</strong>
-            <span>Slug: {item.slug}</span>
-            <span>Vizibil: {item.isVisible ? "Da" : "Nu"}</span>
-            {item.description ? <span>{item.description}</span> : null}
-            <DashboardDeleteButton
-              endpoint={`/api/admin/brands/${item.id}`}
-              label={item.name}
-            />
-          </div>
+    <div className="admin-stack">
+      {brands.map((brand) => {
+        const isOpen = openId === brand.id;
 
-          <div className="admin-folder-toggle-visual">
-            {item.logoUrl || item.coverImageUrl || item.mediaItems?.[0]?.thumbnailUrl || item.mediaItems?.[0]?.previewUrl || item.mediaItems?.[0]?.fileUrl ? (
-              <img
-                src={
-                  item.logoUrl ||
-                  item.coverImageUrl ||
-                  item.mediaItems?.[0]?.thumbnailUrl ||
-                  item.mediaItems?.[0]?.previewUrl ||
-                  item.mediaItems?.[0]?.fileUrl ||
-                  ""
-                }
-                alt={item.name}
+        return (
+          <div key={brand.id} className="admin-list-item">
+            <div className="admin-card-head">
+              <div className="admin-list-copy">
+                <strong>{brand.name}</strong>
+                <span>{brand.slug}</span>
+              </div>
+
+              <div className="admin-inline-actions">
+                <button
+                  type="button"
+                  className="admin-secondary-button"
+                  onClick={() => setOpenId(isOpen ? null : brand.id)}
+                >
+                  {isOpen ? "Close" : "Edit"}
+                </button>
+              </div>
+            </div>
+
+            {brand.coverImageUrl ? (
+              <div className="admin-media-edit-preview">
+                <img src={brand.coverImageUrl} alt={brand.name} />
+              </div>
+            ) : null}
+
+            {brand.description ? (
+              <p className="admin-helper-text">{brand.description}</p>
+            ) : null}
+
+            {isOpen ? (
+              <DashboardBrandForm
+                mode="edit"
+                brand={brand}
+                onDone={() => setOpenId(null)}
               />
             ) : null}
           </div>
-        </article>
-      ))}
+        );
+      })}
     </div>
   );
 }

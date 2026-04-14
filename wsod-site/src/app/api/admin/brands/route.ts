@@ -1,84 +1,64 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db/prisma";
-import { hasAdminSession } from "@/lib/auth/session";
+import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/db/prisma";
 
-function slugify(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+function normalizeSlug(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, "-");
 }
 
-export async function POST(request: Request) {
-  const isLoggedIn = await hasAdminSession();
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
 
-  if (!isLoggedIn) {
-    return NextResponse.json({ ok: false, message: "Unauthorized" }, { status: 401 });
-  }
+    const name = String(body?.name || "").trim();
+    const slug = normalizeSlug(String(body?.slug || ""));
+    const coverImageUrl = String(body?.coverImageUrl || "").trim();
+    const description = String(body?.description || "").trim();
+    const isVisible = Boolean(body?.isVisible);
 
-  const body = await request.json();
+    if (!name || !slug) {
+      return NextResponse.json(
+        { error: "Name and slug are required." },
+        { status: 400 }
+      );
+    }
 
-  const name = String(body.name || "").trim();
-  const slug = slugify(String(body.slug || body.name || ""));
-  const logoUrl = String(body.logoUrl || "").trim();
-  const coverImageUrl = String(body.coverImageUrl || "").trim();
-  const hoverPreview1 = String(body.hoverPreview1 || "").trim();
-  const hoverPreview2 = String(body.hoverPreview2 || "").trim();
-  const hoverPreview3 = String(body.hoverPreview3 || "").trim();
-  const description = String(body.description || "").trim();
-  const seoTitle = String(body.seoTitle || "").trim();
-  const metaDescription = String(body.metaDescription || "").trim();
+    const existing = await prisma.brand.findUnique({
+      where: { slug },
+    });
 
-  if (!name) {
+    if (existing) {
+      return NextResponse.json(
+        { error: "Slug already exists." },
+        { status: 409 }
+      );
+    }
+
+    const brand = await prisma.brand.create({
+      data: {
+        name,
+        slug,
+        coverImageUrl: coverImageUrl || null,
+        description: description || null,
+        isVisible,
+      },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/brand");
+    revalidatePath("/foto");
+    revalidatePath("/video");
+    revalidatePath("/grafica");
+    revalidatePath("/website");
+    revalidatePath("/studio-dashboard");
+    revalidatePath("/studio-dashboard/brands");
+
+    return NextResponse.json({ ok: true, brand });
+  } catch (error) {
+    console.error("CREATE_BRAND_ERROR", error);
     return NextResponse.json(
-      { ok: false, message: "Numele brandului este obligatoriu." },
-      { status: 400 }
+      { error: "Nu s-a putut crea brandul." },
+      { status: 500 }
     );
   }
-
-  if (!slug) {
-    return NextResponse.json(
-      { ok: false, message: "Slug invalid pentru brand." },
-      { status: 400 }
-    );
-  }
-
-  const existing = await prisma.brand.findUnique({
-    where: { slug },
-  });
-
-  if (existing) {
-    return NextResponse.json(
-      { ok: false, message: "Brandul există deja." },
-      { status: 409 }
-    );
-  }
-
-  const brand = await prisma.brand.create({
-    data: {
-      name,
-      slug,
-      logoUrl: logoUrl || null,
-      coverImageUrl: coverImageUrl || null,
-      hoverPreview1: hoverPreview1 || null,
-      hoverPreview2: hoverPreview2 || null,
-      hoverPreview3: hoverPreview3 || null,
-      description: description || null,
-      seoTitle: seoTitle || null,
-      metaDescription: metaDescription || null,
-    },
-  });
-
-  revalidatePath("/studio-dashboard");
-  revalidatePath("/");
-  revalidatePath("/foto");
-  revalidatePath("/video");
-
-  return NextResponse.json({
-    ok: true,
-    message: "Brand creat.",
-    brand,
-  });
 }

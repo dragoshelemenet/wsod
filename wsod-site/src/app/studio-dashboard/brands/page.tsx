@@ -1,18 +1,33 @@
+import { prisma } from "@/lib/db/prisma";
 import { DashboardBrandForm } from "@/components/dashboard/dashboard-brand-form";
 import { DashboardBrandList } from "@/components/dashboard/dashboard-brand-list";
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { getDashboardBrands } from "@/lib/dashboard/queries";
 
-export default async function DashboardBrandsPage() {
-  const items = await getDashboardBrands();
+export default async function StudioDashboardBrandsPage() {
+  const brands = await prisma.brand.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
-    <DashboardShell
-      title="Brands"
-      description="Administrare branduri publice."
-    >
+    <div className="dashboard-shell">
+      <div className="dashboard-shell-head">
+        <h1>Brands</h1>
+        <p>Create, upload and edit brands from one place.</p>
+      </div>
+
       <DashboardBrandForm />
-      <DashboardBrandList items={items} />
-    </DashboardShell>
+
+      <DashboardBrandList
+        brands={brands.map((brand) => ({
+          id: brand.id,
+          name: brand.name,
+          slug: brand.slug,
+          coverImageUrl: brand.coverImageUrl,
+          description: brand.description,
+          isVisible: brand.isVisible,
+        }))}
+      />
+    </div>
   );
 }

@@ -48,7 +48,6 @@ export interface FolderItem {
   slug: string;
   kind: FolderKind;
   coverUrl?: string | null;
-  logoUrl?: string | null;
   itemsCount?: number;
   isPublished?: boolean;
 }
