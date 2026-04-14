@@ -373,7 +373,7 @@ header:has(.public-navbar) {
 }
 
 body:has(.public-navbar) .public-shell-head {
-  margin-top: 2px;
+  margin-top: 28px;
   margin-bottom: 22px;
 }
 
@@ -3354,7 +3354,7 @@ body:has(.public-navbar) .public-page {
 }
 
 body:has(.public-navbar) .public-shell-head {
-  margin-top: 0;
+  margin-top: 18px;
   margin-bottom: 18px;
 }
 
