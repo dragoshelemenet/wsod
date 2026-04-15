@@ -1,0 +1,69 @@
+"use client";
+
+import { useState } from "react";
+
+export default function HeroClient({
+  logoUrl,
+  contactHref,
+  claimHref,
+  contactLabel,
+  claimLabel,
+}: {
+  logoUrl: string;
+  contactHref: string;
+  claimHref: string;
+  contactLabel: string;
+  claimLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <section className="hero hero-home-clean">
+      <div className="hero-home-mobilebar">
+        <button
+          type="button"
+          className={`hero-mobile-menu-btn${open ? " is-open" : ""}`}
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open menu"
+          aria-expanded={open}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <div className={`hero-mobile-menu${open ? " is-open" : ""}`}>
+          <a href="/servicii-preturi" className="hero-mobile-menu-link">
+            Servicii & prețuri
+          </a>
+          <a href={contactHref} className="hero-mobile-menu-link">
+            {contactLabel}
+          </a>
+          <a
+            href={claimHref}
+            className="hero-mobile-menu-link hero-mobile-menu-link-primary"
+          >
+            {claimLabel}
+          </a>
+        </div>
+      </div>
+
+      <div className="hero-logo-wrap hero-logo-wrap-reference">
+        <div className="hero-logo-visual-shell">
+          {logoUrl ? (
+            <img src={logoUrl} alt="WSOD logo" className="hero-logo-image" />
+          ) : (
+            <>
+              <div className="hero-logo">WSOD</div>
+              <div className="hero-logo-sub">PROD</div>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="hero-copy hero-copy-reference">
+        <h1>agenție media digitală &amp; video</h1>
+      </div>
+    </section>
+  );
+}
