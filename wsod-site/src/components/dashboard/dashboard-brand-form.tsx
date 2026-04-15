@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type DashboardBrandFormProps = {
   mode?: "create" | "edit";
@@ -17,12 +17,17 @@ type DashboardBrandFormProps = {
   onDone?: () => void;
 };
 
+type UploadKind = "logo" | "cover";
+
 export function DashboardBrandForm({
   mode = "create",
   brand = null,
   onDone,
 }: DashboardBrandFormProps) {
   const router = useRouter();
+
+  const logoInputRef = useRef<HTMLInputElement | null>(null);
+  const coverInputRef = useRef<HTMLInputElement | null>(null);
 
   const [name, setName] = useState(brand?.name || "");
   const [slug, setSlug] = useState(brand?.slug || "");
@@ -32,6 +37,77 @@ export function DashboardBrandForm({
   const [isVisible, setIsVisible] = useState(brand?.isVisible ?? true);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [dragLogo, setDragLogo] = useState(false);
+  const [dragCover, setDragCover] = useState(false);
+
+  async function uploadImage(file: File, kind: UploadKind) {
+    if (!file.type.startsWith("image/")) {
+      throw new Error("Poți urca doar imagini.");
+    }
+
+    if (kind === "logo") setUploadingLogo(true);
+    if (kind === "cover") setUploadingCover(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/studio/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data?.url) {
+        throw new Error(data?.error || "Upload failed.");
+      }
+
+      if (kind === "logo") setLogoUrl(data.url);
+      if (kind === "cover") setCoverImageUrl(data.url);
+    } finally {
+      if (kind === "logo") setUploadingLogo(false);
+      if (kind === "cover") setUploadingCover(false);
+    }
+  }
+
+  async function onFileChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+    kind: UploadKind
+  ) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      await uploadImage(file, kind);
+      setMessage(kind === "logo" ? "Logo urcat cu succes." : "Cover urcat cu succes.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Upload failed.");
+    } finally {
+      event.target.value = "";
+    }
+  }
+
+  async function onDropFile(
+    event: React.DragEvent<HTMLDivElement>,
+    kind: UploadKind
+  ) {
+    event.preventDefault();
+    if (kind === "logo") setDragLogo(false);
+    if (kind === "cover") setDragCover(false);
+
+    const file = event.dataTransfer.files?.[0];
+    if (!file) return;
+
+    try {
+      await uploadImage(file, kind);
+      setMessage(kind === "logo" ? "Logo urcat cu succes." : "Cover urcat cu succes.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Upload failed.");
+    }
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,6 +138,7 @@ export function DashboardBrandForm({
         const data = await response.json().catch(() => null);
         throw new Error(
           data?.error ||
+            data?.message ||
             (isEdit ? "Nu s-a putut actualiza brandul." : "Nu s-a putut crea brandul.")
         );
       }
@@ -126,6 +203,35 @@ export function DashboardBrandForm({
           />
         </div>
 
+        <div
+          className={`admin-dropzone ${dragLogo ? "is-dragover" : ""}`}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setDragLogo(true);
+          }}
+          onDragLeave={() => setDragLogo(false)}
+          onDrop={(event) => void onDropFile(event, "logo")}
+          onClick={() => logoInputRef.current?.click()}
+        >
+          <input
+            ref={logoInputRef}
+            type="file"
+            accept="image/*"
+            className="admin-dropzone-input"
+            onChange={(event) => void onFileChange(event, "logo")}
+          />
+          <div className="admin-dropzone-copy">
+            <strong>{uploadingLogo ? "Uploading logo..." : "Drag & drop logo here"}</strong>
+            <span>or click to upload</span>
+          </div>
+        </div>
+
+        {logoUrl ? (
+          <div className="admin-media-edit-preview">
+            <img src={logoUrl} alt={name || "Brand logo"} style={{ objectFit: "contain", padding: 16 }} />
+          </div>
+        ) : null}
+
         <div className="admin-form-field">
           <label htmlFor={`brand-cover-${brand?.id || "new"}`}>Cover image URL</label>
           <input
@@ -135,6 +241,35 @@ export function DashboardBrandForm({
             placeholder="https://..."
           />
         </div>
+
+        <div
+          className={`admin-dropzone ${dragCover ? "is-dragover" : ""}`}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setDragCover(true);
+          }}
+          onDragLeave={() => setDragCover(false)}
+          onDrop={(event) => void onDropFile(event, "cover")}
+          onClick={() => coverInputRef.current?.click()}
+        >
+          <input
+            ref={coverInputRef}
+            type="file"
+            accept="image/*"
+            className="admin-dropzone-input"
+            onChange={(event) => void onFileChange(event, "cover")}
+          />
+          <div className="admin-dropzone-copy">
+            <strong>{uploadingCover ? "Uploading cover..." : "Drag & drop cover here"}</strong>
+            <span>or click to upload</span>
+          </div>
+        </div>
+
+        {coverImageUrl ? (
+          <div className="admin-media-edit-preview">
+            <img src={coverImageUrl} alt={name || "Brand cover"} />
+          </div>
+        ) : null}
 
         <div className="admin-form-field">
           <label htmlFor={`brand-description-${brand?.id || "new"}`}>Description</label>
@@ -157,7 +292,11 @@ export function DashboardBrandForm({
         </label>
 
         <div className="site-content-actions">
-          <button className="admin-submit" type="submit" disabled={loading}>
+          <button
+            className="admin-submit"
+            type="submit"
+            disabled={loading || uploadingLogo || uploadingCover}
+          >
             {loading
               ? mode === "edit"
                 ? "Saving..."
