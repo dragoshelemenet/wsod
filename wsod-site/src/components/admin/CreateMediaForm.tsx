@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { uploadToSpaces } from "@/lib/uploads/upload-to-spaces";
 
 interface CreateMediaFormProps {
   brands: {
@@ -22,18 +23,69 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const payload = {
-      brandSlug: String(formData.get("brandSlug") || ""),
-      category: String(formData.get("category") || ""),
-      type: String(formData.get("type") || ""),
-      title: String(formData.get("title") || ""),
-      description: String(formData.get("description") || ""),
-      date: String(formData.get("date") || ""),
-      fileUrl: String(formData.get("fileUrl") || ""),
-      thumbnail: String(formData.get("thumbnail") || ""),
-    };
-
     try {
+      const brandSlug = String(formData.get("brandSlug") || "").trim();
+      const category = String(formData.get("category") || "").trim();
+
+      const file = formData.get("file") as File | null;
+      const thumbnailFile = formData.get("thumbnailFile") as File | null;
+      const previewFile = formData.get("previewFile") as File | null;
+
+      if (!brandSlug) {
+        throw new Error("Selectează brandul.");
+      }
+
+      if (!category) {
+        throw new Error("Selectează categoria.");
+      }
+
+      if (!file || file.size === 0) {
+        throw new Error("Selectează fișierul principal.");
+      }
+
+      const uploadedMain = await uploadToSpaces({
+        file,
+        brandSlug,
+        category,
+      });
+
+      let thumbnailUrl = "";
+      let previewUrl = "";
+
+      if (thumbnailFile && thumbnailFile.size > 0) {
+        const uploadedThumb = await uploadToSpaces({
+          file: thumbnailFile,
+          brandSlug,
+          category: `${category}-thumb`,
+        });
+        thumbnailUrl = uploadedThumb.url;
+      }
+
+      if (previewFile && previewFile.size > 0) {
+        const uploadedPreview = await uploadToSpaces({
+          file: previewFile,
+          brandSlug,
+          category: `${category}-preview`,
+        });
+        previewUrl = uploadedPreview.url;
+      }
+
+      const payload = {
+        ownerType: "brand",
+        brandSlug,
+        category,
+        type: String(formData.get("type") || "").trim(),
+        title: String(formData.get("title") || "").trim(),
+        description: String(formData.get("description") || "").trim(),
+        seoTitle: String(formData.get("seoTitle") || "").trim(),
+        metaDescription: String(formData.get("metaDescription") || "").trim(),
+        date: String(formData.get("date") || "").trim(),
+        fileUrl: uploadedMain.url,
+        thumbnailUrl,
+        previewUrl,
+        fileNameOriginal: file.name,
+      };
+
       const response = await fetch("/api/admin/media", {
         method: "POST",
         headers: {
@@ -42,13 +94,15 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
         body: JSON.stringify(payload),
       });
 
-      const result = (await response.json()) as { ok: boolean; message: string };
+      const result = (await response.json().catch(() => null)) as
+        | { ok?: boolean; message?: string }
+        | null;
 
-      if (!response.ok || !result.ok) {
-        throw new Error(result.message || "Nu s-a putut crea fișierul.");
+      if (!response.ok || !result?.ok) {
+        throw new Error(result?.message || "Nu s-a putut salva media.");
       }
 
-      setMessage("Fișier creat.");
+      setMessage("Media salvată cu succes.");
       form.reset();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
@@ -112,34 +166,39 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
         </div>
 
         <div className="admin-form-field">
+          <label htmlFor="seoTitle">SEO Title</label>
+          <input id="seoTitle" name="seoTitle" type="text" />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="metaDescription">Meta Description</label>
+          <input id="metaDescription" name="metaDescription" type="text" />
+        </div>
+
+        <div className="admin-form-field">
           <label htmlFor="date">Dată</label>
           <input id="date" name="date" type="date" required />
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="fileUrl">File URL</label>
-          <input
-            id="fileUrl"
-            name="fileUrl"
-            type="text"
-            placeholder="/media/demo/coca-cola/test-photo.jpg"
-          />
+          <label htmlFor="file">Fișier principal</label>
+          <input id="file" name="file" type="file" required />
         </div>
 
         <div className="admin-form-field">
-          <label htmlFor="thumbnail">Thumbnail URL</label>
-          <input
-            id="thumbnail"
-            name="thumbnail"
-            type="text"
-            placeholder="/media/demo/coca-cola/test-photo.jpg"
-          />
+          <label htmlFor="thumbnailFile">Thumbnail</label>
+          <input id="thumbnailFile" name="thumbnailFile" type="file" />
+        </div>
+
+        <div className="admin-form-field">
+          <label htmlFor="previewFile">Preview</label>
+          <input id="previewFile" name="previewFile" type="file" />
         </div>
 
         {message ? <p className="admin-helper-text">{message}</p> : null}
 
         <button type="submit" className="admin-submit" disabled={isSubmitting}>
-          {isSubmitting ? "Se creează..." : "Creează fișier"}
+          {isSubmitting ? "Se încarcă..." : "Creează fișier"}
         </button>
       </form>
     </div>
