@@ -4174,3 +4174,89 @@ body:has(.public-navbar) .section-mini-head {
     margin-top: 10px !important;
   }
 }
+.home-brand-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(133, 159, 255, 0.20), transparent 28%),
+    radial-gradient(circle at 78% 28%, rgba(255, 121, 214, 0.20), transparent 24%),
+    radial-gradient(circle at 68% 76%, rgba(98, 255, 211, 0.12), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(18, 18, 24, 0.95);
+}
+
+.home-brand-art-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.home-brand-art-placeholder {
+  width: 100%;
+  height: 100%;
+}
+/* ===== brand cards same size + centered logos ===== */
+.brands-carousel-grid {
+  align-items: stretch;
+}
+
+.reference-brand-v2-card.home-brand-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  min-height: 520px;
+}
+
+.home-brand-art {
+  aspect-ratio: 1 / 1 !important;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(133, 159, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 78% 28%, rgba(255, 121, 214, 0.16), transparent 24%),
+    radial-gradient(circle at 68% 76%, rgba(98, 255, 211, 0.12), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(18, 18, 24, 0.95);
+}
+
+.home-brand-art-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.reference-brand-v2-name {
+  padding-top: 14px;
+}
+
+@media (max-width: 900px) {
+  .reference-brand-v2-card.home-brand-card {
+    min-height: 260px;
+  }
+
+  .home-brand-art {
+    min-height: 120px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .reference-brand-v2-card.home-brand-card {
+    min-height: 220px;
+  }
+
+  .home-brand-art {
+    min-height: 100px;
+    padding: 10px;
+  }
+}
