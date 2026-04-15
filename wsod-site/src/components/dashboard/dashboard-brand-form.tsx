@@ -19,6 +19,21 @@ type DashboardBrandFormProps = {
 
 type UploadKind = "logo" | "cover";
 
+type PresignResponse = {
+  uploadUrl?: string;
+  publicUrl?: string;
+  fileUrl?: string;
+  error?: string;
+};
+
+function slugify(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export function DashboardBrandForm({
   mode = "create",
   brand = null,
@@ -51,22 +66,48 @@ export function DashboardBrandForm({
     if (kind === "cover") setUploadingCover(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const brandSlug = slugify(slug || name || brand?.slug || brand?.name || "brand");
 
-      const response = await fetch("/api/studio/upload", {
+      const presignResponse = await fetch("/api/uploads/presign", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName: file.name,
+          contentType: file.type || "application/octet-stream",
+          brandSlug,
+          category: kind === "logo" ? "brand-logo" : "brand-cover",
+        }),
       });
 
-      const data = await response.json().catch(() => null);
+      const presignData: PresignResponse = await presignResponse.json().catch(() => ({}));
 
-      if (!response.ok || !data?.url) {
-        throw new Error(data?.error || "Upload failed.");
+      if (!presignResponse.ok) {
+        throw new Error(presignData?.error || "Nu s-a putut genera linkul de upload.");
       }
 
-      if (kind === "logo") setLogoUrl(data.url);
-      if (kind === "cover") setCoverImageUrl(data.url);
+      const uploadUrl = presignData.uploadUrl;
+      const finalUrl = presignData.fileUrl || presignData.publicUrl || "";
+
+      if (!uploadUrl || !finalUrl) {
+        throw new Error("Răspuns invalid de la presign endpoint.");
+      }
+
+      const uploadResult = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type || "application/octet-stream",
+        },
+        body: file,
+      });
+
+      if (!uploadResult.ok) {
+        throw new Error("Upload-ul imaginii a eșuat.");
+      }
+
+      if (kind === "logo") setLogoUrl(finalUrl);
+      if (kind === "cover") setCoverImageUrl(finalUrl);
     } finally {
       if (kind === "logo") setUploadingLogo(false);
       if (kind === "cover") setUploadingCover(false);
@@ -158,7 +199,7 @@ export function DashboardBrandForm({
       router.refresh();
       onDone?.();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Eroare necunoscuta.");
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
     } finally {
       setLoading(false);
     }
@@ -222,7 +263,7 @@ export function DashboardBrandForm({
           />
           <div className="admin-dropzone-copy">
             <strong>{uploadingLogo ? "Uploading logo..." : "Drag & drop logo here"}</strong>
-            <span>or click to upload</span>
+            <span>or click to upload to Spaces</span>
           </div>
         </div>
 
@@ -261,7 +302,7 @@ export function DashboardBrandForm({
           />
           <div className="admin-dropzone-copy">
             <strong>{uploadingCover ? "Uploading cover..." : "Drag & drop cover here"}</strong>
-            <span>or click to upload</span>
+            <span>or click to upload to Spaces</span>
           </div>
         </div>
 
