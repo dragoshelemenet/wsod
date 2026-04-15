@@ -2,16 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-
-type PresignResponse = {
-  ok?: boolean;
-  uploadUrl?: string;
-  fileUrl?: string;
-  publicUrl?: string;
-  key?: string;
-  fields?: Record<string, string>;
-  error?: string;
-};
+import { uploadToSpaces } from "@/lib/uploads/upload-to-spaces";
 
 type UploadItem = {
   id: string;
@@ -23,6 +14,16 @@ type UploadItem = {
   previewUrl: string;
   status: "pending" | "uploading" | "uploaded" | "creating" | "done" | "error";
   error: string;
+};
+
+type BrandOption = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+type DashboardUploadFormProps = {
+  brands: BrandOption[];
 };
 
 function getTypeFromCategory(category: string) {
@@ -50,9 +51,10 @@ function createId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function DashboardUploadForm() {
+export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const router = useRouter();
 
+  const [brandSlug, setBrandSlug] = useState(brands[0]?.slug ?? "");
   const [category, setCategory] = useState("foto");
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
@@ -112,101 +114,26 @@ export function DashboardUploadForm() {
     setItems((current) => [...current, ...nextItems]);
   }
 
-  async function presignAndUpload(file: File) {
-    const presignResponse = await fetch("/api/uploads/presign", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        fileName: file.name,
-        contentType: file.type || "application/octet-stream",
-        category,
-      }),
+  async function uploadSingleFile(file: File, currentCategory: string) {
+    return uploadToSpaces({
+      file,
+      brandSlug,
+      category: currentCategory,
     });
-
-    const presignData: PresignResponse = await presignResponse.json().catch(() => ({}));
-
-    if (!presignResponse.ok) {
-      throw new Error(presignData?.error || "Nu s-a putut genera presign URL.");
-    }
-
-    const uploadUrl = presignData.uploadUrl;
-    const finalUrl = presignData.fileUrl || presignData.publicUrl || "";
-
-    if (!uploadUrl || !finalUrl) {
-      throw new Error("Raspuns invalid de la presign endpoint.");
-    }
-
-    const uploadResult = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type || "application/octet-stream",
-      },
-      body: file,
-    });
-
-    if (!uploadResult.ok) {
-      throw new Error("Upload-ul fisierului a esuat.");
-    }
-
-    return finalUrl;
   }
 
-  async function handleUploadAll() {
+  async function handleUploadAndCreateAll() {
+    if (!brandSlug) {
+      setMessage("Selectează brandul.");
+      return;
+    }
+
     if (!items.length) {
       setMessage("Adauga fisiere mai intai.");
       return;
     }
 
     setUploading(true);
-    setMessage("");
-
-    try {
-      for (const item of items) {
-        updateItem(item.id, { status: "uploading", error: "" });
-
-        try {
-          const finalUrl = await presignAndUpload(item.file);
-
-          const patch: Partial<UploadItem> = {
-            fileUrl: finalUrl,
-            status: "uploaded",
-          };
-
-          if (type === "image") {
-            patch.thumbnailUrl = finalUrl;
-          }
-
-          if (type === "video") {
-            patch.previewUrl = finalUrl;
-          }
-
-          updateItem(item.id, patch);
-        } catch (error) {
-          updateItem(item.id, {
-            status: "error",
-            error: error instanceof Error ? error.message : "Eroare upload",
-          });
-        }
-      }
-
-      setMessage("Upload terminat. Acum apasa Create all media items.");
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Eroare necunoscuta la upload.");
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  async function handleCreateAll() {
-    const readyItems = items.filter((item) => item.fileUrl);
-
-    if (!readyItems.length) {
-      setMessage("Fa upload la fisiere mai intai.");
-      return;
-    }
-
     setCreating(true);
     setMessage("");
 
@@ -214,24 +141,44 @@ export function DashboardUploadForm() {
     let failCount = 0;
 
     try {
-      for (const item of readyItems) {
-        updateItem(item.id, { status: "creating", error: "" });
+      for (const item of items) {
+        updateItem(item.id, { status: "uploading", error: "" });
 
         try {
+          const uploadedMain = await uploadSingleFile(item.file, category);
+
+          const patch: Partial<UploadItem> = {
+            fileUrl: uploadedMain.url,
+            status: "uploaded",
+          };
+
+          if (type === "image") {
+            patch.thumbnailUrl = uploadedMain.url;
+          }
+
+          if (type === "video") {
+            patch.previewUrl = uploadedMain.url;
+          }
+
+          updateItem(item.id, patch);
+          updateItem(item.id, { status: "creating" });
+
           const response = await fetch("/api/admin/media", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              ownerType: "brand",
+              brandSlug,
               title: item.title,
               slug: item.slug,
               category,
               type,
               date: new Date().toISOString(),
-              fileUrl: item.fileUrl,
-              thumbnailUrl: item.thumbnailUrl,
-              previewUrl: item.previewUrl,
+              fileUrl: patch.fileUrl || "",
+              thumbnailUrl: patch.thumbnailUrl || "",
+              previewUrl: patch.previewUrl || "",
               description,
               isVisible,
               isFeatured,
@@ -245,26 +192,32 @@ export function DashboardUploadForm() {
             throw new Error(data?.message || data?.error || "Nu s-a putut crea media item.");
           }
 
-          updateItem(item.id, { status: "done" });
+          updateItem(item.id, { status: "done", error: "" });
           successCount += 1;
         } catch (error) {
           updateItem(item.id, {
             status: "error",
-            error: error instanceof Error ? error.message : "Eroare creare",
+            error: error instanceof Error ? error.message : "Eroare necunoscuta",
           });
           failCount += 1;
         }
       }
 
-      setMessage(`Create finished: ${successCount} ok, ${failCount} failed.`);
+      setMessage(`Upload + create finished: ${successCount} ok, ${failCount} failed.`);
       router.refresh();
     } finally {
+      setUploading(false);
       setCreating(false);
     }
   }
 
   async function handleUploadAudio(which: "original" | "processed") {
     const file = which === "original" ? audioOriginalFile : audioProcessedFile;
+
+    if (!brandSlug) {
+      setMessage("Selectează brandul.");
+      return;
+    }
 
     if (!file) {
       setMessage(which === "original" ? "Alege audio original." : "Alege audio procesat.");
@@ -275,17 +228,17 @@ export function DashboardUploadForm() {
     setMessage("");
 
     try {
-      const finalUrl = await presignAndUpload(file);
+      const uploaded = await uploadSingleFile(file, "audio");
 
       if (which === "original") {
-        setAudioOriginalUrl(finalUrl);
+        setAudioOriginalUrl(uploaded.url);
         if (!audioOriginalTitle) {
           const base = getBaseName(file.name) || "audio-original";
           setAudioOriginalTitle(base);
           setAudioOriginalSlug(slugify(base));
         }
       } else {
-        setAudioProcessedUrl(finalUrl);
+        setAudioProcessedUrl(uploaded.url);
         if (!audioProcessedTitle) {
           const base = getBaseName(file.name) || "audio-procesat";
           setAudioProcessedTitle(base);
@@ -304,6 +257,11 @@ export function DashboardUploadForm() {
   async function handleCreateAudioPair(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (!brandSlug) {
+      setMessage("Selectează brandul.");
+      return;
+    }
+
     if (!audioOriginalUrl || !audioProcessedUrl) {
       setMessage("Incarca si originalul si varianta procesata.");
       return;
@@ -319,6 +277,8 @@ export function DashboardUploadForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          ownerType: "brand",
+          brandSlug,
           title: audioOriginalTitle || "Audio original",
           slug: audioOriginalSlug || slugify(audioOriginalTitle || "audio-original"),
           category: "audio",
@@ -361,8 +321,7 @@ export function DashboardUploadForm() {
     }
   }
 
-  const canCreateAll = items.some((item) => item.fileUrl);
-  const canUploadAll = items.some((item) => !item.fileUrl);
+  const canRunAll = items.length > 0 && !!brandSlug && !uploading && !creating;
 
   return (
     <div className="admin-form">
@@ -371,6 +330,27 @@ export function DashboardUploadForm() {
       </div>
 
       <div className="admin-stack">
+        <div className="admin-form-field">
+          <label htmlFor="media-brand">Brand</label>
+          <select
+            id="media-brand"
+            className="admin-select"
+            value={brandSlug}
+            onChange={(event) => {
+              setBrandSlug(event.target.value);
+              setMessage("");
+            }}
+            required
+          >
+            <option value="">Selectează brandul</option>
+            {brands.map((brand) => (
+              <option key={brand.id} value={brand.slug}>
+                {brand.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="admin-form-field">
           <label htmlFor="media-category">Category</label>
           <select
@@ -433,7 +413,7 @@ export function DashboardUploadForm() {
                   className="admin-submit"
                   type="button"
                   onClick={() => handleUploadAudio("original")}
-                  disabled={uploading || !audioOriginalFile}
+                  disabled={uploading || !audioOriginalFile || !brandSlug}
                 >
                   {uploading ? "Uploading..." : "Upload original"}
                 </button>
@@ -489,7 +469,7 @@ export function DashboardUploadForm() {
                   className="admin-submit"
                   type="button"
                   onClick={() => handleUploadAudio("processed")}
-                  disabled={uploading || !audioProcessedFile}
+                  disabled={uploading || !audioProcessedFile || !brandSlug}
                 >
                   {uploading ? "Uploading..." : "Upload processed"}
                 </button>
@@ -535,7 +515,7 @@ export function DashboardUploadForm() {
             </label>
 
             <div className="site-content-actions">
-              <button className="admin-submit" type="submit" disabled={creating}>
+              <button className="admin-submit" type="submit" disabled={creating || !brandSlug}>
                 {creating ? "Creating..." : "Create audio media item"}
               </button>
             </div>
@@ -660,19 +640,10 @@ export function DashboardUploadForm() {
               <button
                 className="admin-submit"
                 type="button"
-                onClick={handleUploadAll}
-                disabled={uploading || !canUploadAll}
+                onClick={handleUploadAndCreateAll}
+                disabled={!canRunAll}
               >
-                {uploading ? "Uploading..." : "Upload all to Spaces"}
-              </button>
-
-              <button
-                className="admin-submit"
-                type="button"
-                onClick={handleCreateAll}
-                disabled={creating || !canCreateAll}
-              >
-                {creating ? "Creating..." : "Create all media items"}
+                {uploading || creating ? "Processing..." : "Upload and create all media items"}
               </button>
 
               <button
