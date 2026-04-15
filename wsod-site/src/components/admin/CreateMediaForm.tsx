@@ -26,22 +26,23 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
     try {
       const brandSlug = String(formData.get("brandSlug") || "").trim();
       const category = String(formData.get("category") || "").trim();
+      const type = String(formData.get("type") || "").trim();
+      const title = String(formData.get("title") || "").trim();
+      const description = String(formData.get("description") || "").trim();
+      const seoTitle = String(formData.get("seoTitle") || "").trim();
+      const metaDescription = String(formData.get("metaDescription") || "").trim();
+      const date = String(formData.get("date") || "").trim();
 
       const file = formData.get("file") as File | null;
       const thumbnailFile = formData.get("thumbnailFile") as File | null;
       const previewFile = formData.get("previewFile") as File | null;
 
-      if (!brandSlug) {
-        throw new Error("Selectează brandul.");
-      }
-
-      if (!category) {
-        throw new Error("Selectează categoria.");
-      }
-
-      if (!file || file.size === 0) {
-        throw new Error("Selectează fișierul principal.");
-      }
+      if (!brandSlug) throw new Error("Selectează brandul.");
+      if (!category) throw new Error("Selectează categoria.");
+      if (!type) throw new Error("Selectează tipul media.");
+      if (!title) throw new Error("Titlul este obligatoriu.");
+      if (!date) throw new Error("Data este obligatorie.");
+      if (!file || file.size === 0) throw new Error("Selectează fișierul principal.");
 
       const uploadedMain = await uploadToSpaces({
         file,
@@ -74,12 +75,12 @@ export default function CreateMediaForm({ brands }: CreateMediaFormProps) {
         ownerType: "brand",
         brandSlug,
         category,
-        type: String(formData.get("type") || "").trim(),
-        title: String(formData.get("title") || "").trim(),
-        description: String(formData.get("description") || "").trim(),
-        seoTitle: String(formData.get("seoTitle") || "").trim(),
-        metaDescription: String(formData.get("metaDescription") || "").trim(),
-        date: String(formData.get("date") || "").trim(),
+        type,
+        title,
+        description,
+        seoTitle,
+        metaDescription,
+        date,
         fileUrl: uploadedMain.url,
         thumbnailUrl,
         previewUrl,
