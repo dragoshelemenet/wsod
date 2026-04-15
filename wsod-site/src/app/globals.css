@@ -4351,3 +4351,34 @@ body:has(.public-navbar) .section-mini-head {
     padding-top: 6px !important;
   }
 }
+
+/* same title area height for brand cards */
+.reference-brand-v2-name {
+  min-height: 2.6em;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
+}
+
+@media (max-width: 900px) {
+  .reference-brand-v2-name {
+    min-height: 2.8em !important;
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    text-align: center !important;
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 640px) {
+  .reference-brand-v2-name {
+    min-height: 3.2em !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+}
