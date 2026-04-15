@@ -4297,3 +4297,57 @@ body:has(.public-navbar) .section-mini-head {
   padding-top: 10px;
   line-height: 1.2;
 }
+
+/* mobile fix for home brands carousel */
+@media (max-width: 900px) {
+  .reference-brand-v2-card.home-brand-card {
+    min-height: unset !important;
+    height: auto !important;
+    grid-template-rows: auto auto !important;
+    align-content: start !important;
+    padding-bottom: 10px !important;
+  }
+
+  .home-brand-art {
+    aspect-ratio: 1 / 1 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 10px !important;
+  }
+
+  .home-brand-art-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  .reference-brand-v2-name {
+    padding-top: 8px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .brands-carousel-grid {
+    align-items: start !important;
+  }
+
+  .reference-brand-v2-card.home-brand-card {
+    min-height: unset !important;
+    height: auto !important;
+    padding-bottom: 8px !important;
+  }
+
+  .home-brand-art {
+    min-height: 0 !important;
+    padding: 8px !important;
+  }
+
+  .reference-brand-v2-name {
+    font-size: 10px !important;
+    padding-top: 6px !important;
+  }
+}
