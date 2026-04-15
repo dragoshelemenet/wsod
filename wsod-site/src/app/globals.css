@@ -4260,3 +4260,40 @@ body:has(.public-navbar) .section-mini-head {
     padding: 10px;
   }
 }
+
+/* tighten brand cards bottom empty space */
+.reference-brand-v2-card.home-brand-card {
+  min-height: unset !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column;
+}
+
+.home-brand-art {
+  flex: 0 0 auto;
+}
+
+.reference-brand-v2-name {
+  padding-top: 12px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* tighter brand cards */
+.reference-brand-v2-card.home-brand-card {
+  min-height: unset !important;
+  height: auto !important;
+  display: grid !important;
+  grid-template-rows: auto auto;
+  align-content: start;
+  padding-bottom: 12px;
+}
+
+.home-brand-art {
+  min-height: 300px;
+}
+
+.reference-brand-v2-name {
+  padding-top: 10px;
+  line-height: 1.2;
+}
