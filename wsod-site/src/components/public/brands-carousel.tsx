@@ -68,16 +68,19 @@ export function BrandsCarousel({ items }: BrandsCarouselProps) {
             className="reference-brand-v2-card home-brand-card"
           >
             <div className="reference-folder-v2-tab small" />
-            <div
-              className="reference-brand-v2-art home-brand-art"
-              style={
-                brand.imageUrl
-                  ? {
-                      backgroundImage: `linear-gradient(rgba(20,20,24,0.26), rgba(20,20,24,0.26)), url(${brand.imageUrl})`,
-                    }
-                  : undefined
-              }
-            />
+
+            <div className="reference-brand-v2-art home-brand-art">
+              {brand.imageUrl ? (
+                <img
+                  src={brand.imageUrl}
+                  alt={brand.name}
+                  className="home-brand-art-image"
+                />
+              ) : (
+                <div className="home-brand-art-placeholder" />
+              )}
+            </div>
+
             <div className="reference-brand-v2-name">{brand.name}</div>
           </a>
         ))}
