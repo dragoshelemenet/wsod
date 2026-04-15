@@ -23,6 +23,7 @@ type PresignResponse = {
   uploadUrl?: string;
   publicUrl?: string;
   fileUrl?: string;
+  objectKey?: string;
   error?: string;
 };
 
@@ -89,8 +90,9 @@ export function DashboardBrandForm({
 
       const uploadUrl = presignData.uploadUrl;
       const finalUrl = presignData.fileUrl || presignData.publicUrl || "";
+      const objectKey = presignData.objectKey || "";
 
-      if (!uploadUrl || !finalUrl) {
+      if (!uploadUrl || !finalUrl || !objectKey) {
         throw new Error("Răspuns invalid de la presign endpoint.");
       }
 
@@ -104,6 +106,22 @@ export function DashboardBrandForm({
 
       if (!uploadResult.ok) {
         throw new Error("Upload-ul imaginii a eșuat.");
+      }
+
+      const publicResponse = await fetch("/api/uploads/make-public", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          objectKey,
+        }),
+      });
+
+      const publicData = await publicResponse.json().catch(() => ({}));
+
+      if (!publicResponse.ok) {
+        throw new Error(publicData?.error || "Imaginea a fost urcată, dar nu a putut fi făcută publică.");
       }
 
       if (kind === "logo") setLogoUrl(finalUrl);
@@ -353,3 +371,7 @@ export function DashboardBrandForm({
     </form>
   );
 }
+cd /workspaces/wsod/wsod-site || exit 1
+git add src/components/dashboard/dashboard-brand-form.tsx
+git commit -m "Make brand uploads public in Spaces"
+git push origin main
