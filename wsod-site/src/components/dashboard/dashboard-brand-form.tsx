@@ -371,7 +371,3 @@ export function DashboardBrandForm({
     </form>
   );
 }
-cd /workspaces/wsod/wsod-site || exit 1
-git add src/components/dashboard/dashboard-brand-form.tsx
-git commit -m "Make brand uploads public in Spaces"
-git push origin main
