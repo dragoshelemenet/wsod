@@ -56,6 +56,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
 
   const [brandSlug, setBrandSlug] = useState(brands[0]?.slug ?? "");
   const [category, setCategory] = useState("foto");
+  const [graphicKind, setGraphicKind] = useState("");
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
@@ -77,6 +78,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
 
   const type = useMemo(() => getTypeFromCategory(category), [category]);
   const isAudio = category === "audio";
+  const isGrafica = category === "grafica";
 
   const acceptValue = useMemo(() => {
     if (type === "image") return "image/*";
@@ -128,6 +130,11 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
       return;
     }
 
+    if (isGrafica && !graphicKind) {
+      setMessage("Selectează tipul materialului grafic.");
+      return;
+    }
+
     if (!items.length) {
       setMessage("Adauga fisiere mai intai.");
       return;
@@ -175,6 +182,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               slug: item.slug,
               category,
               type,
+              graphicKind: isGrafica ? graphicKind : "",
               date: new Date().toISOString(),
               fileUrl: patch.fileUrl || "",
               thumbnailUrl: patch.thumbnailUrl || "",
@@ -321,7 +329,12 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
     }
   }
 
-  const canRunAll = items.length > 0 && !!brandSlug && !uploading && !creating;
+  const canRunAll =
+    items.length > 0 &&
+    !!brandSlug &&
+    (!isGrafica || !!graphicKind) &&
+    !uploading &&
+    !creating;
 
   return (
     <div className="admin-form">
@@ -360,6 +373,9 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
             onChange={(event) => {
               setCategory(event.target.value);
               setMessage("");
+              if (event.target.value !== "grafica") {
+                setGraphicKind("");
+              }
             }}
           >
             <option value="foto">Foto</option>
@@ -371,7 +387,35 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
           </select>
         </div>
 
-        {isAudio ? (
+        {isGrafica ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-graphic-kind">Tip material grafic</label>
+            <select
+              id="media-graphic-kind"
+              className="admin-select"
+              value={graphicKind}
+              onChange={(event) => {
+                setGraphicKind(event.target.value);
+                setMessage("");
+              }}
+              required
+            >
+              <option value="">Selectează tipul</option>
+              <option value="flyer">Flyer</option>
+              <option value="carte-vizita">Carte de vizita</option>
+              <option value="poster">Poster</option>
+              <option value="banner">Banner</option>
+              <option value="meniu">Meniu</option>
+              <option value="ambalaj">Ambalaj</option>
+              <option value="eticheta">Eticheta</option>
+              <option value="social-media">Social media</option>
+              <option value="logo">Logo</option>
+              <option value="altul">Altul</option>
+            </select>
+          </div>
+        ) : null}
+
+        {category === "audio" ? (
           <form className="admin-stack" onSubmit={handleCreateAudioPair}>
             <div className="admin-upload-box">
               <div className="admin-form-field">
