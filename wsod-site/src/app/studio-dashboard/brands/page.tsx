@@ -4,7 +4,7 @@ import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { getDashboardBrands } from "@/lib/dashboard/queries";
 
 export default async function DashboardBrandsPage() {
-  const items = await getDashboardBrands();
+  const brands = await getDashboardBrands();
 
   return (
     <DashboardShell
@@ -12,7 +12,17 @@ export default async function DashboardBrandsPage() {
       description="Administrare branduri publice."
     >
       <DashboardBrandForm />
-      <DashboardBrandList items={items} />
+      <DashboardBrandList
+        items={brands.map((brand) => ({
+          id: brand.id,
+          name: brand.name,
+          slug: brand.slug,
+          logoUrl: brand.logoUrl,
+          coverImageUrl: brand.coverImageUrl,
+          description: brand.description,
+          isVisible: brand.isVisible,
+        }))}
+      />
     </DashboardShell>
   );
 }
