@@ -4516,4 +4516,4 @@ body:has(.public-navbar) .section-mini-head {
   .foto-preview-grid {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
-}\n
+}
