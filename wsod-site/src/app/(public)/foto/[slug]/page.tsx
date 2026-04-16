@@ -20,6 +20,20 @@ function getDisplayTitle(item: any) {
     : item.title;
 }
 
+function AiBadge() {
+  return (
+    <div
+      className="ai-photo-badge"
+      title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)."
+    >
+      <span className="ai-photo-badge-icon" aria-hidden="true">
+        ✦
+      </span>
+      <span className="ai-photo-badge-text">Schimbat CU AI</span>
+    </div>
+  );
+}
+
 export default async function FotoSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -103,7 +117,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             slug: photo.slug,
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
-            rotation: (photo as any).rotation ?? 0,
+            aiEdited: Boolean((photo as any).aiEdited),
           }))
           .filter((entry) => entry.src)
       : item.personModel?.id
@@ -117,7 +131,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             slug: photo.slug,
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
-            rotation: (photo as any).rotation ?? 0,
+            aiEdited: Boolean((photo as any).aiEdited),
           }))
           .filter((entry) => entry.src)
       : [
@@ -128,7 +142,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             slug: item.slug,
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            rotation: (item as any).rotation ?? 0,
+            aiEdited: Boolean((item as any).aiEdited),
           },
         ].filter((entry) => entry.src);
 
@@ -157,6 +171,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   alt={photo.title}
                   className="detail-thumb-image"
                 />
+                {Boolean((photo as any).aiEdited) ? <AiBadge /> : null}
               </a>
             ))}
           </div>
@@ -179,7 +194,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                 slug: photo.slug,
                 src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
                 thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
-                rotation: (photo as any).rotation ?? 0,
+                aiEdited: Boolean((photo as any).aiEdited),
               }))
               .filter((entry) => entry.src)}
           />
@@ -202,6 +217,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   alt={photo.title}
                   className="detail-thumb-image"
                 />
+                {Boolean((photo as any).aiEdited) ? <AiBadge /> : null}
               </a>
             ))}
           </div>

@@ -73,6 +73,8 @@ export async function POST(request: Request) {
       typeof body.isVisible === "boolean" ? body.isVisible : true;
     const isFeatured =
       typeof body.isFeatured === "boolean" ? body.isFeatured : false;
+    const aiEdited =
+      typeof body.aiEdited === "boolean" ? body.aiEdited : false;
 
     if (!category) {
       return NextResponse.json(
@@ -240,6 +242,7 @@ export async function POST(request: Request) {
               : 0
             : 0,
         graphicKind: category === "grafica" ? graphicKind || null : null,
+        aiEdited,
         isVisible,
         isFeatured,
         brandId,

@@ -169,6 +169,20 @@ function SectionPager({
   );
 }
 
+function AiBadge() {
+  return (
+    <div
+      className="ai-photo-badge"
+      title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)."
+    >
+      <span className="ai-photo-badge-icon" aria-hidden="true">
+        ✦
+      </span>
+      <span className="ai-photo-badge-text">Schimbat CU AI</span>
+    </div>
+  );
+}
+
 export default async function FotoPage({ searchParams }: FotoPageProps) {
   const resolvedParams = (await searchParams) || {};
   const urlParams = new URLSearchParams();
@@ -191,6 +205,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
       title: item.title,
       href: `/foto/${item.slug}`,
       imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
+      aiEdited: Boolean((item as any).aiEdited),
     }));
 
   const allBrandPhotos = items
@@ -200,6 +215,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
       title: item.title,
       href: `/foto/${item.slug}`,
       imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
+      aiEdited: Boolean((item as any).aiEdited),
     }));
 
   const models = allModels.filter(
@@ -245,11 +261,14 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                 href={item.href}
                 className="foto-preview-grid-link"
               >
-                <img
-                  src={item.imageUrl || undefined}
-                  alt={item.title}
-                  className="foto-preview-grid-image"
-                />
+                <div className="foto-preview-grid-media">
+                  <img
+                    src={item.imageUrl || undefined}
+                    alt={item.title}
+                    className="foto-preview-grid-image"
+                  />
+                  {item.aiEdited ? <AiBadge /> : null}
+                </div>
               </Link>
             ))}
           </div>
@@ -296,11 +315,14 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                 href={item.href}
                 className="foto-preview-grid-link"
               >
-                <img
-                  src={item.imageUrl || undefined}
-                  alt={item.title}
-                  className="foto-preview-grid-image"
-                />
+                <div className="foto-preview-grid-media">
+                  <img
+                    src={item.imageUrl || undefined}
+                    alt={item.title}
+                    className="foto-preview-grid-image"
+                  />
+                  {item.aiEdited ? <AiBadge /> : null}
+                </div>
               </Link>
             ))}
           </div>

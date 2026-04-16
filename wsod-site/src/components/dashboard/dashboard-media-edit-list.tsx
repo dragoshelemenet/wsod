@@ -20,6 +20,7 @@ type MediaItem = {
   fileUrl: string | null;
   isVisible: boolean;
   isFeatured: boolean;
+  aiEdited: boolean;
   brandId: string | null;
   personModelId: string | null;
   audioProfileId: string | null;
@@ -273,6 +274,7 @@ function DashboardMediaEditCard({
   const [audioProfileId, setAudioProfileId] = useState(item.audioProfileId || "");
   const [isVisible, setIsVisible] = useState(item.isVisible);
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
+  const [aiEdited, setAiEdited] = useState(item.aiEdited);
   const [loading, setLoading] = useState(false);
 
   const previewImage = useMemo(
@@ -302,6 +304,7 @@ function DashboardMediaEditCard({
           audioProfileId: audioProfileId || null,
           isVisible,
           isFeatured,
+          aiEdited,
         }),
       });
 
@@ -337,7 +340,7 @@ function DashboardMediaEditCard({
             <span>{item.category} • {item.type}</span>
             <span>{item.slug}</span>
             <span>
-              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"}
+              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiEdited ? "AI" : "No AI"}
             </span>
           </div>
         </div>
@@ -454,6 +457,15 @@ function DashboardMediaEditCard({
                   type="checkbox"
                   checked={isFeatured}
                   onChange={(event) => setIsFeatured(event.target.checked)}
+                />
+              </label>
+
+              <label className="admin-toggle-row">
+                <span>Schimbat cu AI</span>
+                <input
+                  type="checkbox"
+                  checked={aiEdited}
+                  onChange={(event) => setAiEdited(event.target.checked)}
                 />
               </label>
             </div>

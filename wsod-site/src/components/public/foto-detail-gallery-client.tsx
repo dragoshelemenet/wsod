@@ -10,12 +10,27 @@ type GalleryItem = {
   slug?: string;
   src: string;
   thumb: string;
+  aiEdited?: boolean;
 };
 
 type Props = {
   items: GalleryItem[];
   titleTargetId?: string;
 };
+
+function AiBadge() {
+  return (
+    <div
+      className="ai-photo-badge"
+      title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)."
+    >
+      <span className="ai-photo-badge-icon" aria-hidden="true">
+        ✦
+      </span>
+      <span className="ai-photo-badge-text">Schimbat CU AI</span>
+    </div>
+  );
+}
 
 export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const router = useRouter();
@@ -96,6 +111,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
             alt={active.displayTitle || active.title}
             className="foto-detail-main-image"
           />
+          {active.aiEdited ? <AiBadge /> : null}
         </button>
 
         {hasMany ? (
@@ -124,6 +140,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
                 alt={item.displayTitle || item.title}
                 className="foto-detail-thumb-image"
               />
+              {item.aiEdited ? <span className="ai-photo-dot" title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)." /> : null}
             </button>
           ))}
         </div>

@@ -75,6 +75,7 @@ model MediaItem {
   groupOrder       Int      @default(0)
   sortOrder        Int      @default(0)
   graphicKind      String?
+  aiEdited         Boolean  @default(false)
   isFeatured       Boolean  @default(false)
   isVisible        Boolean  @default(true)
 

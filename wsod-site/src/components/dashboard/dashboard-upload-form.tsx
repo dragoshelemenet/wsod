@@ -60,6 +60,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
+  const [aiEdited, setAiEdited] = useState(false);
 
   const [audioOriginalTitle, setAudioOriginalTitle] = useState("");
   const [audioOriginalSlug, setAudioOriginalSlug] = useState("");
@@ -190,6 +191,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               description,
               isVisible,
               isFeatured,
+              aiEdited,
               fileNameOriginal: item.file.name,
             }),
           });
@@ -297,6 +299,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
           description,
           isVisible,
           isFeatured,
+          aiEdited,
           fileNameOriginal: audioOriginalFile?.name || "",
         }),
       });
@@ -320,6 +323,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
       setDescription("");
       setIsVisible(true);
       setIsFeatured(false);
+      setAiEdited(false);
       setMessage("Audio media item creat cu succes.");
       router.refresh();
     } catch (error) {
@@ -558,6 +562,17 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               />
             </label>
 
+            {category === "foto" ? (
+              <label className="admin-toggle-row">
+                <span>Schimbat cu AI</span>
+                <input
+                  type="checkbox"
+                  checked={aiEdited}
+                  onChange={(event) => setAiEdited(event.target.checked)}
+                />
+              </label>
+            ) : null}
+
             <div className="site-content-actions">
               <button className="admin-submit" type="submit" disabled={creating || !brandSlug}>
                 {creating ? "Creating..." : "Create audio media item"}
@@ -679,6 +694,17 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
                 onChange={(event) => setIsFeatured(event.target.checked)}
               />
             </label>
+
+            {category === "foto" ? (
+              <label className="admin-toggle-row">
+                <span>Schimbat cu AI</span>
+                <input
+                  type="checkbox"
+                  checked={aiEdited}
+                  onChange={(event) => setAiEdited(event.target.checked)}
+                />
+              </label>
+            ) : null}
 
             <div className="site-content-actions">
               <button
