@@ -4556,3 +4556,94 @@ body:has(.public-navbar) .section-mini-head {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }
+
+
+.website-card-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.website-card-link,
+.website-related-link {
+  display: block;
+  text-decoration: none;
+}
+
+.website-card-media,
+.website-related-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.website-card-media {
+  aspect-ratio: 4 / 5;
+}
+
+.website-related-media {
+  aspect-ratio: 4 / 3;
+}
+
+.website-card-image,
+.website-related-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.website-card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.62);
+  border: 1px solid rgba(255,255,255,0.16);
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(8px);
+}
+
+.website-card-badge-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: invert(1);
+}
+
+.website-related-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .website-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .website-related-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .website-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .website-related-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .website-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

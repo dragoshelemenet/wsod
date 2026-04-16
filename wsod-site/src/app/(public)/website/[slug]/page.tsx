@@ -9,6 +9,9 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+const WEBSITE_ICON =
+  "https://img.icons8.com/ios-filled/100/domain.png";
+
 export default async function WebsiteSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -61,7 +64,7 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
               <h2>Alte website-uri ale aceluiași brand</h2>
             </div>
 
-            <div className="public-grid public-grid-dense">
+            <div className="website-related-grid">
               {sameBrand.map((website) => {
                 const imageUrl =
                   website.thumbnailUrl ||
@@ -73,15 +76,25 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
                   <Link
                     key={website.id}
                     href={`/website/${website.slug}`}
-                    className="public-card public-card-image-only"
+                    className="website-related-link"
                   >
-                    {imageUrl ? (
-                      <img
-                        src={imageUrl}
-                        alt={website.title}
-                        className="public-card-image"
-                      />
-                    ) : null}
+                    <div className="website-related-media">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={website.title}
+                          className="website-related-image"
+                        />
+                      ) : null}
+
+                      <div className="website-card-badge">
+                        <img
+                          src={WEBSITE_ICON}
+                          alt="Website"
+                          className="website-card-badge-icon"
+                        />
+                      </div>
+                    </div>
                   </Link>
                 );
               })}
@@ -95,7 +108,7 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
               <h2>Alte website-uri</h2>
             </div>
 
-            <div className="public-grid public-grid-dense">
+            <div className="website-related-grid">
               {otherBrands.map((website) => {
                 const imageUrl =
                   website.thumbnailUrl ||
@@ -107,15 +120,25 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
                   <Link
                     key={website.id}
                     href={`/website/${website.slug}`}
-                    className="public-card public-card-image-only"
+                    className="website-related-link"
                   >
-                    {imageUrl ? (
-                      <img
-                        src={imageUrl}
-                        alt={website.title}
-                        className="public-card-image"
-                      />
-                    ) : null}
+                    <div className="website-related-media">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={website.title}
+                          className="website-related-image"
+                        />
+                      ) : null}
+
+                      <div className="website-card-badge">
+                        <img
+                          src={WEBSITE_ICON}
+                          alt="Website"
+                          className="website-card-badge-icon"
+                        />
+                      </div>
+                    </div>
                   </Link>
                 );
               })}
