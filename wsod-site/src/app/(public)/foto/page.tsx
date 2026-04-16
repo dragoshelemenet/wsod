@@ -68,6 +68,7 @@ function SectionPager({
       {currentPage > 1 ? (
         <Link
           href={makeHref(currentPage - 1)}
+          scroll={false}
           aria-label="Previous page"
           style={{
             width: 42,
@@ -118,6 +119,7 @@ function SectionPager({
             <Link
               key={page}
               href={makeHref(page)}
+              scroll={false}
               aria-label={`Go to page ${page}`}
               style={{
                 width: active ? 10 : 8,
@@ -135,6 +137,7 @@ function SectionPager({
       {currentPage < totalPages ? (
         <Link
           href={makeHref(currentPage + 1)}
+          scroll={false}
           aria-label="Next page"
           style={{
             width: 42,
