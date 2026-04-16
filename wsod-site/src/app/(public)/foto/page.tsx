@@ -10,9 +10,7 @@ import { PublicShell } from "@/components/public/public-shell";
 
 type FotoPageProps = {
   searchParams?: Promise<{
-    mp?: string;
     mo?: string;
-    bp?: string;
     br?: string;
   }>;
 };
@@ -37,7 +35,7 @@ function paginate<T>(items: T[], page: number, pageSize: number) {
 
 function buildHref(
   params: URLSearchParams,
-  key: "mp" | "mo" | "bp" | "br",
+  key: "mo" | "br",
   value: number
 ) {
   const next = new URLSearchParams(params.toString());
@@ -118,9 +116,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
   const resolvedParams = (await searchParams) || {};
   const urlParams = new URLSearchParams();
 
-  if (resolvedParams.mp) urlParams.set("mp", resolvedParams.mp);
   if (resolvedParams.mo) urlParams.set("mo", resolvedParams.mo);
-  if (resolvedParams.bp) urlParams.set("bp", resolvedParams.bp);
   if (resolvedParams.br) urlParams.set("br", resolvedParams.br);
 
   const [items, allModels, allBrands] = await Promise.all([
@@ -129,8 +125,9 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
     getBrandsWithCategoryPreviewFromDb("foto"),
   ]);
 
-  const allModelPhotos = items
+  const modelPhotos = items
     .filter((item) => item.owner?.type === "model")
+    .slice(0, 48)
     .map((item) => ({
       id: item.id,
       title: item.title,
@@ -139,8 +136,9 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
       showPlayIcon: false,
     }));
 
-  const allBrandPhotos = items
+  const brandPhotos = items
     .filter((item) => item.owner?.type === "brand")
+    .slice(0, 48)
     .map((item) => ({
       id: item.id,
       title: item.title,
@@ -157,35 +155,22 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
     (item) => Array.isArray(item.previewImages) && item.previewImages.length > 0
   );
 
-  const MODEL_PHOTOS_PER_PAGE = 16;
   const MODELS_PER_PAGE = 16;
-  const BRAND_PHOTOS_PER_PAGE = 16;
   const BRANDS_PER_PAGE = 8;
 
-  const modelPhotosTotalPages = Math.max(1, Math.ceil(allModelPhotos.length / MODEL_PHOTOS_PER_PAGE));
   const modelsTotalPages = Math.max(1, Math.ceil(models.length / MODELS_PER_PAGE));
-  const brandPhotosTotalPages = Math.max(1, Math.ceil(allBrandPhotos.length / BRAND_PHOTOS_PER_PAGE));
   const brandsTotalPages = Math.max(1, Math.ceil(brands.length / BRANDS_PER_PAGE));
 
-  const modelPhotosPage = clampPage(resolvedParams.mp, modelPhotosTotalPages);
   const modelsPage = clampPage(resolvedParams.mo, modelsTotalPages);
-  const brandPhotosPage = clampPage(resolvedParams.bp, brandPhotosTotalPages);
   const brandsPage = clampPage(resolvedParams.br, brandsTotalPages);
 
-  const modelPhotosPaginated = paginate(allModelPhotos, modelPhotosPage, MODEL_PHOTOS_PER_PAGE);
   const modelsPaginated = paginate(models, modelsPage, MODELS_PER_PAGE);
-  const brandPhotosPaginated = paginate(allBrandPhotos, brandPhotosPage, BRAND_PHOTOS_PER_PAGE);
   const brandsPaginated = paginate(brands, brandsPage, BRANDS_PER_PAGE);
 
   return (
     <PublicShell title="Foto">
       <div className="foto-index-page">
-        <PreviewRail title="Poze cu modele" items={modelPhotosPaginated.items} />
-        <PaginationBar
-          currentPage={modelPhotosPaginated.page}
-          totalPages={modelPhotosPaginated.totalPages}
-          makeHref={(page) => buildHref(urlParams, "mp", page)}
-        />
+        <PreviewRail title="Poze cu modele" items={modelPhotos} />
 
         <section className="inner-section-block">
           <div className="section-mini-head">
@@ -210,12 +195,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
           />
         </section>
 
-        <PreviewRail title="Poze brand" items={brandPhotosPaginated.items} />
-        <PaginationBar
-          currentPage={brandPhotosPaginated.page}
-          totalPages={brandPhotosPaginated.totalPages}
-          makeHref={(page) => buildHref(urlParams, "bp", page)}
-        />
+        <PreviewRail title="Poze brand" items={brandPhotos} />
 
         <section className="inner-section-block">
           <div className="section-mini-head">
