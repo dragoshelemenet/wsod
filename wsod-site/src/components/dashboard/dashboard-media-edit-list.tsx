@@ -305,6 +305,7 @@ function DashboardMediaEditCard({
           isVisible,
           isFeatured,
           aiEdited,
+          aiEdited,
         }),
       });
 

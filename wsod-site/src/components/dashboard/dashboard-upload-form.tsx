@@ -61,6 +61,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [aiEdited, setAiEdited] = useState(false);
+  const [aiEdited, setAiEdited] = useState(false);
 
   const [audioOriginalTitle, setAudioOriginalTitle] = useState("");
   const [audioOriginalSlug, setAudioOriginalSlug] = useState("");

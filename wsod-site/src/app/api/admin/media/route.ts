@@ -75,6 +75,8 @@ export async function POST(request: Request) {
       typeof body.isFeatured === "boolean" ? body.isFeatured : false;
     const aiEdited =
       typeof body.aiEdited === "boolean" ? body.aiEdited : false;
+    const aiEdited =
+      typeof body.aiEdited === "boolean" ? body.aiEdited : false;
 
     if (!category) {
       return NextResponse.json(

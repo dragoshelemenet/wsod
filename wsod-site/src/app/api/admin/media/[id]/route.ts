@@ -163,6 +163,7 @@ async function handleUpdate(
       isFeatured,
       isVisible,
       aiEdited,
+      aiEdited,
       ...(parsedDate ? { date: parsedDate } : {}),
     },
   });
