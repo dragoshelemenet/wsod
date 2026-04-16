@@ -1,6 +1,4 @@
 import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
-import { PublicCard } from "@/components/public/public-card";
-import { PublicGrid } from "@/components/public/public-grid";
 import {
   getPublishedMediaByCategory,
   getPublishedMediaBySlug,
@@ -137,24 +135,24 @@ export default async function GraficaSlugPage({ params }: PageProps) {
       </section>
 
       {otherBrandGraphics.length > 0 ? (
-        <section className="inner-section-block">
-          <div className="section-mini-head">
-            <h2>Alte grafici din alte brand-uri</h2>
-          </div>
+        <section className="inner-section">
+          <h2 className="detail-section-title">Alte grafici din alte brand-uri:</h2>
 
-          <PublicGrid dense>
+          <div className="detail-thumb-grid">
             {otherBrandGraphics.map((graphic) => (
-              <PublicCard
+              <a
                 key={graphic.id}
-                title={graphic.title}
                 href={`/grafica/${graphic.slug}`}
-                imageUrl={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl}
-                imageOnly
-                imageFit="contain"
-                mediaRatio="wide"
-              />
+                className="detail-thumb-link"
+              >
+                <img
+                  src={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || undefined}
+                  alt={graphic.title}
+                  className="detail-thumb-image"
+                />
+              </a>
             ))}
-          </PublicGrid>
+          </div>
         </section>
       ) : null}
 
@@ -176,24 +174,24 @@ export default async function GraficaSlugPage({ params }: PageProps) {
       ) : null}
 
       {otherModelGraphics.length > 0 ? (
-        <section className="inner-section-block">
-          <div className="section-mini-head">
-            <h2>Alte grafici cu alte modele</h2>
-          </div>
+        <section className="inner-section">
+          <h2 className="detail-section-title">Alte grafici cu alte modele:</h2>
 
-          <PublicGrid dense>
+          <div className="detail-thumb-grid">
             {otherModelGraphics.map((graphic) => (
-              <PublicCard
+              <a
                 key={graphic.id}
-                title={graphic.title}
                 href={`/grafica/${graphic.slug}`}
-                imageUrl={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl}
-                imageOnly
-                imageFit="contain"
-                mediaRatio="wide"
-              />
+                className="detail-thumb-link"
+              >
+                <img
+                  src={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || undefined}
+                  alt={graphic.title}
+                  className="detail-thumb-image"
+                />
+              </a>
             ))}
-          </PublicGrid>
+          </div>
         </section>
       ) : null}
     </main>
