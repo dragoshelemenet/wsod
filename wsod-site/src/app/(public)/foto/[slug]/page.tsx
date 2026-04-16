@@ -7,6 +7,14 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function looksAutoTitle(value: string) {
+  const v = (value || "").trim().toLowerCase();
+  if (!v) return true;
+  if (v.length > 40 && /[0-9a-f]{8,}/.test(v)) return true;
+  if (v.startsWith("hf") && /[0-9]/.test(v)) return true;
+  return false;
+}
+
 export default async function FotoSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -22,19 +30,20 @@ export default async function FotoSlugPage({ params }: PageProps) {
     );
   }
 
-  const sameBrandPhotos =
+  const sameBrandAllPhotos =
     item.brand?.id
       ? await prisma.mediaItem.findMany({
           where: {
             isVisible: true,
             category: "foto",
             brandId: item.brand.id,
-            id: { not: item.id },
           },
           orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
-          take: 24,
+          take: 100,
         })
       : [];
+
+  const sameBrandPhotos = sameBrandAllPhotos.filter((photo) => photo.id !== item.id);
 
   const otherBrandPhotos =
     item.brand?.id
@@ -51,19 +60,20 @@ export default async function FotoSlugPage({ params }: PageProps) {
         })
       : [];
 
-  const sameModelPhotos =
+  const sameModelAllPhotos =
     item.personModel?.id
       ? await prisma.mediaItem.findMany({
           where: {
             isVisible: true,
             category: "foto",
             personModelId: item.personModel.id,
-            id: { not: item.id },
           },
           orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
-          take: 24,
+          take: 100,
         })
       : [];
+
+  const sameModelPhotos = sameModelAllPhotos.filter((photo) => photo.id !== item.id);
 
   const otherModelPhotos =
     item.personModel?.id
@@ -89,64 +99,43 @@ export default async function FotoSlugPage({ params }: PageProps) {
     take: 200,
   });
 
-  const navigationSource =
+  const navigationItems =
     item.brand?.id
-      ? [
-          item,
-          ...sameBrandPhotos,
-        ]
+      ? sameBrandAllPhotos
       : item.personModel?.id
-      ? [
-          item,
-          ...sameModelPhotos,
-        ]
+      ? sameModelAllPhotos
       : fallbackPhotos;
 
-  const navigationItems = navigationSource
-    .filter((photo) => (photo.fileUrl || photo.previewUrl || photo.thumbnailUrl) && photo.slug)
-    .filter((photo, index, arr) => arr.findIndex((x) => x.id === photo.id) === index);
-
   const currentIndex = navigationItems.findIndex((photo) => photo.id === item.id);
-  const prevPhoto =
-    currentIndex > 0 ? navigationItems[currentIndex - 1] : null;
+  const prevPhoto = currentIndex > 0 ? navigationItems[currentIndex - 1] : null;
   const nextPhoto =
     currentIndex >= 0 && currentIndex < navigationItems.length - 1
       ? navigationItems[currentIndex + 1]
       : null;
 
-  const brandGalleryItems = [
-    {
-      id: item.id,
-      title: item.title,
-      src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-      thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-      rotation: (item as any).rotation ?? 0,
-    },
-    ...sameBrandPhotos.map((photo) => ({
+  const brandGalleryItems = sameBrandPhotos
+    .map((photo) => ({
       id: photo.id,
       title: photo.title,
       src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
       thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
       rotation: (photo as any).rotation ?? 0,
-    })),
-  ].filter((entry) => entry.src);
+    }))
+    .filter((entry) => entry.src);
 
-  const modelGalleryItems = [
-    {
-      id: item.id,
-      title: item.title,
-      src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-      thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-      rotation: (item as any).rotation ?? 0,
-    },
-    ...sameModelPhotos.map((photo) => ({
+  const modelGalleryItems = sameModelPhotos
+    .map((photo) => ({
       id: photo.id,
       title: photo.title,
       src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
       thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
       rotation: (photo as any).rotation ?? 0,
-    })),
-  ].filter((entry) => entry.src);
+    }))
+    .filter((entry) => entry.src);
+
+  const displayTitle = looksAutoTitle(item.title)
+    ? item.brand?.name || item.personModel?.name || "Foto"
+    : item.title;
 
   const navigationLabel = item.brand?.name
     ? `Navighezi prin brandul ${item.brand.name}`
@@ -207,7 +196,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
           </div>
         </div>
 
-        <h1>{item.title}</h1>
+        <h1>{displayTitle}</h1>
         {item.description ? <p className="inner-description">{item.description}</p> : null}
 
         <FotoDetailGalleryClient
@@ -223,9 +212,11 @@ export default async function FotoSlugPage({ params }: PageProps) {
         />
       </section>
 
-      {item.brand?.name && brandGalleryItems.length > 1 ? (
+      {item.brand?.name && brandGalleryItems.length > 0 ? (
         <section className="inner-section">
-          <h2 className="detail-section-title">Mai multe poze din brandul {item.brand.name}:</h2>
+          <h2 className="detail-section-title">
+            Mai multe poze din brandul {item.brand.name}:
+          </h2>
           <FotoDetailGalleryClient items={brandGalleryItems} />
         </section>
       ) : null}
@@ -252,9 +243,11 @@ export default async function FotoSlugPage({ params }: PageProps) {
         </section>
       ) : null}
 
-      {item.personModel?.name && modelGalleryItems.length > 1 ? (
+      {item.personModel?.name && modelGalleryItems.length > 0 ? (
         <section className="inner-section">
-          <h2 className="detail-section-title">Mai multe poze cu modelul {item.personModel.name}:</h2>
+          <h2 className="detail-section-title">
+            Mai multe poze cu modelul {item.personModel.name}:
+          </h2>
           <FotoDetailGalleryClient items={modelGalleryItems} />
         </section>
       ) : null}
