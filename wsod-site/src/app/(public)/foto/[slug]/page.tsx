@@ -21,6 +21,35 @@ export default async function FotoSlugPage({ params }: PageProps) {
     );
   }
 
+  const sameBrandPhotos =
+    item.brand?.id
+      ? await prisma.mediaItem.findMany({
+          where: {
+            isVisible: true,
+            category: "foto",
+            brandId: item.brand.id,
+            id: { not: item.id },
+          },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+          take: 24,
+        })
+      : [];
+
+  const otherBrandPhotos =
+    item.brand?.id
+      ? await prisma.mediaItem.findMany({
+          where: {
+            isVisible: true,
+            category: "foto",
+            id: { not: item.id },
+            brandId: { not: null },
+            NOT: { brandId: item.brand.id },
+          },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+          take: 18,
+        })
+      : [];
+
   const sameModelPhotos =
     item.personModel?.id
       ? await prisma.mediaItem.findMany({
@@ -35,21 +64,39 @@ export default async function FotoSlugPage({ params }: PageProps) {
         })
       : [];
 
-  const randomPhotos = await prisma.mediaItem.findMany({
-    where: {
-      isVisible: true,
-      category: "foto",
-      id: { not: item.id },
-      personModelId: { not: null },
-      ...(item.personModel?.id
-        ? { NOT: { personModelId: item.personModel.id } }
-        : {}),
-    },
-    orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
-    take: 18,
-  });
+  const otherModelPhotos =
+    item.personModel?.id
+      ? await prisma.mediaItem.findMany({
+          where: {
+            isVisible: true,
+            category: "foto",
+            id: { not: item.id },
+            personModelId: { not: null },
+            NOT: { personModelId: item.personModel.id },
+          },
+          orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+          take: 18,
+        })
+      : [];
 
-  const galleryItems = [
+  const brandGalleryItems = [
+    {
+      id: item.id,
+      title: item.title,
+      src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
+      thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
+      rotation: (item as any).rotation ?? 0,
+    },
+    ...sameBrandPhotos.map((photo) => ({
+      id: photo.id,
+      title: photo.title,
+      src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
+      thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
+      rotation: (photo as any).rotation ?? 0,
+    })),
+  ].filter((entry) => entry.src);
+
+  const modelGalleryItems = [
     {
       id: item.id,
       title: item.title,
@@ -72,15 +119,32 @@ export default async function FotoSlugPage({ params }: PageProps) {
         <h1>{item.title}</h1>
         {item.description ? <p className="inner-description">{item.description}</p> : null}
 
-        <FotoDetailGalleryClient items={galleryItems} />
+        <FotoDetailGalleryClient
+          items={[
+            {
+              id: item.id,
+              title: item.title,
+              src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
+              thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
+              rotation: (item as any).rotation ?? 0,
+            },
+          ].filter((entry) => entry.src)}
+        />
       </section>
 
-      {randomPhotos.length ? (
+      {item.brand?.name && brandGalleryItems.length > 1 ? (
         <section className="inner-section">
-          <h2 className="detail-section-title">Vezi alte poze:</h2>
+          <h2 className="detail-section-title">Mai multe poze din brandul {item.brand.name}:</h2>
+          <FotoDetailGalleryClient items={brandGalleryItems} />
+        </section>
+      ) : null}
+
+      {otherBrandPhotos.length ? (
+        <section className="inner-section">
+          <h2 className="detail-section-title">Alte poze din alte brand-uri:</h2>
 
           <div className="detail-thumb-grid">
-            {randomPhotos.map((photo) => (
+            {otherBrandPhotos.map((photo) => (
               <a
                 key={photo.id}
                 href={`/foto/${photo.slug}`}
@@ -90,7 +154,35 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
                   alt={photo.title}
                   className="detail-thumb-image"
-                 
+                />
+              </a>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {item.personModel?.name && modelGalleryItems.length > 1 ? (
+        <section className="inner-section">
+          <h2 className="detail-section-title">Mai multe poze cu modelul {item.personModel.name}:</h2>
+          <FotoDetailGalleryClient items={modelGalleryItems} />
+        </section>
+      ) : null}
+
+      {otherModelPhotos.length ? (
+        <section className="inner-section">
+          <h2 className="detail-section-title">Alte poze cu alte modele:</h2>
+
+          <div className="detail-thumb-grid">
+            {otherModelPhotos.map((photo) => (
+              <a
+                key={photo.id}
+                href={`/foto/${photo.slug}`}
+                className="detail-thumb-link"
+              >
+                <img
+                  src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
+                  alt={photo.title}
+                  className="detail-thumb-image"
                 />
               </a>
             ))}
