@@ -44,7 +44,6 @@ export default async function GraficaSlugPage({ params }: PageProps) {
     item.brandId
       ? allGraphics.filter(
           (graphic) =>
-            graphic.id !== item.id &&
             graphic.category === "grafica" &&
             graphic.brandId === item.brandId
         )
@@ -64,7 +63,6 @@ export default async function GraficaSlugPage({ params }: PageProps) {
     item.personModelId
       ? allGraphics.filter(
           (graphic) =>
-            graphic.id !== item.id &&
             graphic.category === "grafica" &&
             graphic.personModelId === item.personModelId
         )
@@ -84,17 +82,8 @@ export default async function GraficaSlugPage({ params }: PageProps) {
 
   const mainGalleryItems =
     item.brandId
-      ? [
-          {
-            id: item.id,
-            title: item.title,
-            displayTitle: getDisplayTitle(item),
-            slug: item.slug,
-            src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-            thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            rotation: (item as any).rotation ?? 0,
-          },
-          ...sameBrandGraphics.map((graphic) => ({
+      ? sameBrandGraphics
+          .map((graphic) => ({
             id: graphic.id,
             title: graphic.title,
             displayTitle: looksAutoTitle(graphic.title)
@@ -104,30 +93,22 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
             thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
             rotation: (graphic as any).rotation ?? 0,
-          })),
-        ].filter((entry) => entry.src)
+          }))
+          .filter((entry) => entry.src)
       : item.personModelId
-      ? [
-          {
-            id: item.id,
-            title: item.title,
-            displayTitle: getDisplayTitle(item),
-            slug: item.slug,
-            src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-            thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            rotation: (item as any).rotation ?? 0,
-          },
-          ...sameModelGraphics.map((graphic) => ({
+      ? sameModelGraphics
+          .map((graphic) => ({
             id: graphic.id,
             title: graphic.title,
             displayTitle: looksAutoTitle(graphic.title)
               ? item.personModel?.name || item.graphicKind || "Grafica"
               : graphic.title,
+            slug: graphic.slug,
             src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
             thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
             rotation: (graphic as any).rotation ?? 0,
-          })),
-        ].filter((entry) => entry.src)
+          }))
+          .filter((entry) => entry.src)
       : [
           {
             id: item.id,
@@ -173,7 +154,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
         </section>
       ) : null}
 
-      {item.personModelId && sameModelGraphics.length > 0 ? (
+      {item.personModelId && sameModelGraphics.length > 1 ? (
         <section className="inner-section">
           <h2 className="detail-section-title">Mai multe grafici cu același model:</h2>
           <FotoDetailGalleryClient

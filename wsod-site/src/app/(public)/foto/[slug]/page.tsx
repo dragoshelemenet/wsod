@@ -48,8 +48,6 @@ export default async function FotoSlugPage({ params }: PageProps) {
         })
       : [];
 
-  const sameBrandPhotos = sameBrandAllPhotos.filter((photo) => photo.id !== item.id);
-
   const otherBrandPhotos =
     item.brand?.id
       ? await prisma.mediaItem.findMany({
@@ -78,8 +76,6 @@ export default async function FotoSlugPage({ params }: PageProps) {
         })
       : [];
 
-  const sameModelPhotos = sameModelAllPhotos.filter((photo) => photo.id !== item.id);
-
   const otherModelPhotos =
     item.personModel?.id
       ? await prisma.mediaItem.findMany({
@@ -99,17 +95,8 @@ export default async function FotoSlugPage({ params }: PageProps) {
 
   const mainGalleryItems =
     item.brand?.id
-      ? [
-          {
-            id: item.id,
-            title: item.title,
-            displayTitle: getDisplayTitle(item),
-            slug: item.slug,
-            src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-            thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            rotation: (item as any).rotation ?? 0,
-          },
-          ...sameBrandPhotos.map((photo) => ({
+      ? sameBrandAllPhotos
+          .map((photo) => ({
             id: photo.id,
             title: photo.title,
             displayTitle: looksAutoTitle(photo.title) ? item.brand?.name || "Foto" : photo.title,
@@ -117,20 +104,11 @@ export default async function FotoSlugPage({ params }: PageProps) {
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
             rotation: (photo as any).rotation ?? 0,
-          })),
-        ].filter((entry) => entry.src)
+          }))
+          .filter((entry) => entry.src)
       : item.personModel?.id
-      ? [
-          {
-            id: item.id,
-            title: item.title,
-            displayTitle: getDisplayTitle(item),
-            slug: item.slug,
-            src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-            thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            rotation: (item as any).rotation ?? 0,
-          },
-          ...sameModelPhotos.map((photo) => ({
+      ? sameModelAllPhotos
+          .map((photo) => ({
             id: photo.id,
             title: photo.title,
             displayTitle: looksAutoTitle(photo.title)
@@ -140,8 +118,8 @@ export default async function FotoSlugPage({ params }: PageProps) {
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
             rotation: (photo as any).rotation ?? 0,
-          })),
-        ].filter((entry) => entry.src)
+          }))
+          .filter((entry) => entry.src)
       : [
           {
             id: item.id,
@@ -185,19 +163,20 @@ export default async function FotoSlugPage({ params }: PageProps) {
         </section>
       ) : null}
 
-      {item.personModel?.name && item.brand?.id && sameModelPhotos.length > 0 ? (
+      {item.personModel?.name && item.brand?.id && sameModelAllPhotos.length > 1 ? (
         <section className="inner-section">
           <h2 className="detail-section-title">
             Mai multe poze cu modelul {item.personModel.name}:
           </h2>
           <FotoDetailGalleryClient
-            items={sameModelPhotos
+            items={sameModelAllPhotos
               .map((photo) => ({
                 id: photo.id,
                 title: photo.title,
                 displayTitle: looksAutoTitle(photo.title)
                   ? item.personModel?.name || "Foto"
                   : photo.title,
+                slug: photo.slug,
                 src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
                 thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
                 rotation: (photo as any).rotation ?? 0,

@@ -22,7 +22,21 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const pathname = usePathname();
 
   const safeItems = useMemo(() => items.filter((item) => item.src), [items]);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const currentSlug = useMemo(() => {
+    const parts = pathname.split("/").filter(Boolean);
+    return parts[parts.length - 1] || "";
+  }, [pathname]);
+
+  const initialIndex = useMemo(() => {
+    const foundIndex = safeItems.findIndex((item) => item.slug === currentSlug);
+    return foundIndex >= 0 ? foundIndex : 0;
+  }, [safeItems, currentSlug]);
+
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
+
+  useEffect(() => {
+    setActiveIndex(initialIndex);
+  }, [initialIndex]);
 
   useEffect(() => {
     if (!titleTargetId) return;
@@ -36,16 +50,14 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   useEffect(() => {
     const active = safeItems[activeIndex];
     if (!active?.slug) return;
+    if (currentSlug === active.slug) return;
 
     const parts = pathname.split("/").filter(Boolean);
     if (parts.length < 2) return;
 
-    const currentSlug = parts[parts.length - 1];
-    if (currentSlug === active.slug) return;
-
     const nextPath = `/${parts[0]}/${active.slug}`;
     router.replace(nextPath, { scroll: false });
-  }, [activeIndex, safeItems, pathname, router]);
+  }, [activeIndex, safeItems, pathname, router, currentSlug]);
 
   if (!safeItems.length) return null;
 
