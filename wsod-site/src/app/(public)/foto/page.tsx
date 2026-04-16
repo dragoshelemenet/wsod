@@ -62,7 +62,7 @@ function SectionPager({
         alignItems: "center",
         justifyContent: "flex-end",
         gap: 12,
-        marginTop: 14,
+        marginTop: 16,
       }}
     >
       {currentPage > 1 ? (
@@ -104,14 +104,7 @@ function SectionPager({
         </span>
       )}
 
-      <div
-        aria-label={`Page ${currentPage} of ${totalPages}`}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         {Array.from({ length: totalPages }, (_, index) => {
           const page = index + 1;
           const active = page === currentPage;
