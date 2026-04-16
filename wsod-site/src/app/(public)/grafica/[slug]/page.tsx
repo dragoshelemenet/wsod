@@ -16,6 +16,12 @@ function looksAutoTitle(value: string) {
   return false;
 }
 
+function getDisplayTitle(item: any) {
+  return looksAutoTitle(item.title)
+    ? item.brand?.name || item.personModel?.name || item.graphicKind || "Grafica"
+    : item.title;
+}
+
 export default async function GraficaSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const [item, allGraphics] = await Promise.all([
@@ -74,12 +80,15 @@ export default async function GraficaSlugPage({ params }: PageProps) {
     )
     .slice(0, 12);
 
+  const displayTitle = getDisplayTitle(item);
+
   const mainGalleryItems =
     item.brandId
       ? [
           {
             id: item.id,
             title: item.title,
+            displayTitle: getDisplayTitle(item),
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -87,6 +96,9 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           ...sameBrandGraphics.map((graphic) => ({
             id: graphic.id,
             title: graphic.title,
+            displayTitle: looksAutoTitle(graphic.title)
+              ? item.brand?.name || item.graphicKind || "Grafica"
+              : graphic.title,
             src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
             thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
             rotation: (graphic as any).rotation ?? 0,
@@ -97,6 +109,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           {
             id: item.id,
             title: item.title,
+            displayTitle: getDisplayTitle(item),
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -104,6 +117,9 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           ...sameModelGraphics.map((graphic) => ({
             id: graphic.id,
             title: graphic.title,
+            displayTitle: looksAutoTitle(graphic.title)
+              ? item.personModel?.name || item.graphicKind || "Grafica"
+              : graphic.title,
             src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
             thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
             rotation: (graphic as any).rotation ?? 0,
@@ -113,25 +129,22 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           {
             id: item.id,
             title: item.title,
+            displayTitle: getDisplayTitle(item),
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
           },
         ].filter((entry) => entry.src);
 
-  const displayTitle = looksAutoTitle(item.title)
-    ? item.brand?.name || item.personModel?.name || item.graphicKind || "Grafica"
-    : item.title;
-
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <h1>{displayTitle}</h1>
+        <h1 id="detail-dynamic-title">{displayTitle}</h1>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect grafic."}
         </p>
 
-        <FotoDetailGalleryClient items={mainGalleryItems} />
+        <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
       </section>
 
       {otherBrandGraphics.length > 0 ? (
@@ -164,6 +177,9 @@ export default async function GraficaSlugPage({ params }: PageProps) {
               .map((graphic) => ({
                 id: graphic.id,
                 title: graphic.title,
+                displayTitle: looksAutoTitle(graphic.title)
+                  ? item.personModel?.name || item.graphicKind || "Grafica"
+                  : graphic.title,
                 src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
                 thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
                 rotation: (graphic as any).rotation ?? 0,

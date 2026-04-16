@@ -1,21 +1,32 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type GalleryItem = {
   id: string;
   title: string;
+  displayTitle?: string;
   src: string;
   thumb: string;
 };
 
 type Props = {
   items: GalleryItem[];
+  titleTargetId?: string;
 };
 
-export function FotoDetailGalleryClient({ items }: Props) {
+export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const safeItems = useMemo(() => items.filter((item) => item.src), [items]);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (!titleTargetId) return;
+    const el = document.getElementById(titleTargetId);
+    if (!el) return;
+    const active = safeItems[activeIndex];
+    if (!active) return;
+    el.textContent = active.displayTitle || active.title;
+  }, [activeIndex, safeItems, titleTargetId]);
 
   if (!safeItems.length) return null;
 
@@ -51,7 +62,7 @@ export function FotoDetailGalleryClient({ items }: Props) {
         >
           <img
             src={active.src}
-            alt={active.title}
+            alt={active.displayTitle || active.title}
             className="foto-detail-main-image"
           />
         </button>
@@ -79,7 +90,7 @@ export function FotoDetailGalleryClient({ items }: Props) {
             >
               <img
                 src={item.thumb}
-                alt={item.title}
+                alt={item.displayTitle || item.title}
                 className="foto-detail-thumb-image"
               />
             </button>

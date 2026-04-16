@@ -14,6 +14,12 @@ function looksAutoTitle(value: string) {
   return false;
 }
 
+function getDisplayTitle(item: any) {
+  return looksAutoTitle(item.title)
+    ? item.brand?.name || item.personModel?.name || "Foto"
+    : item.title;
+}
+
 export default async function FotoSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -89,9 +95,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
         })
       : [];
 
-  const displayTitle = looksAutoTitle(item.title)
-    ? item.brand?.name || item.personModel?.name || "Foto"
-    : item.title;
+  const displayTitle = getDisplayTitle(item);
 
   const mainGalleryItems =
     item.brand?.id
@@ -99,6 +103,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
           {
             id: item.id,
             title: item.title,
+            displayTitle: getDisplayTitle(item),
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -106,6 +111,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
           ...sameBrandPhotos.map((photo) => ({
             id: photo.id,
             title: photo.title,
+            displayTitle: looksAutoTitle(photo.title) ? item.brand?.name || "Foto" : photo.title,
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
             rotation: (photo as any).rotation ?? 0,
@@ -116,6 +122,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
           {
             id: item.id,
             title: item.title,
+            displayTitle: getDisplayTitle(item),
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -123,6 +130,9 @@ export default async function FotoSlugPage({ params }: PageProps) {
           ...sameModelPhotos.map((photo) => ({
             id: photo.id,
             title: photo.title,
+            displayTitle: looksAutoTitle(photo.title)
+              ? item.personModel?.name || "Foto"
+              : photo.title,
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
             rotation: (photo as any).rotation ?? 0,
@@ -132,6 +142,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
           {
             id: item.id,
             title: item.title,
+            displayTitle: getDisplayTitle(item),
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -141,10 +152,10 @@ export default async function FotoSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <h1>{displayTitle}</h1>
+        <h1 id="detail-dynamic-title">{displayTitle}</h1>
         {item.description ? <p className="inner-description">{item.description}</p> : null}
 
-        <FotoDetailGalleryClient items={mainGalleryItems} />
+        <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
       </section>
 
       {otherBrandPhotos.length ? (
@@ -179,6 +190,9 @@ export default async function FotoSlugPage({ params }: PageProps) {
               .map((photo) => ({
                 id: photo.id,
                 title: photo.title,
+                displayTitle: looksAutoTitle(photo.title)
+                  ? item.personModel?.name || "Foto"
+                  : photo.title,
                 src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
                 thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
                 rotation: (photo as any).rotation ?? 0,
