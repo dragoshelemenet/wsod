@@ -89,6 +89,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             id: item.id,
             title: item.title,
             displayTitle: getDisplayTitle(item),
+            slug: item.slug,
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -99,6 +100,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             displayTitle: looksAutoTitle(graphic.title)
               ? item.brand?.name || item.graphicKind || "Grafica"
               : graphic.title,
+            slug: graphic.slug,
             src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
             thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
             rotation: (graphic as any).rotation ?? 0,
@@ -110,6 +112,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             id: item.id,
             title: item.title,
             displayTitle: getDisplayTitle(item),
+            slug: item.slug,
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -130,6 +133,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             id: item.id,
             title: item.title,
             displayTitle: getDisplayTitle(item),
+            slug: item.slug,
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             rotation: (item as any).rotation ?? 0,
@@ -180,6 +184,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
                 displayTitle: looksAutoTitle(graphic.title)
                   ? item.personModel?.name || item.graphicKind || "Grafica"
                   : graphic.title,
+                slug: graphic.slug,
                 src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
                 thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
                 rotation: (graphic as any).rotation ?? 0,
