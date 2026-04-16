@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
 import { prisma } from "@/lib/prisma";
 import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
@@ -79,6 +80,40 @@ export default async function FotoSlugPage({ params }: PageProps) {
         })
       : [];
 
+  const fallbackPhotos = await prisma.mediaItem.findMany({
+    where: {
+      isVisible: true,
+      category: "foto",
+    },
+    orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+    take: 200,
+  });
+
+  const navigationSource =
+    item.brand?.id
+      ? [
+          item,
+          ...sameBrandPhotos,
+        ]
+      : item.personModel?.id
+      ? [
+          item,
+          ...sameModelPhotos,
+        ]
+      : fallbackPhotos;
+
+  const navigationItems = navigationSource
+    .filter((photo) => (photo.fileUrl || photo.previewUrl || photo.thumbnailUrl) && photo.slug)
+    .filter((photo, index, arr) => arr.findIndex((x) => x.id === photo.id) === index);
+
+  const currentIndex = navigationItems.findIndex((photo) => photo.id === item.id);
+  const prevPhoto =
+    currentIndex > 0 ? navigationItems[currentIndex - 1] : null;
+  const nextPhoto =
+    currentIndex >= 0 && currentIndex < navigationItems.length - 1
+      ? navigationItems[currentIndex + 1]
+      : null;
+
   const brandGalleryItems = [
     {
       id: item.id,
@@ -113,9 +148,65 @@ export default async function FotoSlugPage({ params }: PageProps) {
     })),
   ].filter((entry) => entry.src);
 
+  const navigationLabel = item.brand?.name
+    ? `Navighezi prin brandul ${item.brand.name}`
+    : item.personModel?.name
+    ? `Navighezi prin modelul ${item.personModel.name}`
+    : "Navighezi prin toate pozele";
+
   return (
     <main className="inner-page">
       <section className="inner-section">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 12,
+            marginBottom: 24,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {prevPhoto ? (
+              <Link
+                href={`/foto/${prevPhoto.slug}`}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  padding: "10px 14px",
+                  textDecoration: "none",
+                  color: "white",
+                }}
+              >
+                {"<"} Prev
+              </Link>
+            ) : null}
+
+            {nextPhoto ? (
+              <Link
+                href={`/foto/${nextPhoto.slug}`}
+                style={{
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  padding: "10px 14px",
+                  textDecoration: "none",
+                  color: "white",
+                }}
+              >
+                Next {">"}
+              </Link>
+            ) : null}
+          </div>
+
+          <div
+            style={{
+              border: "1px solid rgba(255,255,255,0.14)",
+              padding: "10px 14px",
+              color: "rgba(255,255,255,0.75)",
+            }}
+          >
+            {navigationLabel}
+          </div>
+        </div>
+
         <h1>{item.title}</h1>
         {item.description ? <p className="inner-description">{item.description}</p> : null}
 
