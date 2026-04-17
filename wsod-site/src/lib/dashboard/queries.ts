@@ -245,6 +245,23 @@ export async function getSiteContentRecord() {
   }
 }
 
+
+export async function getServicesCertificates() {
+  try {
+    return await prisma.mediaItem.findMany({
+      where: {
+        isVisible: true,
+        category: "grafica",
+        graphicKind: "certificat",
+        showOnServices: true,
+      },
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+    });
+  } catch {
+    return [];
+  }
+}
+
 export async function getDashboardBlogPosts() {
   try {
     return await prisma.blogPost.findMany({

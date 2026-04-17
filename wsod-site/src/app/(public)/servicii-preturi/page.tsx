@@ -1,4 +1,7 @@
-import { getSiteContentRecord } from "@/lib/dashboard/queries";
+import Link from "next/link";
+import { getServicesCertificates, getSiteContentRecord } from "@/lib/dashboard/queries";
+import { PublicCard } from "@/components/public/public-card";
+import { PublicGrid } from "@/components/public/public-grid";
 
 function toLines(value: string | null | undefined) {
   return (value || "")
@@ -20,12 +23,42 @@ function parsePackageCard(line: string) {
   return { title, subtitle, oldPrice, price, note };
 }
 
+function parseServiceTableRow(line: string) {
+  const [category = "", service = "", price = "", note = ""] = line
+    .split("|")
+    .map((part) => part.trim());
+
+  const normalizedCategory = category.toLowerCase();
+
+  const hrefMap: Record<string, string> = {
+    foto: "/foto",
+    video: "/video",
+    grafica: "/grafica",
+    website: "/website",
+    "meta-ads": "/meta-ads",
+    audio: "/audio",
+  };
+
+  return {
+    category: normalizedCategory,
+    categoryLabel: category || "",
+    service,
+    price,
+    note,
+    href: hrefMap[normalizedCategory] || "#",
+  };
+}
+
 export default async function ServicesPricingPage() {
-  const content = await getSiteContentRecord();
+  const [content, certificates] = await Promise.all([
+    getSiteContentRecord(),
+    getServicesCertificates(),
+  ]);
 
   const intro = toLines(content?.servicesList);
   const serviceCards = toLines(content?.servicesCards).map(parseServiceCard);
   const packageCards = toLines(content?.packageCards).map(parsePackageCard);
+  const serviceTableRows = toLines(content?.servicesTableRows).map(parseServiceTableRow);
 
   return (
     <main className="inner-page">
@@ -40,6 +73,45 @@ export default async function ServicesPricingPage() {
             </div>
           ) : null}
         </header>
+
+        {serviceTableRows.length ? (
+          <section className="services-clean-section">
+            <div className="section-mini-head">
+              <h2>Tabel servicii</h2>
+            </div>
+
+            <div className="services-price-table-wrap">
+              <table className="services-price-table">
+                <thead>
+                  <tr>
+                    <th>Categorie</th>
+                    <th>Serviciu</th>
+                    <th>Pret</th>
+                    <th>Detalii</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {serviceTableRows.map((row, index) => (
+                    <tr key={`${row.category}-${row.service}-${index}`}>
+                      <td>
+                        {row.href !== "#" ? (
+                          <Link href={row.href} className="services-price-link">
+                            {row.categoryLabel || row.category}
+                          </Link>
+                        ) : (
+                          row.categoryLabel || row.category
+                        )}
+                      </td>
+                      <td>{row.service}</td>
+                      <td>{row.price}</td>
+                      <td>{row.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        ) : null}
 
         {serviceCards.length ? (
           <section className="services-clean-section">
@@ -80,6 +152,28 @@ export default async function ServicesPricingPage() {
                 </article>
               ))}
             </div>
+          </section>
+        ) : null}
+
+        {certificates.length ? (
+          <section className="services-clean-section">
+            <div className="section-mini-head">
+              <h2>{content?.servicesCertificatesTitle || "Certificate"}</h2>
+            </div>
+
+            <PublicGrid dense>
+              {certificates.map((item) => (
+                <PublicCard
+                  key={item.id}
+                  title={item.title}
+                  href={`/grafica/${item.slug}`}
+                  imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
+                  imageOnly
+                  imageFit="contain"
+                  mediaRatio="wide"
+                />
+              ))}
+            </PublicGrid>
           </section>
         ) : null}
       </section>

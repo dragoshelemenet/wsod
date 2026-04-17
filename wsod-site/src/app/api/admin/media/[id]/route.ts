@@ -100,6 +100,7 @@ async function handleUpdate(
   const aiModeRaw = String(body.aiMode || "").trim();
   const aiMode = aiModeRaw === "ai" || aiModeRaw === "ai-edit" ? aiModeRaw : null;
   const aiEdited = Boolean(body.aiEdited || aiMode);
+  const showOnServices = Boolean(body.showOnServices);
   const rotationRaw = Number(body.rotation ?? 0);
   const normalizedRotation =
     rotationRaw === 90 || rotationRaw === 180 || rotationRaw === 270 ? rotationRaw : 0;
@@ -166,6 +167,7 @@ async function handleUpdate(
       metaDescription: metaDescription || null,
       groupLabel: groupLabel || null,
       graphicKind: graphicKind || null,
+      showOnServices,
       videoKind,
       videoFormat,
       groupOrder: Number.isFinite(groupOrder) ? groupOrder : 0,

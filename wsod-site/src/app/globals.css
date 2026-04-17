@@ -5490,3 +5490,48 @@ video::-webkit-media-controls-panel {
     max-height: 100% !important;
   }
 }
+
+
+.services-price-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 14, 18, 0.7);
+}
+
+.services-price-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.services-price-table th,
+.services-price-table td {
+  padding: 16px 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.services-price-table th {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.62);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.services-price-table td {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.services-price-link {
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.services-price-link:hover {
+  text-decoration: underline;
+}

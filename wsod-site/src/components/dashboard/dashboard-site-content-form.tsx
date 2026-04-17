@@ -11,6 +11,8 @@ type SiteContentRecord = {
   servicesList: string | null;
   servicesCards: string | null;
   packageCards: string | null;
+  servicesTableRows: string | null;
+  servicesCertificatesTitle: string | null;
   pricingLabel: string | null;
   pricingHref: string | null;
   contactLabel: string | null;
@@ -33,6 +35,8 @@ export function DashboardSiteContentForm({
   const [servicesList, setServicesList] = useState(item?.servicesList || "");
   const [servicesCards, setServicesCards] = useState(item?.servicesCards || "");
   const [packageCards, setPackageCards] = useState(item?.packageCards || "");
+  const [servicesTableRows, setServicesTableRows] = useState(item?.servicesTableRows || "");
+  const [servicesCertificatesTitle, setServicesCertificatesTitle] = useState(item?.servicesCertificatesTitle || "");
   const [pricingLabel, setPricingLabel] = useState(item?.pricingLabel || "");
   const [pricingHref, setPricingHref] = useState(item?.pricingHref || "");
   const [contactLabel, setContactLabel] = useState(item?.contactLabel || "");
@@ -61,6 +65,8 @@ export function DashboardSiteContentForm({
           servicesList,
           servicesCards,
           packageCards,
+          servicesTableRows,
+          servicesCertificatesTitle,
           pricingLabel,
           pricingHref,
           contactLabel,
@@ -131,6 +137,25 @@ export function DashboardSiteContentForm({
             className="admin-textarea"
             value={packageCards}
             onChange={(e) => setPackageCards(e.target.value)}
+          />
+        </div>
+
+        <div className="admin-form-field site-content-full">
+          <label>Services Table Rows</label>
+          <textarea
+            className="admin-textarea"
+            value={servicesTableRows}
+            onChange={(e) => setServicesTableRows(e.target.value)}
+            placeholder="foto|Fotosesiune portret|de la 100€|editare inclusă&#10;video|Videoclip 9:16|de la 150€|filmare + montaj&#10;website|Website prezentare|de la 300€|design + implementare"
+          />
+        </div>
+
+        <div className="admin-form-field site-content-full">
+          <label>Services Certificates Title</label>
+          <input
+            value={servicesCertificatesTitle}
+            onChange={(e) => setServicesCertificatesTitle(e.target.value)}
+            placeholder="Certificate"
           />
         </div>
 

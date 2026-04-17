@@ -26,6 +26,7 @@ type MediaItem = {
   graphicKind?: string | null;
   videoKind?: string | null;
   videoFormat?: string | null;
+  showOnServices?: boolean;
   brandId: string | null;
   personModelId: string | null;
   audioProfileId: string | null;
@@ -294,6 +295,7 @@ function DashboardMediaEditCard({
   const [graphicKind, setGraphicKind] = useState(item.graphicKind || "");
   const [videoKind, setVideoKind] = useState(item.videoKind || "");
   const [videoFormat, setVideoFormat] = useState(item.videoFormat || "portrait-9x16");
+  const [showOnServices, setShowOnServices] = useState(Boolean(item.showOnServices));
   const [thumbnailDragOver, setThumbnailDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -352,6 +354,7 @@ function DashboardMediaEditCard({
           aiEdited: !!aiMode,
           aiMode,
           graphicKind: item.category === "grafica" ? (graphicKind || null) : null,
+          showOnServices: item.category === "grafica" ? showOnServices : false,
           videoKind: item.category === "video" ? (videoKind || null) : null,
           videoFormat: item.category === "video" ? videoFormat : null,
         }),
@@ -554,27 +557,38 @@ function DashboardMediaEditCard({
               </label>
 
               {item.category === "grafica" ? (
-                <div className="admin-form-field">
-                  <label>Tip material grafic</label>
-                  <select
-                    className="admin-select"
-                    value={graphicKind}
-                    onChange={(event) => setGraphicKind(event.target.value)}
-                  >
-                    <option value="">Selectează tipul</option>
-                    <option value="flyer">Flyer</option>
-                    <option value="carte-vizita">Carte de vizita</option>
-                    <option value="certificat">Certificat</option>
-                    <option value="poster">Poster</option>
-                    <option value="banner">Banner</option>
-                    <option value="meniu">Meniu</option>
-                    <option value="ambalaj">Ambalaj</option>
-                    <option value="eticheta">Eticheta</option>
-                    <option value="social-media">Social media</option>
-                    <option value="logo">Logo</option>
-                    <option value="altul">Altul</option>
-                  </select>
-                </div>
+                <>
+                  <div className="admin-form-field">
+                    <label>Tip material grafic</label>
+                    <select
+                      className="admin-select"
+                      value={graphicKind}
+                      onChange={(event) => setGraphicKind(event.target.value)}
+                    >
+                      <option value="">Selectează tipul</option>
+                      <option value="flyer">Flyer</option>
+                      <option value="carte-vizita">Carte de vizita</option>
+                      <option value="certificat">Certificat</option>
+                      <option value="poster">Poster</option>
+                      <option value="banner">Banner</option>
+                      <option value="meniu">Meniu</option>
+                      <option value="ambalaj">Ambalaj</option>
+                      <option value="eticheta">Eticheta</option>
+                      <option value="social-media">Social media</option>
+                      <option value="logo">Logo</option>
+                      <option value="altul">Altul</option>
+                    </select>
+                  </div>
+
+                  <label className="admin-toggle-row">
+                    <span>Arată și în Servicii</span>
+                    <input
+                      type="checkbox"
+                      checked={showOnServices}
+                      onChange={(event) => setShowOnServices(event.target.checked)}
+                    />
+                  </label>
+                </>
               ) : null}
 
               {["foto", "video"].includes(item.category) ? (
