@@ -267,7 +267,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                     alt={item.title}
                     className="foto-preview-grid-image"
                   />
-                  {item.aiEdited ? <AiBadge /> : null}
+                  {item.aiMode ? <AiBadge mode={item.aiMode} /> : null}
                 </div>
               </Link>
             ))}
@@ -321,7 +321,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                     alt={item.title}
                     className="foto-preview-grid-image"
                   />
-                  {item.aiEdited ? <AiBadge /> : null}
+                  {item.aiMode ? <AiBadge mode={item.aiMode} /> : null}
                 </div>
               </Link>
             ))}
