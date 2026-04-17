@@ -58,6 +58,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const [brandSlug, setBrandSlug] = useState(brands[0]?.slug ?? "");
   const [category, setCategory] = useState("foto");
   const [graphicKind, setGraphicKind] = useState("");
+  const [showOnServices, setShowOnServices] = useState(false);
   const [videoKind, setVideoKind] = useState("");
   const [videoFormat, setVideoFormat] = useState("portrait-9x16");
   const [description, setDescription] = useState("");
@@ -194,6 +195,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               category,
               type,
               graphicKind: isGrafica ? graphicKind : "",
+              showOnServices: isGrafica ? showOnServices : false,
               videoKind: isVideo ? videoKind : "",
               videoFormat: isVideo ? videoFormat : "",
               date: new Date().toISOString(),
@@ -394,6 +396,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               setMessage("");
               if (event.target.value !== "grafica") {
                 setGraphicKind("");
+                setShowOnServices(false);
               }
               if (event.target.value !== "video") {
                 setVideoKind("");
@@ -440,6 +443,17 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               <option value="altul">Altul</option>
             </select>
           </div>
+        ) : null}
+
+        {isGrafica ? (
+          <label className="admin-toggle-row">
+            <span>Arată și în Servicii</span>
+            <input
+              type="checkbox"
+              checked={showOnServices}
+              onChange={(event) => setShowOnServices(event.target.checked)}
+            />
+          </label>
         ) : null}
 
         {isVideo ? (

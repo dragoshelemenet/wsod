@@ -83,6 +83,8 @@ export async function POST(request: Request) {
     const aiMode = aiModeRaw === "ai" || aiModeRaw === "ai-edit" ? aiModeRaw : null;
     const aiEdited =
       typeof body.aiEdited === "boolean" ? body.aiEdited : Boolean(aiMode);
+    const showOnServices =
+      typeof body.showOnServices === "boolean" ? body.showOnServices : false;
 
     if (!category) {
       return NextResponse.json(
@@ -250,6 +252,7 @@ export async function POST(request: Request) {
               : 0
             : 0,
         graphicKind: category === "grafica" ? graphicKind || null : null,
+        showOnServices: category === "grafica" ? showOnServices : false,
         videoKind: category === "video" ? videoKind : null,
         videoFormat: category === "video" ? videoFormat : null,
         aiEdited,
