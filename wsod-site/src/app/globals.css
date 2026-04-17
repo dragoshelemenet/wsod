@@ -5126,12 +5126,29 @@ video::-webkit-media-controls-panel {
 }
 
 @media (max-width: 640px) {
+  .detail-top-row {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    column-gap: 12px;
+    align-items: start;
+  }
+
+  .detail-top-row h1 {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0 !important;
+  }
+
   .detail-back-button {
-    left: 0;
-    top: -14px;
+    position: static;
+    left: auto;
+    top: auto;
+    grid-column: 1;
+    grid-row: 1;
     width: 34px;
     height: 34px;
     font-size: 17px;
+    margin-top: 4px;
   }
 
   .detail-bottom-back {
