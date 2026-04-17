@@ -169,16 +169,19 @@ function SectionPager({
   );
 }
 
-function AiBadge() {
+function AiBadge({ mode }: { mode?: string | null }) {
+  const isFullAi = mode === "ai";
+  const title = isFullAi
+    ? "Fotosesiune complet creată cu AI."
+    : "Hainele sau unele elemente au fost schimbate cu AI.";
+  const label = isFullAi ? "AI" : "AI EDIT";
+
   return (
     <div
       className="ai-photo-badge"
-      title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)."
+      title={title}
     >
-      <span className="ai-photo-badge-icon" aria-hidden="true">
-        ✦
-      </span>
-      <span className="ai-photo-badge-text">Schimbat CU AI</span>
+      <span className="ai-photo-badge-text">{label}</span>
     </div>
   );
 }
