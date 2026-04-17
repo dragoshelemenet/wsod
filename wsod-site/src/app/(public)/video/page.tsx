@@ -9,6 +9,21 @@ function hasAiBadge(item: any) {
   return Boolean(item.aiMode || item.aiEdited);
 }
 
+function getVideoRatio(item: any) {
+  if (item.videoFormat === "wide-16x9") return "wide";
+  if (item.videoFormat === "square-1x1") return "square";
+  return "portrait";
+}
+
+const VIDEO_GROUPS = [
+  { title: "Videoclipuri 9:16", videoKind: "normal", videoFormat: "portrait-9x16" },
+  { title: "Videoclipuri 16:9", videoKind: "normal", videoFormat: "wide-16x9" },
+  { title: "Videoclipuri 1:1", videoKind: "normal", videoFormat: "square-1x1" },
+  { title: "Videoclipuri cu versuri 9:16", videoKind: "lyrics", videoFormat: "portrait-9x16" },
+  { title: "Videoclipuri cu versuri 16:9", videoKind: "lyrics", videoFormat: "wide-16x9" },
+  { title: "Videoclipuri cu versuri 1:1", videoKind: "lyrics", videoFormat: "square-1x1" },
+] as const;
+
 export default async function VideoPage() {
   const [items, allBrands] = await Promise.all([
     getPublishedMediaByCategory("video"),
@@ -21,13 +36,47 @@ export default async function VideoPage() {
       item.previewImages.length > 0
   );
 
-  const normalVideos = items.filter((item: any) => item.videoKind !== "lyrics");
-  const lyricVideos = items.filter((item: any) => item.videoKind === "lyrics");
+  const groupedSections = VIDEO_GROUPS.map((group) => {
+    const sectionItems = items.filter((item: any) => {
+      const normalizedKind = item.videoKind === "lyrics" ? "lyrics" : "normal";
+      const normalizedFormat =
+        item.videoFormat === "wide-16x9" || item.videoFormat === "square-1x1"
+          ? item.videoFormat
+          : "portrait-9x16";
 
+      return normalizedKind === group.videoKind && normalizedFormat === group.videoFormat;
+    });
+
+    return { ...group, items: sectionItems };
+  });
   return (
     <PublicShell title="Video">
-      {normalVideos.length > 0 ? (
-        <section className="inner-section-block">
+      {groupedSections.map((section) =>
+        section.items.length > 0 ? (
+          <section key={`${section.videoKind}-${section.videoFormat}`} className="inner-section-block">
+            <div className="section-mini-head">
+              <h2>{section.title}</h2>
+            </div>
+
+            <PublicGrid dense>
+              {section.items.map((item: any) => (
+                <PublicCard
+                  key={item.id}
+                  title={item.title}
+                  href={`/video/${item.slug}`}
+                  imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
+                  imageOnly
+                  showPlayIcon
+                  mediaRatio={getVideoRatio(item)}
+                  badgeLabel={hasAiBadge(item) ? "AI" : undefined}
+                  badgeTooltip={hasAiBadge(item) ? "Video complet generat cu AI." : undefined}
+                />
+              ))}
+            </PublicGrid>
+          </section>
+        ) : null
+      )}
+      <section className="inner-section-block">
           <div className="section-mini-head">
             <h2>Videoclipuri</h2>
           </div>

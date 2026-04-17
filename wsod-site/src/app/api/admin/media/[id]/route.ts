@@ -89,6 +89,10 @@ async function handleUpdate(
   const graphicKind = String(body.graphicKind || "").trim();
   const videoKindRaw = String(body.videoKind || "").trim();
   const videoKind = videoKindRaw === "lyrics" ? "lyrics" : null;
+  const videoFormatRaw = String(body.videoFormat || "").trim();
+  const videoFormat = ["portrait-9x16", "wide-16x9", "square-1x1"].includes(videoFormatRaw)
+    ? videoFormatRaw
+    : "portrait-9x16";
   const groupOrder = Number(body.groupOrder ?? 0);
   const sortOrder = Number(body.sortOrder ?? 0);
   const isFeatured = Boolean(body.isFeatured);
@@ -163,6 +167,7 @@ async function handleUpdate(
       groupLabel: groupLabel || null,
       graphicKind: graphicKind || null,
       videoKind,
+      videoFormat,
       groupOrder: Number.isFinite(groupOrder) ? groupOrder : 0,
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       isFeatured,

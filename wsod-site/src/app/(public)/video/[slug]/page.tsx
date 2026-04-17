@@ -18,6 +18,12 @@ function getAiBadgeTooltip(item: any) {
   return hasAiBadge(item) ? "Video complet generat cu AI." : undefined;
 }
 
+function getVideoRatio(item: any) {
+  if (item.videoFormat === "wide-16x9") return "wide";
+  if (item.videoFormat === "square-1x1") return "square";
+  return "portrait";
+}
+
 export default async function VideoSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -91,7 +97,7 @@ export default async function VideoSlugPage({ params }: PageProps) {
                 imageUrl={video.thumbnailUrl || video.previewUrl || video.fileUrl}
                 imageOnly
                 showPlayIcon
-                mediaRatio={video.videoKind === "lyrics" ? "wide" : "portrait"}
+                mediaRatio={getVideoRatio(video)}
                 badgeLabel={getAiBadgeLabel(video)}
                 badgeTooltip={getAiBadgeTooltip(video)}
               />
@@ -115,7 +121,7 @@ export default async function VideoSlugPage({ params }: PageProps) {
                 imageUrl={video.thumbnailUrl || video.previewUrl || video.fileUrl}
                 imageOnly
                 showPlayIcon
-                mediaRatio={video.videoKind === "lyrics" ? "wide" : "portrait"}
+                mediaRatio={getVideoRatio(video)}
                 badgeLabel={getAiBadgeLabel(video)}
                 badgeTooltip={getAiBadgeTooltip(video)}
               />

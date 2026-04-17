@@ -23,6 +23,7 @@ type MediaItem = {
   aiEdited: boolean;
   aiMode?: string | null;
   videoKind?: string | null;
+  videoFormat?: string | null;
   brandId: string | null;
   personModelId: string | null;
   audioProfileId: string | null;
@@ -278,6 +279,7 @@ function DashboardMediaEditCard({
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
   const [aiMode, setAiMode] = useState(item.aiMode || "");
   const [videoKind, setVideoKind] = useState(item.videoKind || "");
+  const [videoFormat, setVideoFormat] = useState(item.videoFormat || "portrait-9x16");
   const [loading, setLoading] = useState(false);
 
   const previewImage = useMemo(
@@ -310,6 +312,7 @@ function DashboardMediaEditCard({
           aiEdited: !!aiMode,
           aiMode,
           videoKind: item.category === "video" ? (videoKind || null) : null,
+          videoFormat: item.category === "video" ? videoFormat : null,
         }),
       });
 
@@ -342,7 +345,7 @@ function DashboardMediaEditCard({
 
           <div className="media-compact-meta">
             <strong>{title}</strong>
-            <span>{item.category} • {item.type}{item.category === "video" && videoKind === "lyrics" ? " • lyrics" : ""}</span>
+            <span>{item.category} • {item.type}{item.category === "video" && videoKind === "lyrics" ? " • lyrics" : ""}{item.category === "video" ? ` • ${videoFormat === "wide-16x9" ? "16:9" : videoFormat === "square-1x1" ? "1:1" : "9:16"}` : ""}</span>
             <span>{item.slug}</span>
             <span>
               {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiMode ? aiMode.toUpperCase() : "No AI"}
@@ -481,17 +484,32 @@ function DashboardMediaEditCard({
               ) : null}
 
               {item.category === "video" ? (
-                <div className="admin-form-field">
-                  <label>Tip video</label>
-                  <select
-                    className="admin-select"
-                    value={videoKind}
-                    onChange={(event) => setVideoKind(event.target.value)}
-                  >
-                    <option value="">Video normal</option>
-                    <option value="lyrics">Videoclip cu versuri</option>
-                  </select>
-                </div>
+                <>
+                  <div className="admin-form-field">
+                    <label>Tip video</label>
+                    <select
+                      className="admin-select"
+                      value={videoKind}
+                      onChange={(event) => setVideoKind(event.target.value)}
+                    >
+                      <option value="">Video normal</option>
+                      <option value="lyrics">Videoclip cu versuri</option>
+                    </select>
+                  </div>
+
+                  <div className="admin-form-field">
+                    <label>Format video</label>
+                    <select
+                      className="admin-select"
+                      value={videoFormat}
+                      onChange={(event) => setVideoFormat(event.target.value)}
+                    >
+                      <option value="portrait-9x16">9:16</option>
+                      <option value="wide-16x9">16:9</option>
+                      <option value="square-1x1">1:1</option>
+                    </select>
+                  </div>
+                </>
               ) : null}
             </div>
           </div>

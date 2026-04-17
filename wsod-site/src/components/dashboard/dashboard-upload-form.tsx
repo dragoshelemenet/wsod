@@ -58,6 +58,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const [category, setCategory] = useState("foto");
   const [graphicKind, setGraphicKind] = useState("");
   const [videoKind, setVideoKind] = useState("");
+  const [videoFormat, setVideoFormat] = useState("portrait-9x16");
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
@@ -187,6 +188,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               type,
               graphicKind: isGrafica ? graphicKind : "",
               videoKind: isVideo ? videoKind : "",
+              videoFormat: isVideo ? videoFormat : "",
               date: new Date().toISOString(),
               fileUrl: patch.fileUrl || "",
               thumbnailUrl: patch.thumbnailUrl || "",
@@ -388,6 +390,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               }
               if (event.target.value !== "video") {
                 setVideoKind("");
+                setVideoFormat("portrait-9x16");
               }
               if (!["foto", "video"].includes(event.target.value)) {
                 setAiMode("");
@@ -446,6 +449,25 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
             >
               <option value="">Video normal</option>
               <option value="lyrics">Videoclip cu versuri</option>
+            </select>
+          </div>
+        ) : null}
+
+        {isVideo ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-video-format">Format video</label>
+            <select
+              id="media-video-format"
+              className="admin-select"
+              value={videoFormat}
+              onChange={(event) => {
+                setVideoFormat(event.target.value);
+                setMessage("");
+              }}
+            >
+              <option value="portrait-9x16">9:16</option>
+              <option value="wide-16x9">16:9</option>
+              <option value="square-1x1">1:1</option>
             </select>
           </div>
         ) : null}
