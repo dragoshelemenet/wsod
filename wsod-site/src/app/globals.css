@@ -5276,3 +5276,21 @@ video::-webkit-media-controls-panel {
 .admin-dropzone-compact .admin-dropzone-copy span {
   font-size: 12px;
 }
+
+
+.foto-detail-main-button {
+  cursor: zoom-in;
+}
+
+.foto-detail-main-button.is-zoomed {
+  cursor: zoom-out;
+}
+
+.foto-detail-main-image {
+  transition: transform 180ms ease;
+  transform-origin: center center;
+}
+
+.foto-detail-main-image.is-zoomed {
+  transform: scale(1.9);
+}

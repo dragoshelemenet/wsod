@@ -59,9 +59,11 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   }, [safeItems, currentSlug]);
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
     setActiveIndex(initialIndex);
+    setIsZoomed(false);
   }, [initialIndex]);
 
   useEffect(() => {
@@ -91,11 +93,17 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const hasMany = safeItems.length > 1;
 
   const goPrev = () => {
+    setIsZoomed(false);
     setActiveIndex((prev) => (prev - 1 + safeItems.length) % safeItems.length);
   };
 
   const goNext = () => {
+    setIsZoomed(false);
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
+  };
+
+  const toggleZoom = () => {
+    setIsZoomed((prev) => !prev);
   };
 
   return (
@@ -114,13 +122,14 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
 
         <button
           type="button"
-          className="foto-detail-main-button"
-          onClick={hasMany ? goNext : undefined}
+          className={`foto-detail-main-button ${isZoomed ? "is-zoomed" : ""}`}
+          onClick={toggleZoom}
+          aria-label={isZoomed ? "Zoom out" : "Zoom in"}
         >
           <img
             src={active.src}
             alt={active.displayTitle || active.title}
-            className="foto-detail-main-image"
+            className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
           />
           {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
         </button>
@@ -144,7 +153,10 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               key={item.id}
               type="button"
               className={`foto-detail-thumb-button ${index === activeIndex ? "is-active" : ""}`}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                setIsZoomed(false);
+                setActiveIndex(index);
+              }}
             >
               <img
                 src={item.thumb}
