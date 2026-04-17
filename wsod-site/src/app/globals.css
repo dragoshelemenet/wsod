@@ -4664,15 +4664,15 @@ body:has(.public-navbar) .section-mini-head {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 5;
+  z-index: 20;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   justify-content: center;
   max-width: calc(100% - 16px);
-  padding: 6px 10px;
+  padding: 5px 8px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.74);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: white;
   backdrop-filter: blur(8px);
@@ -4681,8 +4681,8 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .ai-photo-badge-icon {
-  width: 14px;
-  height: 14px;
+  width: 11px;
+  height: 11px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4691,8 +4691,8 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .ai-photo-badge-icon-svg {
-  width: 14px;
-  height: 14px;
+  width: 11px;
+  height: 11px;
   display: block;
 }
 
@@ -4700,7 +4700,7 @@ body:has(.public-navbar) .section-mini-head {
   font-size: 11px;
   line-height: 1;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
@@ -4710,11 +4710,11 @@ body:has(.public-navbar) .section-mini-head {
 
 .ai-photo-badge[data-ai-tooltip]::after {
   content: attr(data-ai-tooltip);
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  min-width: 180px;
-  max-width: 260px;
+  position: fixed;
+  top: 96px;
+  right: 24px;
+  min-width: 190px;
+  max-width: 280px;
   padding: 10px 12px;
   border-radius: 14px;
   background: rgba(12, 12, 16, 0.96);
@@ -4733,15 +4733,15 @@ body:has(.public-navbar) .section-mini-head {
 
 .ai-photo-badge[data-ai-tooltip]::before {
   content: "";
-  position: absolute;
-  right: 18px;
-  top: calc(100% + 4px);
+  position: fixed;
+  top: 90px;
+  right: 38px;
   width: 10px;
   height: 10px;
   background: rgba(12, 12, 16, 0.96);
   border-left: 1px solid rgba(255, 255, 255, 0.12);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  transform: rotate(45deg);
+  transform: rotate(45deg) translateY(-4px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
@@ -4750,7 +4750,14 @@ body:has(.public-navbar) .section-mini-head {
 .ai-photo-badge:hover::after,
 .ai-photo-badge:hover::before {
   opacity: 1;
+}
+
+.ai-photo-badge:hover::after {
   transform: translateY(0);
+}
+
+.ai-photo-badge:hover::before {
+  transform: rotate(45deg) translateY(0);
 }
 
 .ai-photo-dot {
@@ -4769,14 +4776,14 @@ body:has(.public-navbar) .section-mini-head {
   .ai-photo-badge {
     top: 6px;
     right: 6px;
-    gap: 5px;
-    padding: 5px 8px;
+    gap: 4px;
+    padding: 4px 7px;
   }
 
   .ai-photo-badge-icon,
   .ai-photo-badge-icon-svg {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
   }
 
   .ai-photo-badge-text {
@@ -4784,11 +4791,17 @@ body:has(.public-navbar) .section-mini-head {
   }
 
   .ai-photo-badge[data-ai-tooltip]::after {
-    right: 0;
+    top: 82px;
+    right: 12px;
     min-width: 150px;
     max-width: 220px;
     font-size: 11px;
     padding: 8px 10px;
+  }
+
+  .ai-photo-badge[data-ai-tooltip]::before {
+    top: 76px;
+    right: 26px;
   }
 }
 
