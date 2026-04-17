@@ -4818,19 +4818,7 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 
-.detail-thumb-grid-foto-related {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
-}
 
-.detail-thumb-link-foto-related {
-  display: block;
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
-  border: 0;
-}
 
 .detail-thumb-grid-foto-related .detail-thumb-image {
   display: block;
@@ -4840,48 +4828,36 @@ body:has(.public-navbar) .section-mini-head {
   border-radius: 12px;
 }
 
-.detail-thumb-link-dimmed::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-  z-index: 1;
+
+
+
+
+
+
+.foto-detail-thumb-button .ai-photo-dot,
+
+.foto-detail-thumb-button .ai-photo-badge {
+  top: 4px;
+  right: 4px;
+  gap: 1px;
+  padding: 2px 4px 2px 3px;
 }
 
-.detail-thumb-link-foto-related .ai-photo-badge {
-  z-index: 2;
+.foto-detail-thumb-button .ai-photo-badge-icon,
+.foto-detail-thumb-button .ai-photo-badge-icon-svg {
+  width: 8px;
+  height: 8px;
 }
 
-@media (max-width: 1200px) {
-  .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-  }
+.foto-detail-thumb-button .ai-photo-badge-text {
+  font-size: 7px;
+  font-weight: 900;
 }
-
-@media (max-width: 900px) {
-  .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .detail-thumb-link-foto-related,
-  .detail-thumb-grid-foto-related .detail-thumb-image {
-    border-radius: 10px;
-  }
-}
-
 
 .detail-thumb-grid-foto-related {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 5px;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 4px;
 }
 
 .detail-thumb-link-foto-related {
@@ -4889,7 +4865,7 @@ body:has(.public-navbar) .section-mini-head {
   position: relative;
   min-width: 0;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 7px;
   overflow: hidden;
   background: transparent;
   border: 0;
@@ -4900,7 +4876,7 @@ body:has(.public-navbar) .section-mini-head {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 7px;
 }
 
 .detail-thumb-link-dimmed::after {
@@ -4921,32 +4897,32 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge {
-  top: 4px;
-  right: 4px;
+  top: 3px;
+  right: 3px;
   gap: 1px;
   padding: 2px 4px 2px 3px;
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge-icon,
 .detail-thumb-grid-foto-related .ai-photo-badge-icon-svg {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge-text {
-  font-size: 7px;
+  font-size: 6px;
   font-weight: 900;
 }
 
 @media (max-width: 1200px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 900px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
@@ -4958,46 +4934,22 @@ body:has(.public-navbar) .section-mini-head {
 
   .detail-thumb-link-foto-related,
   .detail-thumb-link-foto-related .detail-thumb-image {
-    border-radius: 7px;
+    border-radius: 6px;
   }
 
   .detail-thumb-grid-foto-related .ai-photo-badge {
-    top: 4px;
-    right: 4px;
-    padding: 3px 5px 3px 4px;
+    top: 2px;
+    right: 2px;
+    padding: 1px 3px 1px 2px;
   }
 
   .detail-thumb-grid-foto-related .ai-photo-badge-icon,
   .detail-thumb-grid-foto-related .ai-photo-badge-icon-svg {
-    width: 9px;
-    height: 9px;
+    width: 6px;
+    height: 6px;
   }
 
   .detail-thumb-grid-foto-related .ai-photo-badge-text {
-    font-size: 8px;
+    font-size: 5px;
   }
-}
-
-
-.foto-detail-thumb-button .ai-photo-dot,
-.detail-thumb-link-foto-related .ai-photo-dot {
-  display: none !important;
-}
-
-.foto-detail-thumb-button .ai-photo-badge {
-  top: 4px;
-  right: 4px;
-  gap: 1px;
-  padding: 2px 4px 2px 3px;
-}
-
-.foto-detail-thumb-button .ai-photo-badge-icon,
-.foto-detail-thumb-button .ai-photo-badge-icon-svg {
-  width: 8px;
-  height: 8px;
-}
-
-.foto-detail-thumb-button .ai-photo-badge-text {
-  font-size: 7px;
-  font-weight: 900;
 }
