@@ -5646,199 +5646,6 @@ video::-webkit-media-controls-panel {
 }
 
 
-/* =========================
-   WSOD PAGE REVEAL EFFECT
-   ========================= */
-
-.wsod-page-reveal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 16% 20%, rgba(90, 110, 255, 0.18), transparent 26%),
-    radial-gradient(circle at 82% 18%, rgba(255, 70, 190, 0.14), transparent 24%),
-    radial-gradient(circle at 54% 14%, rgba(70, 230, 255, 0.10), transparent 22%),
-    linear-gradient(115deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.08) 16%, rgba(255,255,255,0.00) 30%),
-    linear-gradient(180deg, rgba(6, 8, 16, 0.22), rgba(3, 3, 8, 0.08));
-  mix-blend-mode: screen;
-  animation: wsod-page-overlay-sweep 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity, transform, filter;
-}
-
-.wsod-route-loading .public-navbar,
-.wsod-route-loading .public-shell-head,
-.wsod-route-loading .inner-section > h1,
-.wsod-route-loading .inner-description,
-.wsod-route-loading .category-hero,
-.wsod-route-loading .section-mini-head,
-.wsod-route-loading .preview-rail-shell,
-.wsod-route-loading .public-grid > *,
-.wsod-route-loading .image-only-grid > *,
-.wsod-route-loading .media-carousel,
-.wsod-route-loading .detail-top-row,
-.wsod-route-loading .foto-gallery-stage,
-.wsod-route-loading .detail-thumb-grid,
-.wsod-route-loading .detail-bottom-back,
-.wsod-route-loading .reference-home-v2 > *,
-.wsod-route-loading .reference-brands-v2,
-.wsod-route-loading .brands-carousel,
-.wsod-route-loading .public-global-footer,
-.wsod-route-loading .footer,
-.wsod-route-loading .services-clean-grid > *,
-.wsod-route-loading .services-clean-hero,
-.wsod-route-loading .services-table-wrap,
-.wsod-route-loading .website-detail-square-wrap,
-.wsod-route-loading .website-preview-shell,
-.wsod-route-loading .admin-list-item {
-  animation: wsod-element-reveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: opacity, transform, filter;
-}
-
-.wsod-route-loading .public-grid > *:nth-child(1),
-.wsod-route-loading .image-only-grid > *:nth-child(1),
-.wsod-route-loading .detail-thumb-grid > *:nth-child(1) { animation-delay: 0.04s; }
-
-.wsod-route-loading .public-grid > *:nth-child(2),
-.wsod-route-loading .image-only-grid > *:nth-child(2),
-.wsod-route-loading .detail-thumb-grid > *:nth-child(2) { animation-delay: 0.08s; }
-
-.wsod-route-loading .public-grid > *:nth-child(3),
-.wsod-route-loading .image-only-grid > *:nth-child(3),
-.wsod-route-loading .detail-thumb-grid > *:nth-child(3) { animation-delay: 0.12s; }
-
-.wsod-route-loading .public-grid > *:nth-child(4),
-.wsod-route-loading .image-only-grid > *:nth-child(4),
-.wsod-route-loading .detail-thumb-grid > *:nth-child(4) { animation-delay: 0.16s; }
-
-.wsod-route-loading .public-grid > *:nth-child(5),
-.wsod-route-loading .image-only-grid > *:nth-child(5),
-.wsod-route-loading .detail-thumb-grid > *:nth-child(5) { animation-delay: 0.20s; }
-
-.wsod-route-loading .public-grid > *:nth-child(6),
-.wsod-route-loading .image-only-grid > *:nth-child(6),
-.wsod-route-loading .detail-thumb-grid > *:nth-child(6) { animation-delay: 0.24s; }
-
-@keyframes wsod-element-reveal {
-  0% {
-    opacity: 0;
-    transform: translateY(12px) scale(0.992);
-    filter: saturate(1.04) brightness(1.02);
-  }
-  45% {
-    opacity: 0.68;
-    transform: translateY(4px) scale(0.997);
-    filter: saturate(1.02) brightness(1.01);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: saturate(1) brightness(1);
-  }
-}
-
-@keyframes wsod-page-overlay-sweep {
-  0% {
-    opacity: 0.72;
-    transform: translate3d(0, 0, 0) scale(1.01);
-  }
-  55% {
-    opacity: 0.26;
-    transform: translate3d(4%, -2%, 0) scale(1.004);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(7%, -3%, 0) scale(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .wsod-page-reveal-overlay,
-  .wsod-route-loading .public-navbar,
-  .wsod-route-loading .public-shell-head,
-  .wsod-route-loading .inner-section > h1,
-  .wsod-route-loading .inner-description,
-  .wsod-route-loading .category-hero,
-  .wsod-route-loading .section-mini-head,
-  .wsod-route-loading .preview-rail-shell,
-  .wsod-route-loading .public-grid > *,
-  .wsod-route-loading .image-only-grid > *,
-  .wsod-route-loading .media-carousel,
-  .wsod-route-loading .detail-top-row,
-  .wsod-route-loading .foto-gallery-stage,
-  .wsod-route-loading .detail-thumb-grid,
-  .wsod-route-loading .detail-bottom-back,
-  .wsod-route-loading .reference-home-v2 > *,
-  .wsod-route-loading .reference-brands-v2,
-  .wsod-route-loading .brands-carousel,
-  .wsod-route-loading .public-global-footer,
-  .wsod-route-loading .footer,
-  .wsod-route-loading .services-clean-grid > *,
-  .wsod-route-loading .services-clean-hero,
-  .wsod-route-loading .services-table-wrap,
-  .wsod-route-loading .website-detail-square-wrap,
-  .wsod-route-loading .website-preview-shell,
-  .wsod-route-loading .admin-list-item {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-  }
-}
-
-
-.foto-before-ai-toggle-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 14px;
-  margin-bottom: 14px;
-}
-
-.foto-before-ai-toggle {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  min-width: 124px;
-  padding: 6px 8px 6px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-    rgba(18, 18, 24, 0.92);
-  color: rgba(255, 255, 255, 0.96);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-
-.foto-before-ai-toggle:hover {
-  transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.foto-before-ai-toggle-knob {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.78)),
-    rgba(255,255,255,0.9);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
-  transition: transform 220ms ease;
-}
-
-.foto-before-ai-toggle.is-before .foto-before-ai-toggle-knob {
-  transform: translateX(-2px);
-}
-
-.foto-before-ai-toggle.is-ai .foto-before-ai-toggle-knob {
-  transform: translateX(2px);
-}
-
 
 /* ===== foto slug ai toggle polish + stable mobile gallery ===== */
 .foto-before-ai-toggle {
@@ -5985,5 +5792,125 @@ video::-webkit-media-controls-panel {
   .foto-detail-thumb-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
+  }
+}
+
+/* =========================
+   WSOD POP IN ANIMATION
+   ========================= */
+
+.public-navbar,
+.public-shell-head,
+.inner-section > h1,
+.inner-description,
+.category-hero,
+.section-mini-head,
+.preview-rail-shell,
+.public-grid > *,
+.image-only-grid > *,
+.media-carousel,
+.detail-top-row,
+.foto-gallery-stage,
+.detail-thumb-grid,
+.detail-bottom-back,
+.reference-home-v2 > *,
+.reference-brands-v2,
+.brands-carousel,
+.public-global-footer,
+.footer,
+.services-clean-grid > *,
+.services-clean-hero,
+.services-table-wrap,
+.website-detail-square-wrap,
+.website-preview-shell,
+.admin-list-item,
+.admin-form,
+.empty-state-block,
+.public-owner-folder-card,
+.folder-card,
+.brand-card {
+  animation: wsod-pop-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+.public-grid > *:nth-child(1),
+.image-only-grid > *:nth-child(1),
+.detail-thumb-grid > *:nth-child(1),
+.brands-carousel-grid > *:nth-child(1) { animation-delay: 0.02s; }
+
+.public-grid > *:nth-child(2),
+.image-only-grid > *:nth-child(2),
+.detail-thumb-grid > *:nth-child(2),
+.brands-carousel-grid > *:nth-child(2) { animation-delay: 0.05s; }
+
+.public-grid > *:nth-child(3),
+.image-only-grid > *:nth-child(3),
+.detail-thumb-grid > *:nth-child(3),
+.brands-carousel-grid > *:nth-child(3) { animation-delay: 0.08s; }
+
+.public-grid > *:nth-child(4),
+.image-only-grid > *:nth-child(4),
+.detail-thumb-grid > *:nth-child(4),
+.brands-carousel-grid > *:nth-child(4) { animation-delay: 0.11s; }
+
+.public-grid > *:nth-child(5),
+.image-only-grid > *:nth-child(5),
+.detail-thumb-grid > *:nth-child(5),
+.brands-carousel-grid > *:nth-child(5) { animation-delay: 0.14s; }
+
+.public-grid > *:nth-child(6),
+.image-only-grid > *:nth-child(6),
+.detail-thumb-grid > *:nth-child(6),
+.brands-carousel-grid > *:nth-child(6) { animation-delay: 0.17s; }
+
+@keyframes wsod-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.82) translateY(12px);
+  }
+  55% {
+    opacity: 0.82;
+    transform: scale(1.02) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-navbar,
+  .public-shell-head,
+  .inner-section > h1,
+  .inner-description,
+  .category-hero,
+  .section-mini-head,
+  .preview-rail-shell,
+  .public-grid > *,
+  .image-only-grid > *,
+  .media-carousel,
+  .detail-top-row,
+  .foto-gallery-stage,
+  .detail-thumb-grid,
+  .detail-bottom-back,
+  .reference-home-v2 > *,
+  .reference-brands-v2,
+  .brands-carousel,
+  .public-global-footer,
+  .footer,
+  .services-clean-grid > *,
+  .services-clean-hero,
+  .services-table-wrap,
+  .website-detail-square-wrap,
+  .website-preview-shell,
+  .admin-list-item,
+  .admin-form,
+  .empty-state-block,
+  .public-owner-folder-card,
+  .folder-card,
+  .brand-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
