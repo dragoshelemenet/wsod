@@ -136,12 +136,12 @@ export default async function GraficaSlugPage({ params }: PageProps) {
         <section className="inner-section">
           <h2 className="detail-section-title">Alte grafici din alte brand-uri:</h2>
 
-          <div className="detail-thumb-grid">
+          <div className="detail-thumb-grid-foto-related">
             {otherBrandGraphics.map((graphic) => (
               <a
                 key={graphic.id}
                 href={`/grafica/${graphic.slug}`}
-                className="detail-thumb-link"
+                className="detail-thumb-link-foto-related detail-thumb-link-dimmed"
               >
                 <img
                   src={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || undefined}
@@ -179,12 +179,12 @@ export default async function GraficaSlugPage({ params }: PageProps) {
         <section className="inner-section">
           <h2 className="detail-section-title">Alte grafici cu alte modele:</h2>
 
-          <div className="detail-thumb-grid">
+          <div className="detail-thumb-grid-foto-related">
             {otherModelGraphics.map((graphic) => (
               <a
                 key={graphic.id}
                 href={`/grafica/${graphic.slug}`}
-                className="detail-thumb-link"
+                className="detail-thumb-link-foto-related"
               >
                 <img
                   src={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || undefined}
