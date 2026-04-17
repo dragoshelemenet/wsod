@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type SiteContentRecord = {
   id: string;
@@ -25,6 +25,43 @@ type DashboardSiteContentFormProps = {
   item: SiteContentRecord | null;
 };
 
+type ServiceTableRow = {
+  category: string;
+  service: string;
+  price: string;
+  note: string;
+};
+
+const CATEGORY_OPTIONS = [
+  { value: "foto", label: "Foto" },
+  { value: "video", label: "Video" },
+  { value: "grafica", label: "Grafica" },
+  { value: "website", label: "Website" },
+  { value: "meta-ads", label: "Meta Ads" },
+  { value: "audio", label: "Audio" },
+];
+
+function parseTableRows(value: string | null | undefined): ServiceTableRow[] {
+  return (value || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [category = "", service = "", price = "", note = ""] = line
+        .split("|")
+        .map((part) => part.trim());
+
+      return { category, service, price, note };
+    });
+}
+
+function serializeTableRows(rows: ServiceTableRow[]) {
+  return rows
+    .map((row) => [row.category, row.service, row.price, row.note].map((x) => x.trim()).join("|"))
+    .filter((line) => line.replace(/\|/g, "").trim())
+    .join("\n");
+}
+
 export function DashboardSiteContentForm({
   item,
 }: DashboardSiteContentFormProps) {
@@ -35,16 +72,43 @@ export function DashboardSiteContentForm({
   const [servicesList, setServicesList] = useState(item?.servicesList || "");
   const [servicesCards, setServicesCards] = useState(item?.servicesCards || "");
   const [packageCards, setPackageCards] = useState(item?.packageCards || "");
-  const [servicesTableRows, setServicesTableRows] = useState(item?.servicesTableRows || "");
-  const [servicesCertificatesTitle, setServicesCertificatesTitle] = useState(item?.servicesCertificatesTitle || "");
+  const [servicesCertificatesTitle, setServicesCertificatesTitle] = useState(
+    item?.servicesCertificatesTitle || ""
+  );
   const [pricingLabel, setPricingLabel] = useState(item?.pricingLabel || "");
   const [pricingHref, setPricingHref] = useState(item?.pricingHref || "");
   const [contactLabel, setContactLabel] = useState(item?.contactLabel || "");
   const [contactHref, setContactHref] = useState(item?.contactHref || "");
   const [claimLabel, setClaimLabel] = useState(item?.claimLabel || "");
   const [claimHref, setClaimHref] = useState(item?.claimHref || "");
+  const [tableRows, setTableRows] = useState<ServiceTableRow[]>(
+    parseTableRows(item?.servicesTableRows).length
+      ? parseTableRows(item?.servicesTableRows)
+      : [{ category: "foto", service: "", price: "", note: "" }]
+  );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const serializedTableRows = useMemo(() => serializeTableRows(tableRows), [tableRows]);
+
+  function updateRow(index: number, patch: Partial<ServiceTableRow>) {
+    setTableRows((current) =>
+      current.map((row, rowIndex) => (rowIndex === index ? { ...row, ...patch } : row))
+    );
+  }
+
+  function addRow() {
+    setTableRows((current) => [
+      ...current,
+      { category: "foto", service: "", price: "", note: "" },
+    ]);
+  }
+
+  function removeRow(index: number) {
+    setTableRows((current) =>
+      current.length === 1 ? [{ category: "foto", service: "", price: "", note: "" }] : current.filter((_, i) => i !== index)
+    );
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,7 +129,7 @@ export function DashboardSiteContentForm({
           servicesList,
           servicesCards,
           packageCards,
-          servicesTableRows,
+          servicesTableRows: serializedTableRows,
           servicesCertificatesTitle,
           pricingLabel,
           pricingHref,
@@ -123,6 +187,59 @@ export function DashboardSiteContentForm({
         </div>
 
         <div className="admin-form-field site-content-full">
+          <label>Tabel servicii</label>
+          <div className="services-table-editor">
+            {tableRows.map((row, index) => (
+              <div key={index} className="services-table-editor-row">
+                <select
+                  className="admin-select"
+                  value={row.category}
+                  onChange={(e) => updateRow(index, { category: e.target.value })}
+                >
+                  {CATEGORY_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  value={row.service}
+                  onChange={(e) => updateRow(index, { service: e.target.value })}
+                  placeholder="Serviciu"
+                />
+
+                <input
+                  value={row.price}
+                  onChange={(e) => updateRow(index, { price: e.target.value })}
+                  placeholder="Pret"
+                />
+
+                <input
+                  value={row.note}
+                  onChange={(e) => updateRow(index, { note: e.target.value })}
+                  placeholder="Detalii"
+                />
+
+                <button
+                  type="button"
+                  className="admin-ghost-button"
+                  onClick={() => removeRow(index)}
+                >
+                  Șterge
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="site-content-actions">
+            <button type="button" className="admin-ghost-button" onClick={addRow}>
+              + Adaugă rând
+            </button>
+          </div>
+        </div>
+
+        <div className="admin-form-field site-content-full">
           <label>Services Cards</label>
           <textarea
             className="admin-textarea"
@@ -137,16 +254,6 @@ export function DashboardSiteContentForm({
             className="admin-textarea"
             value={packageCards}
             onChange={(e) => setPackageCards(e.target.value)}
-          />
-        </div>
-
-        <div className="admin-form-field site-content-full">
-          <label>Services Table Rows</label>
-          <textarea
-            className="admin-textarea"
-            value={servicesTableRows}
-            onChange={(e) => setServicesTableRows(e.target.value)}
-            placeholder="foto|Fotosesiune portret|de la 100€|editare inclusă&#10;video|Videoclip 9:16|de la 150€|filmare + montaj&#10;website|Website prezentare|de la 300€|design + implementare"
           />
         </div>
 
