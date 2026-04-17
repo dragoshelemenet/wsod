@@ -419,6 +419,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               <option value="">Selectează tipul</option>
               <option value="flyer">Flyer</option>
               <option value="carte-vizita">Carte de vizita</option>
+              <option value="certificat">Certificat</option>
               <option value="poster">Poster</option>
               <option value="banner">Banner</option>
               <option value="meniu">Meniu</option>
