@@ -5302,3 +5302,110 @@ video::-webkit-media-controls-panel {
 .foto-detail-main-image.is-zoomed {
   transform: scale(1.35);
 }
+
+
+/* ===== smaller inner-page brand + model folders ===== */
+.inner-page .foto-model-folder-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 190px)) !important;
+  justify-content: start !important;
+  gap: 14px !important;
+}
+
+.inner-page .foto-brand-folder-grid,
+.inner-page .public-owner-folder-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 180px)) !important;
+  justify-content: start !important;
+  gap: 14px !important;
+}
+
+.inner-page .public-owner-folder-card.is-model-tall {
+  max-width: 190px !important;
+  width: 100% !important;
+  padding: 8px !important;
+  border-radius: 16px !important;
+}
+
+.inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-art {
+  aspect-ratio: 9 / 15 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+
+.inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-title {
+  padding-top: 6px !important;
+  font-size: 11px !important;
+  line-height: 1.15 !important;
+}
+
+.inner-page .public-owner-folder-card.is-brand-mini {
+  max-width: 180px !important;
+  width: 100% !important;
+  padding: 8px !important;
+  border-radius: 16px !important;
+}
+
+.inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-art {
+  aspect-ratio: 1.18 / 1 !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+}
+
+.inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
+  max-width: 42% !important;
+  max-height: 42% !important;
+}
+
+.inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-title {
+  padding-top: 6px !important;
+  font-size: 10px !important;
+  line-height: 1.15 !important;
+}
+
+@media (max-width: 900px) {
+  .inner-page .foto-model-folder-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 170px)) !important;
+  }
+
+  .inner-page .foto-brand-folder-grid,
+  .inner-page .public-owner-folder-grid {
+    grid-template-columns: repeat(auto-fit, minmax(135px, 160px)) !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-model-tall {
+    max-width: 170px !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-brand-mini {
+    max-width: 160px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .inner-page .foto-model-folder-grid,
+  .inner-page .foto-brand-folder-grid,
+  .inner-page .public-owner-folder-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-model-tall,
+  .inner-page .public-owner-folder-card.is-brand-mini {
+    max-width: none !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-art {
+    aspect-ratio: 9 / 14.5 !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
+    max-width: 48% !important;
+    max-height: 48% !important;
+  }
+}
