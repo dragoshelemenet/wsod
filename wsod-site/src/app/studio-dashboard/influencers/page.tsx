@@ -5,7 +5,19 @@ import { getDashboardTalents } from "@/lib/dashboard/queries";
 
 export default async function DashboardInfluencersPage() {
   const items = await getDashboardTalents();
-  const influencers = items.filter((item) => item.kind === "influencer");
+
+  const influencers = items
+    .filter((item) => item.kind === "influencer")
+    .map((item) => ({
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      kind: "influencer" as const,
+      portraitImageUrl: item.portraitImageUrl,
+      coverImageUrl: item.coverImageUrl,
+      description: item.description,
+      isVisible: item.isVisible,
+    }));
 
   return (
     <DashboardShell

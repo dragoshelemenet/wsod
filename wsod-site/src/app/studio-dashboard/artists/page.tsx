@@ -5,7 +5,19 @@ import { getDashboardTalents } from "@/lib/dashboard/queries";
 
 export default async function DashboardArtistsPage() {
   const items = await getDashboardTalents();
-  const artists = items.filter((item) => item.kind === "artist");
+
+  const artists = items
+    .filter((item) => item.kind === "artist")
+    .map((item) => ({
+      id: item.id,
+      name: item.name,
+      slug: item.slug,
+      kind: "artist" as const,
+      portraitImageUrl: item.portraitImageUrl,
+      coverImageUrl: item.coverImageUrl,
+      description: item.description,
+      isVisible: item.isVisible,
+    }));
 
   return (
     <DashboardShell
