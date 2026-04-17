@@ -794,6 +794,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
                   <option value="ai">AI</option>
                   {category === "foto" ? <option value="ai-edit">AI EDIT</option> : null}
                   {category === "foto" ? <option value="ai-enhanced">AI ÎMBUNĂTĂȚIT</option> : null}
+                  {category === "foto" ? <option value="ai-enhanced">AI ÎMBUNĂTĂȚIT</option> : null}
                 </select>
               </div>
             ) : null}

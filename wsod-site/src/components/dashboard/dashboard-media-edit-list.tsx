@@ -715,6 +715,7 @@ function DashboardMediaEditCard({
                     <option value="">Fără AI tag</option>
                     <option value="ai">AI</option>
                     {item.category === "foto" ? <option value="ai-edit">AI EDIT</option> : null}
+                    {item.category === "foto" ? <option value="ai-enhanced">AI ÎMBUNĂTĂȚIT</option> : null}
                   </select>
                 </div>
               ) : null}
