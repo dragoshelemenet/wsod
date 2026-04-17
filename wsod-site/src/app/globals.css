@@ -5029,12 +5029,20 @@ video::-webkit-media-controls-panel {
 }
 
 .public-card.public-card-image-only .public-card-media-wrap {
-  overflow: hidden !important;
+  overflow: visible !important;
   border-radius: 16px;
 }
 
-.public-card.public-card-image-only .public-card-media {
+.public-card.public-card-image-only .public-card-media,
+.public-card.public-card-image-only .public-card-media-wrap img,
+.public-card.public-card-image-only .public-card-media-wrap video {
   border-radius: 16px;
+  clip-path: inset(0 round 16px);
+}
+
+.public-card.public-card-image-only .public-card-play,
+.public-card.public-card-image-only .public-card-play-badge {
+  z-index: 3;
 }
 
 .public-card.public-card-image-only .public-card-ai-badge {
