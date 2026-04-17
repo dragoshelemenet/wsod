@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DashboardDeleteButton } from "@/components/dashboard/dashboard-delete-button";
+import { uploadToSpaces } from "@/lib/uploads/upload-to-spaces";
 
 type OptionItem = {
   id: string;
@@ -55,6 +56,17 @@ const visibilityOptions = [
 ] as const;
 
 const PAGE_SIZE = 18;
+
+
+function inferBrandSlugFromUrls(...values: Array<string | null | undefined>) {
+  for (const value of values) {
+    if (!value) continue;
+    const match = value.match(/\/uploads\/([^/]+)\//i);
+    if (match?.[1]) return match[1];
+  }
+  return "";
+}
+
 
 export function DashboardMediaEditList({
   items,
@@ -282,12 +294,38 @@ function DashboardMediaEditCard({
   const [graphicKind, setGraphicKind] = useState(item.graphicKind || "");
   const [videoKind, setVideoKind] = useState(item.videoKind || "");
   const [videoFormat, setVideoFormat] = useState(item.videoFormat || "portrait-9x16");
+  const [thumbnailDragOver, setThumbnailDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const previewImage = useMemo(
     () => thumbnailUrl || previewUrl || fileUrl || "",
     [thumbnailUrl, previewUrl, fileUrl]
   );
+
+  async function handleThumbnailUpload(file: File) {
+    const brandSlug = inferBrandSlugFromUrls(fileUrl, thumbnailUrl, previewUrl);
+
+    if (!brandSlug) {
+      onMessage("Nu pot determina brand slug pentru upload thumbnail.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      onMessage("");
+      const uploaded = await uploadToSpaces({
+        file,
+        brandSlug,
+        category: "video",
+      });
+      setThumbnailUrl(uploaded.url);
+      onMessage("Thumbnail uploadat cu succes.");
+    } catch (error) {
+      onMessage(error instanceof Error ? error.message : "Eroare upload thumbnail.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function onSave() {
     setLoading(true);
@@ -390,6 +428,48 @@ function DashboardMediaEditCard({
                 onChange={(event) => setThumbnailUrl(event.target.value)}
               />
             </div>
+
+            {item.category === "video" ? (
+              <div className="admin-form-field">
+                <label>Upload thumbnail video</label>
+                <div
+                  className={`admin-dropzone admin-dropzone-compact ${thumbnailDragOver ? "is-dragover" : ""}`}
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    setThumbnailDragOver(true);
+                  }}
+                  onDragLeave={(event) => {
+                    event.preventDefault();
+                    setThumbnailDragOver(false);
+                  }}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    setThumbnailDragOver(false);
+                    const file = event.dataTransfer.files?.[0];
+                    if (file) {
+                      void handleThumbnailUpload(file);
+                    }
+                  }}
+                >
+                  <input
+                    className="admin-dropzone-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        void handleThumbnailUpload(file);
+                      }
+                      event.currentTarget.value = "";
+                    }}
+                  />
+                  <div className="admin-dropzone-copy">
+                    <strong>Drag & drop thumbnail aici</strong>
+                    <span>sau click pentru imagine nouă</span>
+                  </div>
+                </div>
+              </div>
+            ) : null}
 
             <div className="admin-form-field">
               <label>Preview URL</label>

@@ -12,6 +12,7 @@ type UploadItem = {
   fileUrl: string;
   thumbnailUrl: string;
   previewUrl: string;
+  thumbnailFile: File | null;
   status: "pending" | "uploading" | "uploaded" | "creating" | "done" | "error";
   error: string;
 };
@@ -112,6 +113,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
         fileUrl: "",
         thumbnailUrl: "",
         previewUrl: "",
+        thumbnailFile: null,
         status: "pending" as const,
         error: "",
       };
@@ -169,6 +171,11 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
 
           if (type === "video") {
             patch.previewUrl = uploadedMain.url;
+
+            if (item.thumbnailFile) {
+              const uploadedThumb = await uploadSingleFile(item.thumbnailFile, "video");
+              patch.thumbnailUrl = uploadedThumb.url;
+            }
           }
 
           updateItem(item.id, patch);
@@ -702,6 +709,30 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
                         readOnly
                       />
                     </div>
+
+                    {isVideo ? (
+                      <div className="admin-form-field">
+                        <label>Thumbnail imagine pentru video</label>
+                        <div className="admin-dropzone admin-dropzone-compact">
+                          <input
+                            className="admin-dropzone-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={(event) => {
+                              const file = event.target.files?.[0] || null;
+                              updateItem(item.id, { thumbnailFile: file });
+                              event.currentTarget.value = "";
+                            }}
+                          />
+                          <div className="admin-dropzone-copy">
+                            <strong>
+                              {item.thumbnailFile ? item.thumbnailFile.name : "Drag & drop thumbnail aici"}
+                            </strong>
+                            <span>ori click și selectezi o imagine</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 ))}
               </div>
