@@ -5143,8 +5143,8 @@ video::-webkit-media-controls-panel {
   }
 }
 /* ===== slug title lower ===== */
-.inner-page .detail-top-row {
-  margin-top: 28px !important;
+.inner-page .inner-section > .detail-top-row {
+  margin-top: 52px !important;
   margin-bottom: 0 !important;
 }
 
@@ -5158,8 +5158,8 @@ video::-webkit-media-controls-panel {
 }
 
 @media (max-width: 900px) {
-  .inner-page .detail-top-row {
-    margin-top: 22px !important;
+  .inner-page .inner-section > .detail-top-row {
+    margin-top: 46px !important;
   }
 
   .inner-page .inner-description {
@@ -5168,8 +5168,8 @@ video::-webkit-media-controls-panel {
 }
 
 @media (max-width: 640px) {
-  .inner-page .detail-top-row {
-    margin-top: 34px !important;
+  .inner-page .inner-section > .detail-top-row {
+    margin-top: 46px !important;
   }
 
   .inner-page .inner-description {
