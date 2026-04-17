@@ -59,7 +59,7 @@ export default async function VideoSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <div className="detail-top-row">
-          <Link href="/video" className="detail-back-button">Înapoi</Link>
+          <Link href="/video" className="detail-back-button" aria-label="Înapoi">←</Link>
           <h1>{item.title}</h1>
         </div>
         <p className="inner-description">

@@ -31,7 +31,7 @@ export default async function MetaAdsSlugPage({ params }: PageProps) {
           ]}
         />
         <div className="detail-top-row">
-          <a href="/meta-ads" className="detail-back-button">Înapoi</a>
+          <a href="/meta-ads" className="detail-back-button" aria-label="Înapoi">←</a>
           <h1>{item.title}</h1>
         </div>
         <p className="inner-description">

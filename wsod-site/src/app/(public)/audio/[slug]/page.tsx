@@ -24,7 +24,7 @@ export default async function AudioSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <div className="detail-top-row">
-          <Link href="/audio" className="detail-back-button">Înapoi</Link>
+          <Link href="/audio" className="detail-back-button" aria-label="Înapoi">←</Link>
           <h1>{item.title}</h1>
         </div>
         <p className="inner-description">

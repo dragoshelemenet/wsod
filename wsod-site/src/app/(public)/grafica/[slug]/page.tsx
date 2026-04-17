@@ -157,7 +157,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <div className="detail-top-row">
-          <Link href="/grafica" className="detail-back-button">Înapoi</Link>
+          <Link href="/grafica" className="detail-back-button" aria-label="Înapoi">←</Link>
           <h1 id="detail-dynamic-title">{displayTitle}</h1>
         </div>
         <p className="inner-description">

@@ -162,7 +162,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
     <main className="inner-page">
       <section className="inner-section">
         <div className="detail-top-row">
-          <Link href="/foto" className="detail-back-button">Înapoi</Link>
+          <Link href="/foto" className="detail-back-button" aria-label="Înapoi">←</Link>
           <h1 id="detail-dynamic-title">{displayTitle}</h1>
         </div>
         {item.description ? <p className="inner-description">{item.description}</p> : null}

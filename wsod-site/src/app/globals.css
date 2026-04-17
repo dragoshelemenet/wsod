@@ -5066,23 +5066,25 @@ video::-webkit-media-controls-panel {
 
 .detail-top-row {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 0;
 }
 
 .detail-back-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 42px;
   height: 42px;
-  padding: 0 16px;
+  flex: 0 0 42px;
+  margin-top: 8px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.05);
   color: white;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
   backdrop-filter: blur(8px);
@@ -5100,12 +5102,13 @@ video::-webkit-media-controls-panel {
 @media (max-width: 640px) {
   .detail-top-row {
     gap: 10px;
-    margin-bottom: 8px;
   }
 
   .detail-back-button {
+    width: 36px;
     height: 36px;
-    padding: 0 12px;
-    font-size: 13px;
+    flex-basis: 36px;
+    margin-top: 6px;
+    font-size: 18px;
   }
 }
