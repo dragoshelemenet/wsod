@@ -106,6 +106,59 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
   const isGrafica = category === "grafica";
   const isVideo = category === "video";
 
+  const graphicOptions = useMemo(() => {
+    if (ownerType === "artist") {
+      return [
+        { value: "coperta-single", label: "Copertă single" },
+        { value: "coperta-album", label: "Copertă album" },
+        { value: "coperta-ep", label: "Copertă EP" },
+        { value: "banner-concert", label: "Banner concert" },
+        { value: "poster-eveniment", label: "Poster eveniment" },
+        { value: "flyer-eveniment", label: "Flyer eveniment" },
+        { value: "promo-artist", label: "Material promo artist" },
+        { value: "visual-streaming", label: "Visual streaming" },
+        { value: "thumbnail-youtube", label: "Thumbnail YouTube" },
+        { value: "certificat", label: "Certificat" },
+        { value: "altul", label: "Altul" },
+      ];
+    }
+
+    if (ownerType === "influencer") {
+      return [
+        { value: "social-media", label: "Social media" },
+        { value: "poster", label: "Poster" },
+        { value: "banner", label: "Banner" },
+        { value: "thumbnail-youtube", label: "Thumbnail YouTube" },
+        { value: "promo-artist", label: "Material promo" },
+        { value: "certificat", label: "Certificat" },
+        { value: "altul", label: "Altul" },
+      ];
+    }
+
+    if (ownerType === "model") {
+      return [
+        { value: "poster", label: "Poster" },
+        { value: "social-media", label: "Social media" },
+        { value: "certificat", label: "Certificat" },
+        { value: "altul", label: "Altul" },
+      ];
+    }
+
+    return [
+      { value: "flyer", label: "Flyer" },
+      { value: "carte-vizita", label: "Carte de vizită" },
+      { value: "certificat", label: "Certificat" },
+      { value: "poster", label: "Poster" },
+      { value: "banner", label: "Banner" },
+      { value: "meniu", label: "Meniu" },
+      { value: "ambalaj", label: "Ambalaj" },
+      { value: "eticheta", label: "Etichetă" },
+      { value: "social-media", label: "Social media" },
+      { value: "logo", label: "Logo" },
+      { value: "altul", label: "Altul" },
+    ];
+  }, [ownerType]);
+
   const acceptValue = useMemo(() => {
     if (type === "image") return "image/*";
     if (type === "video") return "video/*";
@@ -422,6 +475,7 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
             value={ownerType}
             onChange={(event) => {
               setOwnerType(event.target.value);
+              setGraphicKind("");
               setMessage("");
             }}
           >
@@ -569,17 +623,11 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
               required
             >
               <option value="">Selectează tipul</option>
-              <option value="flyer">Flyer</option>
-              <option value="carte-vizita">Carte de vizita</option>
-              <option value="certificat">Certificat</option>
-              <option value="poster">Poster</option>
-              <option value="banner">Banner</option>
-              <option value="meniu">Meniu</option>
-              <option value="ambalaj">Ambalaj</option>
-              <option value="eticheta">Eticheta</option>
-              <option value="social-media">Social media</option>
-              <option value="logo">Logo</option>
-              <option value="altul">Altul</option>
+              {graphicOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
         ) : null}
