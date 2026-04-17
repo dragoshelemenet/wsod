@@ -63,7 +63,9 @@ export default async function WebsitePage() {
               key={item.id}
               title={item.name}
               href={`/brand/${item.slug}`}
-              imageUrl={item.previewImages?.[0] || null}
+              
+                imageUrl={item.logoUrl || null}
+                variant="brand"
             />
           ))}
         </div>

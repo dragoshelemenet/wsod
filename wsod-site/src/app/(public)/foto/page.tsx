@@ -302,7 +302,9 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                 key={item.id}
                 title={item.name}
                 href={`/model/${item.slug}`}
-                imageUrl={item.previewImages?.[0] || null}
+                
+                imageUrl={item.portraitImageUrl || item.previewImages?.[0] || null}
+                variant="model"
               />
             ))}
           </div>
@@ -356,7 +358,9 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
                 key={item.id}
                 title={item.name}
                 href={`/brand/${item.slug}`}
-                imageUrl={item.previewImages?.[0] || null}
+                
+                imageUrl={item.logoUrl || null}
+                variant="brand"
               />
             ))}
           </div>
