@@ -44,6 +44,9 @@ export default async function MetaAdsSlugPage({ params }: PageProps) {
             className="media-detail-image"
           />
         </div>
+        <div className="detail-bottom-back">
+          <a href="/meta-ads" className="detail-bottom-back-link">Înapoi la galerie</a>
+        </div>
       </section>
     </main>
   );

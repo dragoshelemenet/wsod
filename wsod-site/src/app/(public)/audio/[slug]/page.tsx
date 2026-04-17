@@ -44,6 +44,9 @@ export default async function AudioSlugPage({ params }: PageProps) {
             <audio src={item.previewUrl} controls style={{ width: "100%" }} />
           </div>
         ) : null}
+        <div className="detail-bottom-back">
+          <Link href="/audio" className="detail-bottom-back-link">Înapoi la galerie</Link>
+        </div>
       </section>
     </main>
   );

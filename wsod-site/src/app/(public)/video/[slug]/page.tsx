@@ -84,6 +84,9 @@ export default async function VideoSlugPage({ params }: PageProps) {
             </span>
           ) : null}
         </div>
+        <div className="detail-bottom-back">
+          <Link href="/video" className="detail-bottom-back-link">Înapoi la galerie</Link>
+        </div>
       </section>
 
       {sameBrandVideos.length > 0 ? (

@@ -165,6 +165,9 @@ export default async function GraficaSlugPage({ params }: PageProps) {
         </p>
 
         <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
+        <div className="detail-bottom-back">
+          <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+        </div>
       </section>
 
       {item.personModelId && sameModelGraphics.length > 1 ? (

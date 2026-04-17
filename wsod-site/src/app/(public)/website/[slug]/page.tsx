@@ -59,6 +59,9 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
 
         {previewSrc ? (
           <WebsitePreviewZoom src={previewSrc} title={item.title} />
+        <div className="detail-bottom-back">
+          <Link href="/website" className="detail-bottom-back-link">Înapoi la galerie</Link>
+        </div>
         ) : null}
 
         {sameBrand.length > 0 ? (

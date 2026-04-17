@@ -168,6 +168,9 @@ export default async function FotoSlugPage({ params }: PageProps) {
         {item.description ? <p className="inner-description">{item.description}</p> : null}
 
         <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
+        <div className="detail-bottom-back">
+          <Link href="/foto" className="detail-bottom-back-link">Înapoi la galerie</Link>
+        </div>
       </section>
 
       {item.personModel?.name && item.brand?.id && sameModelAllPhotos.length > 1 ? (
