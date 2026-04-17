@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const REVEAL_MS = 5000;
+const REVEAL_MS = 2400;
 
 export default function PageRevealEffect() {
   const pathname = usePathname();
