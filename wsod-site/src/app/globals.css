@@ -4953,3 +4953,31 @@ body:has(.public-navbar) .section-mini-head {
     font-size: 5px;
   }
 }
+
+
+img,
+video,
+canvas,
+picture {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+a:has(img),
+a:has(video) {
+  -webkit-user-drag: none;
+}
+
+video::-internal-media-controls-download-button {
+  display: none;
+}
+
+video::-webkit-media-controls-enclosure {
+  overflow: hidden;
+}
+
+video::-webkit-media-controls-panel {
+  width: calc(100% + 30px);
+}
