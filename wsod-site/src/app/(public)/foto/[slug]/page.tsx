@@ -194,7 +194,6 @@ export default async function FotoSlugPage({ params }: PageProps) {
                 thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
                 aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
                 beforeAiSrc: (photo as any).beforeAiUrl || "",
-            beforeAiSrc: (photo as any).beforeAiUrl || "",
               }))
               .filter((entry) => entry.src)}
           />
