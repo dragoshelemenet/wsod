@@ -4667,13 +4667,13 @@ body:has(.public-navbar) .section-mini-head {
   z-index: 999;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   justify-content: center;
   max-width: calc(100% - 16px);
-  padding: 4px 7px;
+  padding: 4px 8px 4px 7px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.76);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: white;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -4681,26 +4681,27 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .ai-photo-badge-icon {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
   color: white;
+  margin-right: -1px;
 }
 
 .ai-photo-badge-icon-svg {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   display: block;
 }
 
 .ai-photo-badge-text {
   font-size: 10px;
   line-height: 1;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-weight: 900;
+  letter-spacing: 0.01em;
   white-space: nowrap;
 }
 
@@ -4778,14 +4779,14 @@ body:has(.public-navbar) .section-mini-head {
   .ai-photo-badge {
     top: 6px;
     right: 6px;
-    gap: 3px;
-    padding: 4px 6px;
+    gap: 2px;
+    padding: 4px 7px 4px 6px;
   }
 
   .ai-photo-badge-icon,
   .ai-photo-badge-icon-svg {
-    width: 9px;
-    height: 9px;
+    width: 11px;
+    height: 11px;
   }
 
   .ai-photo-badge-text {
