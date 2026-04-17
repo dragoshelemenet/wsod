@@ -70,6 +70,7 @@ export async function POST(request: Request) {
     const fileUrl = String(body.fileUrl || "").trim();
     const thumbnailUrl = String(body.thumbnailUrl || "").trim();
     const previewUrl = String(body.previewUrl || "").trim();
+    const beforeAiUrl = String(body.beforeAiUrl || "").trim();
     const fileNameOriginal = String(body.fileNameOriginal || "").trim();
 
     const groupLabel = String(body.groupLabel || "").trim();
@@ -129,6 +130,13 @@ export async function POST(request: Request) {
     if (!fileUrl) {
       return NextResponse.json(
         { ok: false, message: "Fișierul principal nu a fost salvat corect." },
+        { status: 400 }
+      );
+    }
+
+    if (category === "foto" && aiMode && !beforeAiUrl) {
+      return NextResponse.json(
+        { ok: false, message: "Pentru pozele cu AI trebuie să încarci și imaginea before AI." },
         { status: 400 }
       );
     }
@@ -249,6 +257,7 @@ export async function POST(request: Request) {
         fileUrl,
         thumbnailUrl: thumbnailUrl || null,
         previewUrl: previewUrl || null,
+        beforeAiUrl: beforeAiUrl || null,
         fileNameOriginal: fileNameOriginal || null,
         description: description || null,
         seoTitle: seoTitle || null,

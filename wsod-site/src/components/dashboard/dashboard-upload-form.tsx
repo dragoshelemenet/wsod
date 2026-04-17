@@ -13,6 +13,8 @@ type UploadItem = {
   thumbnailUrl: string;
   previewUrl: string;
   thumbnailFile: File | null;
+  beforeAiFile: File | null;
+  beforeAiUrl: string;
   status: "pending" | "uploading" | "uploaded" | "creating" | "done" | "error";
   error: string;
 };
@@ -133,6 +135,8 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
         thumbnailUrl: "",
         previewUrl: "",
         thumbnailFile: null,
+        beforeAiFile: null,
+        beforeAiUrl: "",
         status: "pending" as const,
         error: "",
       };
@@ -164,6 +168,11 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
       return;
     }
 
+    if (category === "foto" && aiMode && items.some((item) => !item.beforeAiFile && !item.beforeAiUrl)) {
+      setMessage("Dacă alegi un AI tag la poze, trebuie să încarci și imaginea before AI pentru fiecare poză.");
+      return;
+    }
+
     if (!items.length) {
       setMessage("Adauga fisiere mai intai.");
       return;
@@ -190,6 +199,11 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
 
           if (type === "image") {
             patch.thumbnailUrl = uploadedMain.url;
+
+            if (category === "foto" && aiMode && item.beforeAiFile) {
+              const uploadedBeforeAi = await uploadSingleFile(item.beforeAiFile, "foto");
+              patch.beforeAiUrl = uploadedBeforeAi.url;
+            }
           }
 
           if (type === "video") {
@@ -226,6 +240,7 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
               fileUrl: patch.fileUrl || "",
               thumbnailUrl: patch.thumbnailUrl || "",
               previewUrl: patch.previewUrl || "",
+              beforeAiUrl: patch.beforeAiUrl || item.beforeAiUrl || "",
               description,
               isVisible,
               isFeatured,
@@ -871,6 +886,30 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
                         </div>
                       </div>
                     ) : null}
+
+                    {category === "foto" && aiMode ? (
+                      <div className="admin-form-field">
+                        <label>Imagine before AI</label>
+                        <div className="admin-dropzone admin-dropzone-compact">
+                          <input
+                            className="admin-dropzone-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={(event) => {
+                              const file = event.target.files?.[0] || null;
+                              updateItem(item.id, { beforeAiFile: file });
+                              event.currentTarget.value = "";
+                            }}
+                          />
+                          <div className="admin-dropzone-copy">
+                            <strong>
+                              {item.beforeAiFile ? item.beforeAiFile.name : item.beforeAiUrl ? "Before AI încărcat" : "Încarcă imaginea before AI"}
+                            </strong>
+                            <span>această opțiune este obligatorie pentru pozele cu AI</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -917,7 +956,6 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
                   <option value="">Fără AI tag</option>
                   <option value="ai">AI</option>
                   {category === "foto" ? <option value="ai-edit">AI EDIT</option> : null}
-                  {category === "foto" ? <option value="ai-enhanced">AI ÎMBUNĂTĂȚIT</option> : null}
                   {category === "foto" ? <option value="ai-enhanced">AI ÎMBUNĂTĂȚIT</option> : null}
                 </select>
               </div>

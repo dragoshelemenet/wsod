@@ -83,6 +83,7 @@ async function handleUpdate(
   const thumbnailUrl = String(body.thumbnailUrl || "").trim();
   const previewUrl = String(body.previewUrl || "").trim();
   const fileUrl = String(body.fileUrl || "").trim();
+  const beforeAiUrl = String(body.beforeAiUrl || "").trim();
   const seoTitle = String(body.seoTitle || "").trim();
   const metaDescription = String(body.metaDescription || "").trim();
   const groupLabel = String(body.groupLabel || "").trim();
@@ -154,6 +155,13 @@ async function handleUpdate(
   const slugBase = manualSlug || nextTitle || "media-item";
   const nextSlug = await makeUniqueSlug(slugBase, id);
 
+  if (existing && body.category === "foto" && aiMode && !beforeAiUrl) {
+    return NextResponse.json(
+      { ok: false, message: "Pentru pozele cu AI trebuie să existe și imaginea before AI." },
+      { status: 400 }
+    );
+  }
+
   const updated = await prisma.mediaItem.update({
     where: { id },
     data: {
@@ -163,6 +171,7 @@ async function handleUpdate(
       thumbnailUrl: thumbnailUrl || null,
       previewUrl: previewUrl || null,
       fileUrl: fileUrl || null,
+      beforeAiUrl: beforeAiUrl || null,
       brandId,
       personModelId,
       audioProfileId,

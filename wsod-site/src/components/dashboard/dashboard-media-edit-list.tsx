@@ -19,6 +19,7 @@ type MediaItem = {
   thumbnailUrl: string | null;
   previewUrl: string | null;
   fileUrl: string | null;
+  beforeAiUrl?: string | null;
   isVisible: boolean;
   isFeatured: boolean;
   aiEdited: boolean;
@@ -388,6 +389,7 @@ function DashboardMediaEditCard({
   const [thumbnailUrl, setThumbnailUrl] = useState(item.thumbnailUrl || "");
   const [previewUrl, setPreviewUrl] = useState(item.previewUrl || "");
   const [fileUrl, setFileUrl] = useState(item.fileUrl || "");
+  const [beforeAiUrl, setBeforeAiUrl] = useState(item.beforeAiUrl || "");
   const [brandId, setBrandId] = useState(item.brandId || "");
   const [personModelId, setPersonModelId] = useState(item.personModelId || "");
   const [audioProfileId, setAudioProfileId] = useState(item.audioProfileId || "");
@@ -431,6 +433,32 @@ function DashboardMediaEditCard({
     }
   }
 
+
+  async function handleBeforeAiUpload(file: File) {
+    const brandSlug = inferBrandSlugFromUrls(fileUrl, thumbnailUrl, previewUrl, beforeAiUrl);
+
+    if (!brandSlug) {
+      onMessage("Nu pot determina owner slug pentru upload before AI.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      onMessage("");
+      const uploaded = await uploadToSpaces({
+        file,
+        brandSlug,
+        category: "foto",
+      });
+      setBeforeAiUrl(uploaded.url);
+      onMessage("Imaginea before AI a fost uploadată.");
+    } catch (error) {
+      onMessage(error instanceof Error ? error.message : "Eroare upload before AI.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function onSave() {
     setLoading(true);
     onMessage("");
@@ -448,6 +476,7 @@ function DashboardMediaEditCard({
           thumbnailUrl,
           previewUrl,
           fileUrl,
+          beforeAiUrl,
           brandId: brandId || null,
           personModelId: personModelId || null,
           audioProfileId: audioProfileId || null,
@@ -718,6 +747,41 @@ function DashboardMediaEditCard({
                     {item.category === "foto" ? <option value="ai-enhanced">AI ÎMBUNĂTĂȚIT</option> : null}
                   </select>
                 </div>
+              ) : null}
+
+              {item.category === "foto" && aiMode ? (
+                <>
+                  <div className="admin-form-field admin-grid-full">
+                    <label>Before AI URL</label>
+                    <input
+                      value={beforeAiUrl}
+                      onChange={(event) => setBeforeAiUrl(event.target.value)}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div className="admin-form-field">
+                    <label>Upload imagine before AI</label>
+                    <div className="admin-dropzone admin-dropzone-compact">
+                      <input
+                        className="admin-dropzone-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) {
+                            void handleBeforeAiUpload(file);
+                          }
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                      <div className="admin-dropzone-copy">
+                        <strong>{beforeAiUrl ? "Before AI încărcat" : "Încarcă imaginea before AI"}</strong>
+                        <span>toggle-ul din slug apare doar dacă această imagine există</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               ) : null}
 
               {item.category === "video" ? (

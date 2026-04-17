@@ -86,6 +86,7 @@ model MediaItem {
   thumbnailUrl     String?
   previewUrl       String?
   fileUrl          String?
+  beforeAiUrl      String?
   fileNameOriginal String?
   description      String?
   seoTitle         String?

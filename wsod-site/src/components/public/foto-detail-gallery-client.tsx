@@ -11,6 +11,7 @@ type GalleryItem = {
   src: string;
   thumb: string;
   aiMode?: string;
+  beforeAiSrc?: string;
 };
 
 type Props = {
@@ -61,6 +62,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
+  const [showBeforeAi, setShowBeforeAi] = useState(false);
   const zoomResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     setActiveIndex(initialIndex);
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
+    setShowBeforeAi(false);
   }, [initialIndex]);
 
   useEffect(() => {
@@ -106,6 +109,8 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
 
   const active = safeItems[activeIndex];
   const hasMany = safeItems.length > 1;
+  const canToggleBeforeAi = Boolean(active?.beforeAiSrc);
+  const activeImageSrc = showBeforeAi && active?.beforeAiSrc ? active.beforeAiSrc : active?.src;
 
   const goPrev = () => {
     if (zoomResetTimer.current) {
@@ -114,6 +119,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     }
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
+    setShowBeforeAi(false);
     setActiveIndex((prev) => (prev - 1 + safeItems.length) % safeItems.length);
   };
 
@@ -124,6 +130,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     }
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
+    setShowBeforeAi(false);
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
   };
 
@@ -172,7 +179,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
           aria-label={isZoomed ? "Zoom out" : "Zoom in"}
         >
           <img
-            src={active.src}
+            src={activeImageSrc}
             alt={active.displayTitle || active.title}
             className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
             style={{ transformOrigin: zoomOrigin }}
@@ -192,6 +199,23 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
         ) : null}
       </div>
 
+      {canToggleBeforeAi ? (
+        <div className="foto-before-ai-toggle-wrap">
+          <button
+            type="button"
+            className={`foto-before-ai-toggle ${showBeforeAi ? "is-before" : "is-ai"}`}
+            onClick={() => {
+              setIsZoomed(false);
+              setZoomOrigin("50% 50%");
+              setShowBeforeAi((current) => !current);
+            }}
+          >
+            <span>{showBeforeAi ? "Before AI" : "AI"}</span>
+            <span className="foto-before-ai-toggle-knob" />
+          </button>
+        </div>
+      ) : null}
+
       {hasMany ? (
         <div className="foto-detail-thumb-grid">
           {safeItems.map((item, index) => (
@@ -206,6 +230,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
                 }
                 setIsZoomed(false);
                 setZoomOrigin("50% 50%");
+                setShowBeforeAi(false);
                 setActiveIndex(index);
               }}
             >

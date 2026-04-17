@@ -130,6 +130,8 @@ export default async function FotoSlugPage({ params }: PageProps) {
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
             aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
+            beforeAiSrc: (photo as any).beforeAiUrl || "",
+            beforeAiSrc: (photo as any).beforeAiUrl || "",
           }))
           .filter((entry) => entry.src)
       : item.personModel?.id
@@ -144,6 +146,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
             aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
+            beforeAiSrc: (photo as any).beforeAiUrl || "",
           }))
           .filter((entry) => entry.src)
       : [
@@ -155,6 +158,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
             aiMode: (item as any).aiMode || (Boolean((item as any).aiEdited) ? "ai-edit" : ""),
+            beforeAiSrc: (item as any).beforeAiUrl || "",
           },
         ].filter((entry) => entry.src);
 
@@ -190,6 +194,8 @@ export default async function FotoSlugPage({ params }: PageProps) {
                 src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
                 thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
                 aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
+                beforeAiSrc: (photo as any).beforeAiUrl || "",
+            beforeAiSrc: (photo as any).beforeAiUrl || "",
               }))
               .filter((entry) => entry.src)}
           />
