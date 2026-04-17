@@ -5016,3 +5016,23 @@ video::-webkit-media-controls-enclosure {
 video::-webkit-media-controls-panel {
   width: calc(100% + 30px);
 }
+
+
+.public-card.public-card-image-only,
+.public-card.public-card-image-only .public-card-media-wrap {
+  overflow: visible !important;
+}
+
+.public-card.public-card-image-only {
+  position: relative;
+  z-index: 1;
+}
+
+.public-card.public-card-image-only:hover {
+  z-index: 20;
+}
+
+.public-card.public-card-image-only .public-card-ai-badge {
+  pointer-events: auto;
+  z-index: 1000;
+}
