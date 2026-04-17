@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 type GalleryItem = {
@@ -61,12 +61,25 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
+  const zoomResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (zoomResetTimer.current) {
+      clearTimeout(zoomResetTimer.current);
+      zoomResetTimer.current = null;
+    }
     setActiveIndex(initialIndex);
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
   }, [initialIndex]);
+
+  useEffect(() => {
+    return () => {
+      if (zoomResetTimer.current) {
+        clearTimeout(zoomResetTimer.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!titleTargetId) return;
@@ -95,12 +108,20 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const hasMany = safeItems.length > 1;
 
   const goPrev = () => {
+    if (zoomResetTimer.current) {
+      clearTimeout(zoomResetTimer.current);
+      zoomResetTimer.current = null;
+    }
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
     setActiveIndex((prev) => (prev - 1 + safeItems.length) % safeItems.length);
   };
 
   const goNext = () => {
+    if (zoomResetTimer.current) {
+      clearTimeout(zoomResetTimer.current);
+      zoomResetTimer.current = null;
+    }
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
@@ -109,7 +130,13 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const handleMainImageClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (isZoomed) {
       setIsZoomed(false);
-      setZoomOrigin("50% 50%");
+      if (zoomResetTimer.current) {
+        clearTimeout(zoomResetTimer.current);
+      }
+      zoomResetTimer.current = setTimeout(() => {
+        setZoomOrigin("50% 50%");
+        zoomResetTimer.current = null;
+      }, 220);
       return;
     }
 
@@ -173,7 +200,12 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               type="button"
               className={`foto-detail-thumb-button ${index === activeIndex ? "is-active" : ""}`}
               onClick={() => {
+                if (zoomResetTimer.current) {
+                  clearTimeout(zoomResetTimer.current);
+                  zoomResetTimer.current = null;
+                }
                 setIsZoomed(false);
+                setZoomOrigin("50% 50%");
                 setActiveIndex(index);
               }}
             >
