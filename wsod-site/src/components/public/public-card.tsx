@@ -45,7 +45,7 @@ export function PublicCard({
       <img src={imageUrl} alt={title} className={mediaClass} />
       {showPlayIcon ? <span className="public-card-play">▶</span> : null}
       {badgeLabel ? (
-        <span className="ai-photo-badge public-card-ai-badge" data-ai-tooltip={badgeTooltip} title={badgeTooltip}>
+        <span className="ai-photo-badge public-card-ai-badge" data-ai-tooltip={badgeTooltip}>
           <span className="ai-photo-badge-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" className="ai-photo-badge-icon-svg">
               <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.4L12 15l-1.9-4.6L5.5 9l4.6-1.4L12 3z" fill="currentColor" />

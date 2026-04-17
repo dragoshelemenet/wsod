@@ -180,7 +180,6 @@ function AiBadge({ mode }: { mode?: string | null }) {
     <div
       className="ai-photo-badge"
       data-ai-tooltip={title}
-      title={title}
     >
       <span className="ai-photo-badge-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" className="ai-photo-badge-icon-svg">

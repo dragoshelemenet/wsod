@@ -4657,22 +4657,22 @@ body:has(.public-navbar) .section-mini-head {
 .foto-detail-main-button,
 .foto-detail-thumb-button {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .ai-photo-badge {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 20;
+  z-index: 999;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   justify-content: center;
   max-width: calc(100% - 16px);
-  padding: 5px 8px;
+  padding: 4px 7px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.74);
+  background: rgba(0, 0, 0, 0.76);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: white;
   backdrop-filter: blur(8px);
@@ -4681,8 +4681,8 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .ai-photo-badge-icon {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4691,16 +4691,16 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .ai-photo-badge-icon-svg {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   display: block;
 }
 
 .ai-photo-badge-text {
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
@@ -4711,13 +4711,13 @@ body:has(.public-navbar) .section-mini-head {
 .ai-photo-badge[data-ai-tooltip]::after {
   content: attr(data-ai-tooltip);
   position: fixed;
-  top: 96px;
-  right: 24px;
+  top: 94px;
+  right: 18px;
   min-width: 190px;
-  max-width: 280px;
+  max-width: 300px;
   padding: 10px 12px;
   border-radius: 14px;
-  background: rgba(12, 12, 16, 0.96);
+  background: rgba(12, 12, 16, 0.97);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: white;
   font-size: 12px;
@@ -4726,25 +4726,27 @@ body:has(.public-navbar) .section-mini-head {
   letter-spacing: 0;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
   opacity: 0;
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 2147483647;
 }
 
 .ai-photo-badge[data-ai-tooltip]::before {
   content: "";
   position: fixed;
-  top: 90px;
-  right: 38px;
+  top: 88px;
+  right: 34px;
   width: 10px;
   height: 10px;
-  background: rgba(12, 12, 16, 0.96);
+  background: rgba(12, 12, 16, 0.97);
   border-left: 1px solid rgba(255, 255, 255, 0.12);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  transform: rotate(45deg) translateY(-4px);
+  transform: rotate(45deg) translateY(-6px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 2147483647;
 }
 
 .ai-photo-badge:hover::after,
@@ -4776,23 +4778,23 @@ body:has(.public-navbar) .section-mini-head {
   .ai-photo-badge {
     top: 6px;
     right: 6px;
-    gap: 4px;
-    padding: 4px 7px;
+    gap: 3px;
+    padding: 4px 6px;
   }
 
   .ai-photo-badge-icon,
   .ai-photo-badge-icon-svg {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
   }
 
   .ai-photo-badge-text {
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .ai-photo-badge[data-ai-tooltip]::after {
-    top: 82px;
-    right: 12px;
+    top: 78px;
+    right: 10px;
     min-width: 150px;
     max-width: 220px;
     font-size: 11px;
@@ -4800,8 +4802,8 @@ body:has(.public-navbar) .section-mini-head {
   }
 
   .ai-photo-badge[data-ai-tooltip]::before {
-    top: 76px;
-    right: 26px;
+    top: 72px;
+    right: 24px;
   }
 }
 
