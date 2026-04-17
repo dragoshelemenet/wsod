@@ -179,8 +179,17 @@ function AiBadge({ mode }: { mode?: string | null }) {
   return (
     <div
       className="ai-photo-badge"
+      data-ai-tooltip={title}
       title={title}
     >
+      <span className="ai-photo-badge-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" className="ai-photo-badge-icon-svg">
+          <path
+            d="M12 3l1.9 4.6L18.5 9l-4.6 1.4L12 15l-1.9-4.6L5.5 9l4.6-1.4L12 3z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
       <span className="ai-photo-badge-text">{label}</span>
     </div>
   );
