@@ -41,6 +41,26 @@ model PersonModel {
   mediaItems       MediaItem[]
 }
 
+
+model TalentProfile {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  kind             String
+  portraitImageUrl String?
+  coverImageUrl    String?
+  hoverPreview1    String?
+  hoverPreview2    String?
+  hoverPreview3    String?
+  description      String?
+  seoTitle         String?
+  metaDescription  String?
+  isVisible        Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  mediaItems       MediaItem[]
+}
+
 model AudioProfile {
   id              String      @id @default(cuid())
   name            String
@@ -95,12 +115,16 @@ model MediaItem {
   audioProfileId   String?
   audioProfile     AudioProfile? @relation(fields: [audioProfileId], references: [id], onDelete: Cascade)
 
+  talentProfileId  String?
+  talentProfile    TalentProfile? @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+
   blogPostMedia    BlogPostMedia[]
 
   @@index([category])
   @@index([brandId])
   @@index([personModelId])
   @@index([audioProfileId])
+  @@index([talentProfileId])
   @@index([groupLabel])
   @@index([graphicKind])
 }

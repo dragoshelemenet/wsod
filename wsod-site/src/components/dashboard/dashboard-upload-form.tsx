@@ -23,8 +23,23 @@ type BrandOption = {
   slug: string;
 };
 
+type ModelOption = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+type TalentOption = {
+  id: string;
+  name: string;
+  slug: string;
+  kind: string;
+};
+
 type DashboardUploadFormProps = {
   brands: BrandOption[];
+  models: ModelOption[];
+  talents: TalentOption[];
 };
 
 function getTypeFromCategory(category: string) {
@@ -52,10 +67,13 @@ function createId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
+export function DashboardUploadForm({ brands, models, talents }: DashboardUploadFormProps) {
   const router = useRouter();
 
+  const [ownerType, setOwnerType] = useState("brand");
   const [brandSlug, setBrandSlug] = useState(brands[0]?.slug ?? "");
+  const [modelSlug, setModelSlug] = useState(models[0]?.slug ?? "");
+  const [talentSlug, setTalentSlug] = useState(talents[0]?.slug ?? "");
   const [category, setCategory] = useState("foto");
   const [graphicKind, setGraphicKind] = useState("");
   const [showOnServices, setShowOnServices] = useState(false);
@@ -126,14 +144,18 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   async function uploadSingleFile(file: File, currentCategory: string) {
     return uploadToSpaces({
       file,
-      brandSlug,
+      brandSlug: ownerType === "brand" ? brandSlug : ownerType === "model" ? modelSlug : talentSlug,
       category: currentCategory,
     });
   }
 
   async function handleUploadAndCreateAll() {
-    if (!brandSlug) {
-      setMessage("Selectează brandul.");
+    if (
+      (ownerType === "brand" && !brandSlug) ||
+      (ownerType === "model" && !modelSlug) ||
+      ((ownerType === "artist" || ownerType === "influencer") && !talentSlug)
+    ) {
+      setMessage("Selectează owner-ul.");
       return;
     }
 
@@ -188,8 +210,10 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              ownerType: "brand",
-              brandSlug,
+              ownerType,
+              brandSlug: ownerType === "brand" ? brandSlug : "",
+              modelSlug: ownerType === "model" ? modelSlug : "",
+              talentSlug: ownerType === "artist" || ownerType === "influencer" ? talentSlug : "",
               title: item.title,
               slug: item.slug,
               category,
@@ -239,8 +263,12 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   async function handleUploadAudio(which: "original" | "processed") {
     const file = which === "original" ? audioOriginalFile : audioProcessedFile;
 
-    if (!brandSlug) {
-      setMessage("Selectează brandul.");
+    if (
+      (ownerType === "brand" && !brandSlug) ||
+      (ownerType === "model" && !modelSlug) ||
+      ((ownerType === "artist" || ownerType === "influencer") && !talentSlug)
+    ) {
+      setMessage("Selectează owner-ul.");
       return;
     }
 
@@ -302,8 +330,10 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ownerType: "brand",
-          brandSlug,
+          ownerType,
+          brandSlug: ownerType === "brand" ? brandSlug : "",
+          modelSlug: ownerType === "model" ? modelSlug : "",
+          talentSlug: ownerType === "artist" || ownerType === "influencer" ? talentSlug : "",
           videoKind: "",
           title: audioOriginalTitle || "Audio original",
           slug: audioOriginalSlug || slugify(audioOriginalTitle || "audio-original"),
@@ -350,9 +380,14 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
     }
   }
 
+  const hasOwner =
+    (ownerType === "brand" && !!brandSlug) ||
+    (ownerType === "model" && !!modelSlug) ||
+    ((ownerType === "artist" || ownerType === "influencer") && !!talentSlug);
+
   const canRunAll =
     items.length > 0 &&
-    !!brandSlug &&
+    hasOwner &&
     (!isGrafica || !!graphicKind) &&
     !uploading &&
     !creating;
@@ -365,25 +400,114 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
 
       <div className="admin-stack">
         <div className="admin-form-field">
-          <label htmlFor="media-brand">Brand</label>
+          <label htmlFor="media-owner-type">Owner type</label>
           <select
-            id="media-brand"
+            id="media-owner-type"
             className="admin-select"
-            value={brandSlug}
+            value={ownerType}
             onChange={(event) => {
-              setBrandSlug(event.target.value);
+              setOwnerType(event.target.value);
               setMessage("");
             }}
-            required
           >
-            <option value="">Selectează brandul</option>
-            {brands.map((brand) => (
-              <option key={brand.id} value={brand.slug}>
-                {brand.name}
-              </option>
-            ))}
+            <option value="brand">Brand</option>
+            <option value="model">Model</option>
+            <option value="artist">Artist</option>
+            <option value="influencer">Influencer</option>
           </select>
         </div>
+
+        {ownerType === "brand" ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-brand">Brand</label>
+            <select
+              id="media-brand"
+              className="admin-select"
+              value={brandSlug}
+              onChange={(event) => {
+                setBrandSlug(event.target.value);
+                setMessage("");
+              }}
+              required
+            >
+              <option value="">Selectează brandul</option>
+              {brands.map((brand) => (
+                <option key={brand.id} value={brand.slug}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
+
+        {ownerType === "model" ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-model">Model</label>
+            <select
+              id="media-model"
+              className="admin-select"
+              value={modelSlug}
+              onChange={(event) => {
+                setModelSlug(event.target.value);
+                setMessage("");
+              }}
+              required
+            >
+              <option value="">Selectează modelul</option>
+              {models.map((model) => (
+                <option key={model.id} value={model.slug}>
+                  {model.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
+
+        {ownerType === "artist" ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-artist">Artist</label>
+            <select
+              id="media-artist"
+              className="admin-select"
+              value={talentSlug}
+              onChange={(event) => {
+                setTalentSlug(event.target.value);
+                setMessage("");
+              }}
+              required
+            >
+              <option value="">Selectează artistul</option>
+              {talents.filter((item) => item.kind === "artist").map((item) => (
+                <option key={item.id} value={item.slug}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
+
+        {ownerType === "influencer" ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-influencer">Influencer</label>
+            <select
+              id="media-influencer"
+              className="admin-select"
+              value={talentSlug}
+              onChange={(event) => {
+                setTalentSlug(event.target.value);
+                setMessage("");
+              }}
+              required
+            >
+              <option value="">Selectează influencerul</option>
+              {talents.filter((item) => item.kind === "influencer").map((item) => (
+                <option key={item.id} value={item.slug}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
 
         <div className="admin-form-field">
           <label htmlFor="media-category">Category</label>

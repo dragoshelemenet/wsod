@@ -47,7 +47,14 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const ownerType = String(body.ownerType || "").trim();
+    const ownerTypeRaw = String(body.ownerType || "").trim().toLowerCase();
+    const ownerType =
+      ownerTypeRaw === "model" || ownerTypeRaw === "artist" || ownerTypeRaw === "influencer"
+        ? ownerTypeRaw
+        : "brand";
     const brandSlug = String(body.brandSlug || "").trim();
+    const modelSlug = String(body.modelSlug || "").trim();
+    const talentSlug = String(body.talentSlug || "").trim();
     const personModelSlug = String(body.personModelSlug || "").trim();
     const audioProfileSlug = String(body.audioProfileSlug || "").trim();
 
