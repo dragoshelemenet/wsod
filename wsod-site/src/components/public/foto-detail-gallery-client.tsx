@@ -10,7 +10,7 @@ type GalleryItem = {
   slug?: string;
   src: string;
   thumb: string;
-  aiEdited?: boolean;
+  aiMode?: string;
 };
 
 type Props = {
@@ -18,16 +18,19 @@ type Props = {
   titleTargetId?: string;
 };
 
-function AiBadge() {
+function AiBadge({ mode }: { mode?: string }) {
+  const isFullAi = mode === "ai";
+  const title = isFullAi
+    ? "Fotosesiune complet creată cu AI."
+    : "Hainele sau unele elemente au fost schimbate cu AI.";
+  const label = isFullAi ? "AI" : "AI EDIT";
+
   return (
     <div
       className="ai-photo-badge"
-      title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)."
+      title={title}
     >
-      <span className="ai-photo-badge-icon" aria-hidden="true">
-        ✦
-      </span>
-      <span className="ai-photo-badge-text">Schimbat CU AI</span>
+      <span className="ai-photo-badge-text">{label}</span>
     </div>
   );
 }
@@ -111,7 +114,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
             alt={active.displayTitle || active.title}
             className="foto-detail-main-image"
           />
-          {active.aiEdited ? <AiBadge /> : null}
+          {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
         </button>
 
         {hasMany ? (
@@ -140,7 +143,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
                 alt={item.displayTitle || item.title}
                 className="foto-detail-thumb-image"
               />
-              {item.aiEdited ? <span className="ai-photo-dot" title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)." /> : null}
+              {item.aiMode ? <span className="ai-photo-dot" title={item.aiMode === "ai" ? "Fotosesiune complet creată cu AI." : "Hainele sau unele elemente au fost schimbate cu AI."} /> : null}
             </button>
           ))}
         </div>

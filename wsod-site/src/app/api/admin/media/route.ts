@@ -73,8 +73,10 @@ export async function POST(request: Request) {
       typeof body.isVisible === "boolean" ? body.isVisible : true;
     const isFeatured =
       typeof body.isFeatured === "boolean" ? body.isFeatured : false;
+    const aiModeRaw = String(body.aiMode || "").trim();
+    const aiMode = aiModeRaw === "ai" || aiModeRaw === "ai-edit" ? aiModeRaw : null;
     const aiEdited =
-      typeof body.aiEdited === "boolean" ? body.aiEdited : false;
+      typeof body.aiEdited === "boolean" ? body.aiEdited : Boolean(aiMode);
 
     if (!category) {
       return NextResponse.json(
@@ -243,6 +245,7 @@ export async function POST(request: Request) {
             : 0,
         graphicKind: category === "grafica" ? graphicKind || null : null,
         aiEdited,
+        aiMode,
         isVisible,
         isFeatured,
         brandId,

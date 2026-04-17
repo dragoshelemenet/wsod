@@ -21,6 +21,7 @@ type MediaItem = {
   isVisible: boolean;
   isFeatured: boolean;
   aiEdited: boolean;
+  aiMode?: string | null;
   brandId: string | null;
   personModelId: string | null;
   audioProfileId: string | null;
@@ -274,7 +275,7 @@ function DashboardMediaEditCard({
   const [audioProfileId, setAudioProfileId] = useState(item.audioProfileId || "");
   const [isVisible, setIsVisible] = useState(item.isVisible);
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
-  const [aiEdited, setAiEdited] = useState(item.aiEdited);
+  const [aiMode, setAiMode] = useState(item.aiMode || "");
   const [loading, setLoading] = useState(false);
 
   const previewImage = useMemo(
@@ -304,7 +305,8 @@ function DashboardMediaEditCard({
           audioProfileId: audioProfileId || null,
           isVisible,
           isFeatured,
-          aiEdited,
+          aiEdited: !!aiMode,
+          aiMode,
         }),
       });
 
@@ -340,7 +342,7 @@ function DashboardMediaEditCard({
             <span>{item.category} • {item.type}</span>
             <span>{item.slug}</span>
             <span>
-              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiEdited ? "AI" : "No AI"}
+              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiMode ? aiMode.toUpperCase() : "No AI"}
             </span>
           </div>
         </div>
@@ -460,14 +462,18 @@ function DashboardMediaEditCard({
                 />
               </label>
 
-              <label className="admin-toggle-row">
-                <span>Schimbat cu AI</span>
-                <input
-                  type="checkbox"
-                  checked={aiEdited}
-                  onChange={(event) => setAiEdited(event.target.checked)}
-                />
-              </label>
+              <div className="admin-form-field">
+                <label>AI tag</label>
+                <select
+                  className="admin-select"
+                  value={aiMode}
+                  onChange={(event) => setAiMode(event.target.value)}
+                >
+                  <option value="">Fără AI tag</option>
+                  <option value="ai">AI</option>
+                  <option value="ai-edit">AI EDIT</option>
+                </select>
+              </div>
             </div>
           </div>
 

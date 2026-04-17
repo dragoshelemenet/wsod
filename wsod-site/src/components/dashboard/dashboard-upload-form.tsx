@@ -60,7 +60,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
-  const [aiEdited, setAiEdited] = useState(false);
+  const [aiMode, setAiMode] = useState("");
 
   const [audioOriginalTitle, setAudioOriginalTitle] = useState("");
   const [audioOriginalSlug, setAudioOriginalSlug] = useState("");
@@ -191,7 +191,8 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               description,
               isVisible,
               isFeatured,
-              aiEdited,
+              aiEdited: !!aiMode,
+              aiMode,
               fileNameOriginal: item.file.name,
             }),
           });
@@ -299,7 +300,8 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
           description,
           isVisible,
           isFeatured,
-          aiEdited,
+          aiEdited: !!aiMode,
+          aiMode,
           fileNameOriginal: audioOriginalFile?.name || "",
         }),
       });
@@ -323,7 +325,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
       setDescription("");
       setIsVisible(true);
       setIsFeatured(false);
-      setAiEdited(false);
+      setAiMode("");
       setMessage("Audio media item creat cu succes.");
       router.refresh();
     } catch (error) {
@@ -684,14 +686,19 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
             </label>
 
             {category === "foto" ? (
-              <label className="admin-toggle-row">
-                <span>Schimbat cu AI</span>
-                <input
-                  type="checkbox"
-                  checked={aiEdited}
-                  onChange={(event) => setAiEdited(event.target.checked)}
-                />
-              </label>
+              <div className="admin-form-field">
+                <label htmlFor="media-ai-mode">AI tag</label>
+                <select
+                  id="media-ai-mode"
+                  className="admin-select"
+                  value={aiMode}
+                  onChange={(event) => setAiMode(event.target.value)}
+                >
+                  <option value="">Fără AI tag</option>
+                  <option value="ai">AI</option>
+                  <option value="ai-edit">AI EDIT</option>
+                </select>
+              </div>
             ) : null}
 
             <div className="site-content-actions">

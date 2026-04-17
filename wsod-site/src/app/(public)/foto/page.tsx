@@ -205,7 +205,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
       title: item.title,
       href: `/foto/${item.slug}`,
       imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
-      aiEdited: Boolean((item as any).aiEdited),
+      aiMode: (item as any).aiMode || (Boolean((item as any).aiEdited) ? "ai-edit" : ""),
     }));
 
   const allBrandPhotos = items
@@ -215,7 +215,7 @@ export default async function FotoPage({ searchParams }: FotoPageProps) {
       title: item.title,
       href: `/foto/${item.slug}`,
       imageUrl: item.thumbnailUrl || item.previewUrl || item.fileUrl || null,
-      aiEdited: Boolean((item as any).aiEdited),
+      aiMode: (item as any).aiMode || (Boolean((item as any).aiEdited) ? "ai-edit" : ""),
     }));
 
   const models = allModels.filter(

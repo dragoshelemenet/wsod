@@ -20,16 +20,19 @@ function getDisplayTitle(item: any) {
     : item.title;
 }
 
-function AiBadge() {
+function AiBadge({ mode }: { mode?: string | null }) {
+  const isFullAi = mode === "ai";
+  const title = isFullAi
+    ? "Fotosesiune complet creată cu AI."
+    : "Hainele sau unele elemente au fost schimbate cu AI.";
+  const label = isFullAi ? "AI" : "AI EDIT";
+
   return (
     <div
       className="ai-photo-badge"
-      title="Unele elemente au fost schimbate cu AI performant (hainele sau mediu)."
+      title={title}
     >
-      <span className="ai-photo-badge-icon" aria-hidden="true">
-        ✦
-      </span>
-      <span className="ai-photo-badge-text">Schimbat CU AI</span>
+      <span className="ai-photo-badge-text">{label}</span>
     </div>
   );
 }
@@ -117,7 +120,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             slug: photo.slug,
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
-            aiEdited: Boolean((photo as any).aiEdited),
+            aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
           }))
           .filter((entry) => entry.src)
       : item.personModel?.id
@@ -131,7 +134,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             slug: photo.slug,
             src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
             thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
-            aiEdited: Boolean((photo as any).aiEdited),
+            aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
           }))
           .filter((entry) => entry.src)
       : [
@@ -142,7 +145,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
             slug: item.slug,
             src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
             thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            aiEdited: Boolean((item as any).aiEdited),
+            aiMode: (item as any).aiMode || (Boolean((item as any).aiEdited) ? "ai-edit" : ""),
           },
         ].filter((entry) => entry.src);
 
@@ -171,7 +174,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   alt={photo.title}
                   className="detail-thumb-image"
                 />
-                {Boolean((photo as any).aiEdited) ? <AiBadge /> : null}
+                {((photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")) ? <AiBadge mode={(photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")} /> : null}
               </a>
             ))}
           </div>
@@ -194,7 +197,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                 slug: photo.slug,
                 src: photo.fileUrl || photo.previewUrl || photo.thumbnailUrl || "",
                 thumb: photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || "",
-                aiEdited: Boolean((photo as any).aiEdited),
+                aiMode: (photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : ""),
               }))
               .filter((entry) => entry.src)}
           />
@@ -217,7 +220,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
                   alt={photo.title}
                   className="detail-thumb-image"
                 />
-                {Boolean((photo as any).aiEdited) ? <AiBadge /> : null}
+                {((photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")) ? <AiBadge mode={(photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")} /> : null}
               </a>
             ))}
           </div>

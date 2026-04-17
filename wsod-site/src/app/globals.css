@@ -4660,40 +4660,28 @@ body:has(.public-navbar) .section-mini-head {
 
 .ai-photo-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   z-index: 5;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  max-width: min(220px, calc(100% - 20px));
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: white;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
-}
-
-.ai-photo-badge-icon {
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  font-size: 14px;
-  line-height: 1;
+  max-width: calc(100% - 16px);
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   color: white;
-  flex: 0 0 auto;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
 }
 
 .ai-photo-badge-text {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
@@ -4711,13 +4699,12 @@ body:has(.public-navbar) .section-mini-head {
 
 @media (max-width: 640px) {
   .ai-photo-badge {
-    top: 8px;
-    right: 8px;
-    padding: 7px 10px;
-    gap: 6px;
+    top: 6px;
+    right: 6px;
+    padding: 5px 8px;
   }
 
   .ai-photo-badge-text {
-    font-size: 11px;
+    font-size: 10px;
   }
 }
