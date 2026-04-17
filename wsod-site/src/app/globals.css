@@ -4855,13 +4855,13 @@ body:has(.public-navbar) .section-mini-head {
 
 @media (max-width: 1200px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 900px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
@@ -4880,8 +4880,8 @@ body:has(.public-navbar) .section-mini-head {
 
 .detail-thumb-grid-foto-related {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 5px;
 }
 
 .detail-thumb-link-foto-related {
@@ -4889,7 +4889,7 @@ body:has(.public-navbar) .section-mini-head {
   position: relative;
   min-width: 0;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
   background: transparent;
   border: 0;
@@ -4900,7 +4900,7 @@ body:has(.public-navbar) .section-mini-head {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .detail-thumb-link-dimmed::after {
@@ -4921,20 +4921,20 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge {
-  top: 5px;
-  right: 5px;
-  gap: 2px;
-  padding: 2px 5px 2px 4px;
+  top: 4px;
+  right: 4px;
+  gap: 1px;
+  padding: 2px 4px 2px 3px;
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge-icon,
 .detail-thumb-grid-foto-related .ai-photo-badge-icon-svg {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge-text {
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 900;
 }
 
@@ -4953,12 +4953,12 @@ body:has(.public-navbar) .section-mini-head {
 @media (max-width: 640px) {
   .detail-thumb-grid-foto-related {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
+    gap: 4px;
   }
 
   .detail-thumb-link-foto-related,
   .detail-thumb-link-foto-related .detail-thumb-image {
-    border-radius: 8px;
+    border-radius: 7px;
   }
 
   .detail-thumb-grid-foto-related .ai-photo-badge {
@@ -4977,7 +4977,9 @@ body:has(.public-navbar) .section-mini-head {
     font-size: 8px;
   }
 }
-\n\n.foto-detail-thumb-button .ai-photo-dot,
+
+
+.foto-detail-thumb-button .ai-photo-dot,
 .detail-thumb-link-foto-related .ai-photo-dot {
   display: none !important;
 }
@@ -4998,4 +5000,4 @@ body:has(.public-navbar) .section-mini-head {
 .foto-detail-thumb-button .ai-photo-badge-text {
   font-size: 7px;
   font-weight: 900;
-}\n
+}
