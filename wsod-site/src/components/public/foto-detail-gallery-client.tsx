@@ -21,9 +21,12 @@ type Props = {
 
 function AiBadge({ mode }: { mode?: string }) {
   const isFullAi = mode === "ai";
+  const isEnhanced = mode === "ai-enhanced";
   const title = isFullAi
     ? "Fotosesiune complet creată cu AI."
-    : "Hainele sau unele elemente au fost schimbate cu AI.";
+    : isEnhanced
+      ? "Îmbunătățit cu inteligență artificială."
+      : "Elemente ale imaginii au fost editate cu AI.";
   const label = isFullAi ? "AI" : "AI EDIT";
 
   return (
@@ -210,7 +213,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               setShowBeforeAi((current) => !current);
             }}
           >
-            <span>{showBeforeAi ? "Before AI" : "AI"}</span>
+            <span>{showBeforeAi ? "Înainte de AI" : "AI pornit"}</span>
             <span className="foto-before-ai-toggle-knob" />
           </button>
         </div>

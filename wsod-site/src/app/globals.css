@@ -5838,3 +5838,152 @@ video::-webkit-media-controls-panel {
 .foto-before-ai-toggle.is-ai .foto-before-ai-toggle-knob {
   transform: translateX(2px);
 }
+
+
+/* ===== foto slug ai toggle polish + stable mobile gallery ===== */
+.foto-before-ai-toggle {
+  min-width: 152px;
+  padding: 6px 8px 6px 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    rgba(18, 18, 24, 0.92);
+  border-color: rgba(255, 255, 255, 0.14);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.foto-before-ai-toggle.is-ai {
+  background:
+    linear-gradient(180deg, rgba(77, 203, 116, 0.30), rgba(46, 140, 73, 0.16)),
+    rgba(18, 28, 20, 0.96);
+  border-color: rgba(86, 220, 132, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 0 0 1px rgba(44, 170, 88, 0.10),
+    0 12px 30px rgba(26, 120, 58, 0.18);
+}
+
+.foto-before-ai-toggle.is-before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    rgba(18, 18, 24, 0.92);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 10px 26px rgba(0, 0, 0, 0.18);
+}
+
+.foto-before-ai-toggle-knob {
+  transition:
+    transform 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.foto-before-ai-toggle.is-ai .foto-before-ai-toggle-knob {
+  transform: translateX(2px);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(208,255,221,0.98), rgba(124,255,167,0.92)),
+    rgba(124,255,167,0.95);
+  box-shadow: 0 8px 22px rgba(27, 165, 72, 0.35);
+}
+
+.foto-before-ai-toggle.is-before .foto-before-ai-toggle-knob {
+  transform: translateX(-2px);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.96), rgba(235,235,235,0.82)),
+    rgba(255,255,255,0.9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+}
+
+/* keep main image area stable when images have different ratios */
+.foto-detail-gallery {
+  width: 100%;
+}
+
+.foto-detail-stage {
+  min-height: min(78vh, 980px);
+}
+
+.foto-detail-main-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(78vh, 980px);
+  overflow: hidden;
+}
+
+.foto-detail-main-image {
+  width: 100%;
+  height: min(78vh, 980px);
+  object-fit: contain;
+  display: block;
+}
+
+/* keep thumbs uniform so layout does not jump */
+.foto-detail-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.foto-detail-thumb-button {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.foto-detail-thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .foto-detail-stage {
+    min-height: 72vh;
+  }
+
+  .foto-detail-main-button {
+    min-height: 72vh;
+  }
+
+  .foto-detail-main-image {
+    height: 72vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .foto-before-ai-toggle-wrap {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .foto-before-ai-toggle {
+    min-width: 144px;
+    font-size: 11px;
+    gap: 10px;
+  }
+
+  .foto-detail-stage {
+    min-height: 58vh;
+  }
+
+  .foto-detail-main-button {
+    min-height: 58vh;
+  }
+
+  .foto-detail-main-image {
+    height: 58vh;
+  }
+
+  .foto-detail-thumb-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+}
