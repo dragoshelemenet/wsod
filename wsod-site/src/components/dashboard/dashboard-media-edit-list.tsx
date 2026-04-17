@@ -83,6 +83,8 @@ export function DashboardMediaEditList({
   const [visibilityFilter, setVisibilityFilter] =
     useState<(typeof visibilityOptions)[number]>("all");
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   const filteredItems = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -129,6 +131,65 @@ export function DashboardMediaEditList({
     const start = (page - 1) * PAGE_SIZE;
     return filteredItems.slice(start, start + PAGE_SIZE);
   }, [filteredItems, page]);
+
+  const pageIds = paginatedItems.map((item) => item.id);
+  const allPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selectedIds.includes(id));
+
+  function toggleSelected(id: string) {
+    setSelectedIds((current) =>
+      current.includes(id) ? current.filter((value) => value !== id) : [...current, id]
+    );
+  }
+
+  function toggleSelectPage() {
+    setSelectedIds((current) => {
+      if (allPageSelected) {
+        return current.filter((id) => !pageIds.includes(id));
+      }
+      return Array.from(new Set([...current, ...pageIds]));
+    });
+  }
+
+  async function handleBulkDelete() {
+    if (!selectedIds.length) {
+      setMessage("Nu ai selectat nimic.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Sigur vrei să ștergi ${selectedIds.length} fișiere?`
+    );
+    if (!confirmed) return;
+
+    setBulkLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/admin/media/bulk-delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Nu s-au putut șterge fișierele.");
+      }
+
+      setSelectedIds([]);
+      setOpenId(null);
+      setMessage(data?.message || "Fișierele au fost șterse.");
+      window.location.reload();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Eroare necunoscută.");
+    } finally {
+      setBulkLoading(false);
+    }
+  }
 
   if (!items.length) {
     return (
@@ -192,9 +253,40 @@ export function DashboardMediaEditList({
       </div>
 
       <div className="media-pagination-bar">
-        <p className="admin-helper-text">
-          {paginatedItems.length} afisate pe pagina • {filteredItems.length} rezultate • {items.length} total
-        </p>
+        <div className="admin-stack" style={{ gap: 8 }}>
+          <p className="admin-helper-text">
+            {paginatedItems.length} afisate pe pagina • {filteredItems.length} rezultate • {items.length} total
+          </p>
+
+          <div className="media-bulk-actions">
+            <button
+              type="button"
+              className="admin-ghost-button"
+              onClick={toggleSelectPage}
+              disabled={!pageIds.length}
+            >
+              {allPageSelected ? "Deselectează pagina" : "Selectează pagina"}
+            </button>
+
+            <button
+              type="button"
+              className="admin-ghost-button"
+              onClick={() => setSelectedIds([])}
+              disabled={!selectedIds.length}
+            >
+              Clear
+            </button>
+
+            <button
+              type="button"
+              className="admin-delete-button"
+              onClick={handleBulkDelete}
+              disabled={!selectedIds.length || bulkLoading}
+            >
+              {bulkLoading ? "Deleting..." : `Delete selected (${selectedIds.length})`}
+            </button>
+          </div>
+        </div>
 
         <div className="media-pagination-controls">
           <button
@@ -231,6 +323,8 @@ export function DashboardMediaEditList({
             audioProfiles={audioProfiles}
             onMessage={setMessage}
             isOpen={openId === item.id}
+            isSelected={selectedIds.includes(item.id)}
+            onToggleSelected={() => toggleSelected(item.id)}
             onToggle={() => setOpenId((current) => (current === item.id ? null : item.id))}
           />
         ))}
@@ -274,6 +368,8 @@ function DashboardMediaEditCard({
   audioProfiles,
   onMessage,
   isOpen,
+  isSelected,
+  onToggleSelected,
   onToggle,
 }: {
   item: MediaItem;
@@ -282,6 +378,8 @@ function DashboardMediaEditCard({
   audioProfiles: OptionItem[];
   onMessage: (value: string) => void;
   isOpen: boolean;
+  isSelected: boolean;
+  onToggleSelected: () => void;
   onToggle: () => void;
 }) {
   const [title, setTitle] = useState(item.title);
@@ -387,6 +485,17 @@ function DashboardMediaEditCard({
         aria-expanded={isOpen}
       >
         <div className="media-compact-left">
+          <label
+            className="media-select-checkbox"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={onToggleSelected}
+            />
+          </label>
+
           <div className="media-compact-thumb">
             {previewImage ? <img src={previewImage} alt={title} /> : null}
           </div>

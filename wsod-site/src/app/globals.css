@@ -5621,3 +5621,24 @@ video::-webkit-media-controls-panel {
   opacity: 0.5;
   pointer-events: none;
 }
+\n\n.media-bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.media-select-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  min-width: 22px;
+  margin-right: 10px;
+}
+
+.media-select-checkbox input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}\n
