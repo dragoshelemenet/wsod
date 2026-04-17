@@ -5473,20 +5473,20 @@ video::-webkit-media-controls-panel {
 
 /* ===== final override: brand folder logo much bigger ===== */
 .inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
-  max-width: 84% !important;
-  max-height: 84% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 @media (max-width: 900px) {
   .inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
-    max-width: 86% !important;
-    max-height: 86% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
   }
 }
 
 @media (max-width: 640px) {
   .inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
-    max-width: 88% !important;
-    max-height: 88% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
   }
 }
