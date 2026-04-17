@@ -77,52 +77,6 @@ export default async function VideoPage() {
         ) : null
       )}
       <section className="inner-section-block">
-          <div className="section-mini-head">
-            <h2>Videoclipuri</h2>
-          </div>
-
-          <PublicGrid dense>
-            {normalVideos.map((item: any) => (
-              <PublicCard
-                key={item.id}
-                title={item.title}
-                href={`/video/${item.slug}`}
-                imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
-                imageOnly
-                showPlayIcon
-                badgeLabel={hasAiBadge(item) ? "AI" : undefined}
-                badgeTooltip={hasAiBadge(item) ? "Video complet generat cu AI." : undefined}
-              />
-            ))}
-          </PublicGrid>
-        </section>
-      ) : null}
-
-      {lyricVideos.length > 0 ? (
-        <section className="inner-section-block">
-          <div className="section-mini-head">
-            <h2>Videoclipuri cu versuri</h2>
-          </div>
-
-          <PublicGrid dense>
-            {lyricVideos.map((item: any) => (
-              <PublicCard
-                key={item.id}
-                title={item.title}
-                href={`/video/${item.slug}`}
-                imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
-                imageOnly
-                showPlayIcon
-                mediaRatio="wide"
-                badgeLabel={hasAiBadge(item) ? "AI" : undefined}
-                badgeTooltip={hasAiBadge(item) ? "Video complet generat cu AI." : undefined}
-              />
-            ))}
-          </PublicGrid>
-        </section>
-      ) : null}
-
-      <section className="inner-section-block">
         <div className="section-mini-head">
           <h2>Branduri</h2>
         </div>
