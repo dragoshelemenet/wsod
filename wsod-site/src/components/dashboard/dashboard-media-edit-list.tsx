@@ -22,6 +22,7 @@ type MediaItem = {
   isFeatured: boolean;
   aiEdited: boolean;
   aiMode?: string | null;
+  videoKind?: string | null;
   brandId: string | null;
   personModelId: string | null;
   audioProfileId: string | null;
@@ -276,6 +277,7 @@ function DashboardMediaEditCard({
   const [isVisible, setIsVisible] = useState(item.isVisible);
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
   const [aiMode, setAiMode] = useState(item.aiMode || "");
+  const [videoKind, setVideoKind] = useState(item.videoKind || "");
   const [loading, setLoading] = useState(false);
 
   const previewImage = useMemo(
@@ -307,6 +309,7 @@ function DashboardMediaEditCard({
           isFeatured,
           aiEdited: !!aiMode,
           aiMode,
+          videoKind: item.category === "video" ? (videoKind || null) : null,
         }),
       });
 
@@ -339,7 +342,7 @@ function DashboardMediaEditCard({
 
           <div className="media-compact-meta">
             <strong>{title}</strong>
-            <span>{item.category} • {item.type}</span>
+            <span>{item.category} • {item.type}{item.category === "video" && videoKind === "lyrics" ? " • lyrics" : ""}</span>
             <span>{item.slug}</span>
             <span>
               {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiMode ? aiMode.toUpperCase() : "No AI"}
@@ -462,18 +465,34 @@ function DashboardMediaEditCard({
                 />
               </label>
 
-              <div className="admin-form-field">
-                <label>AI tag</label>
-                <select
-                  className="admin-select"
-                  value={aiMode}
-                  onChange={(event) => setAiMode(event.target.value)}
-                >
-                  <option value="">Fără AI tag</option>
-                  <option value="ai">AI</option>
-                  <option value="ai-edit">AI EDIT</option>
-                </select>
-              </div>
+              {["foto", "video"].includes(item.category) ? (
+                <div className="admin-form-field">
+                  <label>AI tag</label>
+                  <select
+                    className="admin-select"
+                    value={aiMode}
+                    onChange={(event) => setAiMode(event.target.value)}
+                  >
+                    <option value="">Fără AI tag</option>
+                    <option value="ai">AI</option>
+                    {item.category === "foto" ? <option value="ai-edit">AI EDIT</option> : null}
+                  </select>
+                </div>
+              ) : null}
+
+              {item.category === "video" ? (
+                <div className="admin-form-field">
+                  <label>Tip video</label>
+                  <select
+                    className="admin-select"
+                    value={videoKind}
+                    onChange={(event) => setVideoKind(event.target.value)}
+                  >
+                    <option value="">Video normal</option>
+                    <option value="lyrics">Videoclip cu versuri</option>
+                  </select>
+                </div>
+              ) : null}
             </div>
           </div>
 

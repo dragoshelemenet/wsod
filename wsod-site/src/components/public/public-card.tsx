@@ -9,6 +9,8 @@ type PublicCardProps = {
   showPlayIcon?: boolean;
   imageFit?: "cover" | "contain";
   mediaRatio?: "portrait" | "wide" | "square";
+  badgeLabel?: string;
+  badgeTooltip?: string;
 };
 
 export function PublicCard({
@@ -20,6 +22,8 @@ export function PublicCard({
   showPlayIcon = false,
   imageFit = "cover",
   mediaRatio = "portrait",
+  badgeLabel,
+  badgeTooltip,
 }: PublicCardProps) {
   const wrapClass = [
     "public-card-media-wrap",
@@ -40,6 +44,16 @@ export function PublicCard({
     <div className={wrapClass}>
       <img src={imageUrl} alt={title} className={mediaClass} />
       {showPlayIcon ? <span className="public-card-play">▶</span> : null}
+      {badgeLabel ? (
+        <span className="ai-photo-badge public-card-ai-badge" data-ai-tooltip={badgeTooltip} title={badgeTooltip}>
+          <span className="ai-photo-badge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="ai-photo-badge-icon-svg">
+              <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.4L12 15l-1.9-4.6L5.5 9l4.6-1.4L12 3z" fill="currentColor" />
+            </svg>
+          </span>
+          <span className="ai-photo-badge-text">{badgeLabel}</span>
+        </span>
+      ) : null}
     </div>
   ) : (
     <div className={`${wrapClass} public-card-media-empty`}>

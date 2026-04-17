@@ -57,6 +57,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const [brandSlug, setBrandSlug] = useState(brands[0]?.slug ?? "");
   const [category, setCategory] = useState("foto");
   const [graphicKind, setGraphicKind] = useState("");
+  const [videoKind, setVideoKind] = useState("");
   const [description, setDescription] = useState("");
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
@@ -80,6 +81,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
   const type = useMemo(() => getTypeFromCategory(category), [category]);
   const isAudio = category === "audio";
   const isGrafica = category === "grafica";
+  const isVideo = category === "video";
 
   const acceptValue = useMemo(() => {
     if (type === "image") return "image/*";
@@ -184,6 +186,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               category,
               type,
               graphicKind: isGrafica ? graphicKind : "",
+              videoKind: isVideo ? videoKind : "",
               date: new Date().toISOString(),
               fileUrl: patch.fileUrl || "",
               thumbnailUrl: patch.thumbnailUrl || "",
@@ -290,6 +293,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
         body: JSON.stringify({
           ownerType: "brand",
           brandSlug,
+          videoKind: "",
           title: audioOriginalTitle || "Audio original",
           slug: audioOriginalSlug || slugify(audioOriginalTitle || "audio-original"),
           category: "audio",
@@ -382,6 +386,12 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               if (event.target.value !== "grafica") {
                 setGraphicKind("");
               }
+              if (event.target.value !== "video") {
+                setVideoKind("");
+              }
+              if (!["foto", "video"].includes(event.target.value)) {
+                setAiMode("");
+              }
             }}
           >
             <option value="foto">Foto</option>
@@ -417,6 +427,24 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               <option value="social-media">Social media</option>
               <option value="logo">Logo</option>
               <option value="altul">Altul</option>
+            </select>
+          </div>
+        ) : null}
+
+        {isVideo ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-video-kind">Tip video</label>
+            <select
+              id="media-video-kind"
+              className="admin-select"
+              value={videoKind}
+              onChange={(event) => {
+                setVideoKind(event.target.value);
+                setMessage("");
+              }}
+            >
+              <option value="">Video normal</option>
+              <option value="lyrics">Videoclip cu versuri</option>
             </select>
           </div>
         ) : null}
@@ -685,7 +713,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
               />
             </label>
 
-            {category === "foto" ? (
+            {["foto", "video"].includes(category) ? (
               <div className="admin-form-field">
                 <label htmlFor="media-ai-mode">AI tag</label>
                 <select
@@ -696,7 +724,7 @@ export function DashboardUploadForm({ brands }: DashboardUploadFormProps) {
                 >
                   <option value="">Fără AI tag</option>
                   <option value="ai">AI</option>
-                  <option value="ai-edit">AI EDIT</option>
+                  {category === "foto" ? <option value="ai-edit">AI EDIT</option> : null}
                 </select>
               </div>
             ) : null}

@@ -87,6 +87,8 @@ async function handleUpdate(
   const metaDescription = String(body.metaDescription || "").trim();
   const groupLabel = String(body.groupLabel || "").trim();
   const graphicKind = String(body.graphicKind || "").trim();
+  const videoKindRaw = String(body.videoKind || "").trim();
+  const videoKind = videoKindRaw === "lyrics" ? "lyrics" : null;
   const groupOrder = Number(body.groupOrder ?? 0);
   const sortOrder = Number(body.sortOrder ?? 0);
   const isFeatured = Boolean(body.isFeatured);
@@ -160,6 +162,7 @@ async function handleUpdate(
       metaDescription: metaDescription || null,
       groupLabel: groupLabel || null,
       graphicKind: graphicKind || null,
+      videoKind,
       groupOrder: Number.isFinite(groupOrder) ? groupOrder : 0,
       sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       isFeatured,

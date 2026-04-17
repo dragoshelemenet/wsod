@@ -75,6 +75,7 @@ model MediaItem {
   groupOrder       Int      @default(0)
   sortOrder        Int      @default(0)
   graphicKind      String?
+  videoKind        String?
   aiEdited         Boolean  @default(false)
   aiMode           String?
   isFeatured       Boolean  @default(false)

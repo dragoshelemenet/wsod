@@ -4789,3 +4789,10 @@ body:has(.public-navbar) .section-mini-head {
     padding: 8px 10px;
   }
 }
+\n\n.public-card-media-wrap {
+  position: relative;
+}
+
+.public-card-ai-badge {
+  pointer-events: auto;
+}\n

@@ -6,6 +6,10 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function hasAiBadge(item: any) {
+  return Boolean(item.aiMode || item.aiEdited);
+}
+
 export default async function VideoSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -24,14 +28,14 @@ export default async function VideoSlugPage({ params }: PageProps) {
   const allVideos = await getPublishedMediaByCategory("video");
 
   const sameBrandVideos = allVideos.filter(
-    (video) =>
+    (video: any) =>
       video.id !== item.id &&
       item.brandId &&
       video.brandId === item.brandId
   );
 
   const otherVideos = allVideos.filter(
-    (video) =>
+    (video: any) =>
       video.id !== item.id &&
       (!item.brandId || video.brandId !== item.brandId)
   );
@@ -61,13 +65,17 @@ export default async function VideoSlugPage({ params }: PageProps) {
           </div>
 
           <PublicGrid dense>
-            {sameBrandVideos.map((video) => (
+            {sameBrandVideos.map((video: any) => (
               <PublicCard
                 key={video.id}
                 title={video.title}
                 href={`/video/${video.slug}`}
                 imageUrl={video.thumbnailUrl || video.previewUrl || video.fileUrl}
                 imageOnly
+                showPlayIcon
+                mediaRatio={video.videoKind === "lyrics" ? "wide" : "portrait"}
+                badgeLabel={hasAiBadge(video) ? "AI" : undefined}
+                badgeTooltip={hasAiBadge(video) ? "Video complet generat cu AI." : undefined}
               />
             ))}
           </PublicGrid>
@@ -81,13 +89,17 @@ export default async function VideoSlugPage({ params }: PageProps) {
           </div>
 
           <PublicGrid dense>
-            {otherVideos.map((video) => (
+            {otherVideos.map((video: any) => (
               <PublicCard
                 key={video.id}
                 title={video.title}
                 href={`/video/${video.slug}`}
                 imageUrl={video.thumbnailUrl || video.previewUrl || video.fileUrl}
                 imageOnly
+                showPlayIcon
+                mediaRatio={video.videoKind === "lyrics" ? "wide" : "portrait"}
+                badgeLabel={hasAiBadge(video) ? "AI" : undefined}
+                badgeTooltip={hasAiBadge(video) ? "Video complet generat cu AI." : undefined}
               />
             ))}
           </PublicGrid>

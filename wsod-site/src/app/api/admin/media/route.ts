@@ -67,6 +67,8 @@ export async function POST(request: Request) {
 
     const groupLabel = String(body.groupLabel || "").trim();
     const graphicKind = String(body.graphicKind || "").trim();
+    const videoKindRaw = String(body.videoKind || "").trim();
+    const videoKind = videoKindRaw === "lyrics" ? "lyrics" : null;
     const groupOrder = Number(body.groupOrder ?? 0);
 
     const isVisible =
@@ -244,6 +246,7 @@ export async function POST(request: Request) {
               : 0
             : 0,
         graphicKind: category === "grafica" ? graphicKind || null : null,
+        videoKind: category === "video" ? videoKind : null,
         aiEdited,
         aiMode,
         isVisible,
