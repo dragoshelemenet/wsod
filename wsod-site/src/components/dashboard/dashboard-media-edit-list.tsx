@@ -54,6 +54,7 @@ const visibilityOptions = [
   "visible",
   "hidden",
   "featured",
+  "services",
 ] as const;
 
 const PAGE_SIZE = 18;
@@ -97,7 +98,9 @@ export function DashboardMediaEditList({
             ? item.isVisible
             : visibilityFilter === "hidden"
               ? !item.isVisible
-              : item.isFeatured;
+              : visibilityFilter === "featured"
+                ? item.isFeatured
+                : Boolean(item.showOnServices);
 
       const haystack =
         `${item.title} ${item.slug} ${item.category} ${item.type}`.toLowerCase();
@@ -183,6 +186,7 @@ export function DashboardMediaEditList({
             <option value="visible">Visible</option>
             <option value="hidden">Hidden</option>
             <option value="featured">Featured</option>
+            <option value="services">În Servicii</option>
           </select>
         </div>
       </div>
@@ -392,7 +396,7 @@ function DashboardMediaEditCard({
             <span>{item.category} • {item.type}{item.category === "grafica" && graphicKind ? ` • ${graphicKind}` : ""}{item.category === "video" && videoKind === "lyrics" ? " • lyrics" : ""}{item.category === "video" ? ` • ${videoFormat === "wide-16x9" ? "16:9" : videoFormat === "square-1x1" ? "1:1" : "9:16"}` : ""}</span>
             <span>{item.slug}</span>
             <span>
-              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiMode ? aiMode.toUpperCase() : "No AI"}
+              {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"}{item.category === "grafica" && item.showOnServices ? " • Servicii" : ""} • {aiMode ? aiMode.toUpperCase() : "No AI"}
             </span>
           </div>
         </div>
