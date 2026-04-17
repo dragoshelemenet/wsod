@@ -5295,12 +5295,11 @@ video::-webkit-media-controls-panel {
 
 .foto-detail-main-image {
   transition: transform 180ms ease;
-  transform-origin: center center;
   will-change: transform;
 }
 
 .foto-detail-main-image.is-zoomed {
-  transform: scale(1.35);
+  transform: scale(1.45);
 }
 
 

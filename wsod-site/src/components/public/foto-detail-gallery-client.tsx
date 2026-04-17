@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 type GalleryItem = {
@@ -60,10 +60,12 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
 
   useEffect(() => {
     setActiveIndex(initialIndex);
     setIsZoomed(false);
+    setZoomOrigin("50% 50%");
   }, [initialIndex]);
 
   useEffect(() => {
@@ -94,16 +96,32 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
 
   const goPrev = () => {
     setIsZoomed(false);
+    setZoomOrigin("50% 50%");
     setActiveIndex((prev) => (prev - 1 + safeItems.length) % safeItems.length);
   };
 
   const goNext = () => {
     setIsZoomed(false);
+    setZoomOrigin("50% 50%");
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
   };
 
-  const toggleZoom = () => {
-    setIsZoomed((prev) => !prev);
+  const handleMainImageClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (isZoomed) {
+      setIsZoomed(false);
+      setZoomOrigin("50% 50%");
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const rawX = ((event.clientX - rect.left) / rect.width) * 100;
+    const rawY = ((event.clientY - rect.top) / rect.height) * 100;
+
+    const clampedX = Math.min(78, Math.max(22, rawX));
+    const clampedY = Math.min(78, Math.max(22, rawY));
+
+    setZoomOrigin(`${clampedX}% ${clampedY}%`);
+    setIsZoomed(true);
   };
 
   return (
@@ -123,13 +141,14 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
         <button
           type="button"
           className={`foto-detail-main-button ${isZoomed ? "is-zoomed" : ""}`}
-          onClick={toggleZoom}
+          onClick={handleMainImageClick}
           aria-label={isZoomed ? "Zoom out" : "Zoom in"}
         >
           <img
             src={active.src}
             alt={active.displayTitle || active.title}
             className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
+            style={{ transformOrigin: zoomOrigin }}
           />
           {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
         </button>
