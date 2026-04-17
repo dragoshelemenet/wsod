@@ -5128,7 +5128,7 @@ video::-webkit-media-controls-panel {
 @media (max-width: 640px) {
   .detail-back-button {
     left: 0;
-    top: -44px;
+    top: -14px;
     width: 34px;
     height: 34px;
     font-size: 17px;
