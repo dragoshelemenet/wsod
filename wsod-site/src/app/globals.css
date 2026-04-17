@@ -5142,3 +5142,37 @@ video::-webkit-media-controls-panel {
     font-size: 13px;
   }
 }
+/* ===== slug title lower ===== */
+.inner-page .detail-top-row {
+  margin-top: 28px !important;
+  margin-bottom: 0 !important;
+}
+
+.inner-page .detail-top-row h1 {
+  margin-top: 0 !important;
+  line-height: 0.96;
+}
+
+.inner-page .inner-description {
+  margin-top: 10px !important;
+}
+
+@media (max-width: 900px) {
+  .inner-page .detail-top-row {
+    margin-top: 22px !important;
+  }
+
+  .inner-page .inner-description {
+    margin-top: 8px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .inner-page .detail-top-row {
+    margin-top: 34px !important;
+  }
+
+  .inner-page .inner-description {
+    margin-top: 8px !important;
+  }
+}
