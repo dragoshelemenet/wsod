@@ -5409,3 +5409,63 @@ video::-webkit-media-controls-panel {
     max-height: 48% !important;
   }
 }
+
+
+/* ===== photo/category rails narrower, brand logo bigger ===== */
+.inner-page .preview-rail-card {
+  width: 100% !important;
+}
+
+.inner-page .preview-rail-card-image-wrap {
+  aspect-ratio: 9 / 14 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+
+.inner-page .preview-rail-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+.inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-art {
+  aspect-ratio: 9 / 14 !important;
+}
+
+.inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
+  max-width: 56% !important;
+  max-height: 56% !important;
+}
+
+@media (max-width: 900px) {
+  .inner-page .preview-rail-card-image-wrap {
+    aspect-ratio: 9 / 14.5 !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-art {
+    aspect-ratio: 9 / 14.5 !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
+    max-width: 60% !important;
+    max-height: 60% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .inner-page .preview-rail-card-image-wrap {
+    aspect-ratio: 9 / 15 !important;
+    border-radius: 14px !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-model-tall .public-owner-folder-art {
+    aspect-ratio: 9 / 15 !important;
+  }
+
+  .inner-page .public-owner-folder-card.is-brand-mini .public-owner-folder-image {
+    max-width: 62% !important;
+    max-height: 62% !important;
+  }
+}
