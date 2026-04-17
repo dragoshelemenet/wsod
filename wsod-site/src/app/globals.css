@@ -5049,3 +5049,16 @@ video::-webkit-media-controls-panel {
   pointer-events: auto;
   z-index: 1000;
 }
+
+
+.media-detail-hero-video {
+  position: relative;
+  overflow: visible;
+}
+
+.media-detail-hero-video .public-card-ai-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
+}

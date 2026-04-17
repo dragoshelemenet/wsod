@@ -10,6 +10,14 @@ function hasAiBadge(item: any) {
   return Boolean(item.aiMode || item.aiEdited);
 }
 
+function getAiBadgeLabel(item: any) {
+  return hasAiBadge(item) ? "AI" : undefined;
+}
+
+function getAiBadgeTooltip(item: any) {
+  return hasAiBadge(item) ? "Video complet generat cu AI." : undefined;
+}
+
 export default async function VideoSlugPage({ params }: PageProps) {
   const { slug } = await params;
   const item = await getPublishedMediaBySlug(slug);
@@ -48,13 +56,23 @@ export default async function VideoSlugPage({ params }: PageProps) {
           {item.description || "Pagina individuala pentru proiect video."}
         </p>
 
-        <div className="media-detail-hero">
+        <div className="media-detail-hero media-detail-hero-video">
           <video
             src={item.fileUrl ?? undefined}
             controls
             playsInline
             className="media-detail-image"
           />
+          {getAiBadgeLabel(item) ? (
+            <span className="ai-photo-badge public-card-ai-badge" data-ai-tooltip={getAiBadgeTooltip(item)}>
+              <span className="ai-photo-badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" className="ai-photo-badge-icon-svg">
+                  <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.4L12 15l-1.9-4.6L5.5 9l4.6-1.4L12 3z" fill="currentColor" />
+                </svg>
+              </span>
+              <span className="ai-photo-badge-text">{getAiBadgeLabel(item)}</span>
+            </span>
+          ) : null}
         </div>
       </section>
 
@@ -74,8 +92,8 @@ export default async function VideoSlugPage({ params }: PageProps) {
                 imageOnly
                 showPlayIcon
                 mediaRatio={video.videoKind === "lyrics" ? "wide" : "portrait"}
-                badgeLabel={hasAiBadge(video) ? "AI" : undefined}
-                badgeTooltip={hasAiBadge(video) ? "Video complet generat cu AI." : undefined}
+                badgeLabel={getAiBadgeLabel(video)}
+                badgeTooltip={getAiBadgeTooltip(video)}
               />
             ))}
           </PublicGrid>
@@ -98,8 +116,8 @@ export default async function VideoSlugPage({ params }: PageProps) {
                 imageOnly
                 showPlayIcon
                 mediaRatio={video.videoKind === "lyrics" ? "wide" : "portrait"}
-                badgeLabel={hasAiBadge(video) ? "AI" : undefined}
-                badgeTooltip={hasAiBadge(video) ? "Video complet generat cu AI." : undefined}
+                badgeLabel={getAiBadgeLabel(video)}
+                badgeTooltip={getAiBadgeTooltip(video)}
               />
             ))}
           </PublicGrid>
