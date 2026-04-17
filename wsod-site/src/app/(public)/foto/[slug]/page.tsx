@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
 import { prisma } from "@/lib/prisma";
 import { getPublishedMediaBySlug } from "@/lib/dashboard/queries";
@@ -160,34 +161,14 @@ export default async function FotoSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <h1 id="detail-dynamic-title">{displayTitle}</h1>
+        <div className="detail-top-row">
+          <Link href="/foto" className="detail-back-button">Înapoi</Link>
+          <h1 id="detail-dynamic-title">{displayTitle}</h1>
+        </div>
         {item.description ? <p className="inner-description">{item.description}</p> : null}
 
         <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
       </section>
-
-      {otherBrandPhotos.length ? (
-        <section className="inner-section">
-          <h2 className="detail-section-title">Alte poze din alte brand-uri:</h2>
-
-          <div className="detail-thumb-grid-foto-related">
-            {otherBrandPhotos.map((photo) => (
-              <a
-                key={photo.id}
-                href={`/foto/${photo.slug}`}
-                className="detail-thumb-link-foto-related detail-thumb-link-dimmed"
-              >
-                <img
-                  src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
-                  alt={photo.title}
-                  className="detail-thumb-image"
-                />
-                {((photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")) ? <AiBadge mode={(photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")} /> : null}
-              </a>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       {item.personModel?.name && item.brand?.id && sameModelAllPhotos.length > 1 ? (
         <section className="inner-section">
@@ -212,28 +193,7 @@ export default async function FotoSlugPage({ params }: PageProps) {
         </section>
       ) : null}
 
-      {otherModelPhotos.length ? (
-        <section className="inner-section">
-          <h2 className="detail-section-title">Alte poze cu alte modele:</h2>
-
-          <div className="detail-thumb-grid-foto-related">
-            {otherModelPhotos.map((photo) => (
-              <a
-                key={photo.id}
-                href={`/foto/${photo.slug}`}
-                className="detail-thumb-link-foto-related"
-              >
-                <img
-                  src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
-                  alt={photo.title}
-                  className="detail-thumb-image"
-                />
-                {((photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")) ? <AiBadge mode={(photo as any).aiMode || (Boolean((photo as any).aiEdited) ? "ai-edit" : "")} /> : null}
-              </a>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      
     </main>
   );
 }

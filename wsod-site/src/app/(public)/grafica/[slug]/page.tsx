@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
 import {
   getPublishedMediaByCategory,
@@ -155,36 +156,16 @@ export default async function GraficaSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <h1 id="detail-dynamic-title">{displayTitle}</h1>
+        <div className="detail-top-row">
+          <Link href="/grafica" className="detail-back-button">Înapoi</Link>
+          <h1 id="detail-dynamic-title">{displayTitle}</h1>
+        </div>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect grafic."}
         </p>
 
         <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
       </section>
-
-      {otherBrandGraphics.length > 0 ? (
-        <section className="inner-section">
-          <h2 className="detail-section-title">Alte grafici din alte brand-uri:</h2>
-
-          <div className="detail-thumb-grid-foto-related">
-            {otherBrandGraphics.map((graphic) => (
-              <a
-                key={graphic.id}
-                href={`/grafica/${graphic.slug}`}
-                className="detail-thumb-link-foto-related detail-thumb-link-dimmed"
-              >
-                <img
-                  src={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || undefined}
-                  alt={graphic.title}
-                  className="detail-thumb-image"
-                />
-                {hasAiBadge(graphic) ? <AiBadge mode={getAiMode(graphic)} /> : null}
-              </a>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       {item.personModelId && sameModelGraphics.length > 1 ? (
         <section className="inner-section">
@@ -207,28 +188,7 @@ export default async function GraficaSlugPage({ params }: PageProps) {
         </section>
       ) : null}
 
-      {otherModelGraphics.length > 0 ? (
-        <section className="inner-section">
-          <h2 className="detail-section-title">Alte grafici cu alte modele:</h2>
-
-          <div className="detail-thumb-grid-foto-related">
-            {otherModelGraphics.map((graphic) => (
-              <a
-                key={graphic.id}
-                href={`/grafica/${graphic.slug}`}
-                className="detail-thumb-link-foto-related"
-              >
-                <img
-                  src={graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || undefined}
-                  alt={graphic.title}
-                  className="detail-thumb-image"
-                />
-                {hasAiBadge(graphic) ? <AiBadge mode={getAiMode(graphic)} /> : null}
-              </a>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      
     </main>
   );
 }

@@ -48,7 +48,10 @@ export default async function WebsiteSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <h1>{item.title}</h1>
+        <div className="detail-top-row">
+          <Link href="/website" className="detail-back-button">Înapoi</Link>
+          <h1>{item.title}</h1>
+        </div>
 
         {item.description ? (
           <p className="inner-description">{item.description}</p>

@@ -30,7 +30,10 @@ export default async function MetaAdsSlugPage({ params }: PageProps) {
             { label: item.title },
           ]}
         />
-        <h1>{item.title}</h1>
+        <div className="detail-top-row">
+          <a href="/meta-ads" className="detail-back-button">Înapoi</a>
+          <h1>{item.title}</h1>
+        </div>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect Meta Ads."}
         </p>

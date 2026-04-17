@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { getPublishedMediaByCategory, getPublishedMediaBySlug } from "@/lib/dashboard/queries";
@@ -57,7 +58,10 @@ export default async function VideoSlugPage({ params }: PageProps) {
   return (
     <main className="inner-page">
       <section className="inner-section">
-        <h1>{item.title}</h1>
+        <div className="detail-top-row">
+          <Link href="/video" className="detail-back-button">Înapoi</Link>
+          <h1>{item.title}</h1>
+        </div>
         <p className="inner-description">
           {item.description || "Pagina individuala pentru proiect video."}
         </p>
