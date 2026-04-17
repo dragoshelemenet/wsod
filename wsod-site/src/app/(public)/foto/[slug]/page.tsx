@@ -170,12 +170,12 @@ export default async function FotoSlugPage({ params }: PageProps) {
         <section className="inner-section">
           <h2 className="detail-section-title">Alte poze din alte brand-uri:</h2>
 
-          <div className="detail-thumb-grid detail-thumb-grid-foto-related">
+          <div className="detail-thumb-grid-foto-related">
             {otherBrandPhotos.map((photo) => (
               <a
                 key={photo.id}
                 href={`/foto/${photo.slug}`}
-                className="detail-thumb-link detail-thumb-link-foto-related detail-thumb-link-dimmed"
+                className="detail-thumb-link-foto-related detail-thumb-link-dimmed"
               >
                 <img
                   src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}
@@ -216,12 +216,12 @@ export default async function FotoSlugPage({ params }: PageProps) {
         <section className="inner-section">
           <h2 className="detail-section-title">Alte poze cu alte modele:</h2>
 
-          <div className="detail-thumb-grid detail-thumb-grid-foto-related">
+          <div className="detail-thumb-grid-foto-related">
             {otherModelPhotos.map((photo) => (
               <a
                 key={photo.id}
                 href={`/foto/${photo.slug}`}
-                className="detail-thumb-link detail-thumb-link-foto-related"
+                className="detail-thumb-link-foto-related"
               >
                 <img
                   src={photo.thumbnailUrl || photo.previewUrl || photo.fileUrl || undefined}

@@ -4873,4 +4873,102 @@ body:has(.public-navbar) .section-mini-head {
   .detail-thumb-grid-foto-related .detail-thumb-image {
     border-radius: 10px;
   }
+}\n\n\n.detail-thumb-grid-foto-related {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.detail-thumb-link-foto-related {
+  display: block;
+  position: relative;
+  min-width: 0;
+  text-decoration: none;
+  border-radius: 10px;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+}
+
+.detail-thumb-link-foto-related .detail-thumb-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.detail-thumb-link-dimmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.detail-thumb-link-foto-related .ai-photo-badge {
+  z-index: 2;
+}
+
+.detail-thumb-link-foto-related .ai-photo-dot {
+  display: none !important;
+}
+
+.detail-thumb-grid-foto-related .ai-photo-badge {
+  top: 6px;
+  right: 6px;
+  gap: 2px;
+  padding: 3px 6px 3px 5px;
+}
+
+.detail-thumb-grid-foto-related .ai-photo-badge-icon,
+.detail-thumb-grid-foto-related .ai-photo-badge-icon-svg {
+  width: 10px;
+  height: 10px;
+}
+
+.detail-thumb-grid-foto-related .ai-photo-badge-text {
+  font-size: 9px;
+  font-weight: 900;
+}
+
+@media (max-width: 1200px) {
+  .detail-thumb-grid-foto-related {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .detail-thumb-grid-foto-related {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .detail-thumb-grid-foto-related {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .detail-thumb-link-foto-related,
+  .detail-thumb-link-foto-related .detail-thumb-image {
+    border-radius: 8px;
+  }
+
+  .detail-thumb-grid-foto-related .ai-photo-badge {
+    top: 4px;
+    right: 4px;
+    padding: 3px 5px 3px 4px;
+  }
+
+  .detail-thumb-grid-foto-related .ai-photo-badge-icon,
+  .detail-thumb-grid-foto-related .ai-photo-badge-icon-svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .detail-thumb-grid-foto-related .ai-photo-badge-text {
+    font-size: 8px;
+  }
 }\n
