@@ -5278,8 +5278,15 @@ video::-webkit-media-controls-panel {
 }
 
 
+.foto-detail-stage {
+  overflow: hidden;
+}
+
 .foto-detail-main-button {
   cursor: zoom-in;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .foto-detail-main-button.is-zoomed {
@@ -5289,8 +5296,9 @@ video::-webkit-media-controls-panel {
 .foto-detail-main-image {
   transition: transform 180ms ease;
   transform-origin: center center;
+  will-change: transform;
 }
 
 .foto-detail-main-image.is-zoomed {
-  transform: scale(1.9);
+  transform: scale(1.35);
 }
