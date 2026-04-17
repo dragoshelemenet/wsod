@@ -5621,7 +5621,9 @@ video::-webkit-media-controls-panel {
   opacity: 0.5;
   pointer-events: none;
 }
-\n\n.media-bulk-actions {
+
+
+.media-bulk-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -5641,4 +5643,4 @@ video::-webkit-media-controls-panel {
   width: 16px;
   height: 16px;
   cursor: pointer;
-}\n
+}
