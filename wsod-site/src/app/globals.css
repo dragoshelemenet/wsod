@@ -4479,7 +4479,9 @@ body:has(.public-navbar) .section-mini-head {
     width: 100% !important;
   }
 }
-\n\n.foto-preview-grid {
+
+
+.foto-preview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
@@ -4789,10 +4791,12 @@ body:has(.public-navbar) .section-mini-head {
     padding: 8px 10px;
   }
 }
-\n\n.public-card-media-wrap {
+
+
+.public-card-media-wrap {
   position: relative;
 }
 
 .public-card-ai-badge {
   pointer-events: auto;
-}\n
+}
