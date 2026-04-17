@@ -4,27 +4,24 @@ import { useEffect } from "react";
 
 export default function AntiDownloadGuard() {
   useEffect(() => {
-    const preventContextMenu = (event: MouseEvent) => {
+    const onContextMenu = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.closest("img, video, canvas, picture, svg")) {
         event.preventDefault();
       }
     };
 
-    const preventDragStart = (event: DragEvent) => {
+    const onDragStart = (event: DragEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.closest("img, video, canvas, picture, svg, a")) {
         event.preventDefault();
       }
     };
 
-    const preventSaveKeys = (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
 
-      if (
-        (event.ctrlKey || event.metaKey) &&
-        (key === "s" || key === "u" || key === "p")
-      ) {
+      if ((event.ctrlKey || event.metaKey) && ["s", "u", "p"].includes(key)) {
         event.preventDefault();
       }
 
@@ -33,14 +30,14 @@ export default function AntiDownloadGuard() {
       }
     };
 
-    document.addEventListener("contextmenu", preventContextMenu);
-    document.addEventListener("dragstart", preventDragStart);
-    document.addEventListener("keydown", preventSaveKeys);
+    document.addEventListener("contextmenu", onContextMenu);
+    document.addEventListener("dragstart", onDragStart);
+    document.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.removeEventListener("contextmenu", preventContextMenu);
-      document.removeEventListener("dragstart", preventDragStart);
-      document.removeEventListener("keydown", preventSaveKeys);
+      document.removeEventListener("contextmenu", onContextMenu);
+      document.removeEventListener("dragstart", onDragStart);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
