@@ -22,6 +22,7 @@ type MediaItem = {
   isFeatured: boolean;
   aiEdited: boolean;
   aiMode?: string | null;
+  graphicKind?: string | null;
   videoKind?: string | null;
   videoFormat?: string | null;
   brandId: string | null;
@@ -278,6 +279,7 @@ function DashboardMediaEditCard({
   const [isVisible, setIsVisible] = useState(item.isVisible);
   const [isFeatured, setIsFeatured] = useState(item.isFeatured);
   const [aiMode, setAiMode] = useState(item.aiMode || "");
+  const [graphicKind, setGraphicKind] = useState(item.graphicKind || "");
   const [videoKind, setVideoKind] = useState(item.videoKind || "");
   const [videoFormat, setVideoFormat] = useState(item.videoFormat || "portrait-9x16");
   const [loading, setLoading] = useState(false);
@@ -311,6 +313,7 @@ function DashboardMediaEditCard({
           isFeatured,
           aiEdited: !!aiMode,
           aiMode,
+          graphicKind: item.category === "grafica" ? (graphicKind || null) : null,
           videoKind: item.category === "video" ? (videoKind || null) : null,
           videoFormat: item.category === "video" ? videoFormat : null,
         }),
@@ -345,7 +348,7 @@ function DashboardMediaEditCard({
 
           <div className="media-compact-meta">
             <strong>{title}</strong>
-            <span>{item.category} • {item.type}{item.category === "video" && videoKind === "lyrics" ? " • lyrics" : ""}{item.category === "video" ? ` • ${videoFormat === "wide-16x9" ? "16:9" : videoFormat === "square-1x1" ? "1:1" : "9:16"}` : ""}</span>
+            <span>{item.category} • {item.type}{item.category === "grafica" && graphicKind ? ` • ${graphicKind}` : ""}{item.category === "video" && videoKind === "lyrics" ? " • lyrics" : ""}{item.category === "video" ? ` • ${videoFormat === "wide-16x9" ? "16:9" : videoFormat === "square-1x1" ? "1:1" : "9:16"}` : ""}</span>
             <span>{item.slug}</span>
             <span>
               {isVisible ? "Visible" : "Hidden"} • {isFeatured ? "Featured" : "Normal"} • {aiMode ? aiMode.toUpperCase() : "No AI"}
@@ -433,21 +436,23 @@ function DashboardMediaEditCard({
               </select>
             </div>
 
-            <div className="admin-form-field">
-              <label>Audio Profile</label>
-              <select
-                className="admin-select"
-                value={audioProfileId}
-                onChange={(event) => setAudioProfileId(event.target.value)}
-              >
-                <option value="">No audio profile</option>
-                {audioProfiles.map((profile) => (
-                  <option key={profile.id} value={profile.id}>
-                    {profile.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {["audio", "video"].includes(item.category) ? (
+              <div className="admin-form-field">
+                <label>Audio Profile</label>
+                <select
+                  className="admin-select"
+                  value={audioProfileId}
+                  onChange={(event) => setAudioProfileId(event.target.value)}
+                >
+                  <option value="">No audio profile</option>
+                  {audioProfiles.map((profile) => (
+                    <option key={profile.id} value={profile.id}>
+                      {profile.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
 
             <div className="admin-grid-full admin-inline-toggles">
               <label className="admin-toggle-row">
@@ -467,6 +472,30 @@ function DashboardMediaEditCard({
                   onChange={(event) => setIsFeatured(event.target.checked)}
                 />
               </label>
+
+              {item.category === "grafica" ? (
+                <div className="admin-form-field">
+                  <label>Tip material grafic</label>
+                  <select
+                    className="admin-select"
+                    value={graphicKind}
+                    onChange={(event) => setGraphicKind(event.target.value)}
+                  >
+                    <option value="">Selectează tipul</option>
+                    <option value="flyer">Flyer</option>
+                    <option value="carte-vizita">Carte de vizita</option>
+                    <option value="certificat">Certificat</option>
+                    <option value="poster">Poster</option>
+                    <option value="banner">Banner</option>
+                    <option value="meniu">Meniu</option>
+                    <option value="ambalaj">Ambalaj</option>
+                    <option value="eticheta">Eticheta</option>
+                    <option value="social-media">Social media</option>
+                    <option value="logo">Logo</option>
+                    <option value="altul">Altul</option>
+                  </select>
+                </div>
+              ) : null}
 
               {["foto", "video"].includes(item.category) ? (
                 <div className="admin-form-field">
