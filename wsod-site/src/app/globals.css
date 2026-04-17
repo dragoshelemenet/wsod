@@ -4816,7 +4816,9 @@ body:has(.public-navbar) .section-mini-head {
 .public-card-ai-badge {
   pointer-events: auto;
 }
-\n\n.detail-thumb-grid-foto-related {
+
+
+.detail-thumb-grid-foto-related {
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
 }
@@ -4873,7 +4875,10 @@ body:has(.public-navbar) .section-mini-head {
   .detail-thumb-grid-foto-related .detail-thumb-image {
     border-radius: 10px;
   }
-}\n\n\n.detail-thumb-grid-foto-related {
+}
+
+
+.detail-thumb-grid-foto-related {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 6px;
@@ -4971,4 +4976,4 @@ body:has(.public-navbar) .section-mini-head {
   .detail-thumb-grid-foto-related .ai-photo-badge-text {
     font-size: 8px;
   }
-}\n
+}
