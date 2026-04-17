@@ -88,6 +88,7 @@ export default async function ServicesPricingPage() {
                     <th>Serviciu</th>
                     <th>Pret</th>
                     <th>Detalii</th>
+                    <th>Exemple</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,6 +106,17 @@ export default async function ServicesPricingPage() {
                       <td>{row.service}</td>
                       <td>{row.price}</td>
                       <td>{row.note}</td>
+                      <td>
+                        {row.href !== "#" ? (
+                          <Link href={row.href} className="services-examples-button">
+                            Vezi exemple
+                          </Link>
+                        ) : (
+                          <span className="services-examples-button is-disabled">
+                            Fără link
+                          </span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
