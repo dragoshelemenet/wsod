@@ -1420,7 +1420,7 @@ body:has(.public-navbar) .inner-section-block {
 .foto-lightbox-strip-image {
   display: block;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
@@ -4855,13 +4855,13 @@ body:has(.public-navbar) .section-mini-head {
 
 @media (max-width: 1200px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 900px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
@@ -4880,7 +4880,7 @@ body:has(.public-navbar) .section-mini-head {
 
 .detail-thumb-grid-foto-related {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -4921,20 +4921,20 @@ body:has(.public-navbar) .section-mini-head {
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge {
-  top: 6px;
-  right: 6px;
+  top: 5px;
+  right: 5px;
   gap: 2px;
-  padding: 3px 6px 3px 5px;
+  padding: 2px 5px 2px 4px;
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge-icon,
 .detail-thumb-grid-foto-related .ai-photo-badge-icon-svg {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 
 .detail-thumb-grid-foto-related .ai-photo-badge-text {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 900;
 }
 
@@ -4952,7 +4952,7 @@ body:has(.public-navbar) .section-mini-head {
 
 @media (max-width: 640px) {
   .detail-thumb-grid-foto-related {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 5px;
   }
 
@@ -4977,3 +4977,25 @@ body:has(.public-navbar) .section-mini-head {
     font-size: 8px;
   }
 }
+\n\n.foto-detail-thumb-button .ai-photo-dot,
+.detail-thumb-link-foto-related .ai-photo-dot {
+  display: none !important;
+}
+
+.foto-detail-thumb-button .ai-photo-badge {
+  top: 4px;
+  right: 4px;
+  gap: 1px;
+  padding: 2px 4px 2px 3px;
+}
+
+.foto-detail-thumb-button .ai-photo-badge-icon,
+.foto-detail-thumb-button .ai-photo-badge-icon-svg {
+  width: 8px;
+  height: 8px;
+}
+
+.foto-detail-thumb-button .ai-photo-badge-text {
+  font-size: 7px;
+  font-weight: 900;
+}\n

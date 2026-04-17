@@ -151,7 +151,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
                 alt={item.displayTitle || item.title}
                 className="foto-detail-thumb-image"
               />
-              {item.aiMode ? <span className="ai-photo-dot" title={item.aiMode === "ai" ? "Fotosesiune complet creată cu AI." : "Hainele sau unele elemente au fost schimbate cu AI."} /> : null}
+              {item.aiMode ? <AiBadge mode={item.aiMode} /> : null}
             </button>
           ))}
         </div>
