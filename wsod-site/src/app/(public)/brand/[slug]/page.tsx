@@ -59,13 +59,23 @@ export default async function BrandSlugPage({ params }: PageProps) {
                   imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
                   imageOnly
                   showPlayIcon
-                  badgeLabel={item.aiMode === "ai-edit" ? "AI EDIT" : item.aiMode ? "AI" : undefined}
+                  badgeLabel={
+                    item.aiMode === "ai-edit"
+                      ? "AI EDIT"
+                      : item.aiMode === "ai-enhanced"
+                        ? "AI ÎMBUNĂTĂȚIT"
+                        : item.aiMode
+                          ? "AI"
+                          : undefined
+                  }
                   badgeTooltip={
                     item.aiMode === "ai-edit"
                       ? "Conținut editat cu AI."
-                      : item.aiMode
-                        ? "Conținut creat cu AI."
-                        : undefined
+                      : item.aiMode === "ai-enhanced"
+                        ? "Îmbunătățit cu inteligență artificială."
+                        : item.aiMode
+                          ? "Conținut creat cu AI."
+                          : undefined
                   }
                 />
               ))}
@@ -87,13 +97,23 @@ export default async function BrandSlugPage({ params }: PageProps) {
                   href={`/${item.category}/${item.slug}`}
                   imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
                   imageOnly
-                  badgeLabel={item.aiMode === "ai-edit" ? "AI EDIT" : item.aiMode ? "AI" : undefined}
+                  badgeLabel={
+                    item.aiMode === "ai-edit"
+                      ? "AI EDIT"
+                      : item.aiMode === "ai-enhanced"
+                        ? "AI ÎMBUNĂTĂȚIT"
+                        : item.aiMode
+                          ? "AI"
+                          : undefined
+                  }
                   badgeTooltip={
                     item.aiMode === "ai-edit"
                       ? "Fotografie editată cu AI."
-                      : item.aiMode
-                        ? "Fotografie creată cu AI."
-                        : undefined
+                      : item.aiMode === "ai-enhanced"
+                        ? "Îmbunătățit cu inteligență artificială."
+                        : item.aiMode
+                          ? "Fotografie creată cu AI."
+                          : undefined
                   }
                 />
               ))}

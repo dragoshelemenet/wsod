@@ -98,7 +98,10 @@ async function handleUpdate(
   const isFeatured = Boolean(body.isFeatured);
   const isVisible = Boolean(body.isVisible);
   const aiModeRaw = String(body.aiMode || "").trim();
-  const aiMode = aiModeRaw === "ai" || aiModeRaw === "ai-edit" ? aiModeRaw : null;
+  const aiMode =
+    aiModeRaw === "ai" || aiModeRaw === "ai-edit" || aiModeRaw === "ai-enhanced"
+      ? aiModeRaw
+      : null;
   const aiEdited = Boolean(body.aiEdited || aiMode);
   const showOnServices = Boolean(body.showOnServices);
   const rotationRaw = Number(body.rotation ?? 0);

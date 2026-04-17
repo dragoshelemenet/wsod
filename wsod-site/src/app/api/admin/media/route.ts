@@ -80,7 +80,10 @@ export async function POST(request: Request) {
     const isFeatured =
       typeof body.isFeatured === "boolean" ? body.isFeatured : false;
     const aiModeRaw = String(body.aiMode || "").trim();
-    const aiMode = aiModeRaw === "ai" || aiModeRaw === "ai-edit" ? aiModeRaw : null;
+    const aiMode =
+      aiModeRaw === "ai" || aiModeRaw === "ai-edit" || aiModeRaw === "ai-enhanced"
+        ? aiModeRaw
+        : null;
     const aiEdited =
       typeof body.aiEdited === "boolean" ? body.aiEdited : Boolean(aiMode);
     const showOnServices =
