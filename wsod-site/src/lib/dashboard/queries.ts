@@ -252,7 +252,6 @@ export async function getServicesCertificates() {
       where: {
         isVisible: true,
         category: "grafica",
-        graphicKind: "certificat",
         showOnServices: true,
       },
       orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
