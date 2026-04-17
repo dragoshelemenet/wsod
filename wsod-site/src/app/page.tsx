@@ -14,7 +14,7 @@ export default async function HomePage() {
 
   const folders = [
     {
-      title: "PHOTO",
+      title: "FOTO",
       href: "/foto",
       meta: "",
     },
@@ -29,7 +29,7 @@ export default async function HomePage() {
       meta: "",
     },
     {
-      title: "GRAPHICA",
+      title: "GRAFICA",
       href: "/grafica",
       meta: "FLYERE · COVERURI · CARTI VIZITA",
     },
