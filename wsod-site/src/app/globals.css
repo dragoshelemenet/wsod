@@ -5018,18 +5018,23 @@ video::-webkit-media-controls-panel {
 }
 
 
-.public-card.public-card-image-only,
-.public-card.public-card-image-only .public-card-media-wrap {
-  overflow: visible !important;
-}
-
 .public-card.public-card-image-only {
   position: relative;
+  overflow: visible !important;
   z-index: 1;
 }
 
 .public-card.public-card-image-only:hover {
   z-index: 20;
+}
+
+.public-card.public-card-image-only .public-card-media-wrap {
+  overflow: hidden !important;
+  border-radius: 16px;
+}
+
+.public-card.public-card-image-only .public-card-media {
+  border-radius: 16px;
 }
 
 .public-card.public-card-image-only .public-card-ai-badge {
