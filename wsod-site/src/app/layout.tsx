@@ -3,6 +3,7 @@ import "./globals.css";
 import "./ui-cleanup.css";
 import { createOrganizationSchema } from "@/lib/seo/schema";
 import AntiDownloadGuard from "@/components/anti-download-guard";
+import PageRevealEffect from "@/components/page-reveal-effect";
 
 export const metadata: Metadata = {
   title: "WSOD.PROD — Agenție media digitală în România | Video, foto, grafică, website-uri",
@@ -40,6 +41,7 @@ export default function RootLayout({
     <html lang="ro">
       <body>
         <AntiDownloadGuard />
+        <PageRevealEffect />
         {children}
         <script
           type="application/ld+json"
