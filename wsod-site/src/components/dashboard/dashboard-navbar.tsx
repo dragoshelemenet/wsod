@@ -3,6 +3,8 @@ const links = [
   { href: "/studio-dashboard/media", label: "Media" },
   { href: "/studio-dashboard/brands", label: "Brands" },
   { href: "/studio-dashboard/models", label: "Models" },
+  { href: "/studio-dashboard/artists", label: "Artists" },
+  { href: "/studio-dashboard/influencers", label: "Influencers" },
   { href: "/studio-dashboard/audio", label: "Audio" },
   { href: "/studio-dashboard/upload", label: "Upload" },
   { href: "/studio-dashboard/site-content", label: "Site Content" },
