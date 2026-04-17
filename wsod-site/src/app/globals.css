@@ -5135,7 +5135,8 @@ video::-webkit-media-controls-panel {
   }
 
   .detail-bottom-back {
-    margin-top: 14px;
+    margin-top: 28px;
+    margin-bottom: 10px;
   }
 
   .detail-bottom-back-link {
