@@ -46,17 +46,17 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const ownerType = String(body.ownerType || "").trim();
     const ownerTypeRaw = String(body.ownerType || "").trim().toLowerCase();
     const ownerType =
-      ownerTypeRaw === "model" || ownerTypeRaw === "artist" || ownerTypeRaw === "influencer"
+      ownerTypeRaw === "model" ||
+      ownerTypeRaw === "artist" ||
+      ownerTypeRaw === "influencer"
         ? ownerTypeRaw
         : "brand";
+
     const brandSlug = String(body.brandSlug || "").trim();
     const modelSlug = String(body.modelSlug || "").trim();
     const talentSlug = String(body.talentSlug || "").trim();
-    const personModelSlug = String(body.personModelSlug || "").trim();
-    const audioProfileSlug = String(body.audioProfileSlug || "").trim();
 
     const category = String(body.category || "").trim();
     const type = String(body.type || "").trim();
@@ -82,17 +82,19 @@ export async function POST(request: Request) {
       : "portrait-9x16";
     const groupOrder = Number(body.groupOrder ?? 0);
 
-    const isVisible =
-      typeof body.isVisible === "boolean" ? body.isVisible : true;
-    const isFeatured =
-      typeof body.isFeatured === "boolean" ? body.isFeatured : false;
+    const isVisible = typeof body.isVisible === "boolean" ? body.isVisible : true;
+    const isFeatured = typeof body.isFeatured === "boolean" ? body.isFeatured : false;
+
     const aiModeRaw = String(body.aiMode || "").trim();
     const aiMode =
-      aiModeRaw === "ai" || aiModeRaw === "ai-edit" || aiModeRaw === "ai-enhanced"
+      aiModeRaw === "ai" ||
+      aiModeRaw === "ai-edit" ||
+      aiModeRaw === "ai-enhanced"
         ? aiModeRaw
         : null;
     const aiEdited =
       typeof body.aiEdited === "boolean" ? body.aiEdited : Boolean(aiMode);
+
     const showOnServices =
       typeof body.showOnServices === "boolean" ? body.showOnServices : false;
 
@@ -133,84 +135,82 @@ export async function POST(request: Request) {
 
     let brandId: string | null = null;
     let personModelId: string | null = null;
-    let audioProfileId: string | null = null;
+    let talentProfileId: string | null = null;
 
-    if (ownerType) {
-      if (!["brand", "model", "audioProfile"].includes(ownerType)) {
+    if (ownerType === "brand") {
+      if (!brandSlug) {
         return NextResponse.json(
-          { ok: false, message: "Tipul de asociere este invalid." },
+          { ok: false, message: "Selectează un brand." },
           { status: 400 }
         );
       }
 
-      if (ownerType === "brand") {
-        if (!brandSlug) {
-          return NextResponse.json(
-            { ok: false, message: "Selectează un brand." },
-            { status: 400 }
-          );
-        }
+      const brand = await prisma.brand.findUnique({
+        where: { slug: brandSlug },
+        select: { id: true },
+      });
 
-        const brand = await prisma.brand.findUnique({
-          where: { slug: brandSlug },
-          select: { id: true },
-        });
-
-        if (!brand) {
-          return NextResponse.json(
-            { ok: false, message: "Brandul selectat nu există." },
-            { status: 404 }
-          );
-        }
-
-        brandId = brand.id;
+      if (!brand) {
+        return NextResponse.json(
+          { ok: false, message: "Brandul selectat nu există." },
+          { status: 404 }
+        );
       }
 
-      if (ownerType === "model") {
-        if (!personModelSlug) {
-          return NextResponse.json(
-            { ok: false, message: "Selectează un model." },
-            { status: 400 }
-          );
-        }
+      brandId = brand.id;
+    }
 
-        const model = await prisma.personModel.findUnique({
-          where: { slug: personModelSlug },
-          select: { id: true },
-        });
-
-        if (!model) {
-          return NextResponse.json(
-            { ok: false, message: "Modelul selectat nu există." },
-            { status: 404 }
-          );
-        }
-
-        personModelId = model.id;
+    if (ownerType === "model") {
+      if (!modelSlug) {
+        return NextResponse.json(
+          { ok: false, message: "Selectează un model." },
+          { status: 400 }
+        );
       }
 
-      if (ownerType === "audioProfile") {
-        if (!audioProfileSlug) {
-          return NextResponse.json(
-            { ok: false, message: "Selectează un profil audio." },
-            { status: 400 }
-          );
-        }
+      const model = await prisma.personModel.findUnique({
+        where: { slug: modelSlug },
+        select: { id: true },
+      });
 
-        const profile = await prisma.audioProfile.findUnique({
-          where: { slug: audioProfileSlug },
-          select: { id: true },
-        });
-
-        if (!profile) {
-          return NextResponse.json(
-            { ok: false, message: "Profilul audio selectat nu există." },
-            { status: 404 }
-          );
-        }
-
-        audioProfileId = profile.id;
+      if (!model) {
+        return NextResponse.json(
+          { ok: false, message: "Modelul selectat nu există." },
+          { status: 404 }
+        );
       }
+
+      personModelId = model.id;
+    }
+
+    if (ownerType === "artist" || ownerType === "influencer") {
+      if (!talentSlug) {
+        return NextResponse.json(
+          { ok: false, message: "Selectează profilul." },
+          { status: 400 }
+        );
+      }
+
+      const talent = await prisma.talentProfile.findUnique({
+        where: { slug: talentSlug },
+        select: { id: true, kind: true },
+      });
+
+      if (!talent) {
+        return NextResponse.json(
+          { ok: false, message: "Profilul selectat nu există." },
+          { status: 404 }
+        );
+      }
+
+      if (talent.kind !== ownerType) {
+        return NextResponse.json(
+          { ok: false, message: "Tipul profilului nu corespunde." },
+          { status: 400 }
+        );
+      }
+
+      talentProfileId = talent.id;
     }
 
     if (category === "foto" && ownerType === "model" && !groupLabel) {
@@ -220,7 +220,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (category === "grafica" && ownerType && !graphicKind) {
+    if (category === "grafica" && !graphicKind) {
       return NextResponse.json(
         { ok: false, message: "Selectează tipul materialului grafic." },
         { status: 400 }
@@ -271,7 +271,7 @@ export async function POST(request: Request) {
         isFeatured,
         brandId,
         personModelId,
-        audioProfileId,
+        talentProfileId,
       },
     });
 
@@ -284,10 +284,15 @@ export async function POST(request: Request) {
     revalidatePath("/audio");
     revalidatePath("/studio-dashboard");
     revalidatePath("/studio-dashboard/upload");
+    revalidatePath("/studio-dashboard/media");
+    revalidatePath("/studio-dashboard/talents");
 
     if (brandSlug) revalidatePath(`/brand/${brandSlug}`);
-    if (personModelSlug) revalidatePath(`/model/${personModelSlug}`);
-    if (audioProfileSlug) revalidatePath(`/audio-profile/${audioProfileSlug}`);
+    if (modelSlug) revalidatePath(`/model/${modelSlug}`);
+    if (talentSlug) {
+      revalidatePath(`/artist/${talentSlug}`);
+      revalidatePath(`/influencer/${talentSlug}`);
+    }
 
     return NextResponse.json({
       ok: true,
