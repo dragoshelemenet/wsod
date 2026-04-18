@@ -21,6 +21,11 @@ interface AdminMediaItem {
   thumbnailUrl?: string | null;
   previewUrl?: string | null;
   fileUrl?: string | null;
+  albumBackUrl?: string | null;
+  displayFormatMain?: string | null;
+  format16x9Url?: string | null;
+  format9x16Url?: string | null;
+  format1x1Url?: string | null;
   brand?: { name: string; slug: string } | null;
   personModel?: { name: string; slug: string } | null;
   audioProfile?: { name: string; slug: string; kind: string } | null;
@@ -235,6 +240,11 @@ export default function AdminMediaManager({
     () => items.find((item) => item.id === selectedItemId) || null,
     [items, selectedItemId]
   );
+  const [albumCardSide, setAlbumCardSide] = useState<"front" | "back">("front");
+
+  useEffect(() => {
+    setAlbumCardSide("front");
+  }, [selectedItemId]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -295,6 +305,7 @@ export default function AdminMediaManager({
           metaDescription: item.metaDescription || "",
           groupLabel: item.groupLabel || "",
           graphicKind: item.graphicKind || "",
+          albumBackUrl: item.albumBackUrl || "",
           groupOrder: item.groupOrder ?? 0,
           sortOrder: item.sortOrder ?? 0,
           isFeatured: !!item.isFeatured,
@@ -543,10 +554,54 @@ export default function AdminMediaManager({
 
             <div className="admin-media-edit-layout admin-media-edit-layout-wide">
               <div className="admin-media-edit-preview">
-                <PreviewLarge item={selectedItem} />
+                {selectedItem.category === "grafica" &&
+                selectedItem.graphicKind === "coperta-album" &&
+                albumCardSide === "back" &&
+                selectedItem.albumBackUrl ? (
+                  <img
+                    src={selectedItem.albumBackUrl}
+                    alt={`${selectedItem.title} spate`}
+                    className="admin-media-edit-preview-media"
+                  />
+                ) : (
+                  <PreviewLarge item={selectedItem} />
+                )}
               </div>
 
               <div className="admin-media-edit-form">
+                {selectedItem.category === "grafica" && selectedItem.graphicKind === "coperta-album" ? (
+                  <>
+                    <div className="admin-inline-actions">
+                      <button
+                        type="button"
+                        className={albumCardSide === "front" ? "admin-submit" : "admin-ghost-button"}
+                        onClick={() => setAlbumCardSide("front")}
+                      >
+                        Față
+                      </button>
+                      <button
+                        type="button"
+                        className={albumCardSide === "back" ? "admin-submit" : "admin-ghost-button"}
+                        onClick={() => setAlbumCardSide("back")}
+                        disabled={!selectedItem.albumBackUrl}
+                      >
+                        Spate
+                      </button>
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>Album card - Spate URL</label>
+                      <input
+                        value={selectedItem.albumBackUrl || ""}
+                        onChange={(e) =>
+                          patchItem(selectedItem.id, { albumBackUrl: e.target.value })
+                        }
+                        placeholder="https://..."
+                      />
+                    </div>
+                  </>
+                ) : null}
+
                 <div className="admin-form-field">
                   <label>Titlu</label>
                   <input
@@ -563,6 +618,19 @@ export default function AdminMediaManager({
                     onChange={(e) => updateDescription(selectedItem.id, e.target.value)}
                   />
                 </div>
+
+                {selectedItem.category === "grafica" && selectedItem.graphicKind === "coperta-album" ? (
+                  <div className="admin-form-field">
+                    <label>Spatele copertei albumului - URL</label>
+                    <input
+                      value={selectedItem.albumBackUrl || ""}
+                      onChange={(e) =>
+                        patchItem(selectedItem.id, { albumBackUrl: e.target.value })
+                      }
+                      placeholder="https://..."
+                    />
+                  </div>
+                ) : null}
 
                 <div className="admin-form-field">
                   <label>SEO title</label>
@@ -584,6 +652,72 @@ export default function AdminMediaManager({
                     }
                   />
                 </div>
+
+                {(selectedItem.category === "grafica" && (selectedItem.graphicKind === "certificat" || selectedItem.graphicKind === "coperta-album")) ? (
+                  <>
+                    <div className="admin-form-field">
+                      <label>Format principal</label>
+                      <select
+                        className="admin-select"
+                        value={selectedItem.displayFormatMain || ""}
+                        onChange={(e) =>
+                          patchItem(selectedItem.id, { displayFormatMain: e.target.value })
+                        }
+                      >
+                        <option value="">fără format</option>
+                        <option value="16:9">16:9</option>
+                        <option value="9:16">9:16</option>
+                        <option value="1:1">1:1</option>
+                      </select>
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>URL 16:9</label>
+                      <input
+                        value={selectedItem.format16x9Url || ""}
+                        onChange={(e) =>
+                          patchItem(selectedItem.id, { format16x9Url: e.target.value })
+                        }
+                        placeholder="https://..."
+                      />
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>URL 9:16</label>
+                      <input
+                        value={selectedItem.format9x16Url || ""}
+                        onChange={(e) =>
+                          patchItem(selectedItem.id, { format9x16Url: e.target.value })
+                        }
+                        placeholder="https://..."
+                      />
+                    </div>
+
+                    <div className="admin-form-field">
+                      <label>URL 1:1</label>
+                      <input
+                        value={selectedItem.format1x1Url || ""}
+                        onChange={(e) =>
+                          patchItem(selectedItem.id, { format1x1Url: e.target.value })
+                        }
+                        placeholder="https://..."
+                      />
+                    </div>
+                  </>
+                ) : null}
+
+                {(selectedItem.category === "grafica" && selectedItem.graphicKind === "coperta-album") ? (
+                  <div className="admin-form-field">
+                    <label>Spatele copertei albumului - URL</label>
+                    <input
+                      value={selectedItem.albumBackUrl || ""}
+                      onChange={(e) =>
+                        patchItem(selectedItem.id, { albumBackUrl: e.target.value })
+                      }
+                      placeholder="https://..."
+                    />
+                  </div>
+                ) : null}
 
                 <div className="admin-media-grid-2">
                   <div className="admin-form-field">

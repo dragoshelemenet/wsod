@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
 import { BusinessCardDetailClient } from "@/components/public/business-card-detail-client";
+import { GraphicFormatDetailClient } from "@/components/public/graphic-format-detail-client";
+import { ExpandableDescription } from "@/components/public/ExpandableDescription";
 import {
   getPublishedMediaByCategory,
   getPublishedMediaBySlug,
@@ -24,32 +26,9 @@ function getDisplayTitle(item: any) {
     : item.title;
 }
 
-function hasAiBadge(item: any) {
-  return Boolean(item.aiMode || item.aiEdited);
-}
-
 function getAiMode(item: any) {
   if (item.aiMode === "ai" || item.aiMode === "ai-edit") return item.aiMode;
   return item.aiEdited ? "ai-edit" : undefined;
-}
-
-function AiBadge({ mode }: { mode?: string }) {
-  const isFullAi = mode === "ai";
-  const title = isFullAi
-    ? "Grafică creată cu AI."
-    : "Unele elemente au fost schimbate cu AI.";
-  const label = isFullAi ? "AI" : "AI EDIT";
-
-  return (
-    <span className="ai-photo-badge public-card-ai-badge" data-ai-tooltip={title}>
-      <span className="ai-photo-badge-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" className="ai-photo-badge-icon-svg">
-          <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.4L12 15l-1.9-4.6L5.5 9l4.6-1.4L12 3z" fill="currentColor" />
-        </svg>
-      </span>
-      <span className="ai-photo-badge-text">{label}</span>
-    </span>
-  );
 }
 
 export default async function GraficaSlugPage({ params }: PageProps) {
@@ -79,16 +58,6 @@ export default async function GraficaSlugPage({ params }: PageProps) {
         )
       : [];
 
-  const otherBrandGraphics = allGraphics
-    .filter(
-      (graphic) =>
-        graphic.id !== item.id &&
-        graphic.category === "grafica" &&
-        graphic.brandId &&
-        graphic.brandId !== item.brandId
-    )
-    .slice(0, 12);
-
   const sameModelGraphics =
     item.personModelId
       ? allGraphics.filter(
@@ -97,16 +66,6 @@ export default async function GraficaSlugPage({ params }: PageProps) {
             graphic.personModelId === item.personModelId
         )
       : [];
-
-  const otherModelGraphics = allGraphics
-    .filter(
-      (graphic) =>
-        graphic.id !== item.id &&
-        graphic.category === "grafica" &&
-        graphic.personModelId &&
-        graphic.personModelId !== item.personModelId
-    )
-    .slice(0, 12);
 
   const displayTitle = getDisplayTitle(item);
 
@@ -161,9 +120,12 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           <Link href="/grafica" className="detail-back-button" aria-label="Înapoi">←</Link>
           <h1 id="detail-dynamic-title">{displayTitle}</h1>
         </div>
-        <p className="inner-description">
-          {item.description || "Pagina individuala pentru proiect grafic."}
-        </p>
+
+        <ExpandableDescription
+          className="inner-description"
+          text={item.description || "Pagina individuala pentru proiect grafic."}
+          collapsedLines={3}
+        />
 
         {item.graphicKind === "carte-vizita" ? (
           <>
@@ -172,6 +134,20 @@ export default async function GraficaSlugPage({ params }: PageProps) {
               previewSrc={item.fileUrl || item.previewUrl || item.thumbnailUrl || ""}
               frontSrc={(item as any).cardFrontUrl || ""}
               backSrc={(item as any).cardBackUrl || ""}
+            />
+            <div className="detail-bottom-back">
+              <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+            </div>
+          </>
+        ) : item.graphicKind === "certificat" || item.graphicKind === "coperta-album" ? (
+          <>
+            <GraphicFormatDetailClient
+              title={displayTitle}
+              mainSrc={item.fileUrl || item.previewUrl || item.thumbnailUrl || ""}
+              displayFormatMain={(item as any).displayFormatMain || ""}
+              format16x9Url={(item as any).format16x9Url || ""}
+              format9x16Url={(item as any).format9x16Url || ""}
+              format1x1Url={(item as any).format1x1Url || ""}
             />
             <div className="detail-bottom-back">
               <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
@@ -186,29 +162,6 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           </>
         )}
       </section>
-
-      {item.personModelId && sameModelGraphics.length > 1 ? (
-        <section className="inner-section">
-          <h2 className="detail-section-title">Mai multe grafici cu același model:</h2>
-          <FotoDetailGalleryClient
-            items={sameModelGraphics
-              .map((graphic) => ({
-                id: graphic.id,
-                title: graphic.title,
-                displayTitle: looksAutoTitle(graphic.title)
-                  ? item.personModel?.name || item.graphicKind || "Grafica"
-                  : graphic.title,
-                slug: graphic.slug,
-                src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
-                thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
-                rotation: (graphic as any).rotation ?? 0,
-              }))
-              .filter((entry) => entry.src)}
-          />
-        </section>
-      ) : null}
-
-      
     </main>
   );
 }
