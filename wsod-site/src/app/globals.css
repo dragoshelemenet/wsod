@@ -6607,7 +6607,7 @@ video::-webkit-media-controls-panel {
 
 .foto-detail-zoom-controls {
   position: absolute;
-  right: 14px;
+  right: clamp(14px, 16vw, 150px);
   bottom: 14px;
   z-index: 6;
   display: flex;
@@ -6636,7 +6636,7 @@ video::-webkit-media-controls-panel {
 
 @media (max-width: 640px) {
   .foto-detail-zoom-controls {
-    right: 10px;
+    right: 14px;
     bottom: 10px;
     gap: 8px;
   }
