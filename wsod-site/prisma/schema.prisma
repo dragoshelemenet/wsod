@@ -87,6 +87,8 @@ model MediaItem {
   previewUrl       String?
   fileUrl          String?
   beforeAiUrl      String?
+  cardFrontUrl     String?
+  cardBackUrl      String?
   fileNameOriginal String?
   description      String?
   seoTitle         String?

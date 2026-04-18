@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
+import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";\nimport { BusinessCardDetailClient } from "@/components/public/business-card-detail-client";
 import {
   getPublishedMediaByCategory,
   getPublishedMediaBySlug,
@@ -164,10 +164,26 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           {item.description || "Pagina individuala pentru proiect grafic."}
         </p>
 
-        <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
-        <div className="detail-bottom-back">
-          <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
-        </div>
+        {item.graphicKind === "carte-vizita" ? (
+          <>
+            <BusinessCardDetailClient
+              title={displayTitle}
+              previewSrc={item.fileUrl || item.previewUrl || item.thumbnailUrl || ""}
+              frontSrc={(item as any).cardFrontUrl || ""}
+              backSrc={(item as any).cardBackUrl || ""}
+            />
+            <div className="detail-bottom-back">
+              <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+            </div>
+          </>
+        ) : (
+          <>
+            <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
+            <div className="detail-bottom-back">
+              <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+            </div>
+          </>
+        )}
       </section>
 
       {item.personModelId && sameModelGraphics.length > 1 ? (

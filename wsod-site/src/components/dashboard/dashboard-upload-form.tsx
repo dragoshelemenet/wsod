@@ -15,6 +15,10 @@ type UploadItem = {
   thumbnailFile: File | null;
   beforeAiFile: File | null;
   beforeAiUrl: string;
+  cardFrontFile: File | null;
+  cardBackFile: File | null;
+  cardFrontUrl: string;
+  cardBackUrl: string;
   status: "pending" | "uploading" | "uploaded" | "creating" | "done" | "error";
   error: string;
 };
@@ -190,6 +194,10 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
         thumbnailFile: null,
         beforeAiFile: null,
         beforeAiUrl: "",
+        cardFrontFile: null,
+        cardBackFile: null,
+        cardFrontUrl: "",
+        cardBackUrl: "",
         status: "pending" as const,
         error: "",
       };
@@ -250,12 +258,25 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
             status: "uploaded",
           };
 
+          const isBusinessCard =
+            category === "grafica" && graphicKind === "carte-vizita";
+
           if (type === "image") {
             patch.thumbnailUrl = uploadedMain.url;
 
             if (category === "foto" && aiMode && item.beforeAiFile) {
               const uploadedBeforeAi = await uploadSingleFile(item.beforeAiFile, "foto");
               patch.beforeAiUrl = uploadedBeforeAi.url;
+            }
+
+            if (isBusinessCard && item.cardFrontFile) {
+              const uploadedFront = await uploadSingleFile(item.cardFrontFile, "grafica");
+              patch.cardFrontUrl = uploadedFront.url;
+            }
+
+            if (isBusinessCard && item.cardBackFile) {
+              const uploadedBack = await uploadSingleFile(item.cardBackFile, "grafica");
+              patch.cardBackUrl = uploadedBack.url;
             }
           }
 
@@ -294,6 +315,8 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
               thumbnailUrl: patch.thumbnailUrl || "",
               previewUrl: patch.previewUrl || "",
               beforeAiUrl: patch.beforeAiUrl || item.beforeAiUrl || "",
+              cardFrontUrl: patch.cardFrontUrl || item.cardFrontUrl || "",
+              cardBackUrl: patch.cardBackUrl || item.cardBackUrl || "",
               description,
               isVisible,
               isFeatured,
@@ -957,6 +980,54 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
                           </div>
                         </div>
                       </div>
+                    ) : null}
+
+                    {category === "grafica" && graphicKind === "carte-vizita" ? (
+                      <>
+                        <div className="admin-form-field">
+                          <label>Imagine carte - Față</label>
+                          <div className="admin-dropzone admin-dropzone-compact">
+                            <input
+                              className="admin-dropzone-input"
+                              type="file"
+                              accept="image/*"
+                              onChange={(event) => {
+                                const file = event.target.files?.[0] || null;
+                                updateItem(item.id, { cardFrontFile: file });
+                                event.currentTarget.value = "";
+                              }}
+                            />
+                            <div className="admin-dropzone-copy">
+                              <strong>
+                                {item.cardFrontFile ? item.cardFrontFile.name : item.cardFrontUrl ? "Față încărcată" : "Încarcă imaginea cu fața"}
+                              </strong>
+                              <span>material brut pentru cartea de vizită</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="admin-form-field">
+                          <label>Imagine carte - Spate</label>
+                          <div className="admin-dropzone admin-dropzone-compact">
+                            <input
+                              className="admin-dropzone-input"
+                              type="file"
+                              accept="image/*"
+                              onChange={(event) => {
+                                const file = event.target.files?.[0] || null;
+                                updateItem(item.id, { cardBackFile: file });
+                                event.currentTarget.value = "";
+                              }}
+                            />
+                            <div className="admin-dropzone-copy">
+                              <strong>
+                                {item.cardBackFile ? item.cardBackFile.name : item.cardBackUrl ? "Spate încărcat" : "Încarcă imaginea cu spatele"}
+                              </strong>
+                              <span>material brut pentru cartea de vizită</span>
+                            </div>
+                          </div>
+                        </div>
+                      </>
                     ) : null}
                   </div>
                 ))}

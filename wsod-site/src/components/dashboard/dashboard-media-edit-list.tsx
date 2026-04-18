@@ -20,6 +20,8 @@ type MediaItem = {
   previewUrl: string | null;
   fileUrl: string | null;
   beforeAiUrl?: string | null;
+  cardFrontUrl?: string | null;
+  cardBackUrl?: string | null;
   isVisible: boolean;
   isFeatured: boolean;
   aiEdited: boolean;
@@ -390,6 +392,8 @@ function DashboardMediaEditCard({
   const [previewUrl, setPreviewUrl] = useState(item.previewUrl || "");
   const [fileUrl, setFileUrl] = useState(item.fileUrl || "");
   const [beforeAiUrl, setBeforeAiUrl] = useState(item.beforeAiUrl || "");
+  const [cardFrontUrl, setCardFrontUrl] = useState(item.cardFrontUrl || "");
+  const [cardBackUrl, setCardBackUrl] = useState(item.cardBackUrl || "");
   const [brandId, setBrandId] = useState(item.brandId || "");
   const [personModelId, setPersonModelId] = useState(item.personModelId || "");
   const [audioProfileId, setAudioProfileId] = useState(item.audioProfileId || "");
@@ -459,6 +463,37 @@ function DashboardMediaEditCard({
     }
   }
 
+  async function handleBusinessCardSideUpload(side: "front" | "back", file: File) {
+    const brandSlug = inferBrandSlugFromUrls(fileUrl, thumbnailUrl, previewUrl, cardFrontUrl, cardBackUrl);
+
+    if (!brandSlug) {
+      onMessage("Nu pot determina owner slug pentru upload imagine carte.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      onMessage("");
+      const uploaded = await uploadToSpaces({
+        file,
+        brandSlug,
+        category: "grafica",
+      });
+
+      if (side === "front") {
+        setCardFrontUrl(uploaded.url);
+        onMessage("Imaginea față a fost uploadată.");
+      } else {
+        setCardBackUrl(uploaded.url);
+        onMessage("Imaginea spate a fost uploadată.");
+      }
+    } catch (error) {
+      onMessage(error instanceof Error ? error.message : "Eroare upload imagine carte.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function onSave() {
     setLoading(true);
     onMessage("");
@@ -477,6 +512,8 @@ function DashboardMediaEditCard({
           previewUrl,
           fileUrl,
           beforeAiUrl,
+          cardFrontUrl,
+          cardBackUrl,
           brandId: brandId || null,
           personModelId: personModelId || null,
           audioProfileId: audioProfileId || null,
@@ -778,6 +815,72 @@ function DashboardMediaEditCard({
                       <div className="admin-dropzone-copy">
                         <strong>{beforeAiUrl ? "Before AI încărcat" : "Încarcă imaginea before AI"}</strong>
                         <span>toggle-ul din slug apare doar dacă această imagine există</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+
+              {item.category === "grafica" && graphicKind === "carte-vizita" ? (
+                <>
+                  <div className="admin-form-field admin-grid-full">
+                    <label>URL imagine carte - Față</label>
+                    <input
+                      value={cardFrontUrl}
+                      onChange={(event) => setCardFrontUrl(event.target.value)}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div className="admin-form-field admin-grid-full">
+                    <label>URL imagine carte - Spate</label>
+                    <input
+                      value={cardBackUrl}
+                      onChange={(event) => setCardBackUrl(event.target.value)}
+                      placeholder="https://..."
+                    />
+                  </div>
+
+                  <div className="admin-form-field">
+                    <label>Upload imagine carte - Față</label>
+                    <div className="admin-dropzone admin-dropzone-compact">
+                      <input
+                        className="admin-dropzone-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) {
+                            void handleBusinessCardSideUpload("front", file);
+                          }
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                      <div className="admin-dropzone-copy">
+                        <strong>{cardFrontUrl ? "Față încărcată" : "Încarcă imaginea față"}</strong>
+                        <span>material brut pentru cartea de vizită</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="admin-form-field">
+                    <label>Upload imagine carte - Spate</label>
+                    <div className="admin-dropzone admin-dropzone-compact">
+                      <input
+                        className="admin-dropzone-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) {
+                            void handleBusinessCardSideUpload("back", file);
+                          }
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                      <div className="admin-dropzone-copy">
+                        <strong>{cardBackUrl ? "Spate încărcat" : "Încarcă imaginea spate"}</strong>
+                        <span>material brut pentru cartea de vizită</span>
                       </div>
                     </div>
                   </div>
