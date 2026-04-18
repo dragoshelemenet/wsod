@@ -7,6 +7,33 @@ import {
 
 export const dynamic = "force-dynamic";
 
+function normalizeSectionKey(value: string) {
+  const raw = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+
+  if (raw === "photo" || raw === "foto") return "foto";
+  if (raw === "graphic" || raw === "grafica") return "grafica";
+  if (raw === "meta-ads" || raw === "meta-ads." || raw === "meta-ads " || raw === "meta-ads-" || raw === "meta-ads--" || raw === "meta-ads---") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta-ads") return "meta-ads";
+  if (raw === "meta-ads" || raw === "meta ads") return "meta-ads";
+  if (raw === "audio") return "audio";
+  if (raw === "video") return "video";
+  if (raw === "website" || raw === "website-uri" || raw === "websites") return "website";
+
+  return raw;
+}
+
 export default async function HomePage() {
   const [brands, siteContent, visibleSections] = await Promise.all([
     getPublishedBrands(),
@@ -51,7 +78,12 @@ export default async function HomePage() {
 
   const visibleSectionKeys = new Set(
     (visibleSections || [])
-      .map((item: any) => String(item.slug || "").trim())
+      .filter((item: any) => item.isVisible)
+      .flatMap((item: any) => [
+        normalizeSectionKey(item.slug || ""),
+        normalizeSectionKey(item.label || ""),
+        normalizeSectionKey(item.name || ""),
+      ])
       .filter(Boolean)
   );
 
