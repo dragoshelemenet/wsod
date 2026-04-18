@@ -19,6 +19,14 @@ type UploadItem = {
   cardBackFile: File | null;
   cardFrontUrl: string;
   cardBackUrl: string;
+  albumBackFile: File | null;
+  albumBackUrl: string;
+  format16x9File: File | null;
+  format9x16File: File | null;
+  format1x1File: File | null;
+  format16x9Url: string;
+  format9x16Url: string;
+  format1x1Url: string;
   status: "pending" | "uploading" | "uploaded" | "creating" | "done" | "error";
   error: string;
 };
@@ -89,6 +97,7 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
   const [isVisible, setIsVisible] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [aiMode, setAiMode] = useState("");
+  const [graphicMainFormat, setGraphicMainFormat] = useState("16:9");
 
   const [audioOriginalTitle, setAudioOriginalTitle] = useState("");
   const [audioOriginalSlug, setAudioOriginalSlug] = useState("");
@@ -109,6 +118,7 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
   const isAudio = category === "audio";
   const isGrafica = category === "grafica";
   const isVideo = category === "video";
+  const canUseGraphicFormats = isGrafica && ["certificat", "coperta-album"].includes(graphicKind);
 
   const graphicOptions = useMemo(() => {
     if (ownerType === "artist") {
@@ -199,6 +209,14 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
         cardBackFile: null,
         cardFrontUrl: "",
         cardBackUrl: "",
+        albumBackFile: null,
+        albumBackUrl: "",
+        format16x9File: null,
+        format9x16File: null,
+        format1x1File: null,
+        format16x9Url: "",
+        format9x16Url: "",
+        format1x1Url: "",
         status: "pending" as const,
         error: "",
       };
@@ -265,6 +283,27 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
           if (type === "image") {
             patch.thumbnailUrl = uploadedMain.url;
 
+            if (canUseGraphicFormats) {
+              if (graphicMainFormat === "16:9") patch.format16x9Url = uploadedMain.url;
+              if (graphicMainFormat === "9:16") patch.format9x16Url = uploadedMain.url;
+              if (graphicMainFormat === "1:1") patch.format1x1Url = uploadedMain.url;
+
+              if (item.format16x9File) {
+                const uploaded = await uploadSingleFile(item.format16x9File, "grafica");
+                patch.format16x9Url = uploaded.url;
+              }
+
+              if (item.format9x16File) {
+                const uploaded = await uploadSingleFile(item.format9x16File, "grafica");
+                patch.format9x16Url = uploaded.url;
+              }
+
+              if (item.format1x1File) {
+                const uploaded = await uploadSingleFile(item.format1x1File, "grafica");
+                patch.format1x1Url = uploaded.url;
+              }
+            }
+
             if (category === "foto" && aiMode && item.beforeAiFile) {
               const uploadedBeforeAi = await uploadSingleFile(item.beforeAiFile, "foto");
               patch.beforeAiUrl = uploadedBeforeAi.url;
@@ -278,6 +317,16 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
             if (isBusinessCard && item.cardBackFile) {
               const uploadedBack = await uploadSingleFile(item.cardBackFile, "grafica");
               patch.cardBackUrl = uploadedBack.url;
+            }
+
+            if (category === "grafica" && graphicKind === "coperta-album" && item.albumBackFile) {
+              const uploadedAlbumBack = await uploadSingleFile(item.albumBackFile, "grafica");
+              patch.albumBackUrl = uploadedAlbumBack.url;
+            }
+
+            if (category === "grafica" && graphicKind === "coperta-album" && item.albumBackFile) {
+              const uploadedAlbumBack = await uploadSingleFile(item.albumBackFile, "grafica");
+              patch.albumBackUrl = uploadedAlbumBack.url;
             }
           }
 
@@ -318,6 +367,10 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
               beforeAiUrl: patch.beforeAiUrl || item.beforeAiUrl || "",
               cardFrontUrl: patch.cardFrontUrl || item.cardFrontUrl || "",
               cardBackUrl: patch.cardBackUrl || item.cardBackUrl || "",
+              displayFormatMain: canUseGraphicFormats ? graphicMainFormat : "",
+              format16x9Url: patch.format16x9Url || item.format16x9Url || "",
+              format9x16Url: patch.format9x16Url || item.format9x16Url || "",
+              format1x1Url: patch.format1x1Url || item.format1x1Url || "",
               description,
               isVisible,
               isFeatured,
@@ -656,6 +709,25 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
           </div>
         ) : null}
 
+        {canUseGraphicFormats ? (
+          <div className="admin-form-field">
+            <label htmlFor="media-graphic-main-format">Format principal</label>
+            <select
+              id="media-graphic-main-format"
+              className="admin-select"
+              value={graphicMainFormat}
+              onChange={(event) => {
+                setGraphicMainFormat(event.target.value);
+                setMessage("");
+              }}
+            >
+              <option value="16:9">16:9</option>
+              <option value="9:16">9:16</option>
+              <option value="1:1">1:1</option>
+            </select>
+          </div>
+        ) : null}
+
         {isGrafica ? (
           <label className="admin-toggle-row">
             <span>Arată și în Servicii</span>
@@ -981,6 +1053,106 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
                           </div>
                         </div>
                       </div>
+                    ) : null}
+
+                    {category === "grafica" && graphicKind === "coperta-album" ? (
+                      <div className="admin-form-field">
+                        <label>Spatele copertei albumului</label>
+                        <div className="admin-dropzone admin-dropzone-compact">
+                          <input
+                            className="admin-dropzone-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={(event) => {
+                              const file = event.target.files?.[0] || null;
+                              updateItem(item.id, { albumBackFile: file });
+                              event.currentTarget.value = "";
+                            }}
+                          />
+                          <div className="admin-dropzone-copy">
+                            <strong>
+                              {item.albumBackFile ? item.albumBackFile.name : item.albumBackUrl ? "Spatele este încărcat" : "Încarcă spatele copertei albumului"}
+                            </strong>
+                            <span>fișierul principal rămâne fața copertei</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {canUseGraphicFormats ? (
+                      <>
+                        {graphicMainFormat !== "16:9" ? (
+                          <div className="admin-form-field">
+                            <label>Varianta 16:9</label>
+                            <div className="admin-dropzone admin-dropzone-compact">
+                              <input
+                                className="admin-dropzone-input"
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0] || null;
+                                  updateItem(item.id, { format16x9File: file });
+                                  event.currentTarget.value = "";
+                                }}
+                              />
+                              <div className="admin-dropzone-copy">
+                                <strong>
+                                  {item.format16x9File ? item.format16x9File.name : item.format16x9Url ? "16:9 încărcat" : "Încarcă varianta 16:9"}
+                                </strong>
+                                <span>format suplimentar pentru toggle</span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {graphicMainFormat !== "9:16" ? (
+                          <div className="admin-form-field">
+                            <label>Varianta 9:16</label>
+                            <div className="admin-dropzone admin-dropzone-compact">
+                              <input
+                                className="admin-dropzone-input"
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0] || null;
+                                  updateItem(item.id, { format9x16File: file });
+                                  event.currentTarget.value = "";
+                                }}
+                              />
+                              <div className="admin-dropzone-copy">
+                                <strong>
+                                  {item.format9x16File ? item.format9x16File.name : item.format9x16Url ? "9:16 încărcat" : "Încarcă varianta 9:16"}
+                                </strong>
+                                <span>format suplimentar pentru toggle</span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {graphicMainFormat !== "1:1" ? (
+                          <div className="admin-form-field">
+                            <label>Varianta 1:1</label>
+                            <div className="admin-dropzone admin-dropzone-compact">
+                              <input
+                                className="admin-dropzone-input"
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => {
+                                  const file = event.target.files?.[0] || null;
+                                  updateItem(item.id, { format1x1File: file });
+                                  event.currentTarget.value = "";
+                                }}
+                              />
+                              <div className="admin-dropzone-copy">
+                                <strong>
+                                  {item.format1x1File ? item.format1x1File.name : item.format1x1Url ? "1:1 încărcat" : "Încarcă varianta 1:1"}
+                                </strong>
+                                <span>format suplimentar pentru toggle</span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                      </>
                     ) : null}
 
                     {category === "grafica" && graphicKind === "carte-vizita" ? (

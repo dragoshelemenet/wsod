@@ -89,6 +89,11 @@ model MediaItem {
   beforeAiUrl      String?
   cardFrontUrl     String?
   cardBackUrl      String?
+  albumBackUrl      String?
+  displayFormatMain String?
+  format16x9Url    String?
+  format9x16Url    String?
+  format1x1Url     String?
   fileNameOriginal String?
   description      String?
   seoTitle         String?

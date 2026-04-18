@@ -86,6 +86,12 @@ async function handleUpdate(
   const beforeAiUrl = String(body.beforeAiUrl || "").trim();
   const cardFrontUrl = String(body.cardFrontUrl || "").trim();
   const cardBackUrl = String(body.cardBackUrl || "").trim();
+  const albumBackUrl = String(body.albumBackUrl || "").trim();
+  const displayFormatMainRaw = String(body.displayFormatMain || "").trim();
+  const displayFormatMain = ["16:9", "9:16", "1:1"].includes(displayFormatMainRaw) ? displayFormatMainRaw : null;
+  const format16x9Url = String(body.format16x9Url || "").trim();
+  const format9x16Url = String(body.format9x16Url || "").trim();
+  const format1x1Url = String(body.format1x1Url || "").trim();
   const seoTitle = String(body.seoTitle || "").trim();
   const metaDescription = String(body.metaDescription || "").trim();
   const groupLabel = String(body.groupLabel || "").trim();
@@ -183,6 +189,11 @@ async function handleUpdate(
       beforeAiUrl: beforeAiUrl || null,
       cardFrontUrl: cardFrontUrl || null,
       cardBackUrl: cardBackUrl || null,
+      albumBackUrl: albumBackUrl || null,
+      displayFormatMain: displayFormatMain || null,
+      format16x9Url: format16x9Url || null,
+      format9x16Url: format9x16Url || null,
+      format1x1Url: format1x1Url || null,
       brandId,
       personModelId,
       audioProfileId,
