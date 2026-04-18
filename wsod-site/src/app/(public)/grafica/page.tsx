@@ -18,13 +18,13 @@ const GRAPHIC_SECTIONS = [
   { key: "logo", label: "Logo-uri" },
 
   { key: "coperta-single", label: "Coperți single" },
-  { key: "coperta-album", label: "Album cover" },
+  { key: "coperta-album", label: "Copertă album" },
   { key: "coperta-ep", label: "Coperți EP" },
   { key: "banner-concert", label: "Bannere concert" },
   { key: "poster-eveniment", label: "Postere eveniment" },
   { key: "flyer-eveniment", label: "Flyere eveniment" },
   { key: "promo-artist", label: "Material promo artist" },
-  { key: "visual-streaming", label: "Visual streaming" },
+  { key: "visual-streaming", label: "Vizual streaming" },
   { key: "thumbnail-youtube", label: "Thumbnail YouTube" },
 
   { key: "altul", label: "Altele" },
