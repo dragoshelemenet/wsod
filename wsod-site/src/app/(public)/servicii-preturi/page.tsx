@@ -3,6 +3,11 @@ import { getServicesCertificates, getSiteContentRecord } from "@/lib/dashboard/q
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 
+
+function cleanDisplayedPrice(value: string) {
+  return String(value || "").replace(/^[-–—\s]+/, "").trim();
+}
+
 function toLines(value: string | null | undefined) {
   return (value || "")
     .split("\n")
@@ -143,7 +148,7 @@ export default async function ServicesPricingPage() {
                   {(item.oldPrice || item.currentPrice) ? (
                     <div className="package-prices">
                       {item.oldPrice ? <small>{item.oldPrice}</small> : null}
-                      {item.currentPrice ? <strong>{item.currentPrice}</strong> : null}
+                      {item.currentPrice ? <strong>{cleanDisplayedPrice(item.currentPrice)}</strong> : null}
                     </div>
                   ) : null}
 
@@ -168,7 +173,7 @@ export default async function ServicesPricingPage() {
 
                   <div className="package-prices">
                     {item.oldPrice ? <small>{item.oldPrice}</small> : null}
-                    {item.price ? <strong>{item.price}</strong> : null}
+                    {item.price ? <strong>{cleanDisplayedPrice(item.price)}</strong> : null}
                   </div>
 
                   {item.note ? <span>{item.note}</span> : null}
