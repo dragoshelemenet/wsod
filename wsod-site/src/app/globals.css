@@ -6442,3 +6442,47 @@ video::-webkit-media-controls-panel {
 .foto-detail-zoom-control {
   display: none !important;
 }
+
+/* ===== MENU MUST STAY CLICKABLE ABOVE FOTO ZOOM ===== */
+
+.public-navbar {
+  position: fixed !important;
+  z-index: 2147483000 !important;
+  pointer-events: auto !important;
+}
+
+.public-navbar-inner,
+.public-navbar-top,
+.public-navbar-links,
+.public-navbar-links-desktop,
+.public-navbar-mobile,
+.public-navbar-link,
+.public-navbar-toggle,
+.public-navbar-logo {
+  position: relative !important;
+  z-index: 2147483001 !important;
+  pointer-events: auto !important;
+}
+
+.foto-detail-gallery,
+.foto-detail-stage,
+.foto-detail-main-frame,
+.foto-detail-main-button,
+.foto-detail-main-image,
+.foto-detail-nav,
+.foto-before-ai-toggle-wrap,
+.foto-detail-thumb-grid {
+  z-index: 1 !important;
+}
+
+.foto-detail-main-button {
+  position: relative !important;
+}
+
+.foto-detail-main-image {
+  position: relative !important;
+}
+
+.ai-photo-badge {
+  z-index: 2 !important;
+}
