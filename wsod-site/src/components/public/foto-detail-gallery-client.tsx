@@ -12,6 +12,10 @@ type GalleryItem = {
   thumb: string;
   aiMode?: string;
   beforeAiSrc?: string;
+  displayFormatMain?: "16:9" | "9:16" | "1:1";
+  format16x9Url?: string;
+  format9x16Url?: string;
+  format1x1Url?: string;
 };
 
 type Props = {
@@ -27,7 +31,11 @@ function AiBadge({ mode }: { mode?: string }) {
     : isEnhanced
       ? "Îmbunătățit cu inteligență artificială."
       : "Elemente ale imaginii au fost editate cu AI.";
-  const label = isFullAi ? "AI" : "AI EDIT";
+  const label = isFullAi
+    ? "AI"
+    : isEnhanced
+      ? "AI ÎMBUNĂTĂȚIT"
+      : "AI EDIT";
 
   return (
     <div className="ai-photo-badge" data-ai-tooltip={title}>
@@ -42,6 +50,22 @@ function AiBadge({ mode }: { mode?: string }) {
       <span className="ai-photo-badge-text">{label}</span>
     </div>
   );
+}
+
+function getAvailableFormats(item: GalleryItem) {
+  const entries = [
+    { key: "16:9" as const, url: item.format16x9Url || "" },
+    { key: "9:16" as const, url: item.format9x16Url || "" },
+    { key: "1:1" as const, url: item.format1x1Url || "" },
+  ].filter((entry) => entry.url);
+
+  return entries;
+}
+
+function getFormatSrc(item: GalleryItem, format: "16:9" | "9:16" | "1:1") {
+  if (format === "16:9") return item.format16x9Url || "";
+  if (format === "9:16") return item.format9x16Url || "";
+  return item.format1x1Url || "";
 }
 
 export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
@@ -63,6 +87,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
   const [showBeforeAi, setShowBeforeAi] = useState(false);
+  const [activeFormat, setActiveFormat] = useState<"16:9" | "9:16" | "1:1" | "">("");
   const zoomResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -74,7 +99,16 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     setIsZoomed(false);
     setZoomOrigin("50% 50%");
     setShowBeforeAi(false);
-  }, [initialIndex]);
+
+    const item = safeItems[initialIndex];
+    const available = item ? getAvailableFormats(item) : [];
+    const preferred = item?.displayFormatMain || "";
+    const nextFormat =
+      available.find((entry) => entry.key === preferred)?.key ||
+      available[0]?.key ||
+      "";
+    setActiveFormat(nextFormat);
+  }, [initialIndex, safeItems]);
 
   useEffect(() => {
     return () => {
@@ -110,7 +144,17 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const active = safeItems[activeIndex];
   const hasMany = safeItems.length > 1;
   const canToggleBeforeAi = Boolean(active?.beforeAiSrc);
-  const activeImageSrc = showBeforeAi && active?.beforeAiSrc ? active.beforeAiSrc : active?.src;
+  const availableFormats = getAvailableFormats(active);
+
+  const formatSrc =
+    activeFormat && getFormatSrc(active, activeFormat as "16:9" | "9:16" | "1:1")
+      ? getFormatSrc(active, activeFormat as "16:9" | "9:16" | "1:1")
+      : "";
+
+  const activeImageSrc =
+    showBeforeAi && active?.beforeAiSrc
+      ? active.beforeAiSrc
+      : formatSrc || active?.src;
 
   const goPrev = () => {
     if (zoomResetTimer.current) {
@@ -160,6 +204,93 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
 
   return (
     <section className="foto-detail-gallery">
+      {availableFormats.length > 1 || canToggleBeforeAi ? (
+        <div className="detail-toggle-stack">
+          {availableFormats.length > 1 ? (
+            <div className="business-card-toggle-wrap">
+              <div
+                className={`business-card-toggle business-card-toggle-3way ${
+                  activeFormat === "16:9"
+                    ? "is-left"
+                    : activeFormat === "9:16"
+                    ? "is-center"
+                    : "is-right"
+                }`}
+              >
+                <span className="business-card-toggle-knob" />
+                {availableFormats.some((entry) => entry.key === "16:9") ? (
+                  <button
+                    type="button"
+                    className={`business-card-toggle-option ${activeFormat === "16:9" ? "is-active" : ""}`}
+                    onClick={() => {
+                      setIsZoomed(false);
+                      setZoomOrigin("50% 50%");
+                      setActiveFormat("16:9");
+                    }}
+                  >
+                    16:9
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {availableFormats.some((entry) => entry.key === "9:16") ? (
+                  <button
+                    type="button"
+                    className={`business-card-toggle-option ${activeFormat === "9:16" ? "is-active" : ""}`}
+                    onClick={() => {
+                      setIsZoomed(false);
+                      setZoomOrigin("50% 50%");
+                      setActiveFormat("9:16");
+                    }}
+                  >
+                    9:16
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {availableFormats.some((entry) => entry.key === "1:1") ? (
+                  <button
+                    type="button"
+                    className={`business-card-toggle-option ${activeFormat === "1:1" ? "is-active" : ""}`}
+                    onClick={() => {
+                      setIsZoomed(false);
+                      setZoomOrigin("50% 50%");
+                      setActiveFormat("1:1");
+                    }}
+                  >
+                    1:1
+                  </button>
+                ) : (
+                  <span />
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {canToggleBeforeAi ? (
+            <div className="foto-before-ai-toggle-wrap">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={!showBeforeAi}
+                className={`foto-before-ai-toggle ${showBeforeAi ? "is-before" : "is-ai"}`}
+                onClick={() => {
+                  setIsZoomed(false);
+                  setZoomOrigin("50% 50%");
+                  setShowBeforeAi((current) => !current);
+                }}
+              >
+                <span className="foto-before-ai-toggle-label-left">Înainte de AI</span>
+                <span className="foto-before-ai-toggle-track">
+                  <span className="foto-before-ai-toggle-knob" />
+                </span>
+                <span className="foto-before-ai-toggle-label-right">AI</span>
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
       <div className="foto-detail-stage">
         {hasMany ? (
           <button
@@ -199,28 +330,6 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
         ) : null}
       </div>
 
-      {canToggleBeforeAi ? (
-        <div className="foto-before-ai-toggle-wrap">
-          <button
-            type="button"
-            role="switch"
-            aria-checked={!showBeforeAi}
-            className={`foto-before-ai-toggle ${showBeforeAi ? "is-before" : "is-ai"}`}
-            onClick={() => {
-              setIsZoomed(false);
-              setZoomOrigin("50% 50%");
-              setShowBeforeAi((current) => !current);
-            }}
-          >
-            <span className="foto-before-ai-toggle-label-left">Înainte de AI</span>
-            <span className="foto-before-ai-toggle-track">
-              <span className="foto-before-ai-toggle-knob" />
-            </span>
-            <span className="foto-before-ai-toggle-label-right">AI</span>
-          </button>
-        </div>
-      ) : null}
-
       {hasMany ? (
         <div className="foto-detail-thumb-grid">
           {safeItems.map((item, index) => (
@@ -233,6 +342,13 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
                   clearTimeout(zoomResetTimer.current);
                   zoomResetTimer.current = null;
                 }
+                const available = getAvailableFormats(item);
+                const preferred = item.displayFormatMain || "";
+                const nextFormat =
+                  available.find((entry) => entry.key === preferred)?.key ||
+                  available[0]?.key ||
+                  "";
+                setActiveFormat(nextFormat);
                 setIsZoomed(false);
                 setZoomOrigin("50% 50%");
                 setShowBeforeAi(false);

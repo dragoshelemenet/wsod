@@ -41,6 +41,36 @@ export function BusinessCardDetailClient({
 
   return (
     <div className="business-card-detail">
+      {modes.length >= 2 ? (
+        <div className="detail-toggle-stack">
+          <div className="business-card-toggle-wrap">
+            <div
+              className={`business-card-toggle business-card-toggle-3way ${
+                mode === "back"
+                  ? "is-left"
+                  : mode === "front"
+                  ? "is-right"
+                  : "is-center"
+              }`}
+            >
+              {modes.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  className={`business-card-toggle-option ${
+                    mode === item.key ? "is-active" : ""
+                  }`}
+                  onClick={() => setMode(item.key)}
+                >
+                  {item.label}
+                </button>
+              ))}
+              <span className="business-card-toggle-knob" />
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="business-card-preview-wrap">
         <div className="business-card-preview-stage">
           <img
@@ -50,34 +80,6 @@ export function BusinessCardDetailClient({
           />
         </div>
       </div>
-
-      {modes.length >= 2 ? (
-        <div className="business-card-toggle-wrap">
-          <div
-            className={`business-card-toggle business-card-toggle-3way ${
-              mode === "back"
-                ? "is-left"
-                : mode === "front"
-                ? "is-right"
-                : "is-center"
-            }`}
-          >
-            {modes.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                className={`business-card-toggle-option ${
-                  mode === item.key ? "is-active" : ""
-                }`}
-                onClick={() => setMode(item.key)}
-              >
-                {item.label}
-              </button>
-            ))}
-            <span className="business-card-toggle-knob" />
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

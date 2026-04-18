@@ -6632,3 +6632,106 @@ video::-webkit-media-controls-panel {
     padding: 10px 12px;
   }
 }
+
+/* ===== DELIVERY QUALITY INFO BADGE ===== */
+
+.delivery-quality-note {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.delivery-quality-note-trigger {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.96);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: help;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.delivery-quality-note-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 16, 0.97);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  line-height: 1.45;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 2147483002;
+}
+
+.delivery-quality-note:hover .delivery-quality-note-tooltip,
+.delivery-quality-note:focus-within .delivery-quality-note-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delivery-quality-block {
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .delivery-quality-note-trigger {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .delivery-quality-note-tooltip {
+    width: min(280px, calc(100vw - 28px));
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+}
+
+/* ===== DETAIL TOGGLES ABOVE IMAGE, CENTERED ===== */
+
+.detail-toggle-stack {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.detail-toggle-stack .business-card-toggle-wrap,
+.detail-toggle-stack .foto-before-ai-toggle-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.business-card-detail .business-card-toggle-wrap,
+.foto-detail-gallery .foto-before-ai-toggle-wrap {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 640px) {
+  .detail-toggle-stack {
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 14px;
+  }
+}
