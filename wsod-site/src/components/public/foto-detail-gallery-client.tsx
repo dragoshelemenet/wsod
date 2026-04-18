@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 type GalleryItem = {
@@ -44,10 +44,6 @@ function AiBadge({ mode }: { mode?: string }) {
   );
 }
 
-const ZOOM_LEVELS = [1, 1.45, 1.9, 2.35];
-const MAX_PAN_X = 260;
-const MAX_PAN_Y = 220;
-
 export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -64,38 +60,19 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   }, [safeItems, currentSlug]);
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
-  const [zoomStep, setZoomStep] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
   const [showBeforeAi, setShowBeforeAi] = useState(false);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-
   const zoomResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const dragState = useRef<{
-    startX: number;
-    startY: number;
-    startPanX: number;
-    startPanY: number;
-  } | null>(null);
 
-  const clampPan = (x: number, y: number) => ({
-    x: Math.max(-MAX_PAN_X, Math.min(MAX_PAN_X, x)),
-    y: Math.max(-MAX_PAN_Y, Math.min(MAX_PAN_Y, y)),
-  });
-
-  const resetZoomState = () => {
+  useEffect(() => {
     if (zoomResetTimer.current) {
       clearTimeout(zoomResetTimer.current);
       zoomResetTimer.current = null;
     }
-    dragState.current = null;
-    setZoomStep(0);
-    setPan({ x: 0, y: 0 });
-    setZoomOrigin("50% 50%");
-  };
-
-  useEffect(() => {
-    resetZoomState();
     setActiveIndex(initialIndex);
+    setIsZoomed(false);
+    setZoomOrigin("50% 50%");
     setShowBeforeAi(false);
   }, [initialIndex]);
 
@@ -106,41 +83,6 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
       }
     };
   }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!dragState.current || zoomStep === 0) return;
-
-      const nextX = dragState.current.startPanX + (event.clientX - dragState.current.startX);
-      const nextY = dragState.current.startPanY + (event.clientY - dragState.current.startY);
-      setPan(clampPan(nextX, nextY));
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      if (!dragState.current || zoomStep === 0 || !event.touches[0]) return;
-
-      const touch = event.touches[0];
-      const nextX = dragState.current.startPanX + (touch.clientX - dragState.current.startX);
-      const nextY = dragState.current.startPanY + (touch.clientY - dragState.current.startY);
-      setPan(clampPan(nextX, nextY));
-    };
-
-    const stopDragging = () => {
-      dragState.current = null;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", stopDragging);
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("touchend", stopDragging);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", stopDragging);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", stopDragging);
-    };
-  }, [zoomStep]);
 
   useEffect(() => {
     if (!titleTargetId) return;
@@ -171,70 +113,49 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const activeImageSrc = showBeforeAi && active?.beforeAiSrc ? active.beforeAiSrc : active?.src;
 
   const goPrev = () => {
-    resetZoomState();
+    if (zoomResetTimer.current) {
+      clearTimeout(zoomResetTimer.current);
+      zoomResetTimer.current = null;
+    }
+    setIsZoomed(false);
+    setZoomOrigin("50% 50%");
     setShowBeforeAi(false);
     setActiveIndex((prev) => (prev - 1 + safeItems.length) % safeItems.length);
   };
 
   const goNext = () => {
-    resetZoomState();
+    if (zoomResetTimer.current) {
+      clearTimeout(zoomResetTimer.current);
+      zoomResetTimer.current = null;
+    }
+    setIsZoomed(false);
+    setZoomOrigin("50% 50%");
     setShowBeforeAi(false);
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
   };
 
-  const handleZoomIn = () => {
-    if (zoomResetTimer.current) {
-      clearTimeout(zoomResetTimer.current);
-      zoomResetTimer.current = null;
-    }
-
-    setZoomOrigin("50% 50%");
-    setZoomStep((current) => Math.min(current + 1, ZOOM_LEVELS.length - 1));
-  };
-
-  const handleZoomOut = () => {
-    if (zoomResetTimer.current) {
-      clearTimeout(zoomResetTimer.current);
-      zoomResetTimer.current = null;
-    }
-
-    dragState.current = null;
-    setZoomStep((current) => {
-      const next = Math.max(current - 1, 0);
-
-      if (next === 0) {
-        zoomResetTimer.current = setTimeout(() => {
-          setPan({ x: 0, y: 0 });
-          setZoomOrigin("50% 50%");
-          zoomResetTimer.current = null;
-        }, 220);
+  const handleMainImageClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (isZoomed) {
+      setIsZoomed(false);
+      if (zoomResetTimer.current) {
+        clearTimeout(zoomResetTimer.current);
       }
+      zoomResetTimer.current = setTimeout(() => {
+        setZoomOrigin("50% 50%");
+        zoomResetTimer.current = null;
+      }, 220);
+      return;
+    }
 
-      return next;
-    });
-  };
+    const rect = event.currentTarget.getBoundingClientRect();
+    const rawX = ((event.clientX - rect.left) / rect.width) * 100;
+    const rawY = ((event.clientY - rect.top) / rect.height) * 100;
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (zoomStep === 0) return;
+    const clampedX = Math.min(78, Math.max(22, rawX));
+    const clampedY = Math.min(78, Math.max(22, rawY));
 
-    dragState.current = {
-      startX: event.clientX,
-      startY: event.clientY,
-      startPanX: pan.x,
-      startPanY: pan.y,
-    };
-  };
-
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (zoomStep === 0 || !event.touches[0]) return;
-
-    const touch = event.touches[0];
-    dragState.current = {
-      startX: touch.clientX,
-      startY: touch.clientY,
-      startPanX: pan.x,
-      startPanY: pan.y,
-    };
+    setZoomOrigin(`${clampedX}% ${clampedY}%`);
+    setIsZoomed(true);
   };
 
   return (
@@ -251,48 +172,20 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
           </button>
         ) : null}
 
-        <div
-          className={`foto-detail-main-frame ${zoomStep > 0 ? "is-zoomed" : ""}`}
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
+        <button
+          type="button"
+          className={`foto-detail-main-button ${isZoomed ? "is-zoomed" : ""}`}
+          onClick={handleMainImageClick}
+          aria-label={isZoomed ? "Zoom out" : "Zoom in"}
         >
-          <div className="foto-detail-zoom-controls">
-            {zoomStep > 0 ? (
-              <button
-                type="button"
-                className="foto-detail-zoom-control"
-                onClick={handleZoomOut}
-                aria-label="Zoom out"
-              >
-                −
-              </button>
-            ) : null}
-
-            {zoomStep < ZOOM_LEVELS.length - 1 ? (
-              <button
-                type="button"
-                className="foto-detail-zoom-control"
-                onClick={handleZoomIn}
-                aria-label="Zoom in"
-              >
-                +
-              </button>
-            ) : null}
-          </div>
-
-          <div className={`foto-detail-main-button ${zoomStep > 0 ? "is-zoomed" : ""}`}>
-            <img
-              src={activeImageSrc}
-              alt={active.displayTitle || active.title}
-              className={`foto-detail-main-image ${zoomStep > 0 ? "is-zoomed" : ""}`}
-              style={{
-                transformOrigin: zoomOrigin,
-                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${ZOOM_LEVELS[zoomStep]})`,
-              }}
-            />
-            {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
-          </div>
-        </div>
+          <img
+            src={activeImageSrc}
+            alt={active.displayTitle || active.title}
+            className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
+            style={{ transformOrigin: zoomOrigin }}
+          />
+          {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
+        </button>
 
         {hasMany ? (
           <button
@@ -314,7 +207,8 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
             aria-checked={!showBeforeAi}
             className={`foto-before-ai-toggle ${showBeforeAi ? "is-before" : "is-ai"}`}
             onClick={() => {
-              resetZoomState();
+              setIsZoomed(false);
+              setZoomOrigin("50% 50%");
               setShowBeforeAi((current) => !current);
             }}
           >
@@ -335,7 +229,12 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               type="button"
               className={`foto-detail-thumb-button ${index === activeIndex ? "is-active" : ""}`}
               onClick={() => {
-                resetZoomState();
+                if (zoomResetTimer.current) {
+                  clearTimeout(zoomResetTimer.current);
+                  zoomResetTimer.current = null;
+                }
+                setIsZoomed(false);
+                setZoomOrigin("50% 50%");
                 setShowBeforeAi(false);
                 setActiveIndex(index);
               }}

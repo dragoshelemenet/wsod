@@ -6647,3 +6647,40 @@ video::-webkit-media-controls-panel {
     font-size: 24px;
   }
 }
+
+/* ===== RESTORE OLD FOTO ZOOM ===== */
+
+.foto-detail-zoom-controls,
+.foto-detail-zoom-control {
+  display: none !important;
+}
+
+.foto-detail-main-frame {
+  position: static !important;
+  overflow: visible !important;
+  touch-action: auto !important;
+}
+
+.foto-detail-stage {
+  overflow: hidden !important;
+}
+
+.foto-detail-main-button {
+  cursor: zoom-in !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.foto-detail-main-button.is-zoomed {
+  cursor: zoom-out !important;
+}
+
+.foto-detail-main-image {
+  transition: transform 180ms ease !important;
+  will-change: transform;
+}
+
+.foto-detail-main-image.is-zoomed {
+  transform: scale(1.45) !important;
+}
