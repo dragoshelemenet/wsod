@@ -9,6 +9,7 @@ import { PublicGrid } from "@/components/public/public-grid";
 
 function cleanDisplayedPrice(value: string) {
   return String(value || "")
+    .replace(/[̶\u0336]/gu, "")
     .replace(/[-‐-‒–—−﹣－]/gu, "")
     .replace(/\s+/g, " ")
     .trim();
