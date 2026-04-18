@@ -6129,17 +6129,12 @@ video::-webkit-media-controls-panel {
 
 
 /* services cards current price must stay visible and look premium */
-.package-card {
-  position: relative;
-}
-
 .package-prices {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
   margin-top: 16px;
-  position: relative;
 }
 
 .package-prices small {
@@ -6152,7 +6147,9 @@ video::-webkit-media-controls-panel {
 }
 
 .package-prices strong {
-  display: block;
+  display: inline-block;
+  position: relative;
+  padding-right: 82px;
   text-decoration: none !important;
   font-size: clamp(52px, 5vw, 72px);
   line-height: 0.92;
@@ -6164,19 +6161,19 @@ video::-webkit-media-controls-panel {
 
 .service-card-note {
   position: absolute;
-  top: 0;
-  left: calc(100% + 12px);
+  top: 6px;
+  right: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 30px;
-  padding: 0 12px;
+  min-height: 28px;
+  padding: 0 10px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.10);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
     rgba(18, 18, 24, 0.62);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   color: rgba(255, 255, 255, 0.92);
   letter-spacing: -0.01em;
@@ -6194,21 +6191,21 @@ video::-webkit-media-controls-panel {
   }
 
   .package-prices strong {
+    padding-right: 70px;
     font-size: clamp(42px, 10vw, 58px);
   }
 
   .service-card-note {
-    left: calc(100% + 8px);
-    min-height: 28px;
-    padding: 0 10px;
-    font-size: 12px;
+    top: 4px;
+    min-height: 24px;
+    padding: 0 8px;
+    font-size: 11px;
   }
 }
 
 @media (max-width: 640px) {
-  .service-card-note {
-    position: static;
-    margin-top: 10px;
+  .package-prices strong {
+    padding-right: 62px;
   }
 }
 
