@@ -5,7 +5,9 @@ import { PublicGrid } from "@/components/public/public-grid";
 
 
 function cleanDisplayedPrice(value: string) {
-  return String(value || "").replace(/^[-–—\s]+/, "").trim();
+  return String(value || "")
+    .replace(/^(?:\s|[-‐-‒–—−﹣－])+/u, "")
+    .trim();
 }
 
 function toLines(value: string | null | undefined) {
@@ -148,7 +150,7 @@ export default async function ServicesPricingPage() {
                   {(item.oldPrice || item.currentPrice) ? (
                     <div className="package-prices">
                       {item.oldPrice ? <small>{item.oldPrice}</small> : null}
-                      {item.currentPrice ? <strong>{cleanDisplayedPrice(item.currentPrice)}</strong> : null}
+                      {item.currentPrice ? <strong>{cleanDisplayedPrice(String(item.currentPrice))}</strong> : null}
                     </div>
                   ) : null}
 
@@ -173,7 +175,7 @@ export default async function ServicesPricingPage() {
 
                   <div className="package-prices">
                     {item.oldPrice ? <small>{item.oldPrice}</small> : null}
-                    {item.price ? <strong>{cleanDisplayedPrice(item.price)}</strong> : null}
+                    {item.price ? <strong>{cleanDisplayedPrice(String(item.price))}</strong> : null}
                   </div>
 
                   {item.note ? <span>{item.note}</span> : null}
