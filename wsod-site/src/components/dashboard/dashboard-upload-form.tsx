@@ -150,6 +150,7 @@ export function DashboardUploadForm({ brands, models, talents }: DashboardUpload
 
     return [
       { value: "flyer", label: "Flyer" },
+      { value: "macheta", label: "Machetă" },
       { value: "carte-vizita", label: "Carte de vizită" },
       { value: "certificat", label: "Certificat" },
       { value: "poster", label: "Poster" },

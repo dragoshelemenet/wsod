@@ -7,6 +7,7 @@ import { PublicShell } from "@/components/public/public-shell";
 
 const GRAPHIC_SECTIONS = [
   { key: "flyer", label: "Flyere" },
+  { key: "macheta", label: "Machete" },
   { key: "carte-vizita", label: "Cărți de vizită" },
   { key: "certificat", label: "Certificate" },
   { key: "poster", label: "Postere" },
