@@ -304,7 +304,7 @@ export function DashboardSiteContentForm({
         </div>
 
         <div className="admin-form-field site-content-full">
-          <label>Services Cards</label>
+          <label>Services Cards (Titlu | Descriere | Pret vechi | Pret actual | Reducere/nota)</label>
 
           <div className="services-table-editor">
             {serviceCardRows.map((row, index) => (
@@ -324,19 +324,19 @@ export function DashboardSiteContentForm({
                 <input
                   value={row.oldPrice}
                   onChange={(e) => updateServiceCardRow(index, { oldPrice: e.target.value })}
-                  placeholder="Pret vechi taiat"
+                  placeholder="Pret vechi taiat ex: 298 lei"
                 />
 
                 <input
                   value={row.price}
                   onChange={(e) => updateServiceCardRow(index, { price: e.target.value })}
-                  placeholder="Pret nou"
+                  placeholder="Pret actual ex: 149 lei"
                 />
 
                 <input
                   value={row.note}
                   onChange={(e) => updateServiceCardRow(index, { note: e.target.value })}
-                  placeholder="Nota / reducere"
+                  placeholder="Reducere / nota ex: -50%"
                 />
 
                 <button

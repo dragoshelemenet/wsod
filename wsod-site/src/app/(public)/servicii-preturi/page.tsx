@@ -147,7 +147,7 @@ export default async function ServicesPricingPage() {
                     </div>
                   ) : null}
 
-                  {item.note ? <span>{item.note}</span> : null}
+                  {item.note ? <span className="service-card-note">{item.note}</span> : null}
                 </article>
               ))}
             </div>
