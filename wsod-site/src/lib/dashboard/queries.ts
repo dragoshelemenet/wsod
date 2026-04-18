@@ -341,3 +341,18 @@ export async function getDashboardBlogPostById(id: string) {
     return null;
   }
 }
+
+
+
+export async function getVisibleHomeSections() {
+  try {
+    const rows = await prisma.siteSectionVisibility.findMany({
+      where: { isVisible: true },
+      orderBy: { label: "asc" },
+    });
+
+    return rows;
+  } catch {
+    return [];
+  }
+}

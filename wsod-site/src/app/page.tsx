@@ -2,48 +2,62 @@ import { BrandsCarousel } from "@/components/public/brands-carousel";
 import {
   getPublishedBrands,
   getSiteContentRecord,
+  getVisibleHomeSections,
 } from "@/lib/dashboard/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [brands, siteContent] = await Promise.all([
+  const [brands, siteContent, visibleSections] = await Promise.all([
     getPublishedBrands(),
     getSiteContentRecord(),
+    getVisibleHomeSections(),
   ]);
 
-  const folders = [
-    {
+  const folderMap = {
+    foto: {
       title: "FOTO",
       href: "/foto",
       meta: "",
     },
-    {
+    video: {
       title: "VIDEO",
       href: "/video",
       meta: "",
     },
-    {
+    audio: {
       title: "AUDIO",
       href: "/audio",
       meta: "",
     },
-    {
+    grafica: {
       title: "GRAFICA",
       href: "/grafica",
       meta: "FLYERE · COVERURI · CARTI VIZITA",
     },
-    {
+    website: {
       title: "WEBSITE-URI",
       href: "/website",
       meta: "",
     },
-    {
+    "meta-ads": {
       title: "META ADS",
       href: "/meta-ads",
       meta: "LEAD-URI",
     },
-  ];
+  } as const;
+
+  const preferredOrder = ["foto", "video", "audio", "grafica", "website", "meta-ads"];
+
+  const visibleSectionKeys = new Set(
+    (visibleSections || [])
+      .map((item: any) => String(item.slug || "").trim())
+      .filter(Boolean)
+  );
+
+  const folders = preferredOrder
+    .filter((key) => visibleSectionKeys.has(key))
+    .map((key) => folderMap[key as keyof typeof folderMap]);
 
   const featuredBrands = brands.map((brand) => ({
     id: brand.id,
