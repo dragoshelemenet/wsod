@@ -32,6 +32,14 @@ type ServiceTableRow = {
   note: string;
 };
 
+type ServiceCardRow = {
+  title: string;
+  description: string;
+  oldPrice: string;
+  price: string;
+  note: string;
+};
+
 const CATEGORY_OPTIONS = [
   { value: "foto", label: "Foto" },
   { value: "video", label: "Video" },
@@ -62,6 +70,31 @@ function serializeTableRows(rows: ServiceTableRow[]) {
     .join("\n");
 }
 
+function parseServiceCards(value: string | null | undefined): ServiceCardRow[] {
+  return (value || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [title = "", description = "", oldPrice = "", price = "", note = ""] = line
+        .split("|")
+        .map((part) => part.trim());
+
+      return { title, description, oldPrice, price, note };
+    });
+}
+
+function serializeServiceCards(rows: ServiceCardRow[]) {
+  return rows
+    .map((row) =>
+      [row.title, row.description, row.oldPrice, row.price, row.note]
+        .map((x) => x.trim())
+        .join("|")
+    )
+    .filter((line) => line.replace(/\|/g, "").trim())
+    .join("\n");
+}
+
 export function DashboardSiteContentForm({
   item,
 }: DashboardSiteContentFormProps) {
@@ -70,7 +103,6 @@ export function DashboardSiteContentForm({
   const [servicesEyebrow, setServicesEyebrow] = useState(item?.servicesEyebrow || "");
   const [servicesTitle, setServicesTitle] = useState(item?.servicesTitle || "");
   const [servicesList, setServicesList] = useState(item?.servicesList || "");
-  const [servicesCards, setServicesCards] = useState(item?.servicesCards || "");
   const [packageCards, setPackageCards] = useState(item?.packageCards || "");
   const [servicesCertificatesTitle, setServicesCertificatesTitle] = useState(
     item?.servicesCertificatesTitle || ""
@@ -86,10 +118,19 @@ export function DashboardSiteContentForm({
       ? parseTableRows(item?.servicesTableRows)
       : [{ category: "foto", service: "", price: "", note: "" }]
   );
+  const [serviceCardRows, setServiceCardRows] = useState<ServiceCardRow[]>(
+    parseServiceCards(item?.servicesCards).length
+      ? parseServiceCards(item?.servicesCards)
+      : [{ title: "", description: "", oldPrice: "", price: "", note: "" }]
+  );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const serializedTableRows = useMemo(() => serializeTableRows(tableRows), [tableRows]);
+  const serializedServiceCards = useMemo(
+    () => serializeServiceCards(serviceCardRows),
+    [serviceCardRows]
+  );
 
   function updateRow(index: number, patch: Partial<ServiceTableRow>) {
     setTableRows((current) =>
@@ -106,7 +147,30 @@ export function DashboardSiteContentForm({
 
   function removeRow(index: number) {
     setTableRows((current) =>
-      current.length === 1 ? [{ category: "foto", service: "", price: "", note: "" }] : current.filter((_, i) => i !== index)
+      current.length === 1
+        ? [{ category: "foto", service: "", price: "", note: "" }]
+        : current.filter((_, i) => i !== index)
+    );
+  }
+
+  function updateServiceCardRow(index: number, patch: Partial<ServiceCardRow>) {
+    setServiceCardRows((current) =>
+      current.map((row, rowIndex) => (rowIndex === index ? { ...row, ...patch } : row))
+    );
+  }
+
+  function addServiceCardRow() {
+    setServiceCardRows((current) => [
+      ...current,
+      { title: "", description: "", oldPrice: "", price: "", note: "" },
+    ]);
+  }
+
+  function removeServiceCardRow(index: number) {
+    setServiceCardRows((current) =>
+      current.length === 1
+        ? [{ title: "", description: "", oldPrice: "", price: "", note: "" }]
+        : current.filter((_, i) => i !== index)
     );
   }
 
@@ -127,7 +191,7 @@ export function DashboardSiteContentForm({
           servicesEyebrow,
           servicesTitle,
           servicesList,
-          servicesCards,
+          servicesCards: serializedServiceCards,
           packageCards,
           servicesTableRows: serializedTableRows,
           servicesCertificatesTitle,
@@ -241,11 +305,56 @@ export function DashboardSiteContentForm({
 
         <div className="admin-form-field site-content-full">
           <label>Services Cards</label>
-          <textarea
-            className="admin-textarea"
-            value={servicesCards}
-            onChange={(e) => setServicesCards(e.target.value)}
-          />
+
+          <div className="services-table-editor">
+            {serviceCardRows.map((row, index) => (
+              <div key={index} className="services-table-editor-row services-card-editor-row">
+                <input
+                  value={row.title}
+                  onChange={(e) => updateServiceCardRow(index, { title: e.target.value })}
+                  placeholder="Titlu"
+                />
+
+                <input
+                  value={row.description}
+                  onChange={(e) => updateServiceCardRow(index, { description: e.target.value })}
+                  placeholder="Descriere"
+                />
+
+                <input
+                  value={row.oldPrice}
+                  onChange={(e) => updateServiceCardRow(index, { oldPrice: e.target.value })}
+                  placeholder="Pret vechi taiat"
+                />
+
+                <input
+                  value={row.price}
+                  onChange={(e) => updateServiceCardRow(index, { price: e.target.value })}
+                  placeholder="Pret nou"
+                />
+
+                <input
+                  value={row.note}
+                  onChange={(e) => updateServiceCardRow(index, { note: e.target.value })}
+                  placeholder="Nota / reducere"
+                />
+
+                <button
+                  type="button"
+                  className="admin-ghost-button"
+                  onClick={() => removeServiceCardRow(index)}
+                >
+                  Șterge
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="site-content-actions">
+            <button type="button" className="admin-ghost-button" onClick={addServiceCardRow}>
+              + Adaugă card
+            </button>
+          </div>
         </div>
 
         <div className="admin-form-field site-content-full">

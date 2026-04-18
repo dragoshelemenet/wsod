@@ -11,8 +11,11 @@ function toLines(value: string | null | undefined) {
 }
 
 function parseServiceCard(line: string) {
-  const [title = "", description = "", tags = ""] = line.split("|").map((part) => part.trim());
-  return { title, description, tags };
+  const [title = "", description = "", oldPrice = "", price = "", note = ""] = line
+    .split("|")
+    .map((part) => part.trim());
+
+  return { title, description, oldPrice, price, note };
 }
 
 function parsePackageCard(line: string) {
@@ -133,10 +136,18 @@ export default async function ServicesPricingPage() {
 
             <div className="services-clean-grid">
               {serviceCards.map((item, index) => (
-                <article key={`${item.title}-${index}`} className="services-clean-card">
+                <article key={`${item.title}-${index}`} className="services-clean-card package-card">
                   <h3>{item.title}</h3>
                   {item.description ? <p>{item.description}</p> : null}
-                  {item.tags ? <span>{item.tags}</span> : null}
+
+                  {(item.oldPrice || item.price) ? (
+                    <div className="package-prices">
+                      {item.oldPrice ? <small>{item.oldPrice}</small> : null}
+                      {item.price ? <strong>{item.price}</strong> : null}
+                    </div>
+                  ) : null}
+
+                  {item.note ? <span>{item.note}</span> : null}
                 </article>
               ))}
             </div>
