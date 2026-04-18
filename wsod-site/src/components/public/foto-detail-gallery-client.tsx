@@ -206,6 +206,8 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
         <div className="foto-before-ai-toggle-wrap">
           <button
             type="button"
+            role="switch"
+            aria-checked={!showBeforeAi}
             className={`foto-before-ai-toggle ${showBeforeAi ? "is-before" : "is-ai"}`}
             onClick={() => {
               setIsZoomed(false);
@@ -213,8 +215,11 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               setShowBeforeAi((current) => !current);
             }}
           >
-            <span>{showBeforeAi ? "Înainte de AI" : "AI pornit"}</span>
-            <span className="foto-before-ai-toggle-knob" />
+            <span className="foto-before-ai-toggle-label-left">Înainte de AI</span>
+            <span className="foto-before-ai-toggle-track">
+              <span className="foto-before-ai-toggle-knob" />
+            </span>
+            <span className="foto-before-ai-toggle-label-right">AI</span>
           </button>
         </div>
       ) : null}
