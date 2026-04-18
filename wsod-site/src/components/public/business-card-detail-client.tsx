@@ -19,7 +19,7 @@ export function BusinessCardDetailClient({
   const hasBack = Boolean(backSrc);
   const hasBoth = hasFront && hasBack;
 
-  const [side, setSide] = useState<"front" | "back">(hasFront ? "front" : "back");
+  const [side, setSide] = useState<"front" | "back">(hasBack ? "back" : "front");
 
   const rawSrc = side === "front" ? frontSrc : backSrc;
 
@@ -31,29 +31,34 @@ export function BusinessCardDetailClient({
 
       {hasBoth ? (
         <div className="business-card-toggle-wrap">
-          <div className={`business-card-toggle ${side === "back" ? "is-right" : "is-left"}`}>
+          <div className={`business-card-toggle business-card-toggle-3col ${side === "front" ? "is-right" : "is-left"}`}>
             <button
               type="button"
-              className={`business-card-toggle-option ${side === "front" ? "is-active" : ""}`}
-              onClick={() => setSide("front")}
-            >
-              Față
-            </button>
-            <button
-              type="button"
-              className={`business-card-toggle-option ${side === "back" ? "is-active" : ""}`}
+              className={`business-card-toggle-side ${side === "back" ? "is-active" : ""}`}
               onClick={() => setSide("back")}
             >
               Spate
             </button>
-            <span className="business-card-toggle-knob" />
+
+            <span className="business-card-toggle-center-label">Preview</span>
+
+            <button
+              type="button"
+              className={`business-card-toggle-side ${side === "front" ? "is-active" : ""}`}
+              onClick={() => setSide("front")}
+            >
+              Față
+            </button>
+
+            <div className="business-card-toggle-track">
+              <span className="business-card-toggle-knob" />
+            </div>
           </div>
         </div>
       ) : null}
 
       {rawSrc ? (
         <div className="business-card-raw-wrap">
-          <h3 className="detail-section-title">Material brut</h3>
           <div className="business-card-raw-frame">
             <img
               src={rawSrc}
