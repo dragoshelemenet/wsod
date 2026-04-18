@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 type GalleryItem = {
@@ -137,7 +137,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
   };
 
-  const handleMainImageClick = (_event: MouseEvent<HTMLButtonElement>) => {
+  const handleMainImageClick = () => {
     if (zoomResetTimer.current) {
       clearTimeout(zoomResetTimer.current);
       zoomResetTimer.current = null;
@@ -170,20 +170,26 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
           </button>
         ) : null}
 
-        <button
-          type="button"
-          className={`foto-detail-main-button ${isZoomed ? "is-zoomed" : ""}`}
-          onClick={handleMainImageClick}
-          aria-label={isZoomed ? "Zoom out" : "Zoom in"}
-        >
-          <img
-            src={activeImageSrc}
-            alt={active.displayTitle || active.title}
-            className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
-            style={{ transformOrigin: zoomOrigin }}
-          />
-          {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
-        </button>
+        <div className={`foto-detail-main-frame ${isZoomed ? "is-zoomed" : ""}`}>
+          <button
+            type="button"
+            className="foto-detail-zoom-control"
+            onClick={handleMainImageClick}
+            aria-label={isZoomed ? "Zoom out" : "Zoom in"}
+          >
+            {isZoomed ? "−" : "+"}
+          </button>
+
+          <div className={`foto-detail-main-button ${isZoomed ? "is-zoomed" : ""}`}>
+            <img
+              src={activeImageSrc}
+              alt={active.displayTitle || active.title}
+              className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
+              style={{ transformOrigin: zoomOrigin }}
+            />
+            {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
+          </div>
+        </div>
 
         {hasMany ? (
           <button
