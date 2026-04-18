@@ -84,6 +84,8 @@ async function handleUpdate(
   const previewUrl = String(body.previewUrl || "").trim();
   const fileUrl = String(body.fileUrl || "").trim();
   const beforeAiUrl = String(body.beforeAiUrl || "").trim();
+  const cardFrontUrl = String(body.cardFrontUrl || "").trim();
+  const cardBackUrl = String(body.cardBackUrl || "").trim();
   const seoTitle = String(body.seoTitle || "").trim();
   const metaDescription = String(body.metaDescription || "").trim();
   const groupLabel = String(body.groupLabel || "").trim();
@@ -162,6 +164,13 @@ async function handleUpdate(
     );
   }
 
+  if (body.category === "grafica" && graphicKind === "carte-vizita" && (!cardFrontUrl || !cardBackUrl)) {
+    return NextResponse.json(
+      { ok: false, message: "Pentru cartea de vizită trebuie să existe și Față și Spate." },
+      { status: 400 }
+    );
+  }
+
   const updated = await prisma.mediaItem.update({
     where: { id },
     data: {
@@ -172,6 +181,8 @@ async function handleUpdate(
       previewUrl: previewUrl || null,
       fileUrl: fileUrl || null,
       beforeAiUrl: beforeAiUrl || null,
+      cardFrontUrl: cardFrontUrl || null,
+      cardBackUrl: cardBackUrl || null,
       brandId,
       personModelId,
       audioProfileId,

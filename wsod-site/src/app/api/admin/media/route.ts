@@ -71,6 +71,8 @@ export async function POST(request: Request) {
     const thumbnailUrl = String(body.thumbnailUrl || "").trim();
     const previewUrl = String(body.previewUrl || "").trim();
     const beforeAiUrl = String(body.beforeAiUrl || "").trim();
+    const cardFrontUrl = String(body.cardFrontUrl || "").trim();
+    const cardBackUrl = String(body.cardBackUrl || "").trim();
     const fileNameOriginal = String(body.fileNameOriginal || "").trim();
 
     const groupLabel = String(body.groupLabel || "").trim();
@@ -137,6 +139,13 @@ export async function POST(request: Request) {
     if (category === "foto" && aiMode && !beforeAiUrl) {
       return NextResponse.json(
         { ok: false, message: "Pentru pozele cu AI trebuie să încarci și imaginea before AI." },
+        { status: 400 }
+      );
+    }
+
+    if (category === "grafica" && graphicKind === "carte-vizita" && (!cardFrontUrl || !cardBackUrl)) {
+      return NextResponse.json(
+        { ok: false, message: "Pentru cartea de vizită trebuie să încarci atât Față cât și Spate." },
         { status: 400 }
       );
     }
@@ -258,6 +267,8 @@ export async function POST(request: Request) {
         thumbnailUrl: thumbnailUrl || null,
         previewUrl: previewUrl || null,
         beforeAiUrl: beforeAiUrl || null,
+        cardFrontUrl: cardFrontUrl || null,
+        cardBackUrl: cardBackUrl || null,
         fileNameOriginal: fileNameOriginal || null,
         description: description || null,
         seoTitle: seoTitle || null,
