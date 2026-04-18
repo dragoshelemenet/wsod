@@ -137,12 +137,14 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
   };
 
-  const handleMainImageClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleMainImageClick = (_event: MouseEvent<HTMLButtonElement>) => {
+    if (zoomResetTimer.current) {
+      clearTimeout(zoomResetTimer.current);
+      zoomResetTimer.current = null;
+    }
+
     if (isZoomed) {
       setIsZoomed(false);
-      if (zoomResetTimer.current) {
-        clearTimeout(zoomResetTimer.current);
-      }
       zoomResetTimer.current = setTimeout(() => {
         setZoomOrigin("50% 50%");
         zoomResetTimer.current = null;
@@ -150,14 +152,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
       return;
     }
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const rawX = ((event.clientX - rect.left) / rect.width) * 100;
-    const rawY = ((event.clientY - rect.top) / rect.height) * 100;
-
-    const clampedX = Math.min(78, Math.max(22, rawX));
-    const clampedY = Math.min(78, Math.max(22, rawY));
-
-    setZoomOrigin(`${clampedX}% ${clampedY}%`);
+    setZoomOrigin("50% 50%");
     setIsZoomed(true);
   };
 
