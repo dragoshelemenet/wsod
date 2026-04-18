@@ -35,9 +35,9 @@ type ServiceTableRow = {
 type ServiceCardRow = {
   title: string;
   description: string;
+  currentPrice: string;
+  discount: string;
   oldPrice: string;
-  price: string;
-  note: string;
 };
 
 const CATEGORY_OPTIONS = [
@@ -76,18 +76,18 @@ function parseServiceCards(value: string | null | undefined): ServiceCardRow[] {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const [title = "", description = "", oldPrice = "", price = "", note = ""] = line
+      const [title = "", description = "", currentPrice = "", discount = "", oldPrice = ""] = line
         .split("|")
         .map((part) => part.trim());
 
-      return { title, description, oldPrice, price, note };
+      return { title, description, currentPrice, discount, oldPrice };
     });
 }
 
 function serializeServiceCards(rows: ServiceCardRow[]) {
   return rows
     .map((row) =>
-      [row.title, row.description, row.oldPrice, row.price, row.note]
+      [row.title, row.description, row.currentPrice, row.discount, row.oldPrice]
         .map((x) => x.trim())
         .join("|")
     )
@@ -121,7 +121,7 @@ export function DashboardSiteContentForm({
   const [serviceCardRows, setServiceCardRows] = useState<ServiceCardRow[]>(
     parseServiceCards(item?.servicesCards).length
       ? parseServiceCards(item?.servicesCards)
-      : [{ title: "", description: "", oldPrice: "", price: "", note: "" }]
+      : [{ title: "", description: "", currentPrice: "", discount: "", oldPrice: "" }]
   );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -162,14 +162,14 @@ export function DashboardSiteContentForm({
   function addServiceCardRow() {
     setServiceCardRows((current) => [
       ...current,
-      { title: "", description: "", oldPrice: "", price: "", note: "" },
+      { title: "", description: "", currentPrice: "", discount: "", oldPrice: "" },
     ]);
   }
 
   function removeServiceCardRow(index: number) {
     setServiceCardRows((current) =>
       current.length === 1
-        ? [{ title: "", description: "", oldPrice: "", price: "", note: "" }]
+        ? [{ title: "", description: "", currentPrice: "", discount: "", oldPrice: "" }]
         : current.filter((_, i) => i !== index)
     );
   }
@@ -304,7 +304,7 @@ export function DashboardSiteContentForm({
         </div>
 
         <div className="admin-form-field site-content-full">
-          <label>Services Cards (Titlu | Descriere | Pret vechi | Pret actual | Reducere/nota)</label>
+          <label>Services Cards (Titlu | Descriere | Pret actual | Reducere | Pret vechi taiat)</label>
 
           <div className="services-table-editor">
             {serviceCardRows.map((row, index) => (
@@ -322,21 +322,21 @@ export function DashboardSiteContentForm({
                 />
 
                 <input
+                  value={row.currentPrice}
+                  onChange={(e) => updateServiceCardRow(index, { currentPrice: e.target.value })}
+                  placeholder="Pret actual ex: 149 ron"
+                />
+
+                <input
+                  value={row.discount}
+                  onChange={(e) => updateServiceCardRow(index, { discount: e.target.value })}
+                  placeholder="Reducere ex: -50%"
+                />
+
+                <input
                   value={row.oldPrice}
                   onChange={(e) => updateServiceCardRow(index, { oldPrice: e.target.value })}
-                  placeholder="Pret vechi taiat ex: 298 lei"
-                />
-
-                <input
-                  value={row.price}
-                  onChange={(e) => updateServiceCardRow(index, { price: e.target.value })}
-                  placeholder="Pret actual ex: 149 lei"
-                />
-
-                <input
-                  value={row.note}
-                  onChange={(e) => updateServiceCardRow(index, { note: e.target.value })}
-                  placeholder="Reducere / nota ex: -50%"
+                  placeholder="Pret vechi taiat ex: 298 ron"
                 />
 
                 <button
