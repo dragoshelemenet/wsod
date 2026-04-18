@@ -6138,21 +6138,27 @@ video::-webkit-media-controls-panel {
 }
 
 .package-prices small {
+  display: block;
+  width: max-content;
+  margin-bottom: 8px;
   text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-skip-ink: none;
   opacity: 0.42;
   font-size: 22px;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .package-prices strong {
   display: inline-block;
   position: relative;
+  margin-top: 2px;
   padding-right: 82px;
   text-decoration: none !important;
   font-size: clamp(52px, 5vw, 72px);
-  line-height: 0.92;
+  line-height: 1;
   font-weight: 900;
   letter-spacing: -0.06em;
   color: rgba(255, 255, 255, 0.99);
