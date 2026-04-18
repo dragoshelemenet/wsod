@@ -2,22 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/video", label: "Video" },
-  { href: "/foto", label: "Foto" },
-  { href: "/grafica", label: "Grafica" },
-  { href: "/website", label: "Website" },
-  { href: "/meta-ads", label: "Meta Ads" },
-  { href: "/audio", label: "Audio" },
-  { href: "/servicii-preturi", label: "Servicii" },
-];
+type PublicNavbarLink = {
+  href: string;
+  label: string;
+};
 
 type PublicNavbarProps = {
   logoUrl?: string | null;
+  links: PublicNavbarLink[];
 };
 
-export function PublicNavbar({ logoUrl }: PublicNavbarProps) {
+export function PublicNavbar({ logoUrl, links }: PublicNavbarProps) {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
 
