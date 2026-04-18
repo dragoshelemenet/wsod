@@ -6602,3 +6602,48 @@ video::-webkit-media-controls-panel {
     font-size: 24px;
   }
 }
+
+/* ===== FOTO DETAIL STEP ZOOM CONTROLS RIGHT BOTTOM ===== */
+
+.foto-detail-zoom-controls {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.foto-detail-zoom-control {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(0,0,0,0.58);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@media (max-width: 640px) {
+  .foto-detail-zoom-controls {
+    right: 10px;
+    bottom: 10px;
+    gap: 8px;
+  }
+
+  .foto-detail-zoom-control {
+    width: 42px;
+    height: 42px;
+    font-size: 24px;
+  }
+}
