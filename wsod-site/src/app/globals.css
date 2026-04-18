@@ -6923,3 +6923,160 @@ video::-webkit-media-controls-panel {
   }
 }
 
+
+/* ===== FINAL OVERRIDE: DELIVERY INFO + MOBILE DESCRIPTION + DYNAMIC FORMAT TOGGLE ===== */
+
+.delivery-quality-block {
+  display: flex !important;
+  justify-content: flex-end !important;
+  margin-top: 8px !important;
+  margin-bottom: 10px !important;
+  position: relative !important;
+  z-index: 8 !important;
+}
+
+.delivery-quality-note {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  z-index: 9 !important;
+}
+
+.delivery-quality-note-trigger {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22) !important;
+}
+
+.delivery-quality-note-tooltip {
+  position: absolute !important;
+  right: 0 !important;
+  top: calc(100% + 10px) !important;
+  width: min(360px, calc(100vw - 40px)) !important;
+  padding: 10px 12px !important;
+  border-radius: 14px !important;
+  background: rgba(12, 12, 16, 0.97) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-6px) !important;
+  transition: opacity 0.18s ease, transform 0.18s ease !important;
+  z-index: 20 !important;
+}
+
+.delivery-quality-note-tooltip.is-open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) !important;
+}
+
+.expandable-description {
+  max-width: 980px !important;
+}
+
+.expandable-description-text {
+  font-size: 16px !important;
+  line-height: 1.75 !important;
+}
+
+.expandable-description-fade {
+  bottom: 38px !important;
+  height: 44px !important;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 8, 12, 0) 0%,
+    rgba(8, 8, 12, 0.52) 45%,
+    rgba(8, 8, 12, 0.96) 100%
+  ) !important;
+}
+
+.expandable-description-toggle {
+  margin-top: 6px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.detail-toggle-stack {
+  display: flex !important;
+  justify-content: center !important;
+  margin-bottom: 14px !important;
+}
+
+.business-card-toggle.business-card-toggle-dynamic {
+  width: auto !important;
+  min-width: 180px !important;
+  height: 52px !important;
+  padding: 4px !important;
+  gap: 0 !important;
+}
+
+.business-card-toggle.business-card-toggle-dynamic .business-card-toggle-option {
+  height: 44px !important;
+  min-width: 88px !important;
+}
+
+@media (max-width: 640px) {
+  .delivery-quality-block {
+    justify-content: flex-start !important;
+    margin-top: 6px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .delivery-quality-note-trigger {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 13px !important;
+  }
+
+  .delivery-quality-note-tooltip {
+    right: auto !important;
+    left: 0 !important;
+    width: min(300px, calc(100vw - 34px)) !important;
+    font-size: 11px !important;
+  }
+
+  .expandable-description-text {
+    font-size: 15px !important;
+    line-height: 1.72 !important;
+  }
+
+  .expandable-description-fade {
+    bottom: 36px !important;
+    height: 36px !important;
+  }
+
+  .expandable-description-toggle {
+    font-size: 12px !important;
+  }
+
+  .business-card-toggle.business-card-toggle-dynamic {
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: 48px !important;
+  }
+
+  .business-card-toggle.business-card-toggle-dynamic .business-card-toggle-option {
+    min-width: 72px !important;
+    height: 40px !important;
+    font-size: 13px !important;
+  }
+}
+

@@ -21,47 +21,52 @@ export function GraphicFormatDetailClient({
   format9x16Url,
   format1x1Url,
 }: Props) {
-  const formats = useMemo(() => {
-    const map: Record<FormatKey, string> = {
-      "16:9": format16x9Url || "",
-      "9:16": format9x16Url || "",
-      "1:1": format1x1Url || "",
+  const available = useMemo(() => {
+    const list: Array<{ key: FormatKey; src: string }> = [];
+
+    const pushIf = (key: FormatKey, src?: string) => {
+      if (src && src.trim()) {
+        list.push({ key, src });
+      }
     };
 
-    if (
-      displayFormatMain &&
-      mainSrc &&
-      (displayFormatMain === "16:9" ||
-        displayFormatMain === "9:16" ||
-        displayFormatMain === "1:1")
-    ) {
-      map[displayFormatMain as FormatKey] = mainSrc;
+    if (displayFormatMain === "16:9") pushIf("16:9", mainSrc);
+    if (displayFormatMain === "9:16") pushIf("9:16", mainSrc);
+    if (displayFormatMain === "1:1") pushIf("1:1", mainSrc);
+
+    if (displayFormatMain !== "16:9") pushIf("16:9", format16x9Url);
+    if (displayFormatMain !== "9:16") pushIf("9:16", format9x16Url);
+    if (displayFormatMain !== "1:1") pushIf("1:1", format1x1Url);
+
+    if (!list.length && mainSrc) {
+      list.push({ key: "16:9", src: mainSrc });
     }
 
-    return map;
+    return list;
   }, [displayFormatMain, mainSrc, format16x9Url, format9x16Url, format1x1Url]);
 
-  const available = (["16:9", "9:16", "1:1"] as FormatKey[]).filter((key) => !!formats[key]);
-  const [activeFormat, setActiveFormat] = useState<FormatKey>((available[0] || "16:9") as FormatKey);
+  const [activeFormat, setActiveFormat] = useState<FormatKey>(available[0]?.key || "16:9");
+  const activeItem = available.find((item) => item.key === activeFormat) || available[0];
 
-  const activeSrc = formats[activeFormat] || mainSrc;
-
-  if (!activeSrc) return null;
+  if (!activeItem?.src) return null;
 
   return (
     <div className="business-card-detail">
       {available.length > 1 ? (
         <div className="detail-toggle-stack">
           <div className="business-card-toggle-wrap">
-            <div className="business-card-toggle business-card-toggle-3way">
-              {available.map((format) => (
+            <div
+              className="business-card-toggle business-card-toggle-dynamic"
+              style={{ gridTemplateColumns: `repeat(${available.length}, minmax(0, 1fr))` }}
+            >
+              {available.map((item) => (
                 <button
-                  key={format}
+                  key={item.key}
                   type="button"
-                  className={`business-card-toggle-option ${activeFormat === format ? "is-active" : ""}`}
-                  onClick={() => setActiveFormat(format)}
+                  className={`business-card-toggle-option ${activeFormat === item.key ? "is-active" : ""}`}
+                  onClick={() => setActiveFormat(item.key)}
                 >
-                  {format}
+                  {item.key}
                 </button>
               ))}
             </div>
@@ -72,8 +77,8 @@ export function GraphicFormatDetailClient({
       <div className="business-card-preview-wrap">
         <div className="business-card-preview-stage">
           <img
-            src={activeSrc}
-            alt={`${title} - ${activeFormat}`}
+            src={activeItem.src}
+            alt={`${title} - ${activeItem.key}`}
             className="business-card-preview-image"
           />
         </div>
