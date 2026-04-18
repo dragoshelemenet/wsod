@@ -14,30 +14,34 @@ export function DeliveryQualityInfo({ className = "" }: DeliveryQualityInfoProps
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const onClick = (event: MouseEvent) => {
+    const onPointerDown = (event: MouseEvent | TouchEvent) => {
       if (!rootRef.current) return;
-      if (!rootRef.current.contains(event.target as Node)) {
+      const target = event.target as Node | null;
+      if (target && !rootRef.current.contains(target)) {
         setOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+    };
   }, []);
 
   return (
-    <div
-      ref={rootRef}
-      className={`delivery-quality-note ${className}`.trim()}
-    >
+    <div ref={rootRef} className={`delivery-quality-note ${className}`.trim()}>
       <button
         type="button"
-        className="delivery-quality-note-trigger"
+        className={`delivery-quality-note-trigger ${open ? "is-open" : ""}`}
         aria-label="Informații despre calitatea materialelor"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        i
+        <span className="delivery-quality-note-trigger-icon">i</span>
+        <span className="delivery-quality-note-trigger-text">Calitate website</span>
       </button>
 
       <div className={`delivery-quality-note-tooltip ${open ? "is-open" : ""}`}>
