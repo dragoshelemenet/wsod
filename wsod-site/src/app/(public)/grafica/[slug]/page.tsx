@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";\nimport { BusinessCardDetailClient } from "@/components/public/business-card-detail-client";
+import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
+import { BusinessCardDetailClient } from "@/components/public/business-card-detail-client";
 import {
   getPublishedMediaByCategory,
   getPublishedMediaBySlug,
