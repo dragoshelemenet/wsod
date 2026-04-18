@@ -6353,300 +6353,8 @@ video::-webkit-media-controls-panel {
     height: 40px;
   }
 }
-/* ===== FOTO DETAIL FINAL FIX: stable zoom + navbar always above ===== */
 
-.public-navbar {
-  z-index: 20000 !important;
-}
 
-.public-navbar-inner,
-.public-navbar-top,
-.public-navbar-links,
-.public-navbar-links-desktop,
-.public-navbar-mobile,
-.public-navbar-link,
-.public-navbar-toggle,
-.public-navbar-logo {
-  position: relative;
-  z-index: 20001 !important;
-}
-
-.foto-detail-gallery,
-.foto-detail-stage,
-.foto-detail-main-frame,
-.foto-detail-main-button,
-.foto-detail-thumb-grid,
-.foto-before-ai-toggle-wrap {
-  position: relative;
-  z-index: 1 !important;
-}
-
-.foto-detail-stage {
-  overflow: hidden !important;
-  isolation: isolate;
-  min-height: clamp(420px, 72vh, 900px) !important;
-}
-
-.foto-detail-main-frame {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 18px;
-}
-
-.foto-detail-main-button {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: clamp(420px, 72vh, 900px) !important;
-  overflow: hidden !important;
-  pointer-events: none;
-  cursor: default !important;
-}
-
-.foto-detail-main-image {
-  display: block;
-  width: 100%;
-  height: clamp(420px, 72vh, 900px) !important;
-  max-height: none !important;
-  object-fit: contain !important;
-  transform-origin: center center !important;
-  transition: transform 220ms ease !important;
-  will-change: transform;
-}
-
-.foto-detail-main-image.is-zoomed {
-  transform: scale(1.16) !important;
-}
-
-.foto-detail-zoom-control {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  z-index: 5;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(0,0,0,0.58);
-  color: #fff;
-  font-size: 26px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.foto-detail-nav {
-  z-index: 4 !important;
-}
-
-.foto-before-ai-toggle-wrap {
-  z-index: 4 !important;
-}
-
-.ai-photo-badge {
-  z-index: 4 !important;
-}
-
-@media (max-width: 640px) {
-  .foto-detail-stage {
-    min-height: 58vh !important;
-  }
-
-  .foto-detail-main-button {
-    min-height: 58vh !important;
-  }
-
-  .foto-detail-main-image {
-    height: 58vh !important;
-  }
-
-  .foto-detail-zoom-control {
-    right: 10px;
-    bottom: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-  }
-}
-
-/* ===== FOTO DETAIL BIGGER ZOOM + DRAG + CENTERED ICON ===== */
-
-.public-navbar {
-  z-index: 20000 !important;
-}
-
-.public-navbar-inner,
-.public-navbar-top,
-.public-navbar-links,
-.public-navbar-links-desktop,
-.public-navbar-mobile,
-.public-navbar-link,
-.public-navbar-toggle,
-.public-navbar-logo {
-  position: relative;
-  z-index: 20001 !important;
-}
-
-.foto-detail-gallery,
-.foto-detail-stage,
-.foto-detail-main-frame,
-.foto-detail-main-button,
-.foto-detail-thumb-grid,
-.foto-before-ai-toggle-wrap {
-  position: relative;
-  z-index: 1 !important;
-}
-
-.foto-detail-stage {
-  overflow: hidden !important;
-  isolation: isolate;
-  min-height: clamp(420px, 72vh, 900px) !important;
-}
-
-.foto-detail-main-frame {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 18px;
-  touch-action: none;
-}
-
-.foto-detail-main-button {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: clamp(420px, 72vh, 900px) !important;
-  overflow: hidden !important;
-  cursor: default !important;
-  user-select: none;
-}
-
-.foto-detail-main-frame.is-zoomed,
-.foto-detail-main-button.is-zoomed {
-  cursor: grab;
-}
-
-.foto-detail-main-frame.is-zoomed:active,
-.foto-detail-main-button.is-zoomed:active {
-  cursor: grabbing;
-}
-
-.foto-detail-main-image {
-  display: block;
-  width: 100%;
-  height: clamp(420px, 72vh, 900px) !important;
-  max-height: none !important;
-  object-fit: contain !important;
-  transform-origin: center center !important;
-  transition: transform 220ms ease !important;
-  will-change: transform;
-  pointer-events: none;
-}
-
-.foto-detail-zoom-control {
-  position: absolute;
-  left: 50%;
-  bottom: 14px;
-  transform: translateX(-50%);
-  z-index: 6;
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(0,0,0,0.58);
-  color: #fff;
-  font-size: 28px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.foto-detail-nav {
-  z-index: 5 !important;
-}
-
-.foto-before-ai-toggle-wrap {
-  z-index: 5 !important;
-}
-
-.ai-photo-badge {
-  z-index: 4 !important;
-}
-
-@media (max-width: 640px) {
-  .foto-detail-stage {
-    min-height: 58vh !important;
-  }
-
-  .foto-detail-main-button {
-    min-height: 58vh !important;
-  }
-
-  .foto-detail-main-image {
-    height: 58vh !important;
-  }
-
-  .foto-detail-zoom-control {
-    bottom: 10px;
-    width: 42px;
-    height: 42px;
-    font-size: 24px;
-  }
-}
-
-/* ===== FOTO DETAIL STEP ZOOM CONTROLS RIGHT BOTTOM ===== */
-
-.foto-detail-zoom-controls {
-  position: absolute;
-  right: clamp(14px, 16vw, 150px);
-  bottom: 14px;
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-.foto-detail-zoom-control {
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(0,0,0,0.58);
-  color: #fff;
-  font-size: 28px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-@media (max-width: 640px) {
-  .foto-detail-zoom-controls {
-    right: 14px;
-    bottom: 10px;
-    gap: 8px;
-  }
-
-  .foto-detail-zoom-control {
-    width: 42px;
-    height: 42px;
-    font-size: 24px;
-  }
-}
 
 /* ===== RESTORE OLD FOTO ZOOM ===== */
 
@@ -6683,4 +6391,54 @@ video::-webkit-media-controls-panel {
 
 .foto-detail-main-image.is-zoomed {
   transform: scale(1.45) !important;
+}
+
+/* ===== FINAL HARD OVERRIDE OLD FOTO CLICK ZOOM ===== */
+
+.foto-detail-stage {
+  overflow: hidden !important;
+}
+
+.foto-detail-main-frame {
+  position: static !important;
+  overflow: visible !important;
+  touch-action: auto !important;
+}
+
+.foto-detail-main-button {
+  pointer-events: auto !important;
+  cursor: zoom-in !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.foto-detail-main-button.is-zoomed {
+  cursor: zoom-out !important;
+}
+
+.foto-detail-main-image {
+  pointer-events: none !important;
+  display: block !important;
+  width: 100% !important;
+  height: min(78vh, 980px) !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  transition: transform 180ms ease !important;
+  will-change: transform;
+}
+
+.foto-detail-main-image.is-zoomed {
+  transform: scale(1.45) !important;
+}
+
+.foto-detail-zoom-controls,
+.foto-detail-zoom-control {
+  display: none !important;
 }
