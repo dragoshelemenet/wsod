@@ -1,123 +1,49 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { FotoDetailGalleryClient } from "@/components/public/foto-detail-gallery-client";
 import { BusinessCardDetailClient } from "@/components/public/business-card-detail-client";
 import { GraphicFormatDetailClient } from "@/components/public/graphic-format-detail-client";
+import { AlbumCoverDetailClient } from "@/components/public/album-cover-detail-client";
 import { ExpandableDescription } from "@/components/public/ExpandableDescription";
+import { DeliveryQualityInfo } from "@/components/public/DeliveryQualityInfo";
 import {
   getPublishedMediaByCategory,
   getPublishedMediaBySlug,
 } from "@/lib/dashboard/queries";
 
-type PageProps = {
+type Props = {
   params: Promise<{ slug: string }>;
 };
 
-function looksAutoTitle(value: string) {
-  const v = (value || "").trim().toLowerCase();
-  if (!v) return true;
-  if (v.length > 40 && /[0-9a-f]{8,}/.test(v)) return true;
-  if (v.startsWith("hf") && /[0-9]/.test(v)) return true;
-  return false;
-}
-
-function getDisplayTitle(item: any) {
-  return looksAutoTitle(item.title)
-    ? item.brand?.name || item.personModel?.name || item.graphicKind || "Grafica"
-    : item.title;
-}
-
-function getAiMode(item: any) {
-  if (item.aiMode === "ai" || item.aiMode === "ai-edit") return item.aiMode;
-  return item.aiEdited ? "ai-edit" : undefined;
-}
-
-export default async function GraficaSlugPage({ params }: PageProps) {
+export default async function GraficaDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [item, allGraphics] = await Promise.all([
-    getPublishedMediaBySlug(slug),
-    getPublishedMediaByCategory("grafica"),
-  ]);
+  const item = await getPublishedMediaBySlug(slug);
 
-  if (!item) {
-    return (
-      <main className="inner-page">
-        <section className="inner-section">
-          <h1>Grafica not found</h1>
-          <p className="inner-description">Proiectul grafic nu a fost gasit.</p>
-        </section>
-      </main>
-    );
+  if (!item || item.category !== "grafica") {
+    notFound();
   }
 
-  const sameBrandGraphics =
-    item.brandId
-      ? allGraphics.filter(
-          (graphic) =>
-            graphic.category === "grafica" &&
-            graphic.brandId === item.brandId
-        )
-      : [];
+  const allGrafica = await getPublishedMediaByCategory("grafica");
 
-  const sameModelGraphics =
-    item.personModelId
-      ? allGraphics.filter(
-          (graphic) =>
-            graphic.category === "grafica" &&
-            graphic.personModelId === item.personModelId
-        )
-      : [];
+  const displayTitle = item.seoTitle || item.title || "Proiect grafic";
 
-  const displayTitle = getDisplayTitle(item);
-
-  const mainGalleryItems =
-    item.brandId
-      ? sameBrandGraphics
-          .map((graphic) => ({
-            id: graphic.id,
-            title: graphic.title,
-            displayTitle: looksAutoTitle(graphic.title)
-              ? item.brand?.name || item.graphicKind || "Grafica"
-              : graphic.title,
-            slug: graphic.slug,
-            src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
-            thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
-            rotation: (graphic as any).rotation ?? 0,
-            aiMode: getAiMode(graphic),
-          }))
-          .filter((entry) => entry.src)
-      : item.personModelId
-      ? sameModelGraphics
-          .map((graphic) => ({
-            id: graphic.id,
-            title: graphic.title,
-            displayTitle: looksAutoTitle(graphic.title)
-              ? item.personModel?.name || item.graphicKind || "Grafica"
-              : graphic.title,
-            slug: graphic.slug,
-            src: graphic.fileUrl || graphic.previewUrl || graphic.thumbnailUrl || "",
-            thumb: graphic.thumbnailUrl || graphic.previewUrl || graphic.fileUrl || "",
-            rotation: (graphic as any).rotation ?? 0,
-            aiMode: getAiMode(graphic),
-          }))
-          .filter((entry) => entry.src)
-      : [
-          {
-            id: item.id,
-            title: item.title,
-            displayTitle: getDisplayTitle(item),
-            slug: item.slug,
-            src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
-            thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
-            rotation: (item as any).rotation ?? 0,
-            aiMode: getAiMode(item),
-          },
-        ].filter((entry) => entry.src);
+  const mainGalleryItems = [
+    {
+      id: item.id,
+      title: item.title || displayTitle,
+      src: item.fileUrl || item.previewUrl || item.thumbnailUrl || "",
+      thumb: item.thumbnailUrl || item.previewUrl || item.fileUrl || "",
+      beforeAiSrc: item.beforeAiUrl || "",
+    },
+  ];
 
   return (
     <main className="inner-page">
       <section className="inner-section">
         <div className="detail-top-row">
-          <Link href="/grafica" className="detail-back-button" aria-label="Înapoi">←</Link>
+          <Link href="/grafica" className="detail-back-button" aria-label="Înapoi la grafica">
+            ←
+          </Link>
           <h1 id="detail-dynamic-title">{displayTitle}</h1>
         </div>
 
@@ -126,6 +52,8 @@ export default async function GraficaSlugPage({ params }: PageProps) {
           text={item.description || "Pagina individuala pentru proiect grafic."}
           collapsedLines={3}
         />
+
+        <DeliveryQualityInfo className="delivery-quality-block" />
 
         {item.graphicKind === "carte-vizita" ? (
           <>
@@ -136,10 +64,12 @@ export default async function GraficaSlugPage({ params }: PageProps) {
               backSrc={(item as any).cardBackUrl || ""}
             />
             <div className="detail-bottom-back">
-              <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+              <Link href="/grafica" className="detail-bottom-back-link">
+                Înapoi la galerie
+              </Link>
             </div>
           </>
-        ) : item.graphicKind === "certificat" || item.graphicKind === "coperta-album" ? (
+        ) : item.graphicKind === "certificat" ? (
           <>
             <GraphicFormatDetailClient
               title={displayTitle}
@@ -150,14 +80,31 @@ export default async function GraficaSlugPage({ params }: PageProps) {
               format1x1Url={(item as any).format1x1Url || ""}
             />
             <div className="detail-bottom-back">
-              <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+              <Link href="/grafica" className="detail-bottom-back-link">
+                Înapoi la galerie
+              </Link>
+            </div>
+          </>
+        ) : item.graphicKind === "coperta-album" ? (
+          <>
+            <AlbumCoverDetailClient
+              title={displayTitle}
+              frontSrc={item.fileUrl || item.previewUrl || item.thumbnailUrl || ""}
+              backSrc={(item as any).albumBackUrl || ""}
+            />
+            <div className="detail-bottom-back">
+              <Link href="/grafica" className="detail-bottom-back-link">
+                Înapoi la galerie
+              </Link>
             </div>
           </>
         ) : (
           <>
             <FotoDetailGalleryClient items={mainGalleryItems} titleTargetId="detail-dynamic-title" />
             <div className="detail-bottom-back">
-              <Link href="/grafica" className="detail-bottom-back-link">Înapoi la galerie</Link>
+              <Link href="/grafica" className="detail-bottom-back-link">
+                Înapoi la galerie
+              </Link>
             </div>
           </>
         )}
