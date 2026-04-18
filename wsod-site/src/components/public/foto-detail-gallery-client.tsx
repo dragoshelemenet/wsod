@@ -47,6 +47,10 @@ function AiBadge({ mode }: { mode?: string }) {
   );
 }
 
+const ZOOM_SCALE = 1.75;
+const MAX_PAN_X = 220;
+const MAX_PAN_Y = 180;
+
 export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -66,16 +70,35 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState("50% 50%");
   const [showBeforeAi, setShowBeforeAi] = useState(false);
-  const zoomResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
+  const zoomResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragState = useRef<{
+    startX: number;
+    startY: number;
+    startPanX: number;
+    startPanY: number;
+  } | null>(null);
+
+  const clampPan = (x: number, y: number) => ({
+    x: Math.max(-MAX_PAN_X, Math.min(MAX_PAN_X, x)),
+    y: Math.max(-MAX_PAN_Y, Math.min(MAX_PAN_Y, y)),
+  });
+
+  const resetZoomState = () => {
     if (zoomResetTimer.current) {
       clearTimeout(zoomResetTimer.current);
       zoomResetTimer.current = null;
     }
-    setActiveIndex(initialIndex);
+    dragState.current = null;
     setIsZoomed(false);
+    setPan({ x: 0, y: 0 });
     setZoomOrigin("50% 50%");
+  };
+
+  useEffect(() => {
+    resetZoomState();
+    setActiveIndex(initialIndex);
     setShowBeforeAi(false);
   }, [initialIndex]);
 
@@ -86,6 +109,41 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!dragState.current || !isZoomed) return;
+
+      const nextX = dragState.current.startPanX + (event.clientX - dragState.current.startX);
+      const nextY = dragState.current.startPanY + (event.clientY - dragState.current.startY);
+      setPan(clampPan(nextX, nextY));
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!dragState.current || !isZoomed || !event.touches[0]) return;
+
+      const touch = event.touches[0];
+      const nextX = dragState.current.startPanX + (touch.clientX - dragState.current.startX);
+      const nextY = dragState.current.startPanY + (touch.clientY - dragState.current.startY);
+      setPan(clampPan(nextX, nextY));
+    };
+
+    const stopDragging = () => {
+      dragState.current = null;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", stopDragging);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", stopDragging);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", stopDragging);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", stopDragging);
+    };
+  }, [isZoomed]);
 
   useEffect(() => {
     if (!titleTargetId) return;
@@ -116,28 +174,18 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
   const activeImageSrc = showBeforeAi && active?.beforeAiSrc ? active.beforeAiSrc : active?.src;
 
   const goPrev = () => {
-    if (zoomResetTimer.current) {
-      clearTimeout(zoomResetTimer.current);
-      zoomResetTimer.current = null;
-    }
-    setIsZoomed(false);
-    setZoomOrigin("50% 50%");
+    resetZoomState();
     setShowBeforeAi(false);
     setActiveIndex((prev) => (prev - 1 + safeItems.length) % safeItems.length);
   };
 
   const goNext = () => {
-    if (zoomResetTimer.current) {
-      clearTimeout(zoomResetTimer.current);
-      zoomResetTimer.current = null;
-    }
-    setIsZoomed(false);
-    setZoomOrigin("50% 50%");
+    resetZoomState();
     setShowBeforeAi(false);
     setActiveIndex((prev) => (prev + 1) % safeItems.length);
   };
 
-  const handleMainImageClick = () => {
+  const handleToggleZoom = () => {
     if (zoomResetTimer.current) {
       clearTimeout(zoomResetTimer.current);
       zoomResetTimer.current = null;
@@ -145,7 +193,9 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
 
     if (isZoomed) {
       setIsZoomed(false);
+      dragState.current = null;
       zoomResetTimer.current = setTimeout(() => {
+        setPan({ x: 0, y: 0 });
         setZoomOrigin("50% 50%");
         zoomResetTimer.current = null;
       }, 220);
@@ -153,7 +203,29 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
     }
 
     setZoomOrigin("50% 50%");
+    setPan({ x: 0, y: 0 });
     setIsZoomed(true);
+  };
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isZoomed) return;
+    dragState.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      startPanX: pan.x,
+      startPanY: pan.y,
+    };
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!isZoomed || !event.touches[0]) return;
+    const touch = event.touches[0];
+    dragState.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      startPanX: pan.x,
+      startPanY: pan.y,
+    };
   };
 
   return (
@@ -170,11 +242,15 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
           </button>
         ) : null}
 
-        <div className={`foto-detail-main-frame ${isZoomed ? "is-zoomed" : ""}`}>
+        <div
+          className={`foto-detail-main-frame ${isZoomed ? "is-zoomed" : ""}`}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        >
           <button
             type="button"
-            className="foto-detail-zoom-control"
-            onClick={handleMainImageClick}
+            className={`foto-detail-zoom-control ${isZoomed ? "is-zoomed" : ""}`}
+            onClick={handleToggleZoom}
             aria-label={isZoomed ? "Zoom out" : "Zoom in"}
           >
             {isZoomed ? "−" : "+"}
@@ -185,7 +261,10 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               src={activeImageSrc}
               alt={active.displayTitle || active.title}
               className={`foto-detail-main-image ${isZoomed ? "is-zoomed" : ""}`}
-              style={{ transformOrigin: zoomOrigin }}
+              style={{
+                transformOrigin: zoomOrigin,
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${isZoomed ? ZOOM_SCALE : 1})`,
+              }}
             />
             {active.aiMode ? <AiBadge mode={active.aiMode} /> : null}
           </div>
@@ -211,8 +290,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
             aria-checked={!showBeforeAi}
             className={`foto-before-ai-toggle ${showBeforeAi ? "is-before" : "is-ai"}`}
             onClick={() => {
-              setIsZoomed(false);
-              setZoomOrigin("50% 50%");
+              resetZoomState();
               setShowBeforeAi((current) => !current);
             }}
           >
@@ -233,12 +311,7 @@ export function FotoDetailGalleryClient({ items, titleTargetId }: Props) {
               type="button"
               className={`foto-detail-thumb-button ${index === activeIndex ? "is-active" : ""}`}
               onClick={() => {
-                if (zoomResetTimer.current) {
-                  clearTimeout(zoomResetTimer.current);
-                  zoomResetTimer.current = null;
-                }
-                setIsZoomed(false);
-                setZoomOrigin("50% 50%");
+                resetZoomState();
                 setShowBeforeAi(false);
                 setActiveIndex(index);
               }}
