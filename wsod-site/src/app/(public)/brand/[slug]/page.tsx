@@ -1,6 +1,10 @@
+import Link from "next/link";
 import { PublicCard } from "@/components/public/public-card";
 import { PublicGrid } from "@/components/public/public-grid";
 import { getPublishedBrandBySlug } from "@/lib/dashboard/queries";
+
+const WEBSITE_ICON =
+  "https://img.icons8.com/ios-filled/100/domain.png";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -149,17 +153,36 @@ export default async function BrandSlugPage({ params }: PageProps) {
               <h2>Website</h2>
             </div>
 
-            <PublicGrid dense>
-              {websites.map((item) => (
-                <PublicCard
-                  key={item.id}
-                  title={item.title}
-                  href={`/${item.category}/${item.slug}`}
-                  imageUrl={item.thumbnailUrl || item.previewUrl || item.fileUrl}
-                  imageOnly
-                />
-              ))}
-            </PublicGrid>
+            <div className="website-card-grid">
+              {websites.map((item) => {
+                const imageUrl = item.thumbnailUrl || item.previewUrl || item.fileUrl || "";
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/website/${item.slug}`}
+                    className="website-card-link"
+                  >
+                    <div className="website-card-media">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={item.title}
+                          className="website-card-image"
+                        />
+                      ) : null}
+
+                      <div className="website-card-badge">
+                        <img
+                          src={WEBSITE_ICON}
+                          alt="Website"
+                          className="website-card-badge-icon"
+                        />
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </section>
         ) : null}
 
