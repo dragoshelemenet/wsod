@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 type BusinessCardDetailClientProps = {
   previewSrc: string;
@@ -8,6 +8,8 @@ type BusinessCardDetailClientProps = {
   backSrc?: string;
   title: string;
 };
+
+type ViewMode = "back" | "preview" | "front";
 
 export function BusinessCardDetailClient({
   previewSrc,
@@ -17,54 +19,60 @@ export function BusinessCardDetailClient({
 }: BusinessCardDetailClientProps) {
   const hasFront = Boolean(frontSrc);
   const hasBack = Boolean(backSrc);
-  const hasBoth = hasFront && hasBack;
+  const hasPreview = Boolean(previewSrc);
 
-  const [side, setSide] = useState<"front" | "back">(hasBack ? "back" : "front");
+  const modes = useMemo(() => {
+    const result: Array<{ key: ViewMode; label: string; src?: string }> = [];
+    if (hasBack) result.push({ key: "back", label: "Spate", src: backSrc });
+    if (hasPreview) result.push({ key: "preview", label: "Împreună", src: previewSrc });
+    if (hasFront) result.push({ key: "front", label: "Față", src: frontSrc });
+    return result;
+  }, [hasBack, hasPreview, hasFront, backSrc, previewSrc, frontSrc]);
 
-  const rawSrc = side === "front" ? frontSrc : backSrc;
+  const defaultMode: ViewMode =
+    hasPreview ? "preview" : hasBack ? "back" : "front";
+
+  const [mode, setMode] = useState<ViewMode>(defaultMode);
+
+  const active = modes.find((item) => item.key === mode) ?? modes[0];
+  const activeSrc = active?.src || previewSrc || frontSrc || backSrc || "";
+
+  if (!activeSrc) return null;
 
   return (
     <div className="business-card-detail">
       <div className="business-card-preview-wrap">
-        <img src={previewSrc} alt={title} className="business-card-preview-image" />
+        <img
+          src={activeSrc}
+          alt={`${title} - ${active?.label || "Preview"}`}
+          className="business-card-preview-image"
+        />
       </div>
 
-      {hasBoth ? (
+      {modes.length >= 2 ? (
         <div className="business-card-toggle-wrap">
-          <div className={`business-card-toggle business-card-toggle-3col ${side === "front" ? "is-right" : "is-left"}`}>
-            <button
-              type="button"
-              className={`business-card-toggle-side ${side === "back" ? "is-active" : ""}`}
-              onClick={() => setSide("back")}
-            >
-              Spate
-            </button>
-
-            <span className="business-card-toggle-center-label">Preview</span>
-
-            <button
-              type="button"
-              className={`business-card-toggle-side ${side === "front" ? "is-active" : ""}`}
-              onClick={() => setSide("front")}
-            >
-              Față
-            </button>
-
-            <div className="business-card-toggle-track">
-              <span className="business-card-toggle-knob" />
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {rawSrc ? (
-        <div className="business-card-raw-wrap">
-          <div className="business-card-raw-frame">
-            <img
-              src={rawSrc}
-              alt={side === "front" ? "Carte de vizită față" : "Carte de vizită spate"}
-              className="business-card-raw-image"
-            />
+          <div
+            className={`business-card-toggle business-card-toggle-3way ${
+              mode === "back"
+                ? "is-left"
+                : mode === "front"
+                ? "is-right"
+                : "is-center"
+            }`}
+          >
+            {modes.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                className={`business-card-toggle-option ${
+                  mode === item.key ? "is-active" : ""
+                }`}
+                onClick={() => setMode(item.key)}
+              >
+                {item.label}
+              </button>
+            ))}
+            <span className="business-card-toggle-knob" />
           </div>
         </div>
       ) : null}
