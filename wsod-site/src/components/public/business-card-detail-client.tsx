@@ -42,11 +42,13 @@ export function BusinessCardDetailClient({
   return (
     <div className="business-card-detail">
       <div className="business-card-preview-wrap">
-        <img
-          src={activeSrc}
-          alt={`${title} - ${active?.label || "Preview"}`}
-          className="business-card-preview-image"
-        />
+        <div className="business-card-preview-stage">
+          <img
+            src={activeSrc}
+            alt={`${title} - ${active?.label || "Preview"}`}
+            className="business-card-preview-image"
+          />
+        </div>
       </div>
 
       {modes.length >= 2 ? (
