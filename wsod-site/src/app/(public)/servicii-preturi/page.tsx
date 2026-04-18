@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import Link from "next/link";
 import { getServicesCertificates, getSiteContentRecord } from "@/lib/dashboard/queries";
 import { PublicCard } from "@/components/public/public-card";
